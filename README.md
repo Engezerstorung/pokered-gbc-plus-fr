@@ -13,8 +13,8 @@ This romhack includ some changes such as :
 - You can define a per sprite XY pixel offset
 - You can do both those easily in a list at the bottom of  data/sprites/facings.asm
 
-QOL:
- -Runnings shoes
+QOL :
+- Runnings shoes
 
 
 
