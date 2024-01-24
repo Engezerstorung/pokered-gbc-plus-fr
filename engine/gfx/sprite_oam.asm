@@ -188,26 +188,26 @@ GetSpriteScreenXY:
 	inc e
 ; Checking if sprite is in SpecialOAMlist ; see data/sprites/facings.asm
 	ld a, [wPictureID] ; loading back PICTUREID in a for comparison
-	ld hl, SpecialOAMlist ; loading list for comparison and values
+	ld hl, SpecialOAMlist ; loading list for comparison and properties values
 	push de ; save d and e
 	ld de, 4 ; define the number of properties in list
 	call IsInArray ; compare list to a ; modify a/b/de
 	pop de ; restore d and e
 	ld a, [de] ; [x#SPRITESTATEDATA1_YPIXELS]
-	inc hl ; select next property in SpecialOAMlist
-	push af
+	push af ; preserve c flag from "add" operations, needed "jr nc, .noXoffset"
 	jr nc, .noYoffset
-	inc hl ; select next property in SpecialOAMlist
-	add [hl] ; add property value of SpecialOAMlist
+	inc hl ; pass over OAM table property in SpecialOAMlist
+	inc hl ; select Y offset property in SpecialOAMlist
+	add [hl] ; add Y offset value
 .noYoffset
 	ldh [hSpriteScreenY], a
-	pop af
+	pop af ; restore c flag after "add" operations, needed for next "jr nc, .noXoffset"
 	inc e
 	inc e
 	ld a, [de] ; [x#SPRITESTATEDATA1_XPIXELS]
 	jr nc, .noXoffset
-	inc hl ; select next property in SpecialOAMlist
-	add [hl] ; add property value of SpecialOAMlist
+	inc hl ; select X offset property in SpecialOAMlist
+	add [hl] ; add X offset value
 .noXoffset
 	ldh [hSpriteScreenX], a
 	ld a, 4
