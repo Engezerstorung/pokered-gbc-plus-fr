@@ -497,7 +497,7 @@ SpritePaletteAssignments: ; Characters on the overworld
 	db SPR_PAL_BROWN
 	; SPRITE_KANGASKHAN
 	db SPR_PAL_BROWN
-	; SPRITE_LAPRASS
+	; SPRITE_LAPRAS
 	db SPR_PAL_BLUE
 	; SPRITE_MEOWTH
 	db SPR_PAL_BROWN

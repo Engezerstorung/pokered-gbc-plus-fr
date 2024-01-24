@@ -72,7 +72,7 @@ SpriteSheetPointerTable:
 	overworld_sprite ClefairySprite, 12
 	overworld_sprite CuboneSprite, 12
 	overworld_sprite KangaskhanSprite, 12
-	overworld_sprite LaprassSprite, 12
+	overworld_sprite LaprasSprite, 12
 	overworld_sprite MeowthSprite, 12
 	overworld_sprite MewtwoSprite, 12
 	overworld_sprite MoltresSprite, 12

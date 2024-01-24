@@ -37,7 +37,7 @@ FuchsiaCity_Object:
 	object_event 25,  6, SPRITE_VOLTORB, STAY, NONE, 6 ; person
 	object_event 12,  6, SPRITE_KANGASKHAN, WALK, LEFT_RIGHT, 7 ; person
 	object_event 30, 12, SPRITE_SLOWPOKE, WALK, LEFT_RIGHT, 8 ; person
-	object_event  8, 17, SPRITE_LAPRASS, WALK, ANY_DIR, 9 ; person
+	object_event  8, 17, SPRITE_LAPRAS, WALK, ANY_DIR, 9 ; person
 	object_event  6,  5, SPRITE_FOSSIL, STAY, NONE, 10 ; person
 
 	def_warps_to FUCHSIA_CITY

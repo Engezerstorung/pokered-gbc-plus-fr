@@ -67,7 +67,7 @@
 	const SPRITE_CLEFAIRY				 ; $3f
 	const SPRITE_CUBONE					 ; $40
 	const SPRITE_KANGASKHAN				 ; $41
-	const SPRITE_LAPRASS				 ; $42
+	const SPRITE_LAPRAS					 ; $42
 	const SPRITE_MEOWTH					 ; $43
 	const SPRITE_MEWTWO					 ; $44
 	const SPRITE_MOLTRES				 ; $45

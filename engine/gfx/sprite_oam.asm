@@ -194,7 +194,7 @@ GetSpriteScreenXY:
 	call IsInArray ; compare list to a ; modify a/b/de
 	pop de ; restore d and e
 	ld a, [de] ; [x#SPRITESTATEDATA1_YPIXELS]
-	push af ; preserve c flag from "add" operations, needed "jr nc, .noXoffset"
+	push af ; restore c flag after "add" operations, needed for next "jr nc, .noXoffset"
 	jr nc, .noYoffset
 	inc hl ; pass over OAM table property in SpecialOAMlist
 	inc hl ; select Y offset property in SpecialOAMlist
