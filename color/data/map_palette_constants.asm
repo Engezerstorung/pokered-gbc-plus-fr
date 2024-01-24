@@ -1,4 +1,4 @@
-const_value = 0
+DEF const_value = 0
 	const INTRO_GRAY        ; 00: used only when booting up the game
 	const OUTDOOR_GRAY      ; 01
 	const OUTDOOR_RED       ; 02
@@ -29,25 +29,25 @@ const_value = 0
 	const CAVE_YELLOW       ; 1B
 	const CAVE_BROWN        ; 1C
 	const CAVE_LIGHT_BLUE   ; 1D
-	const BENCH_GUY_PAL     ; 1E
-	const PC_POKEBALL_PAL   ; 1F: doubles as textbox palette for some areas
-	const FOREST_ROCKS      ; 20
-	const FOREST_TREES      ; 21
+	const SHIP_STOVES     ; 1E
+	const SHIP_MUGS			; 1F
+	const FOREST_TREES		; 20
+	const PC_POKEBALL_PAL   ; 21: doubles as textbox palette for some areas
 	const ALT_TEXTBOX_PAL   ; 22: used in areas with skeleton pokemon
 	const INDOOR_PURPLE     ; 23
+	const OUTDOOR_FLOWER    ; 24
+	const INDOOR_FLOWER    	; 25
+	const INDOOR_GREEN_BG   ; 26
+	const INDOOR_BROWN_BG   ; 27
+	const LOBBY_1STFLOOR  	; 28
+	const LOBBY_CHAIR		; 29
+	const UNDERGROUND_STAIRS; 2A
+	const SHIP_TRASHCANS	; 2B
+	const SHIP_DOCK1		; 2C
+	const SHIP_DOCK2		; 2D
+	const SHIP_DOCK_CAR		; 2E
 
 	; These are unused
-	const MAP_PALETTE_24    ; 24
-	const MAP_PALETTE_25    ; 25
-	const MAP_PALETTE_26    ; 26
-	const MAP_PALETTE_27    ; 27
-	const MAP_PALETTE_28    ; 28
-	const MAP_PALETTE_29    ; 29
-	const MAP_PALETTE_2A    ; 2A
-	const MAP_PALETTE_2B    ; 2B
-	const MAP_PALETTE_2C    ; 2C
-	const MAP_PALETTE_2D    ; 2D
-	const MAP_PALETTE_2E    ; 2E
 	const MAP_PALETTE_2F    ; 2F
 	const MAP_PALETTE_30    ; 30
 	const MAP_PALETTE_31    ; 31
@@ -67,7 +67,7 @@ const_value = 0
 	const MAP_PALETTE_3F    ; 3F
 
 ; Named to make tileset palette assignments consistent with Pokecrystal
-const_value = 0
+DEF const_value = 0
 	const PAL_BG_GRAY      ; 00
 	const PAL_BG_RED       ; 01
 	const PAL_BG_GREEN     ; 02
@@ -78,7 +78,7 @@ const_value = 0
 	const PAL_BG_TEXT      ; 07
 
 ; Used when you want a tile to display above the Player and NPCs
-const_value = $80
+DEF const_value = $80
 	const PAL_BG_PRIORITY_GRAY   ; 80
 	const PAL_BG_PRIORITY_RED    ; 81
 	const PAL_BG_PRIORITY_GREEN  ; 82

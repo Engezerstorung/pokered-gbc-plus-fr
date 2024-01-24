@@ -25,4 +25,5 @@
 	const CLUB         ; 21
 	const FACILITY     ; 22
 	const PLATEAU      ; 23
+	const UNDERGATE   ; 24
 DEF NUM_TILESETS EQU const_value

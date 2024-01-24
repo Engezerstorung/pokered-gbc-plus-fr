@@ -6,7 +6,7 @@ MACRO coll_tiles
 ENDM
 
 Underground_Coll::
-	coll_tiles $0b, $0c, $13, $15, $18
+	coll_tiles $0b, $0c, $0f, $13, $15, $18
 
 Overworld_Coll::
 	coll_tiles $00, $10, $1b, $20, $21, $23, $2c, $2d, $2e, $30, $31, $33, $39, $3c, $3e, $52, $54, $58, $5b
@@ -35,7 +35,7 @@ Gate_Coll::
 	coll_tiles $01, $12, $14, $1a, $1c, $37, $38, $3b, $3c, $5e
 
 Ship_Coll::
-	coll_tiles $04, $0d, $17, $1d, $1e, $23, $34, $37, $39, $4a
+	coll_tiles $04, $0d, $17, $1d, $1e, $23, $34, $37, $39, $4a, $4d, $52
 
 ShipPort_Coll::
 	coll_tiles $0a, $1a, $32, $3b
@@ -68,3 +68,6 @@ Facility_Coll::
 
 Plateau_Coll::
 	coll_tiles $1b, $23, $2c, $2d, $3b, $45
+
+UnderGate_Coll::
+	coll_tiles $01, $14, $15

@@ -29,3 +29,4 @@ MapPaletteAssignments:
 	INCLUDE "color/tilesets/club.asm"        ; CLUB
 	INCLUDE "color/tilesets/facility.asm"    ; FACILITY
 	INCLUDE "color/tilesets/plateau.asm"     ; PLATEAU
+	INCLUDE "color/tilesets/undergate.asm"   ; GATE

@@ -144,7 +144,6 @@ ROMX $18
 ROMX $19
 	"Tilesets 1"
 ROMX $1A
-	"Battle Engine 11"
 	"Tilesets 2"
 ROMX $1B
 	"Tilesets 3"
@@ -215,6 +214,13 @@ ROMX $36
 	"bank36"
 ROMX $37
 	"bank37"
+ROMX $38
+	org $4000
+	"Party Mon Sprites Gfx 1"
+ROMX $39
+	org $4000
+	"Party Mon Sprites Gfx 2"
+	"Party Mon Sprites Routines"
 WRAM0
 	"Audio RAM"
 	org $c100

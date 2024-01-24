@@ -22,6 +22,8 @@ PrepareOAMData::
 	ldh a, [hSpriteOffset2]
 	ld e, a
 	ld a, [de] ; [x#SPRITESTATEDATA1_PICTUREID]
+	ld [wPictureID], a ; store PICTUREID to check if sprite are specific sprites or in lists
+
 	and a
 	jp z, .nextSprite
 
@@ -33,13 +35,28 @@ PrepareOAMData::
 	jr nz, .visible
 
 	call GetSpriteScreenXY
-	jr .nextSprite
+	jp .nextSprite
 
 .visible
+; Checking if sprite is in SpecialOAMlist ; see data/sprites/facings.asm
+	ld a, [wPictureID] ; loading back PICTUREID in a for comparison
+	ld hl, SpecialOAMlist ; loading list for comparison
+	push de ; save d and e
+	ld de, 4 ; define the number of properties in list
+	call IsInArray ; compare list to a ; modify a/b/de
+	pop de ; restore d and e
+	ld a, [wd5cd] ; restoring a to value before conparison checks
+	jr nc, .notSpecialOAM ; jump if not in list
+	inc hl
+	and $f
+	add [hl] ; skip to the appropriate part of the OAM table
+	jr .next
+
+.notSpecialOAM
 	cp $a0 ; is the sprite unchanging like an item ball or boulder?
 	jr c, .usefacing
 
-; unchanging
+; unchanging	
 	and $f
 	add $10 ; skip to the second half of the table which doesn't account for facing direction
 	jr .next
@@ -165,13 +182,27 @@ PrepareOAMData::
 	jr .clear
 
 GetSpriteScreenXY:
+	push bc
+	push hl
 	inc e
 	inc e
+; Checking if sprite is in SpecialOAMlist ; see data/sprites/facings.asm
+	ld a, [wPictureID] ; loading back PICTUREID in a for comparison
+	ld hl, SpecialOAMlist ; loading list for comparison and values
+	push de ; save d and e
+	ld de, 4 ; define the number of properties in list
+	call IsInArray ; compare list to a ; modify a/b/de
+	pop de ; restore d and e
 	ld a, [de] ; [x#SPRITESTATEDATA1_YPIXELS]
+	inc hl ; select next property in SpecialOAMlist
+	push af
+	call c, AddSpecialOAMListValue ; if c, go to routine to add Y Offset value
 	ldh [hSpriteScreenY], a
+	pop af
 	inc e
 	inc e
 	ld a, [de] ; [x#SPRITESTATEDATA1_XPIXELS]
+	call c, AddSpecialOAMListValue ; if c, go to routine to add X Offset value
 	ldh [hSpriteScreenX], a
 	ld a, 4
 	add e
@@ -184,4 +215,11 @@ GetSpriteScreenXY:
 	ldh a, [hSpriteScreenX]
 	and $f0
 	ld [de], a  ; [x#SPRITESTATEDATA1_XADJUSTED]
+	pop hl
+	pop bc
+	ret
+
+AddSpecialOAMListValue:
+	inc hl ; select next property in SpecialOAMlist
+	add [hl] ; add property value of SpecialOAMlist
 	ret

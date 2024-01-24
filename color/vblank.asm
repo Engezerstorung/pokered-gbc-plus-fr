@@ -100,7 +100,7 @@ RefreshPalettesPreVBlank:
 	ld a, [W2_UseOBP1]
 	and a
 	jr z, .obp0
-	ld a, 11
+	add 10
 	cp b
 	jr nc, .obp0
 .obp1

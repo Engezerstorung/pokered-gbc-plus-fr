@@ -8,7 +8,7 @@ SSAnne2F_Object:
 	warp_event 21, 11, SS_ANNE_2F_ROOMS, 7
 	warp_event 25, 11, SS_ANNE_2F_ROOMS, 9
 	warp_event 29, 11, SS_ANNE_2F_ROOMS, 11
-	warp_event  2,  4, SS_ANNE_1F, 9
+	warp_event  5,  4, SS_ANNE_1F, 9
 	warp_event  2, 12, SS_ANNE_3F, 2
 	warp_event 36,  4, SS_ANNE_CAPTAINS_ROOM, 1
 

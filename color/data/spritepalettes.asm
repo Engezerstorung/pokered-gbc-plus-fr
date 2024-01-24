@@ -27,7 +27,7 @@ SpritePalettes: ; Taken from pokemon GSC.
 ; PAL_OW_PURPLE
 	RGB 27,31,27
 	RGB 31,19,10
-	RGB 18,4,18
+	RGB 29,5,13
 	RGB 0,0,0
 
 ; PAL_OW_EMOJI
@@ -124,10 +124,10 @@ SpritePalettesPokecenter: ; Taken from pokemon GSC.
 	RGB 15,10,3
 	RGB 0,0,0
 
-; Heal Machine pokeballs and screen
+; PAL_OW_PURPLE
 	RGB 27,31,27
 	RGB 31,19,10
-	RGB 31,7,1
+	RGB 29,5,13
 	RGB 0,0,0
 
 ; PAL_OW_EMOJI
@@ -136,11 +136,11 @@ SpritePalettesPokecenter: ; Taken from pokemon GSC.
 	RGB 13,13,13
 	RGB 0,0,0
 
-; PAL_OW_TREE
-	RGB 22,31,10
-	RGB 12,25,1
-	RGB 5,14,0
-	RGB 7,7,7
+; Heal Machine pokeballs and screen
+	RGB 27,31,27
+	RGB 31,19,10
+	RGB 31,7,1
+	RGB 0,0,0
 
 ; PAL_OW_ROCK
 	RGB 27,31,27

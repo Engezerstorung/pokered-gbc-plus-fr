@@ -24,6 +24,7 @@ WarpTileIDPointers:
 	dw .ClubWarpTileIDs
 	dw .FacilityWarpTileIDs
 	dw .PlateauWarpTileIDs
+	dw .UnderGateWarpTileIDs
 	assert_table_length NUM_TILESETS
 
 MACRO warp_tiles
@@ -60,7 +61,7 @@ ENDM
 	warp_tiles $54, $5C, $32
 
 .ShipWarpTileIDs:
-	warp_tiles $37, $39, $1E, $4A
+	warp_tiles $37, $39, $1E, $4A, $4D, $52
 
 .InteriorWarpTileIDs:
 	warp_tiles $15, $55, $04
@@ -84,11 +85,15 @@ ENDM
 	db $1B
 	; fallthrough
 .UndergroundWarpTileIDs:
-	warp_tiles $13
+	warp_tiles $0F, $13
 
 .PlateauWarpTileIDs:
 	db $1B, $3B
 	; fallthrough
 .ShipPortWarpTileIDs:
+.UnderGateWarpTileIDs:
+	warp_tiles $15
+	db $3B
+	; fallthrough
 .ClubWarpTileIDs:
 	warp_tiles ; end
