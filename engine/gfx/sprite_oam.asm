@@ -196,13 +196,19 @@ GetSpriteScreenXY:
 	ld a, [de] ; [x#SPRITESTATEDATA1_YPIXELS]
 	inc hl ; select next property in SpecialOAMlist
 	push af
-	call c, AddSpecialOAMListValue ; if c, go to routine to add Y Offset value
+	jr nc, .noYoffset
+	inc hl ; select next property in SpecialOAMlist
+	add [hl] ; add property value of SpecialOAMlist
+.noYoffset
 	ldh [hSpriteScreenY], a
 	pop af
 	inc e
 	inc e
 	ld a, [de] ; [x#SPRITESTATEDATA1_XPIXELS]
-	call c, AddSpecialOAMListValue ; if c, go to routine to add X Offset value
+	jr nc, .noXoffset
+	inc hl ; select next property in SpecialOAMlist
+	add [hl] ; add property value of SpecialOAMlist
+.noXoffset
 	ldh [hSpriteScreenX], a
 	ld a, 4
 	add e
@@ -217,9 +223,4 @@ GetSpriteScreenXY:
 	ld [de], a  ; [x#SPRITESTATEDATA1_XADJUSTED]
 	pop hl
 	pop bc
-	ret
-
-AddSpecialOAMListValue:
-	inc hl ; select next property in SpecialOAMlist
-	add [hl] ; add property value of SpecialOAMlist
 	ret

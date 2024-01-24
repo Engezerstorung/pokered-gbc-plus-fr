@@ -52,6 +52,7 @@ SpriteFacingAndAnimationTable:
 	dw .WalkingLeft,  .FlippedOAM ; facing right, walk animation frame 1
 	dw .StandingLeft, .FlippedOAM ; facing right, walk animation frame 2
 	dw .WalkingLeft,  .FlippedOAM ; facing right, walk animation frame 3
+; insert custom table starting here, each table must contain 4 facings with 4 animation frames each (16 total)
 
 ; four tile ids compose an overworld sprite
 .StandingDown: db $00, $01, $02, $03
