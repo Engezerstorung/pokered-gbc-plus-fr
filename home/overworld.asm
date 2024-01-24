@@ -283,7 +283,20 @@ OverworldLoopLessDelay::
 	bit 6, a ; jumping a ledge?
 	jr nz, .normalPlayerSpriteAdvancement
 	call DoBikeSpeedup
+	ld a, [hJoyHeld]
+	and B_BUTTON
+	jr z, .notRunning
+	call DoBikeSpeedup
+	call DoBikeSpeedup
+	jr .notRunning
 .normalPlayerSpriteAdvancement
+	; Holding B makes you run and surf at 2x walking speed
+	ld a, [hJoyHeld]
+	and B_BUTTON
+	jr z, .notRunning
+	call DoBikeSpeedup
+.notRunning
+	;original .normalPlayerSpriteAdvancement continues here
 	call AdvancePlayerSprite
 	ld a, [wWalkCounter]
 	and a
