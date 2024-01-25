@@ -22,7 +22,7 @@ PrepareOAMData::
 	ldh a, [hSpriteOffset2]
 	ld e, a
 	ld a, [de] ; [x#SPRITESTATEDATA1_PICTUREID]
-	ld [wPictureID], a ; store PICTUREID to check if sprite are specific sprites or in lists
+	ld [wPictureID], a ; store PICTUREID to identify sprite
 
 	and a
 	jp z, .nextSprite
@@ -38,33 +38,30 @@ PrepareOAMData::
 	jp .nextSprite
 
 .visible
-; Checking if sprite is in SpecialOAMlist ; see data/sprites/facings.asm
-	ld a, [wPictureID] ; loading back PICTUREID in a for comparison
-	ld hl, SpecialOAMlist ; loading list for comparison
+; see data/sprites/facings.asm for Animation tables and SpritesOAMProperties
+	ld a, [wPictureID] ; loading back PICTUREID to identify sprite
+	ld hl, SpritesOAMProperties ; loading list for identification and properties values
 	push de ; save d and e
 	ld de, 4 ; define the number of properties in list
-	call IsInArray ; compare list to a ; modify a/b/de
+	call IsInArray ; find Sprite in list ; modify a/b/de
 	pop de ; restore d and e
-	ld a, [wd5cd] ; restoring a to value before conparison checks
-	jr nc, .notSpecialOAM ; jump if not in list
-	inc hl
+	ld a, [wd5cd] ; restoring a to value before sprite identification
 	and $f
-	add [hl] ; skip to the appropriate part of the OAM table
-	jr .next
+	inc hl; select Animation table property in SpritesOAMProperties
+	add [hl] ; load appropriate Animation Table value
+; Original OAM Table selection code
+;	cp $a0 ; is the sprite unchanging like an item ball or boulder?
+;	jr c, .usefacing
 
-.notSpecialOAM
-	cp $a0 ; is the sprite unchanging like an item ball or boulder?
-	jr c, .usefacing
+;; unchanging
+;	and $f
+;	add $10 ; skip to the second half of the table which doesn't account for facing direction
+;	jr .next
 
-; unchanging	
-	and $f
-	add $10 ; skip to the second half of the table which doesn't account for facing direction
-	jr .next
+;.usefacing
+;	and $f
 
-.usefacing
-	and $f
-
-.next
+;.next
 	ld l, a
 
 ; get sprite priority
@@ -186,29 +183,23 @@ GetSpriteScreenXY:
 	push hl
 	inc e
 	inc e
-; Checking if sprite is in SpecialOAMlist ; see data/sprites/facings.asm
-	ld a, [wPictureID] ; loading back PICTUREID in a for comparison
-	ld hl, SpecialOAMlist ; loading list for comparison and properties values
+; see data/sprites/facings.asm for Animation tables and SpritesOAMProperties
+	ld a, [wPictureID] ; loading back PICTUREID to identify sprite
+	ld hl, SpritesOAMProperties ; loading list for identification and properties values
 	push de ; save d and e
 	ld de, 4 ; define the number of properties in list
-	call IsInArray ; compare list to a ; modify a/b/de
+	call IsInArray ; find Sprite in list ; modify a/b/de
 	pop de ; restore d and e
 	ld a, [de] ; [x#SPRITESTATEDATA1_YPIXELS]
-	push af ; restore c flag after "add" operations, needed for next "jr nc, .noXoffset"
-	jr nc, .noYoffset
-	inc hl ; pass over OAM table property in SpecialOAMlist
-	inc hl ; select Y offset property in SpecialOAMlist
+	inc hl ; pass over Animation table property in SpritesOAMProperties
+	inc hl ; select Y offset property in SpritesOAMProperties
 	add [hl] ; add Y offset value
-.noYoffset
 	ldh [hSpriteScreenY], a
-	pop af ; restore c flag after "add" operations, needed for next "jr nc, .noXoffset"
 	inc e
 	inc e
 	ld a, [de] ; [x#SPRITESTATEDATA1_XPIXELS]
-	jr nc, .noXoffset
-	inc hl ; select X offset property in SpecialOAMlist
+	inc hl ; select X offset property in SpritesOAMProperties
 	add [hl] ; add X offset value
-.noXoffset
 	ldh [hSpriteScreenX], a
 	ld a, 4
 	add e
