@@ -1,7 +1,7 @@
 This Romhack start from my port of the pokered-gbc to french to build upon.
 If you want a base experience of the pokered-gbc romhack in french, go there : https://github.com/Engezerstorung/pokered-gbc-fr
 
-This romhack includ some changes such as :
+This romhack include some changes such as :
 - Tweaks to color palettes
 - Tweaks to Tilesets to allow more colors use and general visuals improvement while keeping their vanilla design
 - Tweaks to some maps and blocksets for visual improvement
