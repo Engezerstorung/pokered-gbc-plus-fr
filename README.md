@@ -3,15 +3,15 @@ If you want a base experience of the pokered-gbc romhack in french, go there : h
 
 This romhack include some changes such as :
 - Tweaks to color palettes
-- Tweaks to Tilesets to allow more colors use and general visuals improvement while keeping their vanilla design
+- Tweaks to Tilesets to allow more colors use and general visual improvements while keeping their vanilla design
 - Tweaks to some maps and blocksets for visual improvement
 - Added uniques party pokémons icons following the tutorial on pret/pokered/wiki
 - Replaced the generics pokemons sprites on maps by unique ones from Crystal CLear
 - Also the pokécenter Bench Guy is a real little boy now
 - Those last two points come with an overhaul to the sprite_OAM engine, as follow :
-- You can now create dedicated OAM tables for specific sprites
+- You can now create dedicated animation tables for specific sprites
 - You can define a per sprite XY pixel offset
-- You can do both those easily in a list at the bottom of  data/sprites/facings.asm
+- You can do both those easily in a list at the bottom of data/sprites/facings.asm
 
 QOL :
 - Runnings shoes
