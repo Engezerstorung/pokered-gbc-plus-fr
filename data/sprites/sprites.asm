@@ -109,4 +109,5 @@ SpriteSheetPointerTable:
 	overworld_sprite GamblerAsleepSprite, 4     ; SPRITE_UNUSED_GAMBLER_ASLEEP_2
 	overworld_sprite GamblerAsleepSprite, 4     ; SPRITE_GAMBLER_ASLEEP
 	overworld_sprite BenchGuySprite, 4		    ; SPRITE_BENCH_GUY
+	overworld_sprite BillsMachine, 4
 	assert_table_length NUM_SPRITES

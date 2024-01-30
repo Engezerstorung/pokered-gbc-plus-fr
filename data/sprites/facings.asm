@@ -53,6 +53,23 @@ SpriteFacingAndAnimationTable:
 	dw .WalkingLeft,  .FlippedOAM ; facing right, walk animation frame 1
 	dw .StandingLeft, .FlippedOAM ; facing right, walk animation frame 2
 	dw .WalkingLeft,  .FlippedOAM ; facing right, walk animation frame 3
+; $30 This table is used for Bill's machines
+	dw .StandingDown, .MachineRFlip  ; facing down, walk animation frame 0
+	dw .StandingDown, .MachineRFlip  ; facing down, walk animation frame 1
+	dw .StandingDown, .MachineRFlip  ; facing down, walk animation frame 2
+	dw .StandingDown, .MachineRFlip  ; facing down, walk animation frame 3
+	dw .StandingDown, .MachineR  	 ; facing up, walk animation frame 0
+	dw .StandingDown, .MachineR  	 ; facing up, walk animation frame 1
+	dw .StandingDown, .MachineR  	 ; facing up, walk animation frame 2
+	dw .StandingDown, .MachineR  	 ; facing up, walk animation frame 3
+	dw .StandingDown, .NormalOAM  	 ; facing left, walk animation frame 0
+	dw .StandingDown, .NormalOAM 	 ; facing left, walk animation frame 1
+	dw .StandingDown, .NormalOAM 	 ; facing left, walk animation frame 2
+	dw .StandingDown, .NormalOAM 	 ; facing left, walk animation frame 3
+	dw .StandingDown, .FlippedOAM 	 ; facing right, walk animation frame 0
+	dw .StandingDown, .FlippedOAM 	 ; facing right, walk animation frame 1
+	dw .StandingDown, .FlippedOAM 	 ; facing right, walk animation frame 2
+	dw .StandingDown, .FlippedOAM 	 ; facing right, walk animation frame 3
 ; insert custom table starting here, each table must contain 4 facings with 4 animation frames each (16 total)
 
 ; four tile ids compose an overworld sprite
@@ -83,6 +100,20 @@ SpriteFacingAndAnimationTable:
 	db 0, -1, OAM_HFLIP ; top right
 	db 8, 7, OAM_HFLIP | OAMFLAG_CANBEMASKED ; bottom left
 	db 8, -1, OAM_HFLIP | OAMFLAG_CANBEMASKED | OAMFLAG_ENDOFDATA ; bottom right
+
+.MachineR:
+	; y, x, attributes
+	db 0, 48, $00 ; top left
+	db 0, 56, $00 ; top right
+	db 8, 48, OAMFLAG_CANBEMASKED ; bottom left
+	db 8, 56, OAMFLAG_CANBEMASKED | OAMFLAG_ENDOFDATA ; bottom right
+
+.MachineRFlip:
+	; y, x, attributes
+	db 0, 56, OAM_HFLIP ; top left
+	db 0, 48, OAM_HFLIP ; top right
+	db 8, 56, OAM_HFLIP | OAMFLAG_CANBEMASKED ; bottom left
+	db 8, 48, OAM_HFLIP | OAMFLAG_CANBEMASKED | OAMFLAG_ENDOFDATA ; bottom right
 
 SpritesOAMProperties:
 	; see constants/sprite_constants.asm
@@ -195,5 +226,7 @@ SpritesOAMProperties:
 	db SPRITE_SNORLAX,					$10, 4, 0
 ; Still, +4 YX offset
 	db SPRITE_BENCH_GUY,				$10, 4, 4
+; Bill's Machines
+	db SPRITE_BILLS_MACHINE,			$30, -12, -24
 	db -1
 	

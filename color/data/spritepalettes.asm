@@ -148,6 +148,55 @@ SpritePalettesPokecenter: ; Taken from pokemon GSC.
 	RGB 20,15,3
 	RGB 7,7,7
 
+SpritePalettesInterior:
+
+; PAL_OW_RED
+	RGB 27,31,27
+	RGB 31,19,10
+	RGB 31,7,1
+	RGB 0,0,0
+
+; PAL_OW_BLUE
+	RGB 27,31,27
+	RGB 31,19,10
+	RGB 10,9,31
+	RGB 0,0,0
+
+; PAL_OW_GREEN
+	RGB 27,31,27
+	RGB 31,19,10
+	RGB 7,23,3
+	RGB 0,0,0
+
+; PAL_OW_BROWN
+	RGB 27,31,27
+	RGB 31,19,10
+	RGB 15,10,3
+	RGB 0,0,0
+
+; PAL_OW_PURPLE
+	RGB 27,31,27
+	RGB 31,19,10
+	RGB 29,5,13
+	RGB 0,0,0
+
+; PAL_OW_EMOJI
+	RGB 31,31,31
+	RGB 31,31,31
+	RGB 13,13,13
+	RGB 0,0,0
+
+; PAL_OW_TREE
+	RGB 22,31,10
+	RGB 12,25,1
+	RGB 5,14,0
+	RGB 7,7,7
+
+; Bills Machine
+	RGB 27,31,27
+	RGB 19,19,19
+	RGB 13,13,13
+	RGB 7,7,7
 
 AttackSpritePalettes:
 	; GREY

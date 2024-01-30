@@ -38,6 +38,9 @@ LoadOverworldSpritePalettes:
 	ld hl, SpritePalettesPokecenter
 	cp POKECENTER
 	jr z, .gotPaletteList
+	ld hl, SpritePalettesInterior
+	cp INTERIOR
+	jr z, .gotPaletteList
 	; If not, load the normal Object Pals
 	ld hl, SpritePalettes
 .gotPaletteList
@@ -585,6 +588,9 @@ SpritePaletteAssignments: ; Characters on the overworld
 
 	; 0x49: SPRITE_BENCH_GUY
 	db SPR_PAL_RANDOM
+
+	; SPRITE_BILLS_MACHINE
+	db SPR_PAL_ROCK
 
 AnimationTileset1Palettes:
 	INCBIN "color/data/animtileset1palettes.bin"
