@@ -45,8 +45,8 @@ SetPal_FadeOutToWhite::
 	ld a, $02
 	ldh [rSVBK], a
 
-	ld d, INDOOR_BLUE
-	ld e, 6
+	ld d, INDOOR_FLOWER_FADE
+	ld e, 4
 	farcall LoadMapPalette
 	jr .fadenointeriorbg
 .fadeunderground

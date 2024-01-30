@@ -46,12 +46,12 @@ DEF const_value = 0
 	const SHIP_DOCK1		; 2C
 	const SHIP_DOCK2		; 2D
 	const SHIP_DOCK_CAR		; 2E
-	const OUTDOOR_RED_FADE  ; 2F
+	const OUTDOOR_FLOWER_FADE  ; 2F
 	const OUTDOOR_GRASS_FADE; 30
 	const OUTDOOR_BLUE_FADE ; 31
+	const INDOOR_FLOWER_FADE;32
 
 	; These are unused
-	const MAP_PALETTE_32    ; 32
 	const MAP_PALETTE_33    ; 33
 	const MAP_PALETTE_34    ; 34
 	const MAP_PALETTE_35    ; 35
