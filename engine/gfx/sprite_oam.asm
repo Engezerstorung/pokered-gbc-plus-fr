@@ -191,7 +191,7 @@ GetSpriteScreenXY:
 	call IsInArray ; find Sprite in list ; modify a/b/de
 	pop de ; restore d and e
 	ld a, [de] ; [x#SPRITESTATEDATA1_YPIXELS]
-	inc hl ; pass over Animation table property in SpritesOAMProperties
+	inc hl ; pass over animation table property in SpritesOAMProperties
 	inc hl ; select Y offset property in SpritesOAMProperties
 	add [hl] ; add Y offset value
 	ldh [hSpriteScreenY], a
