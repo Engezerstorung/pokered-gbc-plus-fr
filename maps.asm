@@ -841,7 +841,7 @@ PewterPokecenter_Blocks: INCBIN "maps/PewterPokecenter.blk"
 
 UndergroundPathRoute7_Blocks:
 UndergroundPathRoute7Copy_Blocks:
-UndergroundPathRoute6_Blocks: INCBIN "maps/UndergroundPathRoute7.blk"
+UndergroundPathRoute6_Blocks:
 UndergroundPathRoute5_Blocks: INCBIN "maps/UndergroundPathRoute5.blk"
 
 Route2Gate_Blocks:

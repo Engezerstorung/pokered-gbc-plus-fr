@@ -240,12 +240,3 @@ MapPaletteSets:
 	db OUTDOOR_ROOF
 	db CRYS_TEXTBOX
 
-; UNDERGATE
-	db INDOOR_GRAY
-	db INDOOR_RED
-	db INDOOR_GREEN_BG
-	db INDOOR_BLUE
-	db INDOOR_YELLOW
-	db INDOOR_BROWN_BG
-	db INDOOR_LIGHT_BLUE
-	db ALT_TEXTBOX_PAL ; Uses variant of textbox palette for Articuno binoculars

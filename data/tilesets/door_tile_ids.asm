@@ -12,7 +12,6 @@ DoorTileIDPointers:
 	dbw LAB,         .LabDoorTileIDs
 	dbw FACILITY,    .FacilityDoorTileIDs
 	dbw PLATEAU,     .PlateauDoorTileIDs
-	dbw UNDERGATE,  .TilesetMuseumDoorTileIDs
 	db -1 ; end
 
 MACRO door_tiles

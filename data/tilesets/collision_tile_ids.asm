@@ -69,5 +69,3 @@ Facility_Coll::
 Plateau_Coll::
 	coll_tiles $1b, $23, $2c, $2d, $3b, $45
 
-UnderGate_Coll::
-	coll_tiles $01, $14, $15
