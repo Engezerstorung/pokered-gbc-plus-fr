@@ -15,7 +15,7 @@ ENDM
 	warp_carpet_tiles $01, $12, $17, $3D, $04, $18, $33
 
 .FacingUpWarpTiles:
-	warp_carpet_tiles $01, $5C
+	warp_carpet_tiles $01, $46
 
 .FacingLeftWarpTiles:
 	warp_carpet_tiles $1A, $4B

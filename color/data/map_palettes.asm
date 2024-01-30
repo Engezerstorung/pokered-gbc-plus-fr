@@ -269,7 +269,7 @@ MapPalettes:
 ; 0x2c: SHIP_DOCK1
 	RGB 19,19,19
 	RGB 13,13,13
-	RGB 9,9,31
+	RGB 16,13,3
 	RGB 7,7,7
 
 ; 0x2d: SHIP_DOCK2

@@ -1,9 +1,9 @@
 VermilionDock_Object:
-	db $f ; border block
+	db $D ; border block
 
 	def_warp_events
-	warp_event 14,  0, LAST_MAP, 6
-	warp_event 14,  2, SS_ANNE_1F, 2
+	warp_event 14,  4, LAST_MAP, 6
+	warp_event 14,  6, SS_ANNE_1F, 2
 
 	def_bg_events
 
