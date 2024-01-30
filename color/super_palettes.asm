@@ -1,5 +1,24 @@
 ; Note: after calling this, you may need to set W2_ForceBGPUpdate/ForceOBPUpdate to nonzero.
 ; d = palette to load (see constants/palette_constants.), e = palette index
+LoadMapPalette:
+	ldh a, [rSVBK]
+	ld b, a
+	ld a, 2
+	ldh [rSVBK], a
+	push bc
+
+	ld a, e
+	ld l, d
+	ld h, 0
+	add hl, hl
+	add hl, hl
+	add hl, hl
+	ld de, MapPalettes
+	add hl, de
+
+	ld de, W2_BgPaletteData
+	jr startPaletteTransfer
+
 LoadSGBPalette:
 	ldh a, [rSVBK]
 	ld b, a

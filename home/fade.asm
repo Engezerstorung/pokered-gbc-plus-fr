@@ -24,6 +24,7 @@ GBFadeInFromBlack::
 	jr GBFadeIncCommon
 
 GBFadeOutToWhite::
+	farcall SetPal_FadeOutToWhite
 	ld hl, FadePal6
 	ld b, 3
 
