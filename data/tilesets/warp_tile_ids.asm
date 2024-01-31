@@ -81,7 +81,8 @@ ENDM
 	db $43, $58, $20
 	; fallthrough
 .CemeteryWarpTileIDs:
-	db $1B
+	warp_tiles $13, $1B, $50, $5A
+;	db $1B
 	; fallthrough
 .UndergroundWarpTileIDs:
 	warp_tiles $0F, $13
