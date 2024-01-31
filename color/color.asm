@@ -7,25 +7,11 @@ SetPal_FadeOutToWhite::
 	ld a, [wCurMapTileset]
 	cp SHIP_PORT
 	jr z, .fadeshipport
-	cp GYM
-	jr z, .fadegym
 	cp UNDERGROUND
 	jr z, .fadeunderground
-	cp FOREST_GATE
-	jp z, .fadenointeriorbg
-	cp GATE
-	jr z, .fadenointeriorbg
-	cp MANSION
-	jr z, .fadenointeriorbg
-	cp FACILITY
-	jr z, .fadenointeriorbg
-	cp FOREST
-	jr z, .fadeoverworld
-	cp PLATEAU
-	jr z, .fadeoverworld
-	cp OVERWORLD
-	jr z, .fadeoverworld
-	jp .fadecont
+	cp GYM
+	jr z, .fadegym
+	jr .contfadecheck
 .fadeshipport
 	ld a, $02
 	ldh [rSVBK], a
@@ -41,6 +27,14 @@ SetPal_FadeOutToWhite::
 	ld e, 5
 	farcall LoadMapPalette
 	jr .fadecont
+.fadeunderground
+	ld a, $02
+	ldh [rSVBK], a
+
+	ld d, INDOOR_RED
+	ld e, 1
+	farcall LoadMapPalette
+	jr .fadecont
 .fadegym
 	ld a, $02
 	ldh [rSVBK], a
@@ -49,12 +43,30 @@ SetPal_FadeOutToWhite::
 	ld e, 4
 	farcall LoadMapPalette
 	jr .fadenointeriorbg
-.fadeunderground
-	ld a, $02
-	ldh [rSVBK], a
-
-	ld d, INDOOR_RED
-	ld e, 1
+.contfadecheck
+	cp FOREST_GATE
+	jr z, .fadenointeriorbg
+	cp GATE
+	jr z, .fadenointeriorbg
+	cp MANSION
+	jr z, .fadenointeriorbg
+	cp FACILITY
+	jr z, .fadenointeriorbg
+	cp FOREST
+	jr z, .fadeoverworld
+	cp PLATEAU
+	jr z, .fadeoverworld
+	cp OVERWORLD
+	jr z, .fadeoverworld
+	jr .fadecont
+.fadenointeriorbg
+	ld d, INDOOR_BROWN
+	ld e, 5
+	push de
+	farcall LoadMapPalette
+	pop de
+	ld d, INDOOR_GREEN
+	ld e, 2
 	farcall LoadMapPalette
 	jr .fadecont
 .fadeoverworld
@@ -72,16 +84,6 @@ SetPal_FadeOutToWhite::
 	pop de
 	dec e
 	dec d ; OUTDOOR_RED_FADE
-	farcall LoadMapPalette
-	jr .fadecont
-.fadenointeriorbg
-	ld d, INDOOR_BROWN
-	ld e, 5
-	push de
-	farcall LoadMapPalette
-	pop de
-	ld d, INDOOR_GREEN
-	ld e, 2
 	farcall LoadMapPalette
 .fadecont
 	ld a, 1
