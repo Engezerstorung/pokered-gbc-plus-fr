@@ -45,7 +45,7 @@ PrepareOAMData::
 	ld de, 4 ; define the number of properties in list
 	call IsInArray ; check if Sprite is in list ; modify a/b/de
 	pop de ; restore d and e
-	ld a, [wd5cd] ; restoring a to value before sprite identification
+	ld a, [wSavedSpriteImageIndex] ; restoring a to value before sprite identification
 	jr nc, .notspecialsprite ; jump if not in list
 	and $f
 	inc l; select Animation table property in SpecialOAMlist
