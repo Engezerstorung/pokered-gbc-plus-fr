@@ -38,30 +38,35 @@ PrepareOAMData::
 	jp .nextSprite
 
 .visible
-; see data/sprites/facings.asm for Animation tables and SpritesOAMProperties
+; Checking if sprite is in SpecialOAMlist ; see data/sprites/facings.asm
 	ld a, [wPictureID] ; loading back PICTUREID to identify sprite
-	ld hl, SpritesOAMProperties ; loading list for identification and properties values
+	ld hl, SpecialOAMlist ; loading list for identification and properties values
 	push de ; save d and e
 	ld de, 4 ; define the number of properties in list
-	call IsInArray ; find Sprite in list ; modify a/b/de
+	call IsInArray ; check if Sprite is in list ; modify a/b/de
 	pop de ; restore d and e
 	ld a, [wd5cd] ; restoring a to value before sprite identification
+	jr nc, .notspecialsprite ; jump if not in list
 	and $f
-	inc hl; select Animation table property in SpritesOAMProperties
+	inc l; select Animation table property in SpecialOAMlist
+;	inc hl; select Animation table property in SpecialOAMlist
 	add [hl] ; load appropriate Animation Table value
+	jr .next
+
 ; Original OAM Table selection code
-;	cp $a0 ; is the sprite unchanging like an item ball or boulder?
-;	jr c, .usefacing
+.notspecialsprite
+	cp $a0 ; is the sprite unchanging like an item ball or boulder?
+	jr c, .usefacing
 
-;; unchanging
-;	and $f
-;	add $10 ; skip to the second half of the table which doesn't account for facing direction
-;	jr .next
+; unchanging
+	and $f
+	add $10 ; skip to the second half of the table which doesn't account for facing direction
+	jr .next
 
-;.usefacing
-;	and $f
+.usefacing
+	and $f
 
-;.next
+.next
 	ld l, a
 
 ; get sprite priority
@@ -183,23 +188,32 @@ GetSpriteScreenXY:
 	push hl
 	inc e
 	inc e
-; see data/sprites/facings.asm for Animation tables and SpritesOAMProperties
+; Checking if sprite is in SpecialOAMlist ; see data/sprites/facings.asm
 	ld a, [wPictureID] ; loading back PICTUREID to identify sprite
-	ld hl, SpritesOAMProperties ; loading list for identification and properties values
+	ld hl, SpecialOAMlist ; loading list for identification and properties values
 	push de ; save d and e
 	ld de, 4 ; define the number of properties in list
-	call IsInArray ; find Sprite in list ; modify a/b/de
+	call IsInArray ; check if Sprite is in list ; modify a/b/de
 	pop de ; restore d and e
 	ld a, [de] ; [x#SPRITESTATEDATA1_YPIXELS]
-	inc hl ; pass over animation table property in SpritesOAMProperties
-	inc hl ; select Y offset property in SpritesOAMProperties
+	push af ; save c flag from "add" operations, needed for next "jr nc, .noXoffset"
+	jr nc, .noYoffset
+	inc l ; pass over animation table property in SpecialOAMlist
+	inc l ; select Y offset property in SpecialOAMlist
+;	inc hl ; pass over animation table property in SpecialOAMlist
+;	inc hl ; select Y offset property in SpecialOAMlist
 	add [hl] ; add Y offset value
+.noYoffset
 	ldh [hSpriteScreenY], a
+	pop af ; restore c flag after "add" operations, needed for next "jr nc, .noXoffset"
 	inc e
 	inc e
 	ld a, [de] ; [x#SPRITESTATEDATA1_XPIXELS]
-	inc hl ; select X offset property in SpritesOAMProperties
+	jr nc, .noXoffset
+	inc l ; select X offset property in SpecialOAMlist
+;	inc hl ; select X offset property in SpecialOAMlist
 	add [hl] ; add X offset value
+.noXoffset
 	ldh [hSpriteScreenX], a
 	ld a, 4
 	add e
