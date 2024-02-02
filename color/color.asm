@@ -83,7 +83,7 @@ SetPal_FadeOutToWhite::
 	farcall LoadMapPalette
 	pop de
 	dec e
-	dec d ; OUTDOOR_RED_FADE
+	dec d ; OUTDOOR_FLOWER_FADE
 	farcall LoadMapPalette
 .fadecont
 	ld a, 1
