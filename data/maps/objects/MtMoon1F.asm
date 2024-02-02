@@ -1,5 +1,5 @@
 MtMoon1F_Object:
-	db $3 ; border block
+	db $50 ; border block
 
 	def_warp_events
 	warp_event 14, 35, LAST_MAP, 2
