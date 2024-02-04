@@ -9,6 +9,8 @@ SetPal_FadeOutToWhite::
 	jr z, .fadeshipport
 	cp UNDERGROUND
 	jr z, .fadeunderground
+	cp CAVERN
+	jr z, .fadecavern
 	cp GYM
 	jr z, .fadegym
 	jr .contfadecheck
@@ -26,13 +28,21 @@ SetPal_FadeOutToWhite::
 	ld d, INDOOR_BROWN
 	ld e, 5
 	farcall LoadMapPalette
-	jr .fadecont
+	jp .fadecont
 .fadeunderground
 	ld a, $02
 	ldh [rSVBK], a
 
 	ld d, INDOOR_RED
 	ld e, 1
+	farcall LoadMapPalette
+	jr .fadecont
+.fadecavern
+	ld a, $02
+	ldh [rSVBK], a
+
+	ld d, CAVE_BROWN
+	ld e, 4
 	farcall LoadMapPalette
 	jr .fadecont
 .fadegym
@@ -94,7 +104,7 @@ SetPal_FadeOutToWhite::
 	ret
 
 ; Set all palettes to black at beginning of battle
-SetPal_BattleBlack:
+SetPal_BattleBlack::
 	ld a, $02
 	ldh [rSVBK], a
 

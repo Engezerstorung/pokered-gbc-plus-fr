@@ -50,9 +50,9 @@ DEF const_value = 0
 	const OUTDOOR_GRASS_FADE; 30
 	const OUTDOOR_BLUE_FADE ; 31
 	const INDOOR_FLOWER_FADE;32
+	const CAVE_ENTRANCE   ; 33
 
 	; These are unused
-	const MAP_PALETTE_33    ; 33
 	const MAP_PALETTE_34    ; 34
 	const MAP_PALETTE_35    ; 35
 	const MAP_PALETTE_36    ; 36
