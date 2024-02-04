@@ -157,7 +157,7 @@ LoadTilesetPalette:
 	ret
 
 ; Towns have different roof colors while using the same tileset
-LoadTownPalette:
+LoadTownPalette::
 	ldh a, [rSVBK]
 	ld b, a
 	xor a
@@ -166,13 +166,21 @@ LoadTownPalette:
 	; Get the current map.
 	ld a, [wCurMap]
 	ld c, a
-	cp ROUTE_6 ; Route 6 has 2 rows in saffron city; check if player is there or not.
-	jr nz, .notRoute6
+	cp ROUTE_8 ; Default roof is Lavender, if closer to Saffron Route8 script load Saffron Roof
+	jr z, .Route8
+	cp ROUTE_6 ; Default roof is Vermilion, if closer to Saffron Route6 script load Saffron Roof
+	jr nz, .notSpecialRoute
 	ld a, [wYCoord]
-	cp 2
-	jr nc, .notRoute6
+	cp 21
+	jr nc, .notSpecialRoute
 	ld c, SAFFRON_CITY
-.notRoute6
+	jr .notSpecialRoute
+.Route8
+	ld a, [wXCoord]
+	cp 34
+	jr nc, .notSpecialRoute
+	ld c, SAFFRON_CITY
+.notSpecialRoute
 	ld a, c
 	add a
 	ld c, a

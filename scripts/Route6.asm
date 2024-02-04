@@ -9,7 +9,8 @@ Route6_Script:
 
 Route6_ScriptPointers:
 	def_script_pointers
-	dw_const CheckFightingMapTrainers,              SCRIPT_ROUTE6_DEFAULT
+	dw_const Route6RoofCheck,                       SCRIPT_ROUTE6_DEFAULT
+;	dw_const CheckFightingMapTrainers,              SCRIPT_ROUTE6_DEFAULT
 	dw_const DisplayEnemyTrainerTextAndStartBattle, SCRIPT_ROUTE6_START_BATTLE
 	dw_const EndTrainerBattle,                      SCRIPT_ROUTE6_END_BATTLE
 
@@ -146,3 +147,19 @@ Route6Youngster2AfterBattleText:
 Route6UndergroundPathSignText:
 	text_far _Route6UndergroundPathSignText
 	text_end
+
+Route6RoofCheck:
+	ld a, [wYCoord]
+	cp 20
+	jr z, .route6RoofChange
+	cp 22
+	jr nz, .noRoute6RoofChange
+.route6RoofChange
+	farcall LoadTownPalette
+	ld a, 2
+	ldh [rSVBK], a
+	ld [W2_ForceBGPUpdate], a
+	xor a
+	ldh [rSVBK], a
+.noRoute6RoofChange
+	jp CheckFightingMapTrainers

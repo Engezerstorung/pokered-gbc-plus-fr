@@ -9,7 +9,8 @@ Route8_Script:
 
 Route8_ScriptPointers:
 	def_script_pointers
-	dw_const CheckFightingMapTrainers,              SCRIPT_ROUTE8_DEFAULT
+	dw_const Route8RoofCheck,                       SCRIPT_ROUTE8_DEFAULT
+;	dw_const CheckFightingMapTrainers,              SCRIPT_ROUTE8_DEFAULT
 	dw_const DisplayEnemyTrainerTextAndStartBattle, SCRIPT_ROUTE8_START_BATTLE
 	dw_const EndTrainerBattle,                      SCRIPT_ROUTE8_END_BATTLE
 
@@ -213,3 +214,19 @@ Route8CooltrainerF4AfterBattleText:
 Route8UndergroundSignText:
 	text_far _Route8UndergroundSignText
 	text_end
+
+Route8RoofCheck:
+	ld a, [wXCoord]
+	cp 33
+	jr z, .route8RoofChange
+	cp 35
+	jr nz, .noRoute8RoofChange
+.route8RoofChange
+	farcall LoadTownPalette
+	ld a, 2
+	ldh [rSVBK], a
+	ld [W2_ForceBGPUpdate], a
+	xor a
+	ldh [rSVBK], a
+.noRoute8RoofChange
+	jp CheckFightingMapTrainers

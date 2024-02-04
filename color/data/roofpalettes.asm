@@ -18,7 +18,7 @@ RoofPalettes:
 	dw SaffronRoof   ; ROUTE_5
 	dw VermilionRoof ; ROUTE_6 (hardcoded to use SaffronRoof for top 2 rows)
 	dw SaffronRoof   ; ROUTE_7
-	dw SaffronRoof   ; ROUTE_8
+	dw LavenderRoof  ; ROUTE_8
 	dw LavenderRoof  ; ROUTE_9
 	dw LavenderRoof  ; ROUTE_10
 	dw VermilionRoof ; ROUTE_11
