@@ -222,7 +222,7 @@ SpecialOAMlist:
 	db SPRITE_SEEL2,					$20, 0, 0
 	db SPRITE_ZAPDOS,					$20, 0, 0
 ; Still, +4 Y offset
-	db SPRITE_BOULDER,					$10, 4, 0
+	db SPRITE_BOULDER,					$10, 3, 0
 	db SPRITE_SNORLAX,					$10, 4, 0
 ; Still, +4 YX offset
 	db SPRITE_BENCH_GUY,				$10, 4, 4

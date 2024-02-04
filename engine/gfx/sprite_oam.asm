@@ -48,8 +48,7 @@ PrepareOAMData::
 	ld a, [wSavedSpriteImageIndex] ; restoring a to value before sprite identification
 	jr nc, .notspecialsprite ; jump if not in list
 	and $f
-	inc l; select Animation table property in SpecialOAMlist
-;	inc hl; select Animation table property in SpecialOAMlist
+	inc hl; select Animation table property in SpecialOAMlist
 	add [hl] ; load appropriate Animation Table value
 	jr .next
 
@@ -198,10 +197,8 @@ GetSpriteScreenXY:
 	ld a, [de] ; [x#SPRITESTATEDATA1_YPIXELS]
 	push af ; save c flag from "add" operations, needed for next "jr nc, .noXoffset"
 	jr nc, .noYoffset
-	inc l ; pass over animation table property in SpecialOAMlist
-	inc l ; select Y offset property in SpecialOAMlist
-;	inc hl ; pass over animation table property in SpecialOAMlist
-;	inc hl ; select Y offset property in SpecialOAMlist
+	inc hl ; pass over animation table property in SpecialOAMlist
+	inc hl ; select Y offset property in SpecialOAMlist
 	add [hl] ; add Y offset value
 .noYoffset
 	ldh [hSpriteScreenY], a
@@ -210,8 +207,7 @@ GetSpriteScreenXY:
 	inc e
 	ld a, [de] ; [x#SPRITESTATEDATA1_XPIXELS]
 	jr nc, .noXoffset
-	inc l ; select X offset property in SpecialOAMlist
-;	inc hl ; select X offset property in SpecialOAMlist
+	inc hl ; select X offset property in SpecialOAMlist
 	add [hl] ; add X offset value
 .noXoffset
 	ldh [hSpriteScreenX], a
