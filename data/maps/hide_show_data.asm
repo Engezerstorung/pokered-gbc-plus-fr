@@ -216,14 +216,14 @@ MapHSPointers:
 	dw SilphCo5FHS
 	dw SilphCo6FHS
 	dw SilphCo7FHS
-	dw SilphCo8FHS
+	dw SilphCo8FHS         ; $D5
 	dw PokemonMansion2FHS
 	dw PokemonMansion3FHS
 	dw PokemonMansionB1FHS
 	dw SafariZoneEastHS
 	dw SafariZoneNorthHS
 	dw SafariZoneWestHS
-	dw SafariZoneCenterHS
+	dw SafariZoneCenterHS ; $DC
 	dw NoHS
 	dw NoHS
 	dw NoHS
@@ -231,14 +231,14 @@ MapHSPointers:
 	dw NoHS
 	dw CeruleanCave2FHS
 	dw CeruleanCaveB1FHS
-	dw CeruleanCaveHS
+	dw CeruleanCaveHS ; $E4
 	dw NoHS
 	dw NoHS
+	dw NoHS ; E7 ; Route19Gate
 	dw NoHS
-	dw NoHS
-	dw SilphCo9FHS
+	dw SilphCo9FHS  ; $E9
 	dw SilphCo10FHS
-	dw SilphCo11FHS
+	dw SilphCo11FHS 
 	dw NoHS
 	dw NoHS
 	dw NoHS
