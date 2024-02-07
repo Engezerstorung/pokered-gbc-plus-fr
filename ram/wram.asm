@@ -236,8 +236,7 @@ wPlayerMonNumber:: db
 ; the address of the menu cursor's current location within wTileMap
 wMenuCursorLocation:: dw
 
-wPictureID:: db
-	ds 1
+	ds 2
 
 ; how many times should HandleMenuInput poll the joypad state before it returns?
 wMenuJoypadPollCount:: db
@@ -378,7 +377,8 @@ wSlotMachineSevenAndBarModeChance:: db
 	ds 2
 ; ROM back to return to when the player is done with the slot machine
 wSlotMachineSavedROMBank:: db
-	ds 166
+wPictureID:: db	
+	ds 165
 wLuckySlotHiddenObjectIndex:: db
 
 NEXTU
