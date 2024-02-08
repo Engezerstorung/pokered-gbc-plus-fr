@@ -3,6 +3,7 @@
 	const_export SAFFRONPOKECENTER_BEAUTY
 	const_export SAFFRONPOKECENTER_GENTLEMAN
 	const_export SAFFRONPOKECENTER_LINK_RECEPTIONIST
+	const_export SAFFRONPOKECENTER_BENCH_GUY
 
 SaffronPokecenter_Object:
 	db $0 ; border block

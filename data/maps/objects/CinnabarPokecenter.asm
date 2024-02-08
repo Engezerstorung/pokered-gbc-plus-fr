@@ -3,6 +3,7 @@
 	const_export CINNABARPOKECENTER_COOLTRAINER_F
 	const_export CINNABARPOKECENTER_GENTLEMAN
 	const_export CINNABARPOKECENTER_LINK_RECEPTIONIST
+	const_export CINNABARPOKECENTER_BENCH_GUY
 
 CinnabarPokecenter_Object:
 	db $0 ; border block

@@ -3,6 +3,7 @@
 	const_export VERMILIONPOKECENTER_FISHING_GURU
 	const_export VERMILIONPOKECENTER_SAILOR
 	const_export VERMILIONPOKECENTER_LINK_RECEPTIONIST
+	const_export VERMILIONPOKECENTER_BENCH_GUY
 
 VermilionPokecenter_Object:
 	db $0 ; border block

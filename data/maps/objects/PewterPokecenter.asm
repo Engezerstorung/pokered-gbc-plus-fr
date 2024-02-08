@@ -3,6 +3,7 @@
 	const_export PEWTERPOKECENTER_GENTLEMAN
 	const_export PEWTERPOKECENTER_JIGGLYPUFF
 	const_export PEWTERPOKECENTER_LINK_RECEPTIONIST
+	const_export PEWTERPOKECENTER_BENCH_GUY
 
 PewterPokecenter_Object:
 	db $0 ; border block

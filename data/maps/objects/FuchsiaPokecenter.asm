@@ -3,6 +3,7 @@
 	const_export FUCHSIAPOKECENTER_ROCKER
 	const_export FUCHSIAPOKECENTER_COOLTRAINER_F
 	const_export FUCHSIAPOKECENTER_LINK_RECEPTIONIST
+	const_export FUCHSIAPOKECENTER_BENCH_GUY
 
 FuchsiaPokecenter_Object:
 	db $0 ; border block

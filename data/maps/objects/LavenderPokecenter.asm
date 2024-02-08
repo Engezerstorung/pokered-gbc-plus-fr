@@ -3,6 +3,7 @@
 	const_export LAVENDERPOKECENTER_GENTLEMAN
 	const_export LAVENDERPOKECENTER_LITTLE_GIRL
 	const_export LAVENDERPOKECENTER_LINK_RECEPTIONIST
+	const_export LAVENDERPOKECENTER_BENCH_GUY
 
 LavenderPokecenter_Object:
 	db $0 ; border block

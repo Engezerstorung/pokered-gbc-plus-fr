@@ -3,6 +3,7 @@
 	const_export CERULEANPOKECENTER_SUPER_NERD
 	const_export CERULEANPOKECENTER_GENTLEMAN
 	const_export CERULEANPOKECENTER_LINK_RECEPTIONIST
+	const_export CERULEANPOKECENTER_BENCH_GUY
 
 CeruleanPokecenter_Object:
 	db $0 ; border block

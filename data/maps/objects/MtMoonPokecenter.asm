@@ -5,6 +5,7 @@
 	const_export MTMOONPOKECENTER_MAGIKARP_SALESMAN
 	const_export MTMOONPOKECENTER_CLIPBOARD
 	const_export MTMOONPOKECENTER_LINK_RECEPTIONIST
+	const_export MTMOONPOKECENTER_BENCH_GUY
 
 MtMoonPokecenter_Object:
 	db $0 ; border block

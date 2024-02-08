@@ -59,7 +59,7 @@ PrepareOAMData::
 
 ; unchanging
 	and $f
-	add $10 ; skip to the second half of the table which doesn't account for facing direction
+	add $10 ; skip to the second part of the table which doesn't account for facing direction
 	jr .next
 
 .usefacing

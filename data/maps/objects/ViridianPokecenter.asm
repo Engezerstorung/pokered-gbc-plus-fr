@@ -3,6 +3,7 @@
 	const_export VIRIDIANPOKECENTER_GENTLEMAN
 	const_export VIRIDIANPOKECENTER_COOLTRAINER_M
 	const_export VIRIDIANPOKECENTER_LINK_RECEPTIONIST
+	const_export VIRIDIANPOKECENTER_BENCH_GUY
 
 ViridianPokecenter_Object:
 	db $0 ; border block

@@ -2,6 +2,10 @@
 	const_export BILLSHOUSE_BILL_POKEMON
 	const_export BILLSHOUSE_BILL1
 	const_export BILLSHOUSE_BILL2
+	const_export SPRITE_BILLS_MACHINE1
+	const_export SPRITE_BILLS_MACHINE2
+	const_export SPRITE_BILLS_MACHINE3
+	const_export SPRITE_BILLS_MACHINE4
 
 BillsHouse_Object:
 	db $d ; border block

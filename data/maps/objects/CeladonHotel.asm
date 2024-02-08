@@ -2,6 +2,7 @@
 	const_export CELADONHOTEL_GRANNY
 	const_export CELADONHOTEL_BEAUTY
 	const_export CELADONHOTEL_SUPER_NERD
+	const_export CELADONHOTEL_BENCH_GUY
 
 CeladonHotel_Object:
 	db $0 ; border block

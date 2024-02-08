@@ -3,6 +3,7 @@
 	const_export ROCKTUNNELPOKECENTER_GENTLEMAN
 	const_export ROCKTUNNELPOKECENTER_FISHER
 	const_export ROCKTUNNELPOKECENTER_LINK_RECEPTIONIST
+	const_export ROCKTUNNELPOKECENTER_BENCH_GUY
 
 RockTunnelPokecenter_Object:
 	db $0 ; border block
