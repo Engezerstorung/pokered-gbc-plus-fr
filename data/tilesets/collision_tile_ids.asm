@@ -29,8 +29,9 @@ Forest_Coll::
 House_Coll::
 	coll_tiles $01, $12, $14, $28, $32, $37, $44, $54, $5c
 
-ForestGate_Coll::
 Museum_Coll::
+	coll_tiles $01, $12, $14, $1a, $1c, $37, $38, $3b, $3c, $5e
+ForestGate_Coll::
 Gate_Coll::
 	coll_tiles $01, $12, $14, $1a, $1c, $37, $38, $3b, $3c, $5e
 

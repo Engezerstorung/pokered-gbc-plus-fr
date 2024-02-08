@@ -36,8 +36,10 @@ ENDM
 .OverworldWarpTileIDs:
 	warp_tiles $1B, $58
 
-.ForestGateWarpTileIDs:
 .MuseumWarpTileIDs:
+	db $3B
+	; fallthrough
+.ForestGateWarpTileIDs:
 .GateWarpTileIDs:
 	db $3B
 	; fallthrough

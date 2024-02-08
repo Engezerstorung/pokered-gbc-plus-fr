@@ -33,10 +33,10 @@ Mart_Block::
 Pokecenter_Block::  INCBIN "gfx/blocksets/pokecenter.bst"
 
 ForestGate_GFX::
-Museum_GFX::
+;Museum_GFX::
 Gate_GFX::          INCBIN "gfx/tilesets/gate.2bpp"
 ForestGate_Block::
-Museum_Block::
+;Museum_Block::
 Gate_Block::        INCBIN "gfx/blocksets/gate.bst"
 
 Forest_GFX::        INCBIN "gfx/tilesets/forest.2bpp"
@@ -61,3 +61,8 @@ Club_GFX::          INCBIN "gfx/tilesets/club.2bpp"
 Club_Block::        INCBIN "gfx/blocksets/club.bst"
 Underground_GFX::   INCBIN "gfx/tilesets/underground.2bpp"
 Underground_Block:: INCBIN "gfx/blocksets/underground.bst"
+
+
+SECTION "Tilesets 4", ROMX
+Museum_GFX::        INCBIN "gfx/tilesets/museum.2bpp"
+Museum_Block::      INCBIN "gfx/blocksets/museum.bst"

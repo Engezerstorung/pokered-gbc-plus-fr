@@ -15,7 +15,7 @@ MapPaletteAssignments:
 	INCLUDE "color/tilesets/gym.asm"         ; GYM           (Duplicate of DOJO)
 	INCLUDE "color/tilesets/house.asm"       ; HOUSE
 	INCLUDE "color/tilesets/gate.asm"        ; FOREST_GATE   (Duplicate of GATE and MUSEUM)
-	INCLUDE "color/tilesets/gate.asm"        ; MUSEUM        (Duplicate of GATE and FOREST_GATE)
+	INCLUDE "color/tilesets/museum.asm"      ; MUSEUM        (Duplicate of GATE and FOREST_GATE)
 	INCLUDE "color/tilesets/underground.asm" ; UNDERGROUND
 	INCLUDE "color/tilesets/gate.asm"        ; GATE          (Duplicate of FOREST_GATE and MUSEUM)
 	INCLUDE "color/tilesets/ship.asm"        ; SHIP
