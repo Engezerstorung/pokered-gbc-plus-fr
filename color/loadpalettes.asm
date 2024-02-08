@@ -116,7 +116,15 @@ LoadTilesetPalette:
 	ld hl, W2_TilesetPaletteMap + $4b
 	ld [hli], a
 	ld [hli], a
+	ld l, $4f
 	ld [hli], a
+	ld a, PAL_BG_ROOF
+	ld l, $28
+	ld [hli], a
+	ld l, $38
+	ld [hli], a
+	ld a, PAL_BG_GRAY
+	ld l, $4d
 	ld [hli], a
 	ld [hli], a
 .notCeladonRoof
