@@ -234,7 +234,7 @@ MapHSPointers:
 	dw CeruleanCaveHS ; $E4
 	dw NoHS
 	dw NoHS
-	dw NoHS ; E7 ; Route19Gate
+	dw NoHS ; E7
 	dw NoHS
 	dw SilphCo9FHS  ; $E9
 	dw SilphCo10FHS

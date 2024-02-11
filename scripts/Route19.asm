@@ -40,7 +40,6 @@ Route19GraphicSwapScript:
 
 Route19_ScriptPointers:
 	def_script_pointers
-;	dw_const Route19RefreshSprites,                 SCRIPT_ROUTE19_DEFAULT
 	dw_const CheckFightingMapTrainers,              SCRIPT_ROUTE19_DEFAULT
 	dw_const DisplayEnemyTrainerTextAndStartBattle, SCRIPT_ROUTE19_START_BATTLE
 	dw_const EndTrainerBattle,                      SCRIPT_ROUTE19_END_BATTLE
@@ -266,11 +265,3 @@ Route19Swimmer8AfterBattleText:
 Route19SignText:
 	text_far _Route19SignText
 	text_end
-
-;Route19RefreshSprites:
-;	ld a, [wYCoord]
-;	cp 2
-;	jr nz, .noSpritesRefresh
-;	farcall InitOutsideMapSprites
-;.noSpritesRefresh
-;	jp CheckFightingMapTrainers

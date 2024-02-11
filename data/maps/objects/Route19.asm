@@ -14,7 +14,6 @@ Route19_Object:
 	db $43 ; border block
 
 	def_warp_events
-	warp_event  10,  3, ROUTE_19_GATE, 3
 
 	def_bg_events
 	bg_event 11,  9, TEXT_ROUTE19_SIGN

@@ -845,7 +845,6 @@ UndergroundPathRoute6_Blocks:
 UndergroundPathRoute5_Blocks: INCBIN "maps/UndergroundPathRoute5.blk"
 
 Route2Gate_Blocks:
-Route19Gate_Blocks:
 ViridianForestSouthGate_Blocks:
 ViridianForestNorthGate_Blocks: INCBIN "maps/ViridianForestNorthGate.blk"
 
@@ -941,10 +940,6 @@ INCLUDE "data/maps/objects/ViridianForestNorthGate.asm"
 INCLUDE "data/maps/headers/Route2Gate.asm"
 INCLUDE "scripts/Route2Gate.asm"
 INCLUDE "data/maps/objects/Route2Gate.asm"
-
-INCLUDE "data/maps/headers/Route19Gate.asm"
-INCLUDE "scripts/Route19Gate.asm"
-INCLUDE "data/maps/objects/Route19Gate.asm"
 
 INCLUDE "data/maps/headers/ViridianForestSouthGate.asm"
 INCLUDE "scripts/ViridianForestSouthGate.asm"
