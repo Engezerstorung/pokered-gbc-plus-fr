@@ -115,7 +115,14 @@ ENDC
 	ld de, RedPicFront
 	lb bc, BANK(RedPicFront), $00
 	call IntroDisplayPicCenteredOrUpperRight
+	
+; Prevent FadeInFromWhite to use SetPal_Overworld during the intro who result in messed up colors in Red Picture before Shrink
+	ld hl, wFontLoaded
+	set 0, [hl]
 	call GBFadeInFromWhite
+	ld hl, wFontLoaded
+	res 0, [hl]
+
 	ld a, [wd72d]
 	and a
 	jr nz, .next

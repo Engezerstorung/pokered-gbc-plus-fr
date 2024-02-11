@@ -60,16 +60,21 @@ GBFadeDecCommon:
 	ldh [rBGP], a
 	ld c, 8
 	call DelayFrames
-
+	
+; Load Normal map_palette_sets before the last frame of the fade as to not have the final colors suddently "pop-in"
 	ld a, b
 	cp 2
-	jr nz, .nosetpaloverworld
 	push hl
 	push bc
+	jr nz, .nosetpaloverworld
+; Prevent the map_palette_sets loading during Oak Speech
+	ld hl, wFontLoaded
+	bit 0, [hl]
+	jr nz, .nosetpaloverworld
 	farcall SetPal_Overworld
+.nosetpaloverworld
 	pop bc
 	pop hl
-.nosetpaloverworld
 
 	dec b
 	jr nz, GBFadeDecCommon
