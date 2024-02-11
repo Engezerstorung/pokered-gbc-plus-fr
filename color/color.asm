@@ -1,6 +1,14 @@
 ; Extending bank 1C, same bank as engine/palettes.asm (for "SetPal" functions)
 SECTION "bank1C_extension", ROMX
 
+; Called by ReloadMapSpriteTilePatterns and CloseTextDisplay to reload special case graphics after text, menus and battles
+LoadExtraGraphics::
+	ld a, [wCurMap]
+	cp CELADON_MANSION_ROOF
+	jr nz, .notCeladonMansionRoof
+	farcall CeladonMansionRoofGraphicSwapScript
+	ret
+
 ; Change palettes to alternate palettes for special case FadeOutToWhite ; see home/fade.Asm
 ; d = palette to load (see constants/palette_constants.), e = palette index
 SetPal_FadeWhite::
@@ -13,6 +21,8 @@ SetPal_FadeWhite::
 	jr z, .fadecavern
 	cp REDS_HOUSE_1
 	jr z, .faderedshouse1
+	cp MANSION
+	jr z, .fademansion
 	cp GYM
 	jr z, .fadegym
 	jr .contfadecheck
@@ -38,6 +48,11 @@ SetPal_FadeWhite::
 	lb de, INDOOR_BROWN, 4
 	farcall LoadMapPalette
 	jr .fadecont
+.fademansion
+	lb de, INDOOR_BLUE, 3
+	lb de, INDOOR_BLUE, 6
+	farcall LoadMapPalette
+	jr .fadenointeriorbg
 .fadegym
 	lb de, INDOOR_FLOWER_FADE, 4
 	farcall LoadMapPalette

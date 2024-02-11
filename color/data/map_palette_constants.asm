@@ -55,12 +55,11 @@ DEF const_value = 0
 	const GATE_STAIRS       ; 35
 	const REDS_STAIRS       ; 36
 	const CEMETERY_STAIRS   ; 37
+	const MANSION_WALLS     ; 38
+	const MANSION_WALLS_ROOF; 39
+	const MANSION_SKY       ; 3A
 
 	; These are unused
-	const MAP_PALETTE_34    ; 34
-	const MAP_PALETTE_35    ; 35
-	const MAP_PALETTE_36    ; 36
-	const MAP_PALETTE_37    ; 37
 	const MAP_PALETTE_3B    ; 3B
 	const MAP_PALETTE_3C    ; 3C
 	const MAP_PALETTE_3D    ; 3D

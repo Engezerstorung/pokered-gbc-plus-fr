@@ -140,6 +140,37 @@ LoadTilesetPalette:
 	ld [hli], a
 	ld [hli], a
 .notCeladon1st
+	; Check for Mansion Roof
+	ld a, b
+	cp CELADON_MANSION_ROOF
+	jr nz, .notCeladonMansionRoof
+
+	push de
+	push bc
+	lb de, INDOOR_LIGHT_BLUE, 2
+	farcall LoadMapPalette
+	lb de, MANSION_SKY, 3
+	farcall LoadMapPalette
+	lb de, INDOOR_GRAY, 5
+	farcall LoadMapPalette
+	lb de, MANSION_WALLS_ROOF, 6
+	farcall LoadMapPalette
+
+	ld hl, W2_TilesetPaletteMap + $10
+	ld a, PAL_BG_WATER
+	ld [hli], a
+	ld [hli], a
+	ld [hli], a
+	ld [hli], a
+	ld [hli], a
+	ld [hli], a
+	ld a, PAL_BG_GREEN
+	ld [hli], a
+	ld [hli], a
+	ld [hli], a
+	pop bc
+	pop de
+.notCeladonMansionRoof
 
 	; Retrieve former wram bank
 	pop af

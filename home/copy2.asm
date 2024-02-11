@@ -63,7 +63,11 @@ CopyVideoData::
 ; Wait for the next VBlank, then copy c 2bpp
 ; tiles from b:de to hl, 8 tiles at a time.
 ; This takes c/8 frames.
-
+; de = graphic to use
+; hl = where in vram
+; b = wich bank the graphic is in
+; c = home many tile to copy from the source graphic
+; see exemple : LoadPartyPokeballGfx
 	ldh a, [hAutoBGTransferEnabled]
 	push af
 	xor a ; disable auto-transfer while copying
