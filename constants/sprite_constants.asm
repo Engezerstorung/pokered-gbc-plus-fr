@@ -80,7 +80,10 @@
 	const SPRITE_SPEAROW				 ; $4c
 	const SPRITE_VOLTORB				 ; $4d
 	const SPRITE_WIGGLYTUFF				 ; $4e
+	const SPRITE_OMANYTE
+	const SPRITE_BLANK
 	; Pokémons with odd pixel number
+	const SPRITE_KABUTO
 	const SPRITE_DODUO					 ; $4f
 	const SPRITE_FEAROW					 ; $50
 	const SPRITE_JIGGLYPUFF				 ; $51

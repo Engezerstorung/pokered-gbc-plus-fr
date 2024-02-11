@@ -26,7 +26,6 @@ DEF FIRST_SPLIT_SET EQU const_value
 	const SPLITSET_ROUTE_15 ; f5
 	const SPLITSET_ROUTE_16 ; f6
 	const SPLITSET_ROUTE_18 ; f7
-	const SPLITSET_ROUTE_19 ; f8
 	const SPLITSET_ROUTE_20 ; f8
 	const SPLITSET_ROUTE_5  ; f9
 	const SPLITSET_ROUTE_6  ; fa

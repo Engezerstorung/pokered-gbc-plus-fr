@@ -209,6 +209,7 @@ SpecialOAMlist:
 ;	db SPRITE_UNUSED_GAMBLER_ASLEEP_1,	$10, 0, 0
 ;	db SPRITE_UNUSED_GAMBLER_ASLEEP_2,	$10, 0, 0
 ;	db SPRITE_GAMBLER_ASLEEP,			$10, 0, 0
+
 ; Regular sprites with -1 X offset on down/up flipped walking frame 
 	db SPRITE_DODUO,					$20, 0, 0
 	db SPRITE_FEAROW,					$20, 0, 0
@@ -221,10 +222,11 @@ SpecialOAMlist:
 	db SPRITE_PIKACHU,					$20, 0, 0
 	db SPRITE_SEEL2,					$20, 0, 0
 	db SPRITE_ZAPDOS,					$20, 0, 0
-; Still, +4 Y offset
+	db SPRITE_KABUTO,					$20, 0, 0
+; Still, Y offset
 	db SPRITE_BOULDER,					$10, 3, 0
 	db SPRITE_SNORLAX,					$10, 4, 0
-; Still, +4 YX offset
+; Still, YX offset
 	db SPRITE_BENCH_GUY,				$10, 4, 4
 ; Bill's Machines
 	db SPRITE_BILLS_MACHINE,			$30, -12, -24

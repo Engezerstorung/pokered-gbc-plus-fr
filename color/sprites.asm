@@ -88,6 +88,7 @@ ColorOverworldSprite::
 	ld e, a
 	ld d, wSpriteStateData1 >> 8
 	ld a, [de] ; Load A with picture ID
+	ld [wPictureID], a
 	dec a
 
 	ld de, SpritePaletteAssignments
@@ -107,6 +108,26 @@ ColorOverworldSprite::
 	cp BILLS_HOUSE
 	ld a, SPR_PAL_BROWN
 	jr z, .norandomColor
+
+	ld a, [wCurMap]
+	cp FUCHSIA_CITY
+	jr nz, .notFuchsiaCity
+	ld a, [wPictureID]
+	cp SPRITE_SWIMMER
+	jr z, .isLapras
+	cp SPRITE_COOLTRAINER_M
+	jr nz, .notFuchsiaCity
+	CheckEvent EVENT_GOT_DOME_FOSSIL
+	jr z, .nextfossil
+.isLapras	
+	ld a, SPR_PAL_BLUE
+	jr .norandomColor
+.nextfossil
+	CheckEventReuseA EVENT_GOT_HELIX_FOSSIL
+	jr z, .notFuchsiaCity
+	ld a, SPR_PAL_BROWN
+	jr .norandomColor
+.notFuchsiaCity
 
 	; This is a (somewhat) random but consistent color
 	ldh a, [hSpriteOffset2]
@@ -526,8 +547,14 @@ SpritePaletteAssignments: ; Characters on the overworld
 	db SPR_PAL_ORANGE
 	; SPRITE_WIGGLYTUFF
 	db SPR_PAL_PURPLE
-
+	; SPRITE_OMANYTE
+	db SPR_PAL_RANDOM
+	; SPRITE_BLANK
+	db SPR_PAL_BLUE
+	
 ; Pokémons with odd pixel number	
+	; SPRITE_KABUTO
+	db SPR_PAL_BROWN
 	; SPRITE_DODUO
 	db SPR_PAL_BROWN
 	; SPRITE_FEAROW

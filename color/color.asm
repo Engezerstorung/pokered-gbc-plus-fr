@@ -7,6 +7,10 @@ LoadExtraGraphics::
 	cp CELADON_MANSION_ROOF
 	jr nz, .notCeladonMansionRoof
 	farcall CeladonMansionRoofGraphicSwapScript
+.notCeladonMansionRoof
+	cp FUCHSIA_CITY
+	ret nz
+	farcall FuchsiaCityGraphicSwapScript
 	ret
 
 ; Change palettes to alternate palettes for special case FadeOutToWhite ; see home/fade.Asm

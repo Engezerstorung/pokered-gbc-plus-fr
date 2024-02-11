@@ -85,7 +85,10 @@ SpriteSheetPointerTable:
 	overworld_sprite SpearowSprite, 12
 	overworld_sprite VoltorbSprite, 12
 	overworld_sprite WigglytuffSprite, 12
+	overworld_sprite OmanyteSprite, 12
+	overworld_sprite BlankSprite, 12
 ; Pokémons with odd pixel number
+	overworld_sprite KabutoSprite, 12
 	overworld_sprite DoduoSprite, 12
 	overworld_sprite FearowSprite, 12
 	overworld_sprite JigglypuffSprite, 12
