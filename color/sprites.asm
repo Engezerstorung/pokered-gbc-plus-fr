@@ -527,6 +527,7 @@ SpritePaletteAssignments: ; Characters on the overworld
 	; SPRITE_WIGGLYTUFF
 	db SPR_PAL_PURPLE
 
+; Pokémons with odd pixel number	
 	; SPRITE_DODUO
 	db SPR_PAL_BROWN
 	; SPRITE_FEAROW
@@ -550,10 +551,10 @@ SpritePaletteAssignments: ; Characters on the overworld
 	; SPRITE_ZAPDOS
 	db SPR_PAL_BROWN
 
-	; 0x3d: SPRITE_BALL
+	; 0x3d: SPRITE_POKE_BALL
 	db SPR_PAL_ORANGE
 
-	; 0x3e: SPRITE_OMANYTE
+	; 0x3e: SPRITE_HELIX_FOSSIL
 	db SPR_PAL_ROCK
 
 	; 0x3f: SPRITE_BOULDER

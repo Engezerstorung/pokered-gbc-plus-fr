@@ -15,7 +15,7 @@ MapPaletteSets:
 	db INDOOR_RED
 	db INDOOR_GREEN
 	db INDOOR_BLUE
-	db INDOOR_YELLOW
+	db REDS_STAIRS
 	db INDOOR_BROWN
 	db INDOOR_LIGHT_BLUE
 	db CRYS_TEXTBOX
@@ -105,7 +105,7 @@ MapPaletteSets:
 	db INDOOR_RED
 	db INDOOR_GREEN
 	db INDOOR_BLUE
-	db INDOOR_YELLOW
+	db GATE_STAIRS
 	db INDOOR_BROWN
 	db INDOOR_LIGHT_BLUE
 	db ALT_TEXTBOX_PAL ; Uses variant of textbox palette for skeleton pokemon
@@ -123,12 +123,12 @@ MapPaletteSets:
 ; GATE
 	db INDOOR_GRAY
 	db INDOOR_RED
-	db INDOOR_GREEN_BG
+	db INDOOR_GREEN
 	db INDOOR_BLUE
-	db INDOOR_YELLOW
-	db INDOOR_BROWN_BG
+	db GATE_STAIRS
+	db INDOOR_BROWN
 	db INDOOR_LIGHT_BLUE
-	db ALT_TEXTBOX_PAL ; Uses variant of textbox palette for Articuno binoculars
+	db ARTICUNO_TEXTBOX ; Uses variant of textbox palette for Articuno binoculars
 
 ; SHIP
 	db INDOOR_GRAY
@@ -155,7 +155,7 @@ MapPaletteSets:
 	db INDOOR_RED
 	db INDOOR_GREEN
 	db INDOOR_BLUE
-	db INDOOR_YELLOW
+	db CEMETERY_STAIRS
 	db INDOOR_BROWN
 	db INDOOR_PURPLE
 	db CRYS_TEXTBOX

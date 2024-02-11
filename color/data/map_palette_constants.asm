@@ -29,37 +29,38 @@ DEF const_value = 0
 	const CAVE_YELLOW       ; 1B
 	const CAVE_BROWN        ; 1C
 	const CAVE_LIGHT_BLUE   ; 1D
-	const SHIP_STOVES     ; 1E
+	const SHIP_STOVES       ; 1E
 	const SHIP_MUGS			; 1F
 	const FOREST_TREES		; 20
 	const PC_POKEBALL_PAL   ; 21: doubles as textbox palette for some areas
 	const ALT_TEXTBOX_PAL   ; 22: used in areas with skeleton pokemon
-	const INDOOR_PURPLE     ; 23
-	const OUTDOOR_FLOWER    ; 24
-	const INDOOR_FLOWER    	; 25
-	const INDOOR_GREEN_BG   ; 26
-	const INDOOR_BROWN_BG   ; 27
-	const LOBBY_1STFLOOR  	; 28
-	const LOBBY_CHAIR		; 29
-	const UNDERGROUND_STAIRS; 2A
-	const SHIP_TRASHCANS	; 2B
-	const SHIP_DOCK1		; 2C
-	const SHIP_DOCK2		; 2D
-	const SHIP_DOCK_CAR		; 2E
-	const OUTDOOR_FLOWER_FADE  ; 2F
-	const OUTDOOR_GRASS_FADE; 30
-	const OUTDOOR_BLUE_FADE ; 31
-	const INDOOR_FLOWER_FADE;32
-	const CAVE_ENTRANCE   ; 33
+	const ARTICUNO_TEXTBOX  ; 23: used for articuno picture in gate
+	const INDOOR_PURPLE     ; 24
+	const OUTDOOR_FLOWER    ; 25
+	const INDOOR_FLOWER    	; 26
+	const INDOOR_GREEN_BG   ; 27
+	const INDOOR_BROWN_BG   ; 28
+	const LOBBY_1STFLOOR  	; 29
+	const LOBBY_CHAIR		; 2A
+	const UNDERGROUND_STAIRS; 2B
+	const SHIP_TRASHCANS	; 2C
+	const SHIP_DOCK1		; 2D
+	const SHIP_DOCK2		; 2E
+	const SHIP_DOCK_CAR		; 2F
+	const OUTDOOR_FLOWER_FADE  ; 30
+	const OUTDOOR_GRASS_FADE; 31
+	const OUTDOOR_BLUE_FADE ; 32
+	const INDOOR_FLOWER_FADE; 33
+	const CAVE_ENTRANCE     ; 34
+	const GATE_STAIRS       ; 35
+	const REDS_STAIRS       ; 36
+	const CEMETERY_STAIRS   ; 37
 
 	; These are unused
 	const MAP_PALETTE_34    ; 34
 	const MAP_PALETTE_35    ; 35
 	const MAP_PALETTE_36    ; 36
 	const MAP_PALETTE_37    ; 37
-	const MAP_PALETTE_38    ; 38
-	const MAP_PALETTE_39    ; 39
-	const MAP_PALETTE_3A    ; 3A
 	const MAP_PALETTE_3B    ; 3B
 	const MAP_PALETTE_3C    ; 3C
 	const MAP_PALETTE_3D    ; 3D

@@ -3,7 +3,7 @@ SECTION "bank1C_extension", ROMX
 
 ; Change palettes to alternate palettes for special case FadeOutToWhite ; see home/fade.Asm
 ; d = palette to load (see constants/palette_constants.), e = palette index
-SetPal_FadeOutToWhite::
+SetPal_FadeWhite::
 	ld a, [wCurMapTileset]
 	cp SHIP_PORT
 	jr z, .fadeshipport
@@ -11,52 +11,49 @@ SetPal_FadeOutToWhite::
 	jr z, .fadeunderground
 	cp CAVERN
 	jr z, .fadecavern
+	cp REDS_HOUSE_1
+	jr z, .faderedshouse1
 	cp GYM
 	jr z, .fadegym
 	jr .contfadecheck
 .fadeshipport
-	ld a, $02
-	ldh [rSVBK], a
-
-	ld d, INDOOR_BLUE
-	ld e, 6
+	lb de, INDOOR_BLUE, 6
 	push de
 	farcall LoadMapPalette
 	pop de
 	ld e, 2
 	farcall LoadMapPalette
-	ld d, INDOOR_BROWN
-	ld e, 5
+	lb de, INDOOR_BROWN, 5
 	farcall LoadMapPalette
-	jp .fadecont
+	jr .fadecont
 .fadeunderground
-	ld a, $02
-	ldh [rSVBK], a
-
-	ld d, INDOOR_RED
-	ld e, 1
+	lb de, INDOOR_RED, 1
 	farcall LoadMapPalette
 	jr .fadecont
 .fadecavern
-	ld a, $02
-	ldh [rSVBK], a
-
-	ld d, CAVE_BROWN
-	ld e, 4
+	lb de, CAVE_BROWN, 4
+	farcall LoadMapPalette
+	jr .fadecont
+.faderedshouse1
+	lb de, INDOOR_BROWN, 4
 	farcall LoadMapPalette
 	jr .fadecont
 .fadegym
-	ld a, $02
-	ldh [rSVBK], a
-
-	ld d, INDOOR_FLOWER_FADE
-	ld e, 4
+	lb de, INDOOR_FLOWER_FADE, 4
 	farcall LoadMapPalette
 	jr .fadenointeriorbg
+.fadecont
+	ld a, 1
+	ld [W2_ForceBGPUpdate], a
+	ret
 .contfadecheck
-	cp FOREST_GATE
-	jr z, .fadenointeriorbg
+	cp CEMETERY
+	jr z, .fadegate
 	cp GATE
+	jr z, .fadegate
+	cp MUSEUM
+	jr z, .fadegate
+	cp FOREST_GATE
 	jr z, .fadenointeriorbg
 	cp MANSION
 	jr z, .fadenointeriorbg
@@ -69,21 +66,18 @@ SetPal_FadeOutToWhite::
 	cp OVERWORLD
 	jr z, .fadeoverworld
 	jr .fadecont
-.fadenointeriorbg
-	ld d, INDOOR_BROWN
-	ld e, 5
-	push de
+.fadegate
+	lb de, INDOOR_GRAY, 4
 	farcall LoadMapPalette
-	pop de
-	ld d, INDOOR_GREEN
-	ld e, 2
+	jr .fadecont
+.fadenointeriorbg
+	lb de, INDOOR_BROWN, 5
+	farcall LoadMapPalette
+	lb de, INDOOR_GREEN, 2
 	farcall LoadMapPalette
 	jr .fadecont
 .fadeoverworld
-	ld a, $02
-	ldh [rSVBK], a
-	ld e, 3
-	ld d, OUTDOOR_BLUE_FADE
+	lb de, OUTDOOR_BLUE_FADE, 3
 	push de
 	farcall LoadMapPalette
 	pop de
@@ -95,13 +89,7 @@ SetPal_FadeOutToWhite::
 	dec e
 	dec d ; OUTDOOR_FLOWER_FADE
 	farcall LoadMapPalette
-.fadecont
-	ld a, 1
-	ld [W2_ForceBGPUpdate], a
-
-	xor a
-	ldh [rSVBK], a
-	ret
+	jr .fadecont
 
 ; Set all palettes to black at beginning of battle
 SetPal_BattleBlack::
@@ -708,7 +696,7 @@ SetPal_Generic:
 	ret
 
 ; Loading a map. Called when first loading, and when transitioning between maps.
-SetPal_Overworld:
+SetPal_Overworld::
 	ld a, 2
 	ldh [rSVBK], a
 	dec a ; ld a, 1

@@ -85,6 +85,7 @@ SpriteSheetPointerTable:
 	overworld_sprite SpearowSprite, 12
 	overworld_sprite VoltorbSprite, 12
 	overworld_sprite WigglytuffSprite, 12
+; Pokémons with odd pixel number
 	overworld_sprite DoduoSprite, 12
 	overworld_sprite FearowSprite, 12
 	overworld_sprite JigglypuffSprite, 12
@@ -96,6 +97,7 @@ SpriteSheetPointerTable:
 	overworld_sprite PikachuSprite, 12
 	overworld_sprite Seel2Sprite, 12
 	overworld_sprite ZapdosSprite, 12
+; Still sprites
 	overworld_sprite PokeBallSprite, 4          ; SPRITE_POKE_BALL
 	overworld_sprite FossilSprite, 4            ; SPRITE_FOSSIL
 	overworld_sprite BoulderSprite, 4           ; SPRITE_BOULDER

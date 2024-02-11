@@ -377,7 +377,7 @@ wSlotMachineSevenAndBarModeChance:: db
 	ds 2
 ; ROM back to return to when the player is done with the slot machine
 wSlotMachineSavedROMBank:: db
-wPictureID:: db	
+wPictureID:: db
 	ds 165
 wLuckySlotHiddenObjectIndex:: db
 

@@ -24,7 +24,7 @@ GBFadeInFromBlack::
 	jr GBFadeIncCommon
 
 GBFadeOutToWhite::
-	farcall SetPal_FadeOutToWhite
+	farcall SetPal_FadeWhite
 	ld hl, FadePal6
 	ld b, 3
 
@@ -47,6 +47,7 @@ GBFadeOutToBlack::
 	jr GBFadeDecCommon
 
 GBFadeInFromWhite::
+	farcall SetPal_FadeWhite
 	ld hl, FadePal7 + 2
 	ld b, 3
 
@@ -59,8 +60,20 @@ GBFadeDecCommon:
 	ldh [rBGP], a
 	ld c, 8
 	call DelayFrames
+
+	ld a, b
+	cp 2
+	jr nz, .nosetpaloverworld
+	push hl
+	push bc
+	farcall SetPal_Overworld
+	pop bc
+	pop hl
+.nosetpaloverworld
+
 	dec b
 	jr nz, GBFadeDecCommon
+
 	ret
 
 ; HAX: some of these palettes have been modified, mostly to make BGP/OBP0/OBP1 consistent
