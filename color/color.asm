@@ -25,17 +25,17 @@ SetPal_FadeWhite::
 	jr z, .fadecavern
 	cp REDS_HOUSE_1
 	jr z, .faderedshouse1
+	cp LOBBY
+	jr z, .fadelobby
 	cp MANSION
 	jr z, .fademansion
 	cp GYM
 	jr z, .fadegym
-	jr .contfadecheck
+	jp .contfadecheck
 .fadeshipport
 	lb de, INDOOR_BLUE, 6
-	push de
 	farcall LoadMapPalette
-	pop de
-	ld e, 2
+	lb de, INDOOR_BLUE, 2
 	farcall LoadMapPalette
 	lb de, INDOOR_BROWN, 5
 	farcall LoadMapPalette
@@ -52,8 +52,17 @@ SetPal_FadeWhite::
 	lb de, INDOOR_BROWN, 4
 	farcall LoadMapPalette
 	jr .fadecont
+.fadelobby
+	lb de, INDOOR_LIGHT_BLUE, 2
+	farcall LoadMapPalette
+	lb de, INDOOR_LIGHT_BLUE, 4
+	farcall LoadMapPalette
+	lb de, INDOOR_BLUE, 6
+	farcall LoadMapPalette
+	jr .fadecont
 .fademansion
 	lb de, INDOOR_BLUE, 3
+	farcall LoadMapPalette
 	lb de, INDOOR_BLUE, 6
 	farcall LoadMapPalette
 	jr .fadenointeriorbg
@@ -97,16 +106,10 @@ SetPal_FadeWhite::
 	jr .fadecont
 .fadeoverworld
 	lb de, OUTDOOR_BLUE_FADE, 3
-	push de
 	farcall LoadMapPalette
-	pop de
-	dec e
-	dec d ; OUTDOOR_GRASS_FADE
-	push de
+	lb de, OUTDOOR_GRASS_FADE, 2
 	farcall LoadMapPalette
-	pop de
-	dec e
-	dec d ; OUTDOOR_FLOWER_FADE
+	lb de, OUTDOOR_FLOWER_FADE, 1
 	farcall LoadMapPalette
 	jr .fadecont
 
