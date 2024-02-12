@@ -3,11 +3,11 @@ FuchsiaCity_Script:
 	bit 5, [hl]
 	res 5, [hl]
 	call nz, FuchsiaCityGraphicSwapScript
-	ld a, [wXCoord]
-	and a
-	jr nz, .dontsetbit5
-	set 5, [hl]
-.dontsetbit5
+	ld hl, wCurrentMapScriptFlags
+	bit 4, [hl]
+	res 4, [hl]
+	call nz, FuchsiaCityGraphicSwapScript
+
 	jp EnableAutoTextBoxDrawing
 
 FuchsiaCityGraphicSwapScript::
@@ -209,15 +209,19 @@ FuchsiaCityFossilSignText:
 	jr nz, .got_helix_fossil
 	ld hl, .UndeterminedText
 	call PrintText
+	SetEvent EVENT_GOT_DOME_FOSSIL ; debug fossil test
 	jr .done
 .got_dome_fossil
 	ld hl, .OmanyteText
 	call PrintText
+	ResetEvent EVENT_GOT_DOME_FOSSIL ; debug fossil test
+	SetEvent EVENT_GOT_HELIX_FOSSIL ; debug fossil test
 	ld a, OMANYTE
 	jr .display
 .got_helix_fossil
 	ld hl, .KabutoText
 	call PrintText
+	ResetEvent EVENT_GOT_HELIX_FOSSIL ; debug fossil test
 	ld a, KABUTO
 .display
 	call DisplayPokedex

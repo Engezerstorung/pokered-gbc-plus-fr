@@ -3,11 +3,11 @@ Route19_Script:
 	bit 5, [hl]
 	res 5, [hl]
 	call nz, Route19GraphicSwapScript
-	ld a, [wYCoord]
-	and a
-	jr nz, .dontsetbit5
-	set 5, [hl]
-.dontsetbit5
+	ld hl, wCurrentMapScriptFlags
+	bit 4, [hl]
+	res 4, [hl]
+	call nz, Route19GraphicSwapScript
+	
 	call EnableAutoTextBoxDrawing
 	ld hl, Route19TrainerHeaders
 	ld de, Route19_ScriptPointers

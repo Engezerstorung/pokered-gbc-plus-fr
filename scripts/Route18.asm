@@ -3,6 +3,11 @@ Route18_Script:
 	bit 5, [hl]
 	res 5, [hl]
 	call nz, Route18GraphicSwapScript
+	ld hl, wCurrentMapScriptFlags
+	bit 4, [hl]
+	res 4, [hl]
+	call nz, Route18GraphicSwapScript
+	
 	call EnableAutoTextBoxDrawing
 	ld hl, Route18TrainerHeaders
 	ld de, Route18_ScriptPointers
