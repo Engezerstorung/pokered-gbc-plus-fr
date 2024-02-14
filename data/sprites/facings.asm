@@ -248,7 +248,7 @@ SpecialOAMlist:
 	db SPRITE_JIGGLYPUFF,               $20, 0, 0
 	db SPRITE_MACHOKE,                  $20, 0, 0
 	db SPRITE_MACHOP,                   $20, 0, 0
-	db SPRITE_NIDORANF,                 $20, 0, 0
+	db SPRITE_NIDORANF,                 $20, 0, 1
 	db SPRITE_NIDORANM,                 $20, 0, 0
 	db SPRITE_PIDGEY,                   $20, 0, 0
 	db SPRITE_PIKACHU,                  $20, 0, 0

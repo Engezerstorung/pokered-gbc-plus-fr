@@ -151,11 +151,20 @@ LoadTilesetPalette:
 	farcall LoadMapPalette
 	lb de, MANSION_SKY, 3
 	farcall LoadMapPalette
-	lb de, INDOOR_GRAY, 5
-	farcall LoadMapPalette
 	lb de, MANSION_WALLS_ROOF, 6
 	farcall LoadMapPalette
 
+	ld hl, W2_TilesetPaletteMap + $1
+	ld a, PAL_BG_GRAY
+	ld [hli], a
+	ld l, $26
+	ld [hli], a
+	ld [hli], a
+	ld [hli], a
+	ld l, $36
+	ld [hli], a
+	ld [hli], a
+	ld [hli], a
 	ld hl, W2_TilesetPaletteMap + $10
 	ld a, PAL_BG_WATER
 	ld [hli], a

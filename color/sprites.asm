@@ -125,11 +125,10 @@ ColorOverworldSprite::
 	jr .norandomColor
 .nextfossil
 	CheckEventReuseA EVENT_GOT_HELIX_FOSSIL
-	jr z, .notFuchsiaCity
 	ld a, SPR_PAL_BROWN
-	jr .norandomColor
+	jr nz, .norandomColor
 .notFuchsiaCity
-	
+
 	; This is a (somewhat) random but consistent color
 	ldh a, [hSpriteOffset2]
 	swap a
