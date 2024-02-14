@@ -511,6 +511,25 @@ SpritePaletteAssignments: ; Characters on the overworld
 	; 0x3c: SPRITE_SEEL
 	db SPR_PAL_BLUE
 
+; Start of custom sprites
+	; SPRITE_BLANK
+	db SPR_PAL_BLUE
+; Gym Leaders
+	; SPRITE_BROCK
+	db SPR_PAL_BROWN
+	; SPRITE_MISTY
+	db SPR_PAL_ORANGE
+	; SPRITE_SURGE
+	db SPR_PAL_BROWN
+	; SPRITE_ERIKA
+	db SPR_PAL_GREEN
+	; SPRITE_KOGA2
+	db SPR_PAL_BLUE
+	; SPRITE_SABRINA
+	db SPR_PAL_PURPLE
+	; SPRITE_BLAINE
+	db SPR_PAL_BROWN
+; Map Pokémons	
 	; SPRITE_ARTICUNO
 	db SPR_PAL_BLUE
 	; SPRITE_CHANSEY
@@ -531,6 +550,8 @@ SpritePaletteAssignments: ; Characters on the overworld
 	db SPR_PAL_ORANGE
 	; SPRITE_NIDORINO
 	db SPR_PAL_PURPLE
+	; SPRITE_OMANYTE
+	db SPR_PAL_RANDOM
 	; SPRITE_PIDGEOT
 	db SPR_PAL_BROWN
 	; SPRITE_POLYWRATH
@@ -547,20 +568,15 @@ SpritePaletteAssignments: ; Characters on the overworld
 	db SPR_PAL_ORANGE
 	; SPRITE_WIGGLYTUFF
 	db SPR_PAL_PURPLE
-	; SPRITE_OMANYTE
-	db SPR_PAL_RANDOM
-	; SPRITE_BLANK
-	db SPR_PAL_BLUE
-	
-; Pokémons with odd pixel number	
-	; SPRITE_KABUTO
-	db SPR_PAL_BROWN
+; Pokémons with odd pixel number
 	; SPRITE_DODUO
 	db SPR_PAL_BROWN
 	; SPRITE_FEAROW
 	db SPR_PAL_BROWN
 	; SPRITE_JIGGLYPUFF
 	db SPR_PAL_PURPLE
+	; SPRITE_KABUTO
+	db SPR_PAL_BROWN
 	; SPRITE_MACHOKE
 	db SPR_PAL_BROWN
 	; SPRITE_MACHOP
@@ -614,9 +630,9 @@ SpritePaletteAssignments: ; Characters on the overworld
 	; 0x48: SPRITE_LYING_OLD_MAN
 	db SPR_PAL_BROWN
 
+; Start of custom still sprites
 	; 0x49: SPRITE_BENCH_GUY
 	db SPR_PAL_RANDOM
-
 	; SPRITE_BILLS_MACHINE
 	db SPR_PAL_ROCK
 

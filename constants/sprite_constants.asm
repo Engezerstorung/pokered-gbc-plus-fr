@@ -62,6 +62,17 @@
 	const SPRITE_BRUNO                   ; $3a
 	const SPRITE_LORELEI                 ; $3b
 	const SPRITE_SEEL                    ; $3c
+; Start of custom sprites
+	const SPRITE_BLANK
+; Gym Leaders
+	const SPRITE_BROCK
+	const SPRITE_MISTY
+	const SPRITE_SURGE
+	const SPRITE_ERIKA
+	const SPRITE_KOGA2
+	const SPRITE_SABRINA
+	const SPRITE_BLAINE
+; Map Pokémons
 	const SPRITE_ARTICUNO				 ; $3d
 	const SPRITE_CHANSEY				 ; $3e
 	const SPRITE_CLEFAIRY				 ; $3f
@@ -72,6 +83,7 @@
 	const SPRITE_MEWTWO					 ; $44
 	const SPRITE_MOLTRES				 ; $45
 	const SPRITE_NIDORINO				 ; $46
+	const SPRITE_OMANYTE
 	const SPRITE_PIDGEOT				 ; $47
 	const SPRITE_POLYWRATH				 ; $48
 	const SPRITE_PSYDUCK				 ; $49
@@ -80,13 +92,11 @@
 	const SPRITE_SPEAROW				 ; $4c
 	const SPRITE_VOLTORB				 ; $4d
 	const SPRITE_WIGGLYTUFF				 ; $4e
-	const SPRITE_OMANYTE
-	const SPRITE_BLANK
-	; Pokémons with odd pixel number
-	const SPRITE_KABUTO
+; Map Pokémons with odd pixel number
 	const SPRITE_DODUO					 ; $4f
 	const SPRITE_FEAROW					 ; $50
 	const SPRITE_JIGGLYPUFF				 ; $51
+	const SPRITE_KABUTO
 	const SPRITE_MACHOKE				 ; $52
 	const SPRITE_MACHOP					 ; $53
 	const SPRITE_NIDORANF				 ; $54
@@ -109,6 +119,7 @@
 	const SPRITE_UNUSED_GAMBLER_ASLEEP_1 ; $46
 	const SPRITE_UNUSED_GAMBLER_ASLEEP_2 ; $47
 	const SPRITE_GAMBLER_ASLEEP          ; $48
+; Start of custom still sprites
 	const SPRITE_BENCH_GUY		     	 ; $49
 	const SPRITE_BILLS_MACHINE
 DEF NUM_SPRITES EQU const_value - 1

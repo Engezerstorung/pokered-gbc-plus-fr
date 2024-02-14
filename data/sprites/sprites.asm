@@ -67,6 +67,17 @@ SpriteSheetPointerTable:
 	overworld_sprite BrunoSprite, 12            ; SPRITE_BRUNO
 	overworld_sprite LoreleiSprite, 12          ; SPRITE_LORELEI
 	overworld_sprite SeelSprite, 12             ; SPRITE_SEEL
+; Start of custom sprites
+	overworld_sprite BlankSprite, 12
+; Gym Leaders
+	overworld_sprite BrockSprite, 12
+	overworld_sprite MistySprite, 12
+	overworld_sprite SurgeSprite, 12
+	overworld_sprite ErikaSprite, 12
+	overworld_sprite Koga2Sprite, 12
+	overworld_sprite SabrinaSprite, 12
+	overworld_sprite BlaineSprite, 12
+; Map Pokémons
 	overworld_sprite ArticunoSprite, 12
 	overworld_sprite ChanseySprite, 12
 	overworld_sprite ClefairySprite, 12
@@ -77,6 +88,7 @@ SpriteSheetPointerTable:
 	overworld_sprite MewtwoSprite, 12
 	overworld_sprite MoltresSprite, 12
 	overworld_sprite NidorinoSprite, 12
+	overworld_sprite OmanyteSprite, 12
 	overworld_sprite PidgeotSprite, 12
 	overworld_sprite PolywrathSprite, 12
 	overworld_sprite PsyduckSprite, 12
@@ -85,13 +97,11 @@ SpriteSheetPointerTable:
 	overworld_sprite SpearowSprite, 12
 	overworld_sprite VoltorbSprite, 12
 	overworld_sprite WigglytuffSprite, 12
-	overworld_sprite OmanyteSprite, 12
-	overworld_sprite BlankSprite, 12
 ; Pokémons with odd pixel number
-	overworld_sprite KabutoSprite, 12
 	overworld_sprite DoduoSprite, 12
 	overworld_sprite FearowSprite, 12
 	overworld_sprite JigglypuffSprite, 12
+	overworld_sprite KabutoSprite, 12
 	overworld_sprite MachokeSprite, 12
 	overworld_sprite MachopSprite, 12
 	overworld_sprite NidoranFSprite, 12
@@ -113,6 +123,7 @@ SpriteSheetPointerTable:
 	overworld_sprite GamblerAsleepSprite, 4     ; SPRITE_UNUSED_GAMBLER_ASLEEP_1
 	overworld_sprite GamblerAsleepSprite, 4     ; SPRITE_UNUSED_GAMBLER_ASLEEP_2
 	overworld_sprite GamblerAsleepSprite, 4     ; SPRITE_GAMBLER_ASLEEP
+; Start of custom still sprites
 	overworld_sprite BenchGuySprite, 4		    ; SPRITE_BENCH_GUY
 	overworld_sprite BillsMachine, 4
 	assert_table_length NUM_SPRITES
