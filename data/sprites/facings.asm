@@ -242,6 +242,7 @@ SpecialOAMlist:
 ;	db SPRITE_UNUSED_GAMBLER_ASLEEP_2,	$10, 0, 0
 ;	db SPRITE_GAMBLER_ASLEEP,			$10, 0, 0
 
+	db SPRITE_DOME_FOSSIL,              $10, 0, 0
 ; Regular sprites with -1 X offset on down/up flipped walking frame 
 	db SPRITE_DODUO,                    $20, 0, 0
 	db SPRITE_FEAROW,                   $20, 0, 0

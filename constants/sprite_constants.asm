@@ -64,6 +64,7 @@
 	const SPRITE_SEEL                    ; $3c
 ; Start of custom sprites
 	const SPRITE_BLANK
+	const SPRITE_DOME_FOSSIL
 ; Gym Leaders
 	const SPRITE_BROCK
 	const SPRITE_MISTY

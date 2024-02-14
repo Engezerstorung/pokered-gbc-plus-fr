@@ -514,6 +514,8 @@ SpritePaletteAssignments: ; Characters on the overworld
 ; Start of custom sprites
 	; SPRITE_BLANK
 	db SPR_PAL_BLUE
+	; SPRITE_DOME_FOSSIL
+	db SPR_PAL_ROCK
 ; Gym Leaders
 	; SPRITE_BROCK
 	db SPR_PAL_BROWN

@@ -76,6 +76,7 @@ SeelSprite::             INCBIN "gfx/sprites/seel.2bpp"
 SECTION "NPC Sprites 3", ROMX
 
 BlankSprite::            INCBIN "gfx/sprites/blanksprite.2bpp"
+DomeFossilSprite::       INCBIN "gfx/sprites/fossil_dome.2bpp"
 
 ; Gym Leaders
 BrockSprite::            INCBIN "gfx/sprites/leaders/brock.2bpp"

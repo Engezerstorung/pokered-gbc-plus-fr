@@ -69,6 +69,7 @@ SpriteSheetPointerTable:
 	overworld_sprite SeelSprite, 12             ; SPRITE_SEEL
 ; Start of custom sprites
 	overworld_sprite BlankSprite, 12
+	overworld_sprite DomeFossilSprite, 12
 ; Gym Leaders
 	overworld_sprite BrockSprite, 12
 	overworld_sprite MistySprite, 12
