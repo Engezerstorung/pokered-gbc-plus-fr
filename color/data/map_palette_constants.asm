@@ -58,9 +58,9 @@ DEF const_value = 0
 	const MANSION_WALLS     ; 38
 	const MANSION_WALLS_ROOF; 39
 	const MANSION_SKY       ; 3A
+	const SPRITE_PAL_PSYDUCK; 3B
 
 	; These are unused
-	const MAP_PALETTE_3B    ; 3B
 	const MAP_PALETTE_3C    ; 3C
 	const MAP_PALETTE_3D    ; 3D
 	const MAP_PALETTE_3E    ; 3E

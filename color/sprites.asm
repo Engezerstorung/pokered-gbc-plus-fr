@@ -109,6 +109,7 @@ ColorOverworldSprite::
 	ld a, SPR_PAL_BROWN
 	jr z, .norandomColor
 
+	; set Lapras and Fossil pokémon color in Fuschia
 	ld a, [wCurMap]
 	cp FUCHSIA_CITY
 	jr nz, .notFuchsiaCity
@@ -119,7 +120,7 @@ ColorOverworldSprite::
 	jr nz, .notFuchsiaCity
 	CheckEvent EVENT_GOT_DOME_FOSSIL
 	jr z, .nextfossil
-.isLapras	
+.isLapras
 	ld a, SPR_PAL_BLUE
 	jr .norandomColor
 .nextfossil
@@ -128,7 +129,20 @@ ColorOverworldSprite::
 	ld a, SPR_PAL_BROWN
 	jr .norandomColor
 .notFuchsiaCity
+	; set Psyduck palette in Mr Fuji House
+	ld a, [wCurMap]
+	cp MR_FUJIS_HOUSE
+	jr nz, .notMrFujiHouse
+	push hl
+	push bc
+	lb de, SPRITE_PAL_PSYDUCK, 7
+	farcall LoadMapPalette_Sprite
+	pop bc
+	pop hl
+	ld a, 1
+	ld [W2_ForceOBPUpdate], a
 
+.notMrFujiHouse
 	; This is a (somewhat) random but consistent color
 	ldh a, [hSpriteOffset2]
 	swap a
@@ -557,7 +571,7 @@ SpritePaletteAssignments: ; Characters on the overworld
 	; SPRITE_POLYWRATH
 	db SPR_PAL_BLUE
 	; SPRITE_PSYDUCK
-	db SPR_PAL_BROWN
+	db SPR_PAL_ROCK
 	; SPRITE_SLOWBRO
 	db SPR_PAL_PURPLE
 	; SPRITE_SLOWPOKE

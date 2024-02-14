@@ -54,22 +54,22 @@ SpriteFacingAndAnimationTable:
 	dw .StandingLeft, .FlippedOAM ; facing right, walk animation frame 2
 	dw .WalkingLeft,  .FlippedOAM ; facing right, walk animation frame 3
 ; $30 This table is used for Bill's machines
-	dw .StandingDown, .MachineRFlip  ; facing down, walk animation frame 0
-	dw .StandingDown, .MachineRFlip  ; facing down, walk animation frame 1
-	dw .StandingDown, .MachineRFlip  ; facing down, walk animation frame 2
-	dw .StandingDown, .MachineRFlip  ; facing down, walk animation frame 3
-	dw .StandingDown, .MachineR  	 ; facing up, walk animation frame 0
-	dw .StandingDown, .MachineR  	 ; facing up, walk animation frame 1
-	dw .StandingDown, .MachineR  	 ; facing up, walk animation frame 2
-	dw .StandingDown, .MachineR  	 ; facing up, walk animation frame 3
-	dw .StandingDown, .NormalOAM  	 ; facing left, walk animation frame 0
-	dw .StandingDown, .NormalOAM 	 ; facing left, walk animation frame 1
-	dw .StandingDown, .NormalOAM 	 ; facing left, walk animation frame 2
-	dw .StandingDown, .NormalOAM 	 ; facing left, walk animation frame 3
-	dw .StandingDown, .FlippedOAM 	 ; facing right, walk animation frame 0
-	dw .StandingDown, .FlippedOAM 	 ; facing right, walk animation frame 1
-	dw .StandingDown, .FlippedOAM 	 ; facing right, walk animation frame 2
-	dw .StandingDown, .FlippedOAM 	 ; facing right, walk animation frame 3
+	dw .Machine, .MachineLOAM  ; facing down, walk animation frame 0
+	dw .Machine, .MachineLOAM  ; facing down, walk animation frame 1
+	dw .Machine, .MachineLOAM  ; facing down, walk animation frame 2
+	dw .Machine, .MachineLOAM  ; facing down, walk animation frame 3
+	dw .Machine, .MachineROAM  ; facing up, walk animation frame 0
+	dw .Machine, .MachineROAM  ; facing up, walk animation frame 1
+	dw .Machine, .MachineROAM  ; facing up, walk animation frame 2
+	dw .Machine, .MachineROAM  ; facing up, walk animation frame 3
+	dw .Machine, .MachineLOAM  ; facing left, walk animation frame 0
+	dw .Machine, .MachineLOAM  ; facing left, walk animation frame 1
+	dw .Machine, .MachineLOAM  ; facing left, walk animation frame 2
+	dw .Machine, .MachineLOAM  ; facing left, walk animation frame 3
+	dw .Machine, .MachineROAM  ; facing right, walk animation frame 0
+	dw .Machine, .MachineROAM  ; facing right, walk animation frame 1
+	dw .Machine, .MachineROAM  ; facing right, walk animation frame 2
+	dw .Machine, .MachineROAM  ; facing right, walk animation frame 3
 ; insert custom table starting here, each table must contain 4 facings with 4 animation frames each (16 total)
 
 ; four tile ids compose an overworld sprite
@@ -79,6 +79,8 @@ SpriteFacingAndAnimationTable:
 .WalkingUp:    db $84, $85, $86, $87
 .StandingLeft: db $08, $09, $0a, $0b
 .WalkingLeft:  db $88, $89, $8a, $8b
+
+.Machine:      db $02, $03, $03, $02
 
 .NormalOAM:
 	; y, x, attributes
@@ -101,19 +103,19 @@ SpriteFacingAndAnimationTable:
 	db 8, 7, OAM_HFLIP | OAMFLAG_CANBEMASKED ; bottom left
 	db 8, -1, OAM_HFLIP | OAMFLAG_CANBEMASKED | OAMFLAG_ENDOFDATA ; bottom right
 
-.MachineR:
+.MachineLOAM:
 	; y, x, attributes
-	db 0, 48, $00 ; top left
-	db 0, 56, $00 ; top right
-	db 8, 48, OAMFLAG_CANBEMASKED ; bottom left
-	db 8, 56, OAMFLAG_CANBEMASKED | OAMFLAG_ENDOFDATA ; bottom right
+	db 0, -24, $00
+	db 0, -16, $00
+	db 0, -8, OAM_HFLIP
+	db 0, 0, OAM_HFLIP | OAMFLAG_ENDOFDATA 
 
-.MachineRFlip:
+.MachineROAM:
 	; y, x, attributes
-	db 0, 56, OAM_HFLIP ; top left
-	db 0, 48, OAM_HFLIP ; top right
-	db 8, 56, OAM_HFLIP | OAMFLAG_CANBEMASKED ; bottom left
-	db 8, 48, OAM_HFLIP | OAMFLAG_CANBEMASKED | OAMFLAG_ENDOFDATA ; bottom right
+	db 0, 8, $00
+	db 0, 16, $00
+	db 0, 24, OAM_HFLIP
+	db 0, 32, OAM_HFLIP | OAMFLAG_ENDOFDATA 
 
 SpecialOAMlist:
 	; see constants/sprite_constants.asm
@@ -211,24 +213,24 @@ SpecialOAMlist:
 ;	db SPRITE_GAMBLER_ASLEEP,			$10, 0, 0
 
 ; Regular sprites with -1 X offset on down/up flipped walking frame 
-	db SPRITE_DODUO,					$20, 0, 0
-	db SPRITE_FEAROW,					$20, 0, 0
-	db SPRITE_JIGGLYPUFF,				$20, 0, 0
-	db SPRITE_MACHOKE,					$20, 0, 0
-	db SPRITE_MACHOP,					$20, 0, 0
-	db SPRITE_NIDORANF,					$20, 0, 0
-	db SPRITE_NIDORANM,					$20, 0, 0
-	db SPRITE_PIDGEY,					$20, 0, 0
-	db SPRITE_PIKACHU,					$20, 0, 0
-	db SPRITE_SEEL2,					$20, 0, 0
-	db SPRITE_ZAPDOS,					$20, 0, 0
-	db SPRITE_KABUTO,					$20, 0, 0
+	db SPRITE_DODUO,                    $20, 0, 0
+	db SPRITE_FEAROW,                   $20, 0, 0
+	db SPRITE_JIGGLYPUFF,               $20, 0, 0
+	db SPRITE_MACHOKE,                  $20, 0, 0
+	db SPRITE_MACHOP,                   $20, 0, 0
+	db SPRITE_NIDORANF,                 $20, 0, 0
+	db SPRITE_NIDORANM,                 $20, 0, 0
+	db SPRITE_PIDGEY,                   $20, 0, 0
+	db SPRITE_PIKACHU,                  $20, 0, 0
+	db SPRITE_SEEL2,                    $20, 0, 0
+	db SPRITE_ZAPDOS,                   $20, 0, 0
+	db SPRITE_KABUTO,                   $20, 0, 0
 ; Still, Y offset
-	db SPRITE_BOULDER,					$10, 3, 0
-	db SPRITE_SNORLAX,					$10, 4, 0
+	db SPRITE_BOULDER,                  $10, 3, 0
+	db SPRITE_SNORLAX,                  $10, 4, 0
 ; Still, YX offset
-	db SPRITE_BENCH_GUY,				$10, 4, 4
+	db SPRITE_BENCH_GUY,                $10, 4, 4
 ; Bill's Machines
-	db SPRITE_BILLS_MACHINE,			$30, -12, -24
+	db SPRITE_BILLS_MACHINE,            $30, -4, 0
 	db -1
 	
