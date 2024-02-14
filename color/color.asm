@@ -2,11 +2,19 @@
 SECTION "bank1C_extension", ROMX
 
 ; Called by ReloadMapSpriteTilePatterns and CloseTextDisplay to reload special case graphics after text, menus and battles
+LoadExtraSpritePALs::
+	ld a, [wCurMap]
+	cp MR_FUJIS_HOUSE
+	ret nz
+	farcall MrFujisHouseSpritePALSwapScript
+	ret
+
 LoadExtraGraphics::
 	ld a, [wCurMap]
 	cp CELADON_MANSION_ROOF
 	jr nz, .notCeladonMansionRoof
 	farcall CeladonMansionRoofGraphicSwapScript
+	ret
 .notCeladonMansionRoof
 	cp FUCHSIA_CITY
 	ret nz

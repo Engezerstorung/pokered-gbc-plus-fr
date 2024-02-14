@@ -1,5 +1,14 @@
 MrFujisHouse_Script:
+	ld hl, wCurrentMapScriptFlags
+	bit 5, [hl]
+	res 5, [hl]
+	call nz, MrFujisHouseSpritePALSwapScript
 	call EnableAutoTextBoxDrawing
+	ret
+
+MrFujisHouseSpritePALSwapScript::
+	lb de, SPRITE_PAL_PSYDUCK, 7
+	farcall LoadMapPalette_Sprite
 	ret
 
 MrFujisHouse_TextPointers:

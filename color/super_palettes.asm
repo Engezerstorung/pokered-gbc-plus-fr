@@ -19,7 +19,7 @@ LoadMapPalette:
 	ld de, W2_BgPaletteData
 	jr startPaletteTransfer
 
-LoadMapPalette_Sprite:
+LoadMapPalette_Sprite::
 	ldh a, [rSVBK]
 	ld b, a
 	ld a, 2

@@ -129,20 +129,7 @@ ColorOverworldSprite::
 	ld a, SPR_PAL_BROWN
 	jr .norandomColor
 .notFuchsiaCity
-	; set Psyduck palette in Mr Fuji House
-	ld a, [wCurMap]
-	cp MR_FUJIS_HOUSE
-	jr nz, .notMrFujiHouse
-	push hl
-	push bc
-	lb de, SPRITE_PAL_PSYDUCK, 7
-	farcall LoadMapPalette_Sprite
-	pop bc
-	pop hl
-	ld a, 1
-	ld [W2_ForceOBPUpdate], a
-
-.notMrFujiHouse
+	
 	; This is a (somewhat) random but consistent color
 	ldh a, [hSpriteOffset2]
 	swap a
