@@ -105,6 +105,8 @@
 	const SPRITE_PIKACHU				 ; $57
 	const SPRITE_SEEL2					 ; $58
 	const SPRITE_ZAPDOS					 ; $59
+; One face but use 9 tiles
+	const SPRITE_SNORLAXBIG
 
 	DEF FIRST_STILL_SPRITE EQU const_value
 	const SPRITE_POKE_BALL               ; $3d

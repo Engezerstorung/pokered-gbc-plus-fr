@@ -110,6 +110,8 @@ SpriteSheetPointerTable:
 	overworld_sprite PikachuSprite, 12
 	overworld_sprite Seel2Sprite, 12
 	overworld_sprite ZapdosSprite, 12
+; One face but use 9 tiles
+	overworld_sprite SnorlaxBigSprite, 12
 ; Still sprites
 	overworld_sprite PokeBallSprite, 4          ; SPRITE_POKE_BALL
 	overworld_sprite FossilSprite, 4            ; SPRITE_FOSSIL

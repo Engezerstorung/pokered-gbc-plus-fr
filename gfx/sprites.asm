@@ -120,6 +120,9 @@ PikachuSprite::          INCBIN "gfx/sprites/mons/pikachu.2bpp"
 Seel2Sprite::            INCBIN "gfx/sprites/mons/seel.2bpp"
 ZapdosSprite::           INCBIN "gfx/sprites/mons/zapdos.2bpp"
 
+; One face but use 9 tiles
+SnorlaxBigSprite::       INCBIN "gfx/sprites/mons/snorlax3x3.2bpp"
+
 ; Still sprites
 BenchGuySprite::         INCBIN "gfx/sprites/bench_guy.2bpp"
 BillsMachine::           INCBIN "gfx/sprites/billsmachine.2bpp"

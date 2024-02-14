@@ -607,6 +607,9 @@ SpritePaletteAssignments: ; Characters on the overworld
 	db SPR_PAL_ORANGE
 	; SPRITE_ZAPDOS
 	db SPR_PAL_BROWN
+; One face but use 9 tiles
+	; SPRITE_SNORLAXBIG
+	db SPR_PAL_BLUE
 
 	; 0x3d: SPRITE_POKE_BALL
 	db SPR_PAL_ORANGE

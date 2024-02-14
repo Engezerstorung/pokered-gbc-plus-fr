@@ -70,6 +70,23 @@ SpriteFacingAndAnimationTable:
 	dw .Machine, .MachineROAM  ; facing right, walk animation frame 1
 	dw .Machine, .MachineROAM  ; facing right, walk animation frame 2
 	dw .Machine, .MachineROAM  ; facing right, walk animation frame 3
+; $40 Snorlax 3x3
+	dw .Snorlax, .SnorlaxOAM  ; facing down, walk animation frame 0
+	dw .Snorlax, .SnorlaxOAM  ; facing down, walk animation frame 1
+	dw .Snorlax, .SnorlaxOAM  ; facing down, walk animation frame 2
+	dw .Snorlax, .SnorlaxOAM  ; facing down, walk animation frame 3
+	dw .Snorlax, .SnorlaxOAM  ; facing up, walk animation frame 0
+	dw .Snorlax, .SnorlaxOAM  ; facing up, walk animation frame 1
+	dw .Snorlax, .SnorlaxOAM  ; facing up, walk animation frame 2
+	dw .Snorlax, .SnorlaxOAM  ; facing up, walk animation frame 3
+	dw .Snorlax, .SnorlaxOAM  ; facing left, walk animation frame 0
+	dw .Snorlax, .SnorlaxOAM  ; facing left, walk animation frame 1
+	dw .Snorlax, .SnorlaxOAM  ; facing left, walk animation frame 2
+	dw .Snorlax, .SnorlaxOAM  ; facing left, walk animation frame 3
+	dw .Snorlax, .SnorlaxOAM  ; facing right, walk animation frame 0
+	dw .Snorlax, .SnorlaxOAM  ; facing right, walk animation frame 1
+	dw .Snorlax, .SnorlaxOAM  ; facing right, walk animation frame 2
+	dw .Snorlax, .SnorlaxOAM  ; facing right, walk animation frame 3
 ; insert custom table starting here, each table must contain 4 facings with 4 animation frames each (16 total)
 
 ; four tile ids compose an overworld sprite
@@ -81,6 +98,7 @@ SpriteFacingAndAnimationTable:
 .WalkingLeft:  db $88, $89, $8a, $8b
 
 .Machine:      db $02, $03, $03, $02
+.Snorlax:      db $00, $01, $00, $02, $03, $02, $04, $05, $04
 
 .NormalOAM:
 	; y, x, attributes
@@ -116,6 +134,18 @@ SpriteFacingAndAnimationTable:
 	db 0, 16, $00
 	db 0, 24, OAM_HFLIP
 	db 0, 32, OAM_HFLIP | OAMFLAG_ENDOFDATA 
+
+.SnorlaxOAM:
+	; y, x, attributes
+	db -3, -4, $00 ; top left
+	db -3, 4, $00 ; top center
+	db -3, 12, OAM_HFLIP ; top middle
+	db 5, -4, $00 ; middle left
+	db 5, 4, $00 ; middle center
+	db 5, 12, OAM_HFLIP ; middle right
+	db 13, -4, $00 ; bottom left
+	db 13, 4, $00 ; bottom center
+	db 13, 12, OAM_HFLIP | OAMFLAG_ENDOFDATA ; bottom right
 
 SpecialOAMlist:
 	; see constants/sprite_constants.asm
@@ -232,5 +262,7 @@ SpecialOAMlist:
 	db SPRITE_BENCH_GUY,                $10, 4, 4
 ; Bill's Machines
 	db SPRITE_BILLS_MACHINE,            $30, -4, 0
+; 3x3 tiles Snorlax
+	db SPRITE_SNORLAXBIG,               $40, 0, 0
 	db -1
 	
