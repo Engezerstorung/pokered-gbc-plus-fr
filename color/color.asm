@@ -2,13 +2,6 @@
 SECTION "bank1C_extension", ROMX
 
 ; Called by ReloadMapSpriteTilePatterns and CloseTextDisplay to reload special case graphics after text, menus and battles
-LoadExtraSpritePALs::
-	ld a, [wCurMap]
-	cp MR_FUJIS_HOUSE
-	ret nz
-	farcall MrFujisHouseSpritePALSwapScript
-	ret
-
 LoadExtraGraphics::
 	ld a, [wCurMap]
 	cp CELADON_MANSION_ROOF
@@ -18,7 +11,9 @@ LoadExtraGraphics::
 .notCeladonMansionRoof
 	cp FUCHSIA_CITY
 	ret nz
+;	jr nz, .notFuchsiaCity
 	farcall FuchsiaCityGraphicSwapScript
+;.notFuchsiaCity	
 	ret
 
 ; Change palettes to alternate palettes for special case FadeOutToWhite ; see home/fade.Asm

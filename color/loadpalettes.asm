@@ -180,6 +180,12 @@ LoadTilesetPalette:
 	pop bc
 	pop de
 .notCeladonMansionRoof
+	cp MR_FUJIS_HOUSE
+	jr nz, .notmrfujishouse
+
+	lb de, SPRITE_PAL_PSYDUCK, 7
+	farcall LoadMapPalette_Sprite
+.notmrfujishouse
 
 	; Retrieve former wram bank
 	pop af
@@ -221,12 +227,12 @@ LoadTownPalette::
 	ld a, [wYCoord]
 	cp 21
 	jr nc, .notSpecialRoute
-	ld c, SAFFRON_CITY
-	jr .notSpecialRoute
+	jr .useSaffronRoof
 .Route8
 	ld a, [wXCoord]
 	cp 34
 	jr nc, .notSpecialRoute
+.useSaffronRoof
 	ld c, SAFFRON_CITY
 .notSpecialRoute
 	ld a, c
