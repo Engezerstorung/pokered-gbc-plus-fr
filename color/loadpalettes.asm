@@ -105,87 +105,75 @@ LoadTilesetPalette:
 	ldh [rSVBK], a
 	ld a, [wCurMap]
 	ld b, a
+	ld a, [wCurMapTileset]
+	ld c, a
 	ld a, 2
 	ldh [rSVBK], a
 
-	; Check for celadon mart roof (make the "outside" blue)
-	ld a, b
-	cp CELADON_MART_ROOF
-	jr nz, .notCeladonRoof
-	ld a, PAL_BG_WATER
-	ld hl, W2_TilesetPaletteMap + $4b
-	ld [hli], a
-	ld [hli], a
-	ld l, $4f
-	ld [hli], a
-	ld a, PAL_BG_ROOF
-	ld l, $28
-	ld [hli], a
-	ld l, $38
-	ld [hli], a
-	ld a, PAL_BG_GRAY
-	ld l, $4d
-	ld [hli], a
-	ld [hli], a
-.notCeladonRoof
-	; Check for celadon 1st floor (change bench color from blue to yellow)
-	ld a, b
-	cp CELADON_MART_1F
-	jr nz, .notCeladon1st
-	ld hl, W2_TilesetPaletteMap + $07
-	ld a, PAL_BG_YELLOW
-	ld [hli], a
-	ld [hli], a
-	ld l, $17
-	ld [hli], a
-	ld [hli], a
-.notCeladon1st
-	; Check for Mansion Roof
-	ld a, b
-	cp CELADON_MANSION_ROOF
-	jr nz, .notCeladonMansionRoof
-
-	push de
+; Check Map to replace BG and Sprites palettes in special cases
+; Like on Celadon Mansion Roof, for Gym Leaders or Psyduck
 	push bc
-	lb de, INDOOR_LIGHT_BLUE, 2
+	ld a, b
+	ld hl, MapPalSwapList ; loading list for identification and properties values
+	ld de, 4 ; define the number of properties in list
+	call IsInArray ; check if Sprite is in list ; modify a/b/de
+	jr nc, .noMapPaletteSwap ; jump if not in list
+.loopMapPalSwap
+	ld a, [hli]
+	push af
+	ld a, [hli]
+	ld d, a
+	ld a, [hli]
+	ld e, a
+	ld a, [hli]
+	push hl
+	cp 2 ; Check if BG or Sprite palette (BG=1, Sprite=2)
+	jr z, .swapSpritePal
 	farcall LoadMapPalette
-	lb de, MANSION_SKY, 3
-	farcall LoadMapPalette
-	lb de, MANSION_WALLS_ROOF, 6
-	farcall LoadMapPalette
-
-	ld hl, W2_TilesetPaletteMap + $1
-	ld a, PAL_BG_GRAY
-	ld [hli], a
-	ld l, $26
-	ld [hli], a
-	ld [hli], a
-	ld [hli], a
-	ld l, $36
-	ld [hli], a
-	ld [hli], a
-	ld [hli], a
-	ld hl, W2_TilesetPaletteMap + $10
-	ld a, PAL_BG_WATER
-	ld [hli], a
-	ld [hli], a
-	ld [hli], a
-	ld [hli], a
-	ld [hli], a
-	ld [hli], a
-	ld a, PAL_BG_GREEN
-	ld [hli], a
-	ld [hli], a
-	ld [hli], a
-	pop bc
-	pop de
-.notCeladonMansionRoof
-	cp MR_FUJIS_HOUSE
-	jr nz, .notmrfujishouse
-
-	lb de, SPRITE_PAL_PSYDUCK, 7
+	jr .doneSwapPal
+.swapSpritePal	
 	farcall LoadMapPalette_Sprite
-.notmrfujishouse
+.doneSwapPal	
+	pop hl
+	pop af
+	cp [hl]
+	jr z, .loopMapPalSwap
+
+.noMapPaletteSwap
+	pop bc
+
+; Check Map to replace Tiles used palettes in special cases
+; Like on Celadon Mansion Roof and on Celadon Mart 1F and Roof
+	push bc
+	ld a, b
+	ld hl, TilePalSwapList ; loading list for identification and properties values
+	ld de, 4 ; define the number of properties in list
+	call IsInArray ; check if Sprite is in list ; modify a/b/de
+	jr nc, .noTilePaletteSwap ; jump if not in list
+.loopTilepalSwapList
+	ld a, [hli]
+	push af
+	ld a, [hli]
+	ld b, a
+	ld de, W2_TilesetPaletteMap
+	ld a, [hli]
+	ld e, a
+	ld a, [hli]
+	ld c, a
+.loopTilePalSwap
+	ld a, b
+	ld [de], a
+	inc de
+	ld a, c
+	dec a
+	ld c, a
+	jr nz, .loopTilePalSwap
+	pop af
+	cp [hl]
+	jr z, .loopTilepalSwapList
+
+.noTilePaletteSwap
+	pop bc
 
 	; Retrieve former wram bank
 	pop af
@@ -268,3 +256,36 @@ LoadTownPalette::
 	pop af
 	ldh [rSVBK], a ; Restore wram bank
 	ret
+
+MapPalSwapList:
+	; Map, new palette , palette slot to replace (0-7), palette type(1=BG 2=Sprite)
+	db CELADON_MANSION_ROOF, INDOOR_LIGHT_BLUE, 2, 1
+	db CELADON_MANSION_ROOF, MANSION_SKY, 3, 1
+	db CELADON_MANSION_ROOF, MANSION_WALLS_ROOF, 6, 1
+	db PEWTER_GYM, SPRITE_PAL_BROCK, 4, 2
+	db CERULEAN_GYM, SPRITE_PAL_MISTY, 4, 2
+	db VERMILION_GYM, SPRITE_PAL_SURGE, 4, 2
+	db CELADON_GYM, SPRITE_PAL_ERIKA, 4, 2
+	db FUCHSIA_GYM, SPRITE_PAL_KOGA, 4, 2
+	db SAFFRON_GYM, SPRITE_PAL_SABRINA, 4, 2
+	db CINNABAR_GYM, SPRITE_PAL_BLAINE, 4, 2
+	db VIRIDIAN_GYM, SPRITE_PAL_GIOVANNI, 4, 2
+	db MR_FUJIS_HOUSE, SPRITE_PAL_PSYDUCK, 7, 2
+	db BILLS_HOUSE, SPRITE_PAL_BILLSMACHINE, 7, 2
+	db -1	
+
+TilePalSwapList:
+	; Map, new palette, first tile to replace, number of tiles to replace
+	db CELADON_MANSION_ROOF, PAL_BG_GRAY, $1, 1
+	db CELADON_MANSION_ROOF, PAL_BG_GRAY, $26, 3
+	db CELADON_MANSION_ROOF, PAL_BG_GRAY, $36, 3
+	db CELADON_MANSION_ROOF, PAL_BG_WATER, $10, 6
+	db CELADON_MANSION_ROOF, PAL_BG_GREEN, $16, 3
+	db CELADON_MART_ROOF, PAL_BG_WATER, $4b, 2
+	db CELADON_MART_ROOF, PAL_BG_WATER, $4f, 1
+	db CELADON_MART_ROOF, PAL_BG_ROOF, $28, 1
+	db CELADON_MART_ROOF, PAL_BG_ROOF, $38, 1
+	db CELADON_MART_ROOF, PAL_BG_GRAY, $4d, 2
+	db CELADON_MART_1F, PAL_BG_YELLOW, $07, 2
+	db CELADON_MART_1F, PAL_BG_YELLOW, $17, 2
+	db -1

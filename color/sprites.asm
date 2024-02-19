@@ -38,9 +38,6 @@ LoadOverworldSpritePalettes:
 	ld hl, SpritePalettesPokecenter
 	cp POKECENTER
 	jr z, .gotPaletteList
-	ld hl, SpritePalettesInterior
-	cp INTERIOR
-	jr z, .gotPaletteList
 	; If not, load the normal Object Pals
 	ld hl, SpritePalettes
 .gotPaletteList
@@ -398,7 +395,7 @@ SpritePaletteAssignments: ; Characters on the overworld
 	db SPR_PAL_GREEN
 
 	; 0x17: SPRITE_GIOVANNI
-	db SPR_PAL_BLUE
+	db SPR_PAL_PURPLE
 
 	; 0x18: SPRITE_ROCKET
 	db SPR_PAL_BROWN
@@ -518,19 +515,19 @@ SpritePaletteAssignments: ; Characters on the overworld
 	db SPR_PAL_ROCK
 ; Gym Leaders
 	; SPRITE_BROCK
-	db SPR_PAL_BROWN
+	db SPR_PAL_PURPLE
 	; SPRITE_MISTY
-	db SPR_PAL_ORANGE
+	db SPR_PAL_PURPLE
 	; SPRITE_SURGE
-	db SPR_PAL_BROWN
+	db SPR_PAL_PURPLE
 	; SPRITE_ERIKA
-	db SPR_PAL_GREEN
+	db SPR_PAL_PURPLE
 	; SPRITE_KOGA2
-	db SPR_PAL_BLUE
+	db SPR_PAL_PURPLE
 	; SPRITE_SABRINA
 	db SPR_PAL_PURPLE
 	; SPRITE_BLAINE
-	db SPR_PAL_BROWN
+	db SPR_PAL_PURPLE
 ; Map Pokémons	
 	; SPRITE_ARTICUNO
 	db SPR_PAL_BLUE
