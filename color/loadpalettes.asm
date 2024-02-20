@@ -127,8 +127,8 @@ LoadTilesetPalette:
 	ld e, a
 	ld a, [hli]
 	push hl
-	cp 2 ; Check if BG or Sprite palette (BG=1, Sprite=2)
-	jr z, .swapSpritePal
+	and a ; Check if BG or Sprite palette (BG=0, Sprite=1)
+	jr nz, .swapSpritePal
 	farcall LoadMapPalette
 	jr .doneSwapPal
 .swapSpritePal	
@@ -150,25 +150,21 @@ LoadTilesetPalette:
 	ld de, 4 ; define the number of properties in list
 	call IsInArray ; check if Sprite is in list ; modify a/b/de
 	jr nc, .noTilePaletteSwap ; jump if not in list
+	ld de, W2_TilesetPaletteMap
 .loopTilepalSwapList
 	ld a, [hli]
-	push af
-	ld a, [hli]
 	ld b, a
-	ld de, W2_TilesetPaletteMap
 	ld a, [hli]
 	ld e, a
 	ld a, [hli]
 	ld c, a
+	ld a, [hli]
 .loopTilePalSwap
-	ld a, b
 	ld [de], a
 	inc de
-	ld a, c
-	dec a
-	ld c, a
+	dec c
 	jr nz, .loopTilePalSwap
-	pop af
+	ld a, b
 	cp [hl]
 	jr z, .loopTilepalSwapList
 
@@ -258,34 +254,35 @@ LoadTownPalette::
 	ret
 
 MapPalSwapList:
-	; Map, new palette , palette slot to replace (0-7), palette type(1=BG 2=Sprite)
-	db CELADON_MANSION_ROOF, INDOOR_LIGHT_BLUE, 2, 1
-	db CELADON_MANSION_ROOF, MANSION_SKY, 3, 1
-	db CELADON_MANSION_ROOF, MANSION_WALLS_ROOF, 6, 1
-	db PEWTER_GYM, SPRITE_PAL_BROCK, 4, 2
-	db CERULEAN_GYM, SPRITE_PAL_MISTY, 4, 2
-	db VERMILION_GYM, SPRITE_PAL_SURGE, 4, 2
-	db CELADON_GYM, SPRITE_PAL_ERIKA, 4, 2
-	db FUCHSIA_GYM, SPRITE_PAL_KOGA, 4, 2
-	db SAFFRON_GYM, SPRITE_PAL_SABRINA, 4, 2
-	db CINNABAR_GYM, SPRITE_PAL_BLAINE, 4, 2
-	db VIRIDIAN_GYM, SPRITE_PAL_GIOVANNI, 4, 2
-	db MR_FUJIS_HOUSE, SPRITE_PAL_PSYDUCK, 7, 2
-	db BILLS_HOUSE, SPRITE_PAL_BILLSMACHINE, 7, 2
+	; Map, new palette , palette slot to replace (0-7), palette type(0=BG 1=Sprite)
+	db CELADON_MANSION_ROOF, INDOOR_LIGHT_BLUE, 2, 0
+	db CELADON_MANSION_ROOF, MANSION_SKY, 3, 0
+	db CELADON_MANSION_ROOF, MANSION_WALLS_ROOF, 6, 0
+	db PEWTER_GYM, SPRITE_PAL_BROCK, 4, 1
+	db PEWTER_GYM, SPRITE_PAL_PSYDUCK, 2, 1
+	db CERULEAN_GYM, SPRITE_PAL_MISTY, 4, 1
+	db VERMILION_GYM, SPRITE_PAL_SURGE, 4, 1
+	db CELADON_GYM, SPRITE_PAL_ERIKA, 4, 1
+	db FUCHSIA_GYM, SPRITE_PAL_KOGA, 4, 1
+	db SAFFRON_GYM, SPRITE_PAL_SABRINA, 4, 1
+	db CINNABAR_GYM, SPRITE_PAL_BLAINE, 4, 1
+	db VIRIDIAN_GYM, SPRITE_PAL_GIOVANNI, 4, 1
+	db MR_FUJIS_HOUSE, SPRITE_PAL_PSYDUCK, 7, 1
+	db BILLS_HOUSE, SPRITE_PAL_BILLSMACHINE, 7, 1
 	db -1	
 
 TilePalSwapList:
-	; Map, new palette, first tile to replace, number of tiles to replace
-	db CELADON_MANSION_ROOF, PAL_BG_GRAY, $1, 1
-	db CELADON_MANSION_ROOF, PAL_BG_GRAY, $26, 3
-	db CELADON_MANSION_ROOF, PAL_BG_GRAY, $36, 3
-	db CELADON_MANSION_ROOF, PAL_BG_WATER, $10, 6
-	db CELADON_MANSION_ROOF, PAL_BG_GREEN, $16, 3
-	db CELADON_MART_ROOF, PAL_BG_WATER, $4b, 2
-	db CELADON_MART_ROOF, PAL_BG_WATER, $4f, 1
-	db CELADON_MART_ROOF, PAL_BG_ROOF, $28, 1
-	db CELADON_MART_ROOF, PAL_BG_ROOF, $38, 1
-	db CELADON_MART_ROOF, PAL_BG_GRAY, $4d, 2
-	db CELADON_MART_1F, PAL_BG_YELLOW, $07, 2
-	db CELADON_MART_1F, PAL_BG_YELLOW, $17, 2
+	; Map, first tile to replace, number of tiles to replace, palette slot to use
+	db CELADON_MANSION_ROOF, $1, 1, PAL_BG_GRAY
+	db CELADON_MANSION_ROOF, $26, 3, PAL_BG_GRAY
+	db CELADON_MANSION_ROOF, $36, 3, PAL_BG_GRAY
+	db CELADON_MANSION_ROOF, $10, 6, PAL_BG_WATER
+	db CELADON_MANSION_ROOF, $16, 3, PAL_BG_GREEN
+	db CELADON_MART_ROOF, $4b, 2, PAL_BG_WATER
+	db CELADON_MART_ROOF, $4f, 1, PAL_BG_WATER
+	db CELADON_MART_ROOF, $28, 1, PAL_BG_ROOF
+	db CELADON_MART_ROOF, $38, 1, PAL_BG_ROOF
+	db CELADON_MART_ROOF, $4d, 2, PAL_BG_GRAY
+	db CELADON_MART_1F, $07, 2, PAL_BG_YELLOW
+	db CELADON_MART_1F, $17, 2, PAL_BG_YELLOW
 	db -1
