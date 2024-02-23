@@ -209,19 +209,19 @@ FuchsiaCityFossilSignText:
 	jr nz, .got_helix_fossil
 	ld hl, .UndeterminedText
 	call PrintText
-	SetEvent EVENT_GOT_DOME_FOSSIL ; debug fossil test
+;	SetEvent EVENT_GOT_DOME_FOSSIL ; debug fossil test
 	jr .done
 .got_dome_fossil
 	ld hl, .OmanyteText
 	call PrintText
-	ResetEvent EVENT_GOT_DOME_FOSSIL ; debug fossil test
-	SetEvent EVENT_GOT_HELIX_FOSSIL ; debug fossil test
+;	ResetEvent EVENT_GOT_DOME_FOSSIL ; debug fossil test
+;	SetEvent EVENT_GOT_HELIX_FOSSIL ; debug fossil test
 	ld a, OMANYTE
 	jr .display
 .got_helix_fossil
 	ld hl, .KabutoText
 	call PrintText
-	ResetEvent EVENT_GOT_HELIX_FOSSIL ; debug fossil test
+;	ResetEvent EVENT_GOT_HELIX_FOSSIL ; debug fossil test
 	ld a, KABUTO
 .display
 	call DisplayPokedex
