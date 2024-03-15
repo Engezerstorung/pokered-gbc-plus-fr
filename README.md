@@ -1,11 +1,15 @@
 This Romhack start from my port of the pokered-gbc to french to build upon.
-This is an English branch of my mod.
+
+If you want to play the game in english look at the english branch here : https://github.com/Engezerstorung/pokered-gbc-plus-fr/tree/English .
+
+If you want a base experience of the pokered-gbc romhack in french, go there : https://github.com/Engezerstorung/pokered-gbc-fr .
 
 This romhack include some changes such as :
 - Tweaks to color palettes
 - Tweaks to Tilesets to allow more colors use and general visual improvements while keeping their vanilla design
 - Tweaks to some maps and blocksets for visual improvement
 - Added uniques party pokémons icons following the tutorial on pret/pokered/wiki
+- Added uniques sprites and palettes for Gym Leaders.
 - Replaced the generics pokemons sprites on maps by unique ones from Crystal CLear
 - Also the pokécenter Bench Guy is a real little boy now
 - Those last two points come with an overhaul to the sprite_OAM engine, as follow :
