@@ -1,4 +1,5 @@
 This Romhack start from my port of the pokered-gbc to french to build upon.
+If you want to play the game in english look at the english branch.
 If you want a base experience of the pokered-gbc romhack in french, go there : https://github.com/Engezerstorung/pokered-gbc-fr
 
 This romhack include some changes such as :
