@@ -1,23 +1,23 @@
 _VermilionOldRodHouseFishingGuruDoYouLikeToFishText::
-	text "Je suis le..."
-	line "MAITRE PECHEUR!"
+	text "I'm the FISHING"
+	line "GURU!"
 
-	para "La pêche...moi..."
-	line "J'adore ça!"
+	para "I simply Looove"
+	line "fishing!"
 
-	para "Et toi, p'tite"
-	line "tête?"
+	para "Do you like to"
+	line "fish?"
 	done
 
 _VermilionOldRodHouseFishingGuruTakeThisText::
-	text "Terrib'! Toi,"
-	line "j't'aime bien!"
+	text "Grand! I like"
+	line "your style!"
 
-	para "Prends ça et..."
-	line "Pêche! Pêche!"
+	para "Take this and"
+	line "fish, young one!"
 
-	para "<PLAYER> reçoit"
-	line "@"
+	para "<PLAYER> received"
+	line "an @"
 	text_ram wStringBuffer
 	text "!@"
 	text_end
@@ -25,32 +25,31 @@ _VermilionOldRodHouseFishingGuruTakeThisText::
 _VermilionOldRodHouseFishingGuruFishingIsAWayOfLifeText::
 	text_start
 
-	para "Pêcher, c'est la"
-	line "vie! Et la vie,"
-	cont "c'est la pêche!"
+	para "Fishing is a way"
+	line "of life!"
 
-	para "Du ruisseau"
-	line "jusqu'aux océans,"
-	cont "pêche, pêche et"
-	cont "pêche encore!"
+	para "From the seas to"
+	line "rivers, go out"
+	cont "and land the big"
+	cont "one, young one!"
 	done
 
 _VermilionOldRodHouseFishingGuruThatsSoDisappointingText::
-	text "Oh...ben..."
-	line "C'est dommage..."
+	text "Oh... That's so"
+	line "disappointing..."
 	done
 
 _VermilionOldRodHouseFishingGuruHowAreTheFishBitingText::
-	text "B'jour à toi,"
+	text "Hello there,"
 	line "<PLAYER>!"
 
-	para "Ca mord?"
-	line "Hein? Hein?"
+	para "How are the fish"
+	line "biting?"
 	done
 
 _VermilionOldRodHouseFishingGuruNoRoomText::
-	text "Oh non!"
+	text "Oh no!"
 
-	para "T'as plus d'place"
-	line "pour mon cadeau!"
+	para "You have no room"
+	line "for my gift!"
 	done

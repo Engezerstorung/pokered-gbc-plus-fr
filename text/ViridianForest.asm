@@ -1,133 +1,123 @@
 _ViridianForestYoungster1Text::
-	text "Je suis ici"
-	line "avec des amis!"
+	text "I came here with"
+	line "some friends!"
 
-	para "Ils sont ici"
-	line "pour se battre!"
+	para "They're out for"
+	line "#MON fights!"
 	done
 
 _ViridianForestYoungster2BattleText::
-_ViridianForestBattleText1::
-	text "Hé! Mais tu as"
-	line "des #MON!"
-	cont "Yah! A l'attaque!"
+	text "Hey! You have"
+	line "#MON! Come on!"
+	cont "Let's battle'em!"
 	done
 
 _ViridianForestYoungster2EndBattleText::
-	text "NON!"
-	line "CHENIPAN n'y"
-	cont "arrivera pas!"
+	text "No!"
+	line "CATERPIE can't"
+	cont "cut it!"
 	prompt
 
 _ViridianForestYoungster2AfterBattleText::
-	text "Chut! Tu fais"
-	line "peur aux"
-	cont "insectes..."
+	text "Ssh! You'll scare"
+	line "the bugs away!"
 	done
 
 _ViridianForestYoungster3BattleText::
-	text "Haha! Un dresseur"
-	line "de #MON, un"
-	cont "vrai, ne se"
-	cont "débine jamais!!!"
+	text "Yo! You can't jam"
+	line "out if you're a"
+	cont "#MON trainer!"
 	done
 
 _ViridianForestYoungster3EndBattleText::
-	text "Oups!"
-	line "N'en n'a plus des"
-	cont "#MON, moi!"
+	text "Huh?"
+	line "I ran out of"
+	cont "#MON!"
 	prompt
 
 _ViridianForestYoungster3AfterBattleText::
-	text "Fichtre! J'vais"
-	line "en choper des"
-	cont "plus balèzes!"
+	text "Darn! I'm going"
+	line "to catch some"
+	cont "stronger ones!"
 	done
 
 _ViridianForestYoungster4BattleText::
-	text "Hop, hop! Minute!"
-	line "On n'est pas"
-	cont "pressé!"
+	text "Hey, wait up!"
+	line "What's the hurry?"
 	done
 
 _ViridianForestYoungster4EndBattleText::
-	text "Houlà!"
-	line "J'abandonne!"
-	cont "T'es trop fort!"
+	text "I"
+	line "give! You're good"
+	cont "at this!"
 	prompt
 
 _ViridianForestYoungster4AfterBattleText::
-	text "Tu trouveras"
-	line "peut-être des"
-	cont "objets par terre!"
+	text "Sometimes, you"
+	line "can find stuff on"
+	cont "the ground!"
 
-	para "Je cherche les"
-	line "objets que j'ai"
-	cont "laissé tomber..."
+	para "I'm looking for"
+	line "the stuff I"
+	cont "dropped!"
 	done
 
 _ViridianForestYoungster5Text::
-	text "J'suis à court de"
-	line "# BALL!"
-	cont "Je ne peux plus"
-	cont "attraper de"
-	cont "#MON!"
+	text "I ran out of #"
+	line "BALLs to catch"
+	cont "#MON with!"
 
-	para "Il t'en faut"
-	line "toujours un max!"
+	para "You should carry"
+	line "extras!"
 	done
 
 _ViridianForestTrainerTips1Text::
-	text "ASTUCE"
+	text "TRAINER TIPS"
 
-	para "Pour éviter les"
-	line "combats, ne "
-	cont "marchez pas dans"
-	cont "les hautes herbes!"
+	para "If you want to"
+	line "avoid battles,"
+	cont "stay away from"
+	cont "grassy areas!"
 	done
 
 _ViridianForestUseAntidoteSignText::
-	text "L'ANTIDOTE vendu"
-	line "dans les"
-	cont "BOUTIQUES PKMN"
-	cont "guérit du poison."
+	text "For poison, use"
+	line "ANTIDOTE! Get it"
+	cont "at #MON MARTs!"
 	done
 
 _ViridianForestTrainerTips2Text::
-	text "ASTUCE"
+	text "TRAINER TIPS"
 
-	para "Pour évaluer"
-	line "votre #DEX,"
-	cont "appelez le Prof."
-	cont "Chen via un PC!"
+	para "Contact PROF.OAK"
+	line "via PC to get"
+	cont "your #DEX"
+	cont "evaluated!"
 	done
 
 _ViridianForestTrainerTips3Text::
-	text "ASTUCE"
+	text "TRAINER TIPS"
 
-	para "Interdiction de"
-	line "capturer les"
-	cont "#MON d'un"
-	cont "autre dresseur!"
-	cont "La capture se"
-	cont "fait à l'état"
-	cont "sauvage!"
+	para "No stealing of"
+	line "#MON from"
+	cont "other trainers!"
+	cont "Catch only wild"
+	cont "#MON!"
 	done
 
 _ViridianForestTrainerTips4Text::
-	text "ASTUCE"
+	text "TRAINER TIPS"
 
-	para "Un #MON"
-	line "blessé se capture"
-	cont "plus facilement!"
+	para "Weaken #MON"
+	line "before attempting"
+	cont "capture!"
 
-	para "En pleine forme,"
-	line "il peut s'enfuir!"
+	para "When healthy,"
+	line "they may escape!"
 	done
 
 _ViridianForestLeavingSignText::
-	text "VOUS QUITTEZ LA"
-	line "FORET DE JADE."
-	cont "VOUS ALLEZ VERS"
-	cont "ARGENTA."
+	text "LEAVING"
+	line "VIRIDIAN FOREST"
+	cont "PEWTER CITY AHEAD"
 	done

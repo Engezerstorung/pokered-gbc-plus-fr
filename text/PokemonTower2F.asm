@@ -1,61 +1,57 @@
 _PokemonTower2FRivalWhatBringsYouHereText::
-	text "<RIVAL>: Hé,"
-	line "<PLAYER>!"
-	cont "Kesstu fais là?"
-	cont "Tes #MON sont"
-	cont "pas morts!"
+	text "<RIVAL>: Hey,"
+	line "<PLAYER>! What"
+	cont "brings you here?"
+	cont "Your #MON"
+	cont "don't look dead!"
 
-	para "Je peux quand"
-	line "même les mettre"
-	cont "K.O.! Minable!"
+	para "I can at least"
+	line "make them faint!"
+	cont "Let's go, pal!"
 	done
 
 _PokemonTower2FRivalDefeatedText::
-	text "Hein?"
-	line "Petit fennec!"
+	text "What?"
+	line "You stinker!"
 
-	para "Je ne t'ai pas"
-	line "pris au sérieux!"
-	cont "M-I-N-A-B-L-E!"
+	para "I took it easy on"
+	line "you too!"
 	prompt
 
 _PokemonTower2FRivalVictoryText::
-	text "<RIVAL>: Haha,"
-	line "Tes #MON sont"
-	cont "minables..."
-	cont "Comme toi!"
+	text "<RIVAL>: Well,"
+	line "look at all your"
+	cont "wimpy #MON!"
 
-	para "Tu devrais les"
-	line "entraîner un peu!"
+	para "Toughen them up a"
+	line "bit more!"
 	prompt
 
 _PokemonTower2FRivalHowsYourDexText::
-	text "Où en est ton"
-	line "#DEX? Je"
-	cont "viens de capturer"
-	cont "un OSSELAIT!"
+	text "How's your #DEX"
+	line "coming, pal?"
+	cont "I just caught a"
+	cont "CUBONE!"
 
-	para "Je n'ai pas"
-	line "encore trouvé de"
-	cont "OSSATUEUR!"
+	para "I can't find the"
+	line "grown-up MAROWAK"
+	cont "yet!"
 
-	para "Je crois qu'il"
-	line "n'en existe plus!"
-	cont "Je dois y aller,"
-	cont "minable! J'ai du"
-	cont "pain sur la"
-	cont "planche, minable!"
+	para "I doubt there are"
+	line "any left! Well, I"
+	cont "better get going!"
+	cont "I've got a lot to"
+	cont "accomplish, pal!"
 
-	para "A bientôt..."
-	line "Gros minable!"
+	para "Smell ya later!"
 	done
 
 _PokemonTower2FChannelerText::
-	text "Nous ne pouvons"
-	line "identifier les"
-	cont "SPECTRES!"
+	text "Even we could not"
+	line "identify the"
+	cont "wayward GHOSTs!"
 
-	para "Un SCOPE SYLPHE"
-	line "pourrait les"
-	cont "démasquer."
+	para "A SILPH SCOPE"
+	line "might be able to"
+	cont "unmask them."
 	done

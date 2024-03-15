@@ -1,89 +1,86 @@
 _WardensHouseWardenGibberish1Text::
-	text "GARDIEN: Hif fuff"
-	line "hefifou!"
+	text "WARDEN: Hif fuff"
+	line "hefifoo!"
 
-	para "Ha fof ha fif eu"
+	para "Ha lof ha feef ee"
 	line "hafahi ho. Heff"
-	cont "hi fwi!"
+	cont "hee fwee!"
 	done
 
 _WardensHouseWardenGibberish2Text::
-	text "Ah hahee ho hoo!"
+	text "Ah howhee ho hoo!"
 	line "Eef ee hafahi ho!"
 	done
 
 _WardensHouseWardenGibberish3Text::
-	text "Ha? Hai fou heh"
-	line "ha hoo ih haheh!"
+	text "Ha? He ohay heh"
+	line "ha hoo ee haheh!"
 	done
 
 _WardensHouseWardenGaveTheGoldTeethText::
-	text "<PLAYER> donne la"
-	line "DENT D'OR au"
-	cont "GARDIEN!@"
+	text "<PLAYER> gave the"
+	line "GOLD TEETH to the"
+	cont "WARDEN!@"
 	text_end
 
 _WardensHouseWardenTeethPoppedInHisTeethText::
 	text_start
 
-	para "Le GARDIEN peut"
-	line "remettre son"
-	cont "dentier!"
+	para "The WARDEN popped"
+	line "in his teeth!"
 	prompt
 
 _WardensHouseWardenThanksText::
-	text "GARDIEN: Merci,"
-	line "gamin! C'est un"
-	cont "peu dur de me"
-	cont "faire comprendre."
+	text "WARDEN: Thanks,"
+	line "kid! No one could"
+	cont "understand a word"
+	cont "that I said."
 
-	para "J'pouvais plus"
-	line "travailler!"
-	cont "Quelle horreur!"
-	cont "Tiens, voilà pour"
-	cont "te remercier."
+	para "I couldn't work"
+	line "that way."
+	cont "Let me give you"
+	cont "something for"
+	cont "your trouble."
 	prompt
 
 _WardensHouseWardenReceivedHM04Text::
-	text "<PLAYER> reçoit"
+	text "<PLAYER> received"
 	line "@"
 	text_ram wStringBuffer
 	text "!@"
 	text_end
 
 _WardensHouseWardenHM04ExplanationText::
-	text "GARDIEN: CS04..."
-	line "FORCE!"
+	text "WARDEN: HM04"
+	line "teaches STRENGTH!"
 
-	para "Tes #MON"
-	line "pourront déplacer"
-	cont "des rochers."
+	para "It lets #MON"
+	line "move boulders"
+	cont "when you're out-"
+	cont "side of battle."
 
-	para "Au fait, as-tu"
-	line "trouvé la CABANE"
-	cont "SECRETE dans le"
-	cont "PARC SAFARI?"
+	para "Oh yes, did you"
+	line "find SECRET HOUSE"
+	cont "in SAFARI ZONE?"
 
-	para "Trouve-la et"
-	line "gagne une CS!"
+	para "If you do, you"
+	line "win an HM!"
 
-	para "On raconte que"
-	line "cette CS est... "
-	cont "SURF!"
+	para "I hear it's the"
+	line "rare SURF HM."
 	done
 
 _WardensHouseWardenHM04NoRoomText::
-	text "Ton sac est"
-	line "plein!"
+	text "Your pack is"
+	line "stuffed full!"
 	done
 
 _WardensHouseDisplayPhotosAndFossilsText::
-	text "Photos et"
-	line "fossiles de"
-	cont "#MON."
+	text "#MON photos"
+	line "and fossils."
 	done
 
 _WardensHouseDisplayMerchandiseText::
-	text "Tout plein de"
-	line "trucs #MON!"
+	text "Old #MON"
+	line "merchandise."
 	done

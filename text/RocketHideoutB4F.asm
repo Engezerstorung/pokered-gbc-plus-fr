@@ -1,79 +1,74 @@
 _RocketHideoutB4FGiovanniImpressedYouGotHereText::
-	text "Hmm! Tu me"
-	line "surprends. T'es"
-	cont "dans le genre"
-	cont "PENIBLE!"
+	text "So! I must say, I"
+	line "am impressed you"
+	cont "got here!"
 	done
 
 _RocketHideoutB4FGiovanniWhatCannotBeText::
-	text "QUOI!"
-	line "Damnation!"
+	text "WHAT!"
+	line "This cannot be!"
 	prompt
 
 _RocketHideoutB4FGiovanniHopeWeMeetAgainText::
-	text "Tu élèves tes"
-	line "#MON trop"
-	cont "soigneusement."
+	text "I see that you"
+	line "raise #MON"
+	cont "with utmost care."
 
-	para "Un gosse comme"
-	line "toi ne peut"
-	cont "comprendre mes"
-	cont "plans!"
+	para "A child like you"
+	line "would never"
+	cont "understand what I"
+	cont "hope to achieve."
 
-	para "Tu as gagné cette"
-	line "bataille, mais"
-	cont "pas la guerre..."
+	para "I shall step"
+	line "aside this time!"
 
-	para "On se retrouvera,"
-	line "et cette fois..."
+	para "I hope we meet"
+	line "again..."
 	done
 
 _RocketHideoutB4FGiovanniBattleText::
-	text "Je te reconnais!"
-	line "Tu as ruiné nos"
-	cont "plans sur le"
-	cont "MONT SELENITE!"
+	text "I know you! You"
+	line "ruined our plans"
+	cont "at MT.MOON!"
 	done
 
 _RocketHideoutB4FGiovanniEndBattleText::
-	text "Enfer!"
-	line "Et encore enfer!"
+	text "Burned"
+	line "again!"
 	prompt
 
 _RocketHideoutB4FGiovanniAfterBattleText::
-	text "Je comprends pas,"
-	line "t'aimes pas la"
+	text "Do you have"
+	line "something against"
 	cont "TEAM ROCKET?"
 	done
 
 _RocketHideoutB4FRocket1BattleText::
-	text "Tu ne trouves pas"
-	line "que nos plans"
-	cont "maléfiques sont"
-	cont "super cool?"
+	text "How can you not"
+	line "see the beauty of"
+	cont "our evil?"
 	done
 
 _RocketHideoutB4FRocket1EndBattleText::
-	text "Ayayargh!"
+	text "Ayaya!"
 	prompt
 
 _RocketHideoutB4FRocket1AfterBattleText::
-	text "CHEF! Pardon!"
-	line "J'ai échoué..."
+	text "BOSS! I'm sorry I"
+	line "failed you!"
 	done
 
 _RocketHideoutB4FRocket2BattleText::
-	text "L'ascenseur ne"
-	line "marche pas? Il"
-	cont "faut la CLE ASC.!"
+	text "The elevator"
+	line "doesn't work? Who"
+	cont "has the LIFT KEY?"
 	done
 
 _RocketHideoutB4FRocket2EndBattleText::
-	text "Argh!"
+	text "No!"
 	prompt
 
 _RocketHideoutB4FRocket2AfterBattleText::
-	text "Mince! J'ai"
-	line "perdu la "
-	cont "CLE ASC.!"
+	text "Oh no! I dropped"
+	line "the LIFT KEY!"
 	done

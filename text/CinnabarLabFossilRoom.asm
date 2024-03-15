@@ -1,85 +1,78 @@
 _CinnabarLabFossilRoomScientist1Text::
-	text "Salut!"
+	text "Hiya!"
 
-	para "Je suis un"
-	line "scientifique très"
-	cont "sérieux!"
+	para "I am important"
+	line "doctor!"
 
-	para "J'étudie les"
-	line "fossiles anciens"
-	cont "de #MON!"
+	para "I study here rare"
+	line "#MON fossils!"
 
-	para "Toi! Là!"
-	line "T'aurais pas un"
-	cont "fossile pour moi?"
+	para "You! Have you a"
+	line "fossil for me?"
 	prompt
 
 _CinnabarLabFossilRoomScientist1NoFossilsText::
-	text "Non? C'est bien"
-	line "dommage!"
+	text "No! Is too bad!"
 	done
 
 _CinnabarLabFossilRoomScientist1GoForAWalkText::
-	text "Ca va prendre du"
-	line "temps!"
+	text "I take a little"
+	line "time!"
 
-	para "Va te promener"
-	line "pendant que je"
-	cont "bosse!"
+	para "You go for walk a"
+	line "little while!"
 	done
 
 _CinnabarLabFossilRoomScientist1FossilIsBackToLifeText::
-	text "Ben alors! Où"
-	line "étais-tu passé?"
+	text "Where were you?"
 
-	para "Ton fossile est"
-	line "VIVANT!"
+	para "Your fossil is"
+	line "back to life!"
 
-	para "Il ressemble à un"
-	line "@"
+	para "It was @"
 	text_ram wStringBuffer
-	text "!"
+	text_start
+	line "like I think!"
 	prompt
 
 _CinnabarLabFossilRoomScientist1SeesFossilText::
-	text "Oh! C'est un"
+	text "Oh! That is"
 	line "@"
 	text_ram wcd6d
 	text "!"
 
-	para "C'est un fossile"
-	line "de @"
+	para "It is fossil of"
+	line "@"
 	text_ram wStringBuffer
-	text ","
-	cont "un #MON qui a"
-	cont "disparu!"
+	text ", a"
+	cont "#MON that is"
+	cont "already extinct!"
 
-	para "Ma machine à"
-	line "réanimer va faire"
-	cont "revivre cet"
-	cont "ancien #MON!"
+	para "My Resurrection"
+	line "Machine will make"
+	cont "that #MON live"
+	cont "again!"
 	done
 
 _CinnabarLabFossilRoomScientist1TakesFossilText::
-	text "Tu te grouilles,"
-	line "file-moi ça!"
+	text "So! You hurry and"
+	line "give me that!"
 
-	para "<PLAYER> donne:"
-	line "@"
+	para "<PLAYER> handed"
+	line "over @"
 	text_ram wcd6d
 	text "!"
 	prompt
 
 _CinnabarLabFossilRoomScientist1GoForAWalkText2::
-	text "Ca va prendre un"
-	line "peu de temps!"
+	text "I take a little"
+	line "time!"
 
-	para "Traîne pas dans"
-	line "mes pattes, va"
-	cont "faire un tour!"
+	para "You go for walk a"
+	line "little while!"
 	done
 
 _CinnabarLabFossilRoomScientist1ComeAgainText::
-	text "Argayahhaha!"
-	line "Tu reviendras!"
+	text "Aiyah! You come"
+	line "again!"
 	done

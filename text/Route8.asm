@@ -1,164 +1,154 @@
 _Route8SuperNerd1BattleText::
-	text "T'es un bon avec"
-	line "tes #MON."
-	cont "Mais les maths,"
-	cont "tu connais?"
+	text "You look good at"
+	line "#MON, but"
+	cont "how's your chem?"
 	done
 
 _Route8SuperNerd1EndBattleText::
-	text "Ouch!"
-	line "2 plus 2... 7?"
+	text "Ow!"
+	line "Meltdown!"
 	prompt
 
 _Route8SuperNerd1AfterBattleText::
-	text "Je suis meilleur"
-	line "à l'école!"
+	text "I am better at"
+	line "school than this!"
 	done
 
 _Route8Gambler1BattleText::
-	text "Le sort en est"
-	line "jeté!"
+	text "All right! Let's"
+	line "roll the dice!"
 	done
 
 _Route8Gambler1EndBattleText::
-	text "Haaa!"
-	line "Le hasard..."
+	text "Drat!"
+	line "Came up short!"
 	prompt
 
 _Route8Gambler1AfterBattleText::
-	text "Dame chance n'est"
-	line "pas avec moi!"
+	text "Lady Luck's not"
+	line "with me today!"
 	done
 
 _Route8SuperNerd2BattleText::
-	text "Il te faut une"
-	line "bonne stratégie!"
+	text "You need strategy"
+	line "to win at this!"
 	done
 
 _Route8SuperNerd2EndBattleText::
-	text "Hé!"
-	line "Pas logique!"
+	text "It's"
+	line "not logical!"
 	prompt
 
 _Route8SuperNerd2AfterBattleText::
-	text "D'abord TADMORV"
-	line "et après..."
-	cont "Et puis..."
+	text "Go with GRIMER"
+	line "first...and..."
+	cont "...and...then..."
 	done
 
 _Route8CooltrainerF1BattleText::
-	text "Moi, j'aime les"
-	line "NIDORAN! Yaha!"
+	text "I like NIDORAN, so"
+	line "I collect them!"
 	done
 
 _Route8CooltrainerF21EndBattleText::
-	text "Hein?"
+	text "Why? Why??"
 	prompt
 
 _Route8CooltrainerF1AfterBattleText::
-	text "Quand un #MON"
-	line "grandit, il est"
-	cont "gros et moche."
-	cont "Je les préfère"
-	cont "tout petits!"
+	text "When #MON grow"
+	line "up they get ugly!"
+	cont "They shouldn't"
+	cont "evolve!"
 	done
 
 _Route8SuperNerd3BattleText::
-	text "L'école c'est"
-	line "cool, les #MON"
-	cont "c'est mieux!"
+	text "School is fun, but"
+	line "so are #MON."
 	done
 
 _Route8SuperNerd3EndBattleText::
-	text "Ben..."
-	line "L'école c'est"
-	cont "plus facile!"
+	text "I'll"
+	line "stay with school."
 	prompt
 
 _Route8SuperNerd3AfterBattleText::
-	text "On est bloqué"
-	line "ici, aux portes"
-	cont "de SAFRANIA."
+	text "We're stuck here"
+	line "because of the"
+	cont "gates at SAFFRON."
 	done
 
 _Route8CooltrainerF2BattleText::
-	text "MIAOUSS est si"
-	line "mignon. Miaou!"
+	text "MEOWTH is so cute,"
+	line "meow, meow, meow!"
 	done
 
 _Route8CooltrainerF2EndBattleText::
-	text "Miaou!"
+	text "Meow!"
 	prompt
 
 _Route8CooltrainerF2AfterBattleText::
-	text "Je trouve que"
-	line "ROUCOOL et"
-	cont "RATTATA sont trop"
-	cont "cool!"
+	text "I think PIDGEY"
+	line "and RATTATA"
+	cont "are cute too!"
 	done
 
 _Route8CooltrainerF3BattleText::
-	text "Je sais, on a"
-	line "l'air idiot"
-	cont "debout!"
+	text "We must look"
+	line "silly standing"
+	cont "here like this!"
 	done
 
 _Route8CooltrainerF3EndBattleText::
-	text "Ben..."
-	line "C'est malin ça!"
+	text "Look what"
+	line "you did!"
 	prompt
 
 _Route8CooltrainerF3AfterBattleText::
-	text "Le gardien de la"
-	line "porte de SAFRANIA"
-	cont "ne nous laissera"
-	cont "pas passer!"
+	text "SAFFRON's gate"
+	line "keeper won't let"
+	cont "us through."
+	cont "He's so mean!"
 	done
 
 _Route8Gambler2BattleText::
-	text "Je suis un"
-	line "joueur errant!"
+	text "I'm a rambling,"
+	line "gambling dude!"
 	done
 
 _Route8Gambler2EndBattleText::
-	text "J'ai"
-	line "raté le jackpot!"
+	text "Missed"
+	line "the big score!"
 	prompt
 
 _Route8Gambler2AfterBattleText::
-	text "Le jeu et les"
-	line "#MON, c'est"
-	cont "comme les"
-	cont "cacahuètes."
-	cont "Tu commences et"
-	cont "tu peux plus"
-	cont "t'arrêter! Fou!"
+	text "Gambling and"
+	line "#MON are like"
+	cont "eating peanuts!"
+	cont "Just can't stop!"
 	done
 
 _Route8CooltrainerF4BattleText::
-	text "Qu'il est mimi,"
-	line "gentil et trognon"
-	cont "ce #MON!"
-	cont "Il est à qui?"
-	cont "Hein? A qui?"
+	text "What's a cute,"
+	line "round and fluffy"
+	cont "#MON?"
 	done
 
 _Route8CooltrainerF4EndBattleText::
-	text "Arrête!"
+	text "Stop!"
 
-	para "T'es pas gentil"
-	line "avec MELOFEE!"
+	para "Don't be so mean"
+	line "to my CLEFAIRY!"
 	prompt
 
 _Route8CooltrainerF4AfterBattleText::
-	text "Il paraît que"
-	line "MELOFEE peut"
-	cont "évoluer grâce à "
-	cont "une PIERRE LUNE."
+	text "I heard that"
+	line "CLEFAIRY evolves"
+	cont "when it's exposed"
+	cont "to a MOON STONE."
 	done
 
 _Route8UndergroundSignText::
-	text "SOUTERRAIN"
-	line "CELADOPOLE -"
-	cont "LAVANVILLE"
+	text "UNDERGROUND PATH"
+	line "CELADON CITY -"
+	cont "LAVENDER TOWN"
 	done

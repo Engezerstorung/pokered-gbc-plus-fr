@@ -1,49 +1,47 @@
 _PokemonMansion2FSuperNerdBattleText::
-	text "Mais... J'suis"
-	line "complètement"
-	cont "paumé!"
+	text "I can't get out!"
+	line "This old place is"
+	cont "one big puzzle!"
 	done
 
 _PokemonMansion2FSuperNerdEndBattleText::
-	text "Non!"
-	line "Mon butin!"
+	text "Oh no!"
+	line "My bag of loot!"
 	prompt
 
 _PokemonMansion2FSuperNerdAfterBattleText::
-	text "Les interrupteurs"
-	line "ouvrent et"
-	cont "ferment alterna-"
-	cont "tivement les"
-	cont "portes!"
+	text "Switches open and"
+	line "close alternating"
+	cont "sets of doors!"
 	done
 
 _PokemonMansion2FDiary1Text::
-	text "Rapport:"
-	line "5 Juillet."
-	cont "Jungle X."
+	text "Diary: July 5"
+	line "Guyana,"
+	cont "South America"
 
-	para "Un nouveau type "
-	line "de #MON fut"
-	cont "découvert."
+	para "A new #MON was"
+	line "discovered deep"
+	cont "in the jungle."
 	done
 
 _PokemonMansion2FDiary2Text::
-	text "Rapport:"
-	line "10 Juillet."
-	cont "Le #MON fut"
-	cont "baptisé MEW."
+	text "Diary: July 10"
+	line "We christened the"
+	cont "newly discovered"
+	cont "#MON, MEW."
 	done
 
 _PokemonMansion2FSwitchText::
-	text "Un interrupteur!"
+	text "A secret switch!"
 
-	para "L'actionner?"
+	para "Press it?"
 	done
 
 _PokemonMansion2FSwitchPressedText::
-	text "Sans blague..."
+	text "Who wouldn't?"
 	prompt
 
 _PokemonMansion2FSwitchNotPressedText::
-	text "Pas vraiment!"
+	text "Not quite yet!"
 	done

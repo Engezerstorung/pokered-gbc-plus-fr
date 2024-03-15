@@ -11,7 +11,7 @@ ViridianGym_Script:
 	ret
 
 .CityName:
-	db "JADIELLE@"
+	db "VIRIDIAN CITY@"
 
 .LeaderName:
 	db "GIOVANNI@"

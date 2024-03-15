@@ -1,5 +1,5 @@
 _ItemUseText001::
-	text "<PLAYER> utilise:@"
+	text "<PLAYER> used@"
 	text_end
 
 _ItemUseText002::
@@ -8,7 +8,7 @@ _ItemUseText002::
 	done
 
 _GotOnBicycleText1::
-	text "<PLAYER> monte sur@"
+	text "<PLAYER> got on the@"
 	text_end
 
 _GotOnBicycleText2::
@@ -17,186 +17,184 @@ _GotOnBicycleText2::
 	prompt
 
 _GotOffBicycleText1::
-	text "<PLAYER> range@"
+	text "<PLAYER> got off@"
 	text_end
 
 _GotOffBicycleText2::
-	text "la @"
+	text "the @"
 	text_ram wStringBuffer
 	text "."
 	prompt
 
 _ThrewAwayItemText::
-	text "Adieu,"
+	text "Threw away"
 	line "@"
 	text_ram wcd6d
-	text "!"
+	text "."
 	prompt
 
 _IsItOKToTossItemText::
-	text "Jeter:"
+	text "Is it OK to toss"
 	line "@"
 	text_ram wStringBuffer
-	text ", OK?"
+	text "?"
 	prompt
 
 _TooImportantToTossText::
-	text "T'es pas bien!"
-	line "C'est beaucoup"
-	cont "trop important!"
+	text "That's too impor-"
+	line "tant to toss!"
 	prompt
 
 _AlreadyKnowsText::
 	text_ram wcd6d
-	text_start
-	line "connaît déjà"
-	cont "@"
+	text " knows"
+	line "@"
 	text_ram wStringBuffer
 	text "!"
 	prompt
 
 _ConnectCableText::
-	text "OK! Branche le"
-	line "câble comme ça!"
+	text "Okay, connect the"
+	line "cable like so!"
 	prompt
 
 _TradedForText::
-	text "<PLAYER> échange"
+	text "<PLAYER> traded"
 	line "@"
 	text_ram wInGameTradeGiveMonName
-	text " contre"
+	text " for"
 	cont "@"
 	text_ram wInGameTradeReceiveMonName
 	text "!@"
 	text_end
 
 _WannaTrade1Text::
-	text "Je cherche un"
+	text "I'm looking for"
 	line "@"
 	text_ram wInGameTradeGiveMonName
-	text_start
+	text "! Wanna"
 
-	para "contre un"
+	para "trade one for"
 	line "@"
 	text_ram wInGameTradeReceiveMonName
-	text ", OK?"
+	text "? "
 	done
 
 _NoTrade1Text::
-	text "Bon...."
-	line "Tant pis..."
+	text "Awww!"
+	line "Oh well..."
 	done
 
 _WrongMon1Text::
-	text "Mais c'est pas un"
+	text "What? That's not"
 	line "@"
 	text_ram wInGameTradeGiveMonName
 	text "!"
 
-	para "Reviens m'en"
-	line "apporter un!"
+	para "If you get one,"
+	line "come back here!"
 	done
 
 _Thanks1Text::
-	text "Merciiii!"
+	text "Hey thanks!"
 	done
 
 _AfterTrade1Text::
-	text "Il est cool mon"
+	text "Isn't my old"
 	line "@"
 	text_ram wInGameTradeReceiveMonName
-	text ", hein?"
+	text " great?"
 	done
 
 _WannaTrade2Text::
-	text "Bien le bonjour!"
-	line "Veux-tu échanger:"
+	text "Hello there! Do"
+	line "you want to trade"
 
-	para "@"
+	para "your @"
 	text_ram wInGameTradeGiveMonName
-	text " contre"
-	line "@"
+	text_start
+	line "for @"
 	text_ram wInGameTradeReceiveMonName
-	text ", OK?"
+	text "?"
 	done
 
 _NoTrade2Text::
-	text "Mmmm..."
-	line "Pas glop..."
+	text "Well, if you"
+	line "don't want to..."
 	done
 
 _WrongMon2Text::
-	text "Heu? C'est pas un"
+	text "Hmmm? This isn't"
 	line "@"
 	text_ram wInGameTradeGiveMonName
 	text "."
 
-	para "Essaie pas de"
-	line "m'arnaquer."
+	para "Think of me when"
+	line "you get one."
 	done
 
 _Thanks2Text::
-	text "Merci merci!"
+	text "Thanks!"
 	done
 
 _AfterTrade2Text::
-	text "Ton @"
+	text "The @"
 	text_ram wInGameTradeGiveMonName
-	text_start
-	line "a évolué pendant"
+	text " you"
+	line "traded to me"
 
-	para "l'échange!"
+	para "went and evolved!"
 	done
 
 _WannaTrade3Text::
-	text "Salut! T'as un"
+	text "Hi! Do you have"
 	line "@"
 	text_ram wInGameTradeGiveMonName
 	text "?"
 
-	para "Contre un joli"
-	line "@"
+	para "Want to trade it"
+	line "for @"
 	text_ram wInGameTradeReceiveMonName
-	text ", OK?"
+	text "?"
 	done
 
 _NoTrade3Text::
-	text "Dommage."
+	text "That's too bad."
 	done
 
 _WrongMon3Text::
-	text "...C'est pas un"
+	text "...This is no"
 	line "@"
 	text_ram wInGameTradeGiveMonName
 	text "."
 
-	para "Reviens me voir"
-	line "avec un vrai!"
+	para "If you get one,"
+	line "trade it with me!"
 	done
 
 _Thanks3Text::
-	text "Merci l'ami!"
+	text "Thanks pal!"
 	done
 
 _AfterTrade3Text::
-	text "Il est bien mon"
+	text "How is my old"
 	line "@"
 	text_ram wInGameTradeReceiveMonName
-	text ", hein?"
+	text "?"
 
-	para "Mon @"
+	para "My @"
 	text_ram wInGameTradeGiveMonName
-	text_start
-	line "est terrible!"
+	text " is"
+	line "doing great!"
 	done
 
 _NothingToCutText::
-	text "Il n'y a rien à"
-	line "COUPER!"
+	text "There isn't"
+	line "anything to CUT!"
 	prompt
 
 _UsedCutText::
 	text_ram wcd6d
-	text " a tout"
-	line "coupé! Trop fort!"
+	text " hacked"
+	line "away with CUT!"
 	prompt

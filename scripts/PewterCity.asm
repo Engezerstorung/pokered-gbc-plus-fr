@@ -283,8 +283,6 @@ PewterCitySuperNerd2Text:
 
 PewterCityYoungsterText:
 	text_asm
-	ld a,$FC
-	ld [wJoyIgnore],a
 	ld hl, .YoureATrainerFollowMeText
 	call PrintText
 	xor a

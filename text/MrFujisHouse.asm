@@ -1,60 +1,55 @@
 _MrFujisHouseSuperNerdMrFujiIsntHereText::
-	text "Ce sacré MR.FUJI"
-	line "n'est pas là."
-	cont "Où est-il?"
+	text "That's odd, MR.FUJI"
+	line "isn't here."
+	cont "Where'd he go?"
 	done
 
 _MrFujisHouseSuperNerdMrFujiHadBeenPrayingText::
-	text "MR.FUJI a prié"
-	line "pour le repos de"
-	cont "la mère de"
-	cont "OSSELAIT."
+	text "MR.FUJI had been"
+	line "praying alone for"
+	cont "CUBONE's mother."
 	done
 
 _MrFujisHouseLittleGirlThisIsMrFujisHouseText::
-	text "Voici la maison"
-	line "de MR.FUJI."
+	text "This is really"
+	line "MR.FUJI's house."
 
-	para "C'est vraiment un"
-	line "chic type!"
+	para "He's really kind!"
 
-	para "Il est à la"
-	line "recherche des"
-	cont "#MON orphelins"
-	cont "et abandonnés!"
+	para "He looks after"
+	line "abandoned and"
+	cont "orphaned #MON!"
 	done
 
 _MrFujisHouseLittleGirlPokemonAreNiceToHugText::
-	text "C'est si doux!"
-	line "Faire un câlin à"
-	cont "un #MON,"
-	cont "c'est chou!"
+	text "It's so warm!"
+	line "#MON are so"
+	cont "nice to hug!"
 	done
 
 _MrFujisHousePsyduckText::
-	text "PSYKOKWAK: Kwak!@"
+	text "PSYDUCK: Gwappa!@"
 	text_end
 
 _MrFujisHouseNidorinoText::
-	text "NIDORINO: Nido!@"
+	text "NIDORINO: Gaoo!@"
 	text_end
 
 _MrFujisHouseMrFujiIThinkThisMayHelpYourQuestText::
 	text "MR.FUJI: <PLAYER>."
 
-	para "Ta quête pour"
-	line "compléter ton"
-	cont "#DEX échouera"
-	cont "si tu n'aimes pas"
-	cont "tes #MON."
+	para "Your #DEX quest"
+	line "may fail without"
+	cont "love for your"
+	cont "#MON."
 
-	para "Je crois que ceci"
-	line "te sera utile."
+	para "I think this may"
+	line "help your quest."
 	prompt
 
 _MrFujisHouseMrFujiReceivedPokeFluteText::
-	text "<PLAYER> obtient:"
-	line "@"
+	text "<PLAYER> received"
+	line "a @"
 	text_ram wStringBuffer
 	text "!@"
 	text_end
@@ -62,34 +57,33 @@ _MrFujisHouseMrFujiReceivedPokeFluteText::
 _MrFujisHouseMrFujiPokeFluteExplanationText::
 	text_start
 
-	para "En jouant de la"
-	line "#FLUTE, les"
-	cont "#MON endormis"
-	cont "se réveilleront."
+	para "Upon hearing #"
+	line "FLUTE, sleeping"
+	cont "#MON will"
+	cont "spring awake."
 
-	para "Elle marche sur"
-	line "tous les #MON."
+	para "It works on all"
+	line "sleeping #MON."
 	done
 
 _MrFujisHouseMrFujiPokeFluteNoRoomText::
-	text "Votre inventaire"
-	line "est plein!"
+	text "You must make"
+	line "room for this!"
 	done
 
 _MrFujisHouseMrFujiHasMyFluteHelpedYouText::
-	text "MR.FUJI: Ma FLUTE"
-	line "t'a été utile?"
+	text "MR.FUJI: Has my"
+	line "FLUTE helped you?"
 	done
 
 _MrFujisHouseMrFujiPokedexText::
-	text "Grand concours de"
-	line "dessin de"
-	cont "#MON!"
+	text "#MON Monthly"
+	line "Grand Prize"
+	cont "Drawing!"
 
-	para "Le formulaire"
-	line "d'inscription"
-	cont "est..."
+	para "The application"
+	line "form is..."
 
-	para "...Hein? Il a"
-	line "disparu!"
+	para "Gone! It's been"
+	line "clipped out!"
 	done

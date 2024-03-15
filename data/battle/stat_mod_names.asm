@@ -3,13 +3,13 @@
 
 StatModTextStrings:
 	list_start StatModTextStrings
-	li "FOR"
-	li "DEF"
-	li "VIT"
-	li "SPE"
+	li "ATTACK"
+	li "DEFENSE"
+	li "SPEED"
+	li "SPECIAL"
 	assert_list_length SPECIAL_DOWN_SIDE_EFFECT - ATTACK_DOWN_SIDE_EFFECT + 1
-	li "PRE"
-	li "ESQ"
+	li "ACCURACY"
+	li "EVADE"
 	assert_list_length NUM_STAT_MODS - 2 ; two bytes are unused
 	assert_list_length EVASION_UP1_EFFECT - ATTACK_UP1_EFFECT + 1
 	assert_list_length EVASION_DOWN1_EFFECT - ATTACK_DOWN1_EFFECT + 1

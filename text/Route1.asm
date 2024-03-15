@@ -1,54 +1,50 @@
 _Route1Youngster1MartSampleText::
-	text "Salut! Je"
-	line "travaille à la"
-	cont "BOUTIQUE #MON."
+	text "Hi! I work at a"
+	line "#MON MART."
 
-	para "Nous avons plein"
-	line "d'articles! Viens"
-	cont "nous voir à"
-	cont "JADIELLE."
+	para "It's a convenient"
+	line "shop, so please"
+	cont "visit us in"
+	cont "VIRIDIAN CITY."
 
-	para "Prends donc"
-	line "ceci comme"
-	cont "échantillon!"
+	para "I know, I'll give"
+	line "you a sample!"
+	cont "Here you go!"
 	prompt
 
 _Route1Youngster1GotPotionText::
-	text "<PLAYER> obtient:"
+	text "<PLAYER> got"
 	line "@"
 	text_ram wStringBuffer
 	text "!@"
 	text_end
 
 _Route1Youngster1AlsoGotPokeballsText::
-	text "Nous avons aussi"
-	line "des # BALL"
-	cont "pour capturer les"
-	cont "#MON!"
+	text "We also carry"
+	line "# BALLs for"
+	cont "catching #MON!"
 	done
 
 _Route1Youngster1NoRoomText::
-	text "Ton inventaire"
-	line "est plein!"
+	text "You have too much"
+	line "stuff with you!"
 	done
 
 _Route1Youngster2Text::
-	text "Tu vois ces"
-	line "rebords le long"
-	cont "de la route?"
+	text "See those ledges"
+	line "along the road?"
 
-	para "Tu peux sauter"
-	line "par-dessus! C'est"
-	cont "dingue, non?"
+	para "It's a bit scary,"
+	line "but you can jump"
+	cont "from them."
 
-	para "Tu peux revenir"
-	line "plus vite à"
-	cont "BOURG PALETTE de"
-	cont "cette façon!"
+	para "You can get back"
+	line "to PALLET TOWN"
+	cont "quicker that way."
 	done
 
 _Route1SignText::
 	text "ROUTE 1"
-	line "BOURG PALETTE -"
-	cont "JADIELLE"
+	line "PALLET TOWN -"
+	cont "VIRIDIAN CITY"
 	done

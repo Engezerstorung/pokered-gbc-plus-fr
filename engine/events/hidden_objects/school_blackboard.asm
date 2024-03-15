@@ -68,10 +68,10 @@ LinkCableHelpText2:
 	text_end
 
 HowToLinkText:
-	db   "CABLE LINK"
-	next "COLISEE"
-	next "CENTRE TROC"
-	next "NE PLUS LIRE@"
+	db   "HOW TO LINK"
+	next "COLOSSEUM"
+	next "TRADE CENTER"
+	next "STOP READING@"
 
 LinkCableInfoTexts:
 	dw LinkCableInfoText1
@@ -185,14 +185,14 @@ ViridianSchoolBlackboardText2:
 	text_end
 
 StatusAilmentText1:
-	db   " SOM"
+	db   " SLP"
 	next " PSN"
 	next " PAR@"
 
 StatusAilmentText2:
-	db   " BRU"
-	next " GEL"
-	next " RET@"
+	db   " BRN"
+	next " FRZ"
+	next " QUIT@"
 
 	db "@" ; unused
 

@@ -1,29 +1,31 @@
 _FuchsiaGymKogaPostBattleAdviceText::
-	text "TOXIK fera"
-	line "souffrir de plus"
-	cont "en plus un"
-	cont "#MON pendant"
-	cont "un combat!"
+	text "When afflicted by"
+	line "TOXIC, #MON"
+	cont "suffer more and"
+	cont "more as battle"
+	cont "progresses!"
 
-	para "De quoi filer la"
-	line "pétoche!"
+	para "It will surely"
+	line "terrorize foes!"
 	done
 
 _FuchsiaGymKogaSoulBadgeInfoText::
-	text "Le BADGE AME fera"
-	line "monter la DEFENSE"
-	cont "de tes #MON!"
+	text "Now that you have"
+	line "the SOULBADGE,"
+	cont "the DEFENSE of"
+	cont "your #MON"
+	cont "increases!"
 
-	para "Il te permettra"
-	line "aussi d'utiliser"
-	cont "SURF!"
+	para "It also lets you"
+	line "SURF outside of"
+	cont "battle!"
 
-	para "Attends! Prends"
-	line "aussi ceci!"
+	para "Ah! Take this"
+	line "too!"
 	done
 
 _FuchsiaGymKogaReceivedTM06Text::
-	text "<PLAYER> reçoit:"
+	text "<PLAYER> received"
 	line "@"
 	text_ram wStringBuffer
 	text "!@"
@@ -31,165 +33,162 @@ _FuchsiaGymKogaReceivedTM06Text::
 
 _FuchsiaGymKogaTM06ExplanationText::
 	text_start
-	para "CT06: TOXIK!"
+	para "TM06 contains"
+	line "TOXIC!"
 
-	para "Cette technique"
-	line "secrète et sacrée"
-	cont "est vieille d'au"
-	cont "moins 400 ans!"
-	cont "...j'te jure!"
+	para "It is a secret"
+	line "technique over"
+	cont "400 years old!"
 	done
 
 _FuchsiaGymKogaTM06NoRoomText::
-	text "Gnaaaa!!!"
-	line "Ton inventaire"
-	cont "est plein!"
+	text "Make space for"
+	line "this, child!"
 	done
 
 _FuchsiaGymRocker1BattleText::
-	text "La force..."
-	line "Pas glop."
+	text "Strength isn't"
+	line "the key for"
+	cont "#MON!"
 
-	para "La stratégie... "
-	line "Glop glop!"
+	para "It's strategy!"
 
-	para "Viens là..."
-	line "Pas bouger..."
-	cont "Et..."
-	cont "Mange ta mandale!"
+	para "I'll show you how"
+	line "strategy can beat"
+	cont "brute strength!"
 	done
 
 _FuchsiaGymRocker1EndBattleText::
-	text "Que?"
-	line "Que quoi?"
+	text "What?"
+	line "Extraordinary!"
 	prompt
 
 _FuchsiaGymRocker1AfterBattleText::
-	text "Tu penses avec"
-	line "ta tête? Heu?"
-	cont "Syntax Error!"
+	text "So, you mix brawn"
+	line "with brains?"
+	cont "Good strategy!"
 	done
 
 _FuchsiaGymRocker2BattleText::
-	text "J'veux être un"
-	line "ninja, pour faire"
-	cont "yaaaaa!"
+	text "I wanted to become"
+	line "a ninja, so I"
+	cont "joined this GYM!"
 	done
 
 _FuchsiaGymRocker2EndBattleText::
-	text "Geuh..."
-	line "A perdu!"
+	text "I'm done"
+	line "for!"
 	prompt
 
 _FuchsiaGymRocker2AfterBattleText::
-	text "L'entraînement..."
-	line "C'est le pied!"
+	text "I will keep on"
+	line "training under"
+	cont "KOGA, my ninja"
+	cont "master!"
 	done
 
 _FuchsiaGymRocker3BattleText::
-	text "Crois-tu pouvoir"
-	line "me battre? Haha."
-	cont "Nabot!"
+	text "Let's see you"
+	line "beat my special"
+	cont "techniques!"
 	done
 
 _FuchsiaGymRocker3EndBattleText::
-	text "Quoi?"
-	line "Eul'nabot m'a"
-	cont "battu?"
+	text "You"
+	line "had me fooled!"
 	prompt
 
 _FuchsiaGymRocker3AfterBattleText::
-	text "Les attaques de"
-	line "poison et de"
-	cont "sommeil sont très"
-	cont "puissantes! Oui!"
+	text "I like poison and"
+	line "sleep techniques,"
+	cont "as they linger"
+	cont "after battle!"
 	done
 
 _FuchsiaGymRocker4BattleText::
-	text "Pas bouger!"
+	text "Stop right there!"
 
-	para "Nos jolis murs"
-	line "invisibles sont"
-	cont "sympas, non?"
+	para "Our invisible"
+	line "walls have you"
+	cont "frustrated?"
 	done
 
 _FuchsiaGymRocker4EndBattleText::
 	text "Whoa!"
-	line "Tout mort!"
+	line "He's got it!"
 	prompt
 
 _FuchsiaGymRocker4AfterBattleText::
-	text "Chuis cuit!"
-	line "Voilà un conseil!"
+	text "You impressed me!"
+	line "Here's a hint!"
 
-	para "Fais attention"
-	line "aux trous entre"
-	cont "les murs..."
+	para "Look very closely"
+	line "for gaps in the"
+	cont "invisible walls!"
 	done
 
 _FuchsiaGymRocker5BattleText::
-	text "J'veux être un"
-	line "ninja et sauter"
-	cont "d'arbre en arbre!"
+	text "I also study the"
+	line "way of the ninja"
+	cont "with master KOGA!"
 
-	para "Comme à la télé."
-	line "Comme X-PORC, le"
-	cont "goret d'l'espace!"
+	para "Ninja have a long"
+	line "history of using"
+	cont "animals!"
 	done
 
 _FuchsiaGymRocker5EndBattleText::
-	text "Gruik!"
+	text "Awoo!"
 	prompt
 
 _FuchsiaGymRocker5AfterBattleText::
-	text "J'suis nul!"
+	text "I still have much"
+	line "to learn!"
 	done
 
 _FuchsiaGymRocker6BattleText::
-	text "KOGA fait partie"
-	line "d'une grande"
-	cont "famille de"
-	cont "terribles ninjas!"
+	text "Master KOGA comes"
+	line "from a long line"
+	cont "of ninjas!"
 
-	para "Et toi? D'où"
-	line "viens-tu? Qui"
-	cont "es-tu? Pourquoi?"
+	para "What did you"
+	line "descend from?"
 	done
 
 _FuchsiaGymRocker6EndBattleText::
-	text "..."
-	line "Défaite."
+	text "Dropped"
+	line "my balls!"
 	prompt
 
 _FuchsiaGymRocker6AfterBattleText::
-	text "La lumière"
-	line "engendre l'ombre. "
+	text "Where there is"
+	line "light, there is"
+	cont "shadow!"
 
-	para "Quel côté de la"
-	line "Force choisis-tu?"
+	para "Light and shadow!"
+	line "Which do you"
+	cont "choose?"
 	done
 
 _FuchsiaGymGymGuideChampInMakingText::
-	text "Hop là! Graine"
-	line "de champion!"
+	text "Yo! Champ in"
+	line "making!"
 
-	para "L'ARENE de"
-	line "PARMANIE est un"
-	cont "vrai casse-tête!"
+	para "FUCHSIA GYM is"
+	line "riddled with"
+	cont "invisible walls!"
 
-	para "KOGA te semblera"
-	line "proche, mais de"
-	cont "nombreux murs le"
-	cont "protégeront!"
+	para "KOGA might appear"
+	line "close, but he's"
+	cont "blocked off!"
 
-	para "Trouve les trous"
-	line "entre les murs"
-	cont "pour l'atteindre!"
+	para "You have to find"
+	line "gaps in the walls"
+	cont "to reach him!"
 	done
 
 _FuchsiaGymGymGuideBeatKogaText::
-	text "Un ninja? Bah..."
-	line "C'est gros, roux"
-	cont "et ça fait"
-	cont "coin-coin! Non?"
+	text "It's amazing how"
+	line "ninja can terrify"
+	cont "even now!"
 	done

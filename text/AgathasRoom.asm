@@ -1,52 +1,44 @@
 _AgathaBeforeBattleText::
-	text "Gnnn... Bonjour"
-	line "mon tout petit."
-	cont "Je suis AGATHA du"
-	cont "CONSEIL des 4!"
+	text "I am AGATHA of"
+	line "the ELITE FOUR!"
 
-	para "CHEN mise de"
-	line "grands espoirs"
-	cont "sur toi, fiston!"
+	para "OAK's taken a lot"
+	line "of interest in"
+	cont "you, child!"
 
-	para "Sais-tu que ce"
-	line "vieux machin"
-	cont "était jadis beau"
-	cont "garçon? Enfin..."
-	cont "Il y a très"
-	cont "longtemps!"
+	para "That old duff was"
+	line "once tough and"
+	cont "handsome! That"
+	cont "was decades ago!"
 
-	para "Il veut juste"
-	line "frimer avec son"
-	cont "#DEX! Mais"
-	cont "c'est débile! Les"
-	cont "#MON servent"
-	cont "à combattre!"
+	para "Now he just wants"
+	line "to fiddle with"
+	cont "his #DEX! He's"
+	cont "wrong! #MON"
+	cont "are for fighting!"
 
-	para "<PLAYER>! Je vais"
-	line "te montrer"
-	cont "comment les"
-	cont "grands dresseurs"
-	cont "combattent!"
+	para "<PLAYER>! I'll show"
+	line "you how a real"
+	cont "trainer fights!"
 	done
 
 _AgathaEndBattleText::
 	text "Oh ho!"
-	line "Tu es doué mon"
-	cont "petit!"
+	line "You're something"
+	cont "special, child!"
 	prompt
 
 _AgathaAfterBattleText::
-	text "Mmmm... Je vois"
-	line "pourquoi le vieux"
-	cont "CHEN t'apprécie"
-	cont "autant!"
+	text "You win! I see"
+	line "what the old duff"
+	cont "sees in you now!"
 
-	para "Mes ombres ont"
-	line "perdu. Tu peux"
-	cont "passer."
+	para "I have nothing"
+	line "else to say! Run"
+	cont "along now, child!"
 	done
 
 _AgathasRoomAgathaDontRunAwayText::
-	text "Une voix:"
-	line "Ne fuis pas!"
+	text "Someone's voice:"
+	line "Don't run away!"
 	done

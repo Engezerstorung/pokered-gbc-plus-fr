@@ -1,145 +1,133 @@
 _CeruleanGymMistyPreBattleText::
-	text "Salut! T'es un"
-	line "nouveau!"
+	text "Hi, you're a new"
+	line "face!"
 
-	para "Si tu veux être"
-	line "un vrai dresseur,"
-	cont "il te faut une"
-	cont "stratégie pour"
-	cont "tes #MON!"
+	para "Trainers who want"
+	line "to turn pro have"
+	cont "to have a policy"
+	cont "about #MON!"
 
-	para "C'est quoi ta"
-	line "tactique pour"
-	cont "capturer les"
-	cont "#MON sauvages?"
+	para "What is your"
+	line "approach when you"
+	cont "catch #MON?"
 
-	para "Moi je leur fonce"
-	line "dans le tas avec"
-	cont "mes #MON"
-	cont "aquatiques!"
+	para "My policy is an"
+	line "all-out offensive"
+	cont "with water-type"
+	cont "#MON!"
 	done
 
 _CeruleanGymMistyTM11ExplanationText::
-	text "La CT11 contient"
-	line "BULLES D'O!"
+	text "TM11 teaches"
+	line "BUBBLEBEAM!"
 
-	para "Apprends-la à un"
-	line "#MON de l'eau!"
+	para "Use it on an"
+	line "aquatic #MON!"
 	done
 
 _CeruleanGymMistyCascadeBadgeInfoText::
-	text "Le BADGECASCADE"
-	line "oblige tous les"
-	cont "#MON d'un"
-	cont "niveau inférieur"
-	cont "à 30 à t'obéir!"
+	text "The CASCADEBADGE"
+	line "makes all #MON"
+	cont "up to L30 obey!"
 
-	para "Les échangés"
-	line "aussi!"
+	para "That includes"
+	line "even outsiders!"
 
-	para "En plus, tu peux"
-	line "maintenant"
-	cont "utiliser la CS"
-	cont "COUPE!"
+	para "There's more, you"
+	line "can now use CUT"
+	cont "any time!"
 
-	para "Tu peux COUPER"
-	line "les arbustes"
-	cont "et ouvrir de"
-	cont "nouveaux chemins!"
+	para "You can CUT down"
+	line "small bushes to"
+	cont "open new paths!"
 
-	para "Tu gagnes aussi ma"
-	line "CT favorite!"
+	para "You can also have"
+	line "my favorite TM!"
 	done
 
 _CeruleanGymMistyReceivedTM11Text::
-	text "<PLAYER> reçoit"
-	line "la CT11!@"
+	text "<PLAYER> received"
+	line "TM11!@"
 	text_end
 
 _CeruleanGymMistyTM11NoRoomText::
-	text "Ton inventaire"
-	line "est plein!"
+	text "You better make"
+	line "room for this!"
 	done
 
 _CeruleanGymMistyReceivedCascadeBadgeText::
-	text "Whouha!"
-	line "T'es super fort!"
+	text "Wow!"
+	line "You're too much!"
 
-	para "Très bien!"
+	para "All right!"
 
-	para "Je te donne le"
-	line "BADGECASCADE pour"
-	cont "m'avoir battue!@"
+	para "You can have the"
+	line "CASCADEBADGE to"
+	cont "show you beat me!@"
 	text_end
 
 _CeruleanGymBattleText1::
-	text "Je suis très"
-	line "balèze!"
+	text "I'm more than good"
+	line "enough for you!"
 
-	para "ONDINE attendra!"
+	para "MISTY can wait!"
 	done
 
 _CeruleanGymEndBattleText1::
-	text "Oh!"
-	line "J'me suis fait"
-	cont "écraser!"
+	text "You"
+	line "overwhelmed me!"
 	prompt
 
 _CeruleanGymAfterBattleText1::
-	text "Tu dois te battre"
-	line "contre d'autres"
-	cont "dresseurs pour"
-	cont "connaître ton"
-	cont "niveau."
+	text "You have to face"
+	line "other trainers to"
+	cont "find out how good"
+	cont "you really are."
 	done
 
 _CeruleanGymBattleText2::
-	text "Plaouff!"
+	text "Splash!"
 
-	para "J'suis preums!"
-	line "Baston!"
+	para "I'm first up!"
+	line "Let's do it!"
 	done
 
 _CeruleanGymEndBattleText2::
-	text "Glargh!"
-	line "C'est dingue!"
+	text "That"
+	line "can't be!"
 	prompt
 
 _CeruleanGymAfterBattleText2::
-	text "ONDINE est super"
-	line "forte!"
+	text "MISTY is going to"
+	line "keep improving!"
 
-	para "Elle ne va pas"
-	line "se faire avoir"
-	cont "par un rigolo"
-	cont "comme toi!"
+	para "She won't lose to"
+	line "someone like you!"
 	done
 
 _CeruleanGymGymGuideChampInMakingText::
-	text "Salut à toi!"
-	line "Futur champion!"
+	text "Yo! Champ in"
+	line "making!"
 
-	para "Un conseil?"
+	para "Here's my advice!"
 
-	para "La CHAMPIONNE,"
-	line "ONDINE, est une"
-	cont "spécialiste des"
-	cont "#MON de l'eau!"
+	para "The LEADER, MISTY,"
+	line "is a pro who uses"
+	cont "water #MON!"
 
-	para "Absorbe l'eau"
-	line "avec des #MON"
-	cont "des plantes!"
+	para "You can drain all"
+	line "their water with"
+	cont "plant #MON!"
 
-	para "Ou grille-les"
-	line "avec de"
-	cont "l'électricité!"
+	para "Or, zap them with"
+	line "electricity!"
 	done
 
 _CeruleanGymGymGuideBeatMistyText::
-	text "Tu as battu"
-	line "ONDINE! Génial!"
+	text "You beat MISTY!"
+	line "What'd I tell ya?"
 
-	para "Toi et moi, on"
-	line "forme une super"
-	cont "équipe!"
+	para "You and me kid,"
+	line "we make a pretty"
+	cont "darn good team!"
 	done

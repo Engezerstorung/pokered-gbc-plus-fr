@@ -1,61 +1,58 @@
 _Route18CooltrainerM1BattleText::
-	text "Je fouille les"
-	line "hautes herbes"
-	cont "pour y trouver"
-	cont "des #MON."
+	text "I always check"
+	line "every grassy area"
+	cont "for new #MON."
 	done
 
 _Route18CooltrainerM1EndBattleText::
-	text "Oh!"
+	text "Tch!"
 	prompt
 
 _Route18CooltrainerM1AfterBattleText::
-	text "Ah, si j'avais"
-	line "une meule!"
+	text "I wish I had a"
+	line "BIKE!"
 	done
 
 _Route18CooltrainerM2BattleText::
-	text "Cui cui cui!"
-	line "J'fais l'oiseau,"
-	cont "hein?"
+	text "Kurukkoo!"
+	line "How do you like"
+	cont "my bird call?"
 	done
 
 _Route18CooltrainerM2EndBattleText::
-	text "..."
-	line "J'suis cuit!"
+	text "I"
+	line "had to bug you!"
 	prompt
 
 _Route18CooltrainerM2AfterBattleText::
-	text "Le week-end, je"
-	line "collectionne"
-	cont "les #MON"
-	cont "aquatiques!"
+	text "I also collect sea"
+	line "#MON on"
+	cont "weekends!"
 	done
 
 _Route18CooltrainerM3BattleText::
-	text "T'es sur mon"
-	line "gazon, dégage!"
+	text "This is my turf!"
+	line "Get out of here!"
 	done
 
 _Route18CooltrainerM3EndBattleText::
-	text "Ah?"
+	text "Darn!"
 	prompt
 
 _Route18CooltrainerM3AfterBattleText::
-	text "C'est mon endroit"
-	line "préféré pour"
-	cont "chasser les"
-	cont "#MON!"
+	text "This is my fave"
+	line "#MON hunting"
+	cont "area!"
 	done
 
 _Route18SignText::
 	text "ROUTE 18"
-	line "CELADOPOLE -"
-	cont "PARMANIE"
+	line "CELADON CITY -"
+	cont "FUCHSIA CITY"
 	done
 
 _Route18CyclingRoadSignText::
-	text "PISTE CYCLABLE"
-	line "Interdite aux"
-	cont "piétons!"
+	text "CYCLING ROAD"
+	line "No pedestrians"
+	cont "permitted!"
 	done

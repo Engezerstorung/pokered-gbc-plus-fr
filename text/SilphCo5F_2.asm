@@ -1,59 +1,55 @@
 _SilphCo5FRockerEndBattleText::
-	text "Non!"
-	line "Mon Dieu!"
+	text "Oh"
+	line "goodness!"
 	prompt
 
 _SilphCo5FRockerAfterBattleText::
-	text "Tu n'es qu'au"
-	line "4ème étage!"
-	cont "Le chef est"
-	cont "encore loin!"
+	text "You're only on 5F."
+	line "It's a long way"
+	cont "to my BOSS!"
 	done
 
 _SilphCo5FRocket2BattleText::
-	text "Cause mieux"
-	line "à la grande"
-	cont "TEAM ROCKET!"
+	text "Show TEAM ROCKET"
+	line "a little respect!"
 	done
 
 _SilphCo5FRocket2EndBattleText::
-	text "Kheu..."
-	line "Kheu..."
+	text "Cough..."
+	line "Cough..."
 	prompt
 
 _SilphCo5FRocket2AfterBattleText::
-	text "Ce qui me"
-	line "rappelle..."
+	text "Which reminds me."
 
-	para "SMOGO évolue en"
-	line "SMOGOGO!"
+	para "KOFFING evolves"
+	line "into WEEZING!"
 	done
 
 _SilphCo5FPokemonReport1Text::
-	text "C'est un RAPPORT"
-	line "sur les #MON!"
+	text "It's a #MON"
+	line "REPORT!"
 
-	para "PORYGON:"
-	line "#MON virtuel,"
-	cont "créé par le"
-	cont "LABO #MON!"
+	para "#MON LAB"
+	line "created PORYGON,"
+	cont "the first virtual"
+	cont "reality #MON."
 	done
 
 _SilphCo5FPokemonReport2Text::
-	text "C'est un RAPPORT"
-	line "sur les #MON!"
+	text "It's a #MON"
+	line "REPORT!"
 
-	para "Il existe 160"
-	line "attaques pour"
-	cont "les #MON!"
+	para "Over 160 #MON"
+	line "techniques have"
+	cont "been confirmed."
 	done
 
 _SilphCo5FPokemonReport3Text::
-	text "C'est un RAPPORT"
-	line "sur les #MON!"
+	text "It's a #MON"
+	line "REPORT!"
 
-	para "4 #MON"
-	line "n'évoluent que"
-	cont "s'ils sont"
-	cont "échangés!"
+	para "4 #MON evolve"
+	line "only when traded"
+	cont "by link-cable."
 	done

@@ -1,71 +1,63 @@
 _SSAnne2FWaiterText::
-	text "Ce luxueux bateau"
-	line "accueille tous"
-	cont "les dresseurs!"
+	text "This ship, she is"
+	line "a luxury liner"
+	cont "for trainers!"
 
-	para "Dans chaque port"
-	line "nous organisons"
-	cont "une fête pour"
-	cont "les dresseurs!"
+	para "At every port, we"
+	line "hold parties with"
+	cont "invited trainers!"
 	done
 
 _SSAnne2FRivalText::
-	text "<RIVAL>: Salut!"
+	text "<RIVAL>: Bonjour!"
 	line "<PLAYER>!"
 
-	para "Toi! Ici!"
-	line "Sans blague!"
+	para "Imagine seeing"
+	line "you here!"
 
-	para "<PLAYER>, as-tu"
-	line "vraiment été"
-	cont "invité?"
+	para "<PLAYER>, were you"
+	line "really invited?"
 
-	para "Où en es-tu avec"
-	line "ton #DEX?"
+	para "So how's your"
+	line "#DEX coming?"
 
-	para "Moi, j'ai déjà"
-	line "attrapé 40"
-	cont "#MON! Minable!"
+	para "I already caught"
+	line "40 kinds, pal!"
 
-	para "Y'en a partout!"
+	para "Different kinds"
+	line "are everywhere!"
 
-	para "Tu n'as qu'à ramper"
-	line "dans les hautes"
-	cont "herbes!"
+	para "Crawl around in"
+	line "grassy areas!"
 	done
 
 _SSAnne2FRivalDefeatedText::
-	text "Mouaff!"
+	text "Humph!"
 
-	para "Au moins, tu"
-	line "t'occupes de tes"
+	para "At least you're"
+	line "raising your"
 	cont "#MON!"
 	prompt
 
 _SSAnne2FRivalVictoryText::
-	text "<PLAYER>! Tu as"
-	line "le mal de mer?"
+	text "<PLAYER>! What are"
+	line "you, seasick?"
 
-	para "Tu devrais te"
-	line "mettre au frais!"
-	cont "Minable!"
+	para "You should shape"
+	line "up, pal!"
 	prompt
 
 _SSAnne2FRivalCutMasterText::
-	text "<RIVAL>: Il y"
-	line "a le maître de la"
-	cont "technique COUPE"
-	cont "à bord."
+	text "<RIVAL>: I heard"
+	line "there was a CUT"
+	cont "master on board."
 
-	para "Mais ce n'est"
-	line "qu'un vieil homme"
-	cont "malade et sénile!"
+	para "But, he was just a"
+	line "seasick, old man!"
 
-	para "La technique"
-	line "COUPE est très"
-	cont "utile!"
+	para "But, CUT itself is"
+	line "really useful!"
 
-	para "Tu devrais le"
-	line "rencontrer!"
-	cont "Salut! Minable!"
+	para "You should go see"
+	line "him! Smell ya!"
 	done

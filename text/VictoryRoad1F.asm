@@ -1,30 +1,31 @@
 _VictoryRoad1FCooltrainerFBattleText::
-	text "Es-tu aussi fort"
-	line "que môa? "
+	text "I wonder if you"
+	line "are good enough"
+	cont "for me!"
 	done
 
 _VictoryRoad1FCooltrainerFEndBattleText::
-	text "Oh!"
-	line "Vilain!"
+	text "I"
+	line "lost out!"
 	prompt
 
 _VictoryRoad1FCooltrainerFAfterBattleText::
-	text "Perdre ça craint!"
+	text "I never wanted to"
+	line "lose to anybody!"
 	done
 
 _VictoryRoad1FCooltrainerMBattleText::
-	text "Mmm..."
-	line "T'as l'air fort! "
-	cont "Mais l'es-tu"
-	cont "vraiment?"
+	text "I can see you're"
+	line "good! Let me see"
+	cont "exactly how good!"
 	done
 
 _VictoryRoad1FCooltrainerMEndBattleText::
-	text "OK."
-	line "T'es fort."
+	text "I"
+	line "had a chance..."
 	prompt
 
 _VictoryRoad1FCooltrainerMAfterBattleText::
-	text "T'es fort, "
-	line "on a compris!"
+	text "I concede, you're"
+	line "better than me!"
 	done

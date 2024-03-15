@@ -1,27 +1,26 @@
 _MrPsychicsHouseMrPsychicYouWantedThisText::
-	text "...Chut! Pas un"
-	line "mot!"
+	text "...Wait! Don't"
+	line "say a word!"
 
-	para "Tu veux ça?"
+	para "You wanted this!"
 	prompt
 
 _MrPsychicsHouseMrPsychicReceivedTM29Text::
-	text "<PLAYER> obtient:"
+	text "<PLAYER> received"
 	line "@"
 	text_ram wStringBuffer
 	text "!@"
 	text_end
 
 _MrPsychicsHouseMrPsychicTM29ExplanationText::
-	text "CT29: PSYKO!"
+	text "TM29 is PSYCHIC!"
 
-	para "Cette attaque"
-	line "diminue le"
-	cont "SPECIAL de la"
-	cont "cible."
+	para "It can lower the"
+	line "target's SPECIAL"
+	cont "abilities."
 	done
 
 _MrPsychicsHouseMrPsychicTM29NoRoomText::
-	text "Ton inventaire"
-	line "est plein!"
+	text "Where do you plan"
+	line "to put this?"
 	done

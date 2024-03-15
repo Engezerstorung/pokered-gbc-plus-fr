@@ -1,77 +1,69 @@
 _SSAnneKitchenCook1Text::
-	text "Hé! Le mouflet,"
-	line "y'en a qui bossent"
-
-	para "dur ici!"
-	line "Alors dégage!"
+	text "You, mon petit!"
+	line "We're busy here!"
+	cont "Out of the way!"
 	done
 
 _SSAnneKitchenCook2Text::
-	text "J'ai vu une Ball"
-	line "bizarre dans la"
-	cont "poubelle..."
+	text "I saw an odd ball"
+	line "in the trash."
 	done
 
 _SSAnneKitchenCook3Text::
-	text "J'ai trop de"
-	line "boulot! J'en ai"
-	cont "des vertiges!"
+	text "I'm so busy I'm"
+	line "getting dizzy!"
 	done
 
 _SSAnneKitchenCook4Text::
-	text "Pourquoi?"
-	line "Pourquoi moi?"
+	text "Hum-de-hum-de-"
+	line "ho..."
 
-	para "J'suis tout"
-	line "l'temps d'corvée"
-	cont "d'patates..."
+	para "I peel spuds"
+	line "every day!"
+	cont "Hum-hum..."
 	done
 
 _SSAnneKitchenCook5Text::
-	text "Tu connais"
-	line "RONFLEX?"
+	text "Did you hear about"
+	line "SNORLAX?"
 
-	para "Il passe ses"
-	line "journées à manger"
-	cont "et à pioncer!"
+	para "All it does is"
+	line "eat and sleep!"
 	done
 
 _SSAnneKitchenCook6Text::
-	text "Sniff... "
-	line "...sniff..."
+	text "Snivel...Sniff..."
 
-	para "J'épluche"
-	line "des oignons..."
+	para "I only get to"
+	line "peel onions..."
+	cont "Snivel..."
 	done
 
 _SSAnneKitchenCook7MainCourseIsText::
-	text "Hm, hm! Je suis"
-	line "le chef cuistot!"
+	text "Er-hem! Indeed I"
+	line "am le CHEF!"
 
-	para "Voilà le menu:"
+	para "Le main course is"
 	prompt
 
 SSAnneKitchenCook7SalmonDuSaladText::
-	text "Salade de saumon!"
+	text "Salmon du Salad!"
 
-	para "Pour ceux qui ne"
-	line "sont pas contents"
-	cont "c'est la même"
-	cont "chose!"
+	para "Les guests may"
+	line "gripe it's fish"
+	cont "again, however!"
 	done
 
 SSAnneKitchenCook7EelsAuBarbecueText::
-	text "Pâté d'anguilles!"
+	text "Eels au Barbecue!"
 
-	para "De quoi donner"
-	line "des envies de"
-	cont "mutinerie!"
+	para "Les guests will"
+	line "mutiny, I fear."
 	done
 
 SSAnneKitchenCook7PrimeBeefSteakText::
-	text "Côtes de boeuf!"
+	text "Prime Beef Steak!"
 
-	para "Mais je crois"
-	line "que je n'ai plus"
-	cont "de viande?!"
+	para "But, have I enough"
+	line "fillets du beef?"
 	done

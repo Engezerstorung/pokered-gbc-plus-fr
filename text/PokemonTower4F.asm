@@ -1,45 +1,45 @@
 _PokemonTower4FChanneler1BattleText::
-	text "Un SPECTRE!"
-	line "Rhaaaaaa!"
-	done
-
-_PokemonTower4FChanneler1EndBattleText::
-	text "Ben!"
-	line "Où est le"
-	cont "SPECTRE?"
-	prompt
-
-_PokemonTower4FChanneler1AfterBattleText::
-	text "J'ai dû rêver..."
-	done
-
-_PokemonTower4FChanneler2BattleText::
-	text "Sois maudit!!!!"
+	text "GHOST! No!"
 	line "Kwaaah!"
 	done
 
+_PokemonTower4FChanneler1EndBattleText::
+	text "Where"
+	line "is the GHOST?"
+	prompt
+
+_PokemonTower4FChanneler1AfterBattleText::
+	text "I must have been"
+	line "dreaming..."
+	done
+
+_PokemonTower4FChanneler2BattleText::
+	text "Be cursed with"
+	line "me! Kwaaah!"
+	done
+
 _PokemonTower4FChanneler2EndBattleText::
-	text "QUOI!"
+	text "What!"
 	prompt
 
 _PokemonTower4FChanneler2AfterBattleText::
-	text "Nous ne pouvons"
-	line "identifier les"
-	cont "SPECTRES."
+	text "We can't crack"
+	line "the identity of"
+	cont "the GHOSTs."
 	done
 
 _PokemonTower4FChanneler3BattleText::
 	text "Huhuhu..."
-	line "Ne me frappe pas!"
+	line "Beat me not!"
 	done
 
 _PokemonTower4FChanneler3EndBattleText::
-	text "Hein?"
-	line "Qui? Quoi?"
+	text "Huh?"
+	line "Who? What?"
 	prompt
 
 _PokemonTower4FChanneler3AfterBattleText::
-	text "Que les âmes des"
-	line "défunts #MON"
-	cont "reposent en paix!"
+	text "May the departed"
+	line "souls of #MON"
+	cont "rest in peace..."
 	done

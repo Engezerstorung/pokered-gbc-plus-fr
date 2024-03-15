@@ -12,17 +12,17 @@ DisplayPCMainMenu::
 	jr nz, .leaguePCAvailable
 	hlcoord 0, 0
 	ld b, 8
-	ld c, 15
+	ld c, 14
 	jr .next
 .noOaksPC
 	hlcoord 0, 0
 	ld b, 6
-	ld c, 15
+	ld c, 14
 	jr .next
 .leaguePCAvailable
 	hlcoord 0, 0
 	ld b, 10
-	ld c, 15
+	ld c, 14
 .next
 	call TextBoxBorder
 	call UpdateSprites
@@ -39,11 +39,11 @@ DisplayPCMainMenu::
 .next2
 	call PlaceString
 	hlcoord 2, 4
-	ld de, PlayersPCText
+	ld de, wPlayerName
 	call PlaceString
 	ld l, c
 	ld h, b
-	ld de, wPlayerName
+	ld de, PlayersPCText
 	call PlaceString
 	CheckEvent EVENT_GOT_POKEDEX
 	jr z, .noOaksPC2
@@ -85,12 +85,12 @@ DisplayPCMainMenu::
 	ldh [hAutoBGTransferEnabled], a
 	ret
 
-SomeonesPCText:   db "PC DE ???@"
-BillsPCText:      db "PC DE LEO@"
-PlayersPCText:    db "PC DE @"
-OaksPCText:       db "PC DE CHEN@"
-PKMNLeaguePCText: db "LIGUE <PKMN>@"
-LogOffPCText:     db "DECONNEXION@"
+SomeonesPCText:   db "SOMEONE's PC@"
+BillsPCText:      db "BILL's PC@"
+PlayersPCText:    db "'s PC@"
+OaksPCText:       db "PROF.OAK's PC@"
+PKMNLeaguePCText: db "<PKMN>LEAGUE@"
+LogOffPCText:     db "LOG OFF@"
 
 BillsPC_::
 	ld hl, wd730
@@ -121,7 +121,7 @@ BillsPCMenu:
 	call LoadScreenTilesFromBuffer2DisableBGTransfer
 	hlcoord 0, 0
 	ld b, 10
-	ld c, 14
+	ld c, 12
 	call TextBoxBorder
 	hlcoord 2, 2
 	ld de, BillsPCMenuText
@@ -146,9 +146,9 @@ BillsPCMenu:
 	ld [wPlayerMonNumber], a
 	ld hl, WhatText
 	call PrintText
-	hlcoord 11, 14
+	hlcoord 9, 14
 	ld b, 2
-	ld c, 7
+	ld c, 9
 	call TextBoxBorder
 	ld a, [wCurrentBoxNum]
 	and $7f
@@ -164,7 +164,7 @@ BillsPCMenu:
 	add "1"
 .next
 	ldcoord_a 18, 16
-	hlcoord 12, 16
+	hlcoord 10, 16
 	ld de, BoxNoPCText
 	call PlaceString
 	ld a, 1
@@ -339,15 +339,15 @@ DisplayMonListMenu:
 	ret
 
 BillsPCMenuText:
-	db   "RETIRER <PKMN>"
-	next "STOCKER <PKMN>"
-	next "RELACHER <PKMN>"
-	next "CHANGER BOITE"
-	next "SALUT!"
+	db   "WITHDRAW <PKMN>"
+	next "DEPOSIT <PKMN>"
+	next "RELEASE <PKMN>"
+	next "CHANGE BOX"
+	next "SEE YA!"
 	db "@"
 
 BoxNoPCText:
-	db "BOITE@"
+	db "BOX No.@"
 
 KnowsHMMove::
 ; returns whether mon with party index [wWhichPokemon] knows an HM move
@@ -446,11 +446,11 @@ DisplayDepositWithdrawMenu:
 	call LoadGBPal
 	jr .loop
 
-DepositPCText:  db "STOCKER@"
-WithdrawPCText: db "RETIRER@"
+DepositPCText:  db "DEPOSIT@"
+WithdrawPCText: db "WITHDRAW@"
 StatsCancelPCText:
 	db   "STATS"
-	next "RETOUR@"
+	next "CANCEL@"
 
 SwitchOnText:
 	text_far _SwitchOnText

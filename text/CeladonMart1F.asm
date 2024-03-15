@@ -1,33 +1,31 @@
 _CeladonMart1FReceptionistText::
-	text "Bonjour et bien-"
-	line "venue au CENTRE"
-	cont "COMMERCIAL de"
-	cont "CELADOPOLE."
+	text "Hello! Welcome to"
+	line "CELADON DEPT."
+	cont "STORE."
 
-	para "Le tableau sur la"
-	line "droite décrit les"
-	cont "différents rayons"
-	cont "du magasin."
+	para "The board on the"
+	line "right describes"
+	cont "the store layout."
 	done
 
 _CeladonMart1FDirectorySignText::
-	text "RDC:"
-	line "RENSEIGNEMENTS"
+	text "1F: SERVICE"
+	line "    COUNTER"
 
-	para "1er: MARCHE DES"
-	line "DRESSEURS"
+	para "2F: TRAINER'S"
+	line "    MARKET"
 
-	para "2ème: JEUX VIDEO"
+	para "3F: TV GAME SHOP"
 
-	para "3ème: CADEAUX"
+	para "4F: WISEMAN GIFTS"
 
-	para "4ème: MEDICAMENTS"
+	para "5F: DRUG STORE"
 
-	para "DERNIER ETAGE:"
-	line "DISTRIBUTEURS"
+	para "ROOFTOP SQUARE:"
+	line "VENDING MACHINES"
 	done
 
 _CeladonMart1FCurrentFloorSignText::
-	text "RDC: "
-	line "RENSEIGNEMENTS"
+	text "1F: SERVICE"
+	line "    COUNTER"
 	done

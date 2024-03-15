@@ -17,10 +17,10 @@ PewterGym_Script:
 	jp LoadGymLeaderAndCityName
 
 .CityName:
-	db "ARGENTA@"
+	db "PEWTER CITY@"
 
 .LeaderName:
-	db "PIERRE@"
+	db "BROCK@"
 
 PewterGymResetScripts:
 	xor a

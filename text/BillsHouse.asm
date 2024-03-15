@@ -1,89 +1,88 @@
 _BillsHouseBillImNotAPokemonText::
-	text "Yhah! Je suis un"
+	text "Hiya! I'm a"
 	line "#MON..."
-	cont "..."
-	cont "heu...NON!"
+	cont "...No I'm not!"
 
-	para "Appelle-moi LEO!"
-	line "Je suis un vrai"
-	cont "#MANIAC!"
-	cont "Tu ne me crois"
-	cont "pas?"
+	para "Call me BILL!"
+	line "I'm a true blue"
+	cont "#MANIAC! Hey!"
+	cont "What's with that"
+	cont "skeptical look?"
 
-	para "Mais c'est vrai!"
-	line "J'ai raté une"
-	cont "expérience et me"
-	cont "voilà changé en"
-	cont "#MON!"
+	para "I'm not joshing"
+	line "you, I screwed up"
+	cont "an experiment and"
+	cont "got combined with"
+	cont "a #MON!"
 
-	para "Tu me crois"
-	line "maintenant?"
-	cont "Tu m'aides alors?"
+	para "So, how about it?"
+	line "Help me out here!"
 	done
 
 _BillsHouseBillUseSeparationSystemText::
-	text "Je vais dans le"
-	line "TELEPORTEUR."
-	cont "Lance vite le"
-	cont "programme sur mon"
-	cont "PC!"
+	text "When I'm in the"
+	line "TELEPORTER, go to"
+	cont "my PC and run the"
+	cont "Cell Separation"
+	cont "System!"
 	done
 
 _BillsHouseBillNoYouGottaHelpText::
-	text "Non!? Hé, mais tu"
-	line "dois m'aider, je"
-	cont "suis un mec cool!"
+	text "No!? Come on, you"
+	line "gotta help a guy"
+	cont "in deep trouble!"
 
-	para "Bon, que veux-tu"
-	line "en échange, mon"
-	cont "doux seigneur?"
+	para "What do you say,"
+	line "chief? Please?"
+	cont "OK? All right!"
 	prompt
 
 _BillsHouseBillThankYouText::
-	text "LEO: Yahoo!"
-	line "Merci, mec!"
-	cont "Je t'en dois une!"
+	text "BILL: Yeehah!"
+	line "Thanks, bud! I"
+	cont "owe you one!"
 
-	para "Bon, tu es venu"
-	line "pour voir ma"
-	cont "collection de"
-	cont "#MON?"
-	cont "Non? Tu rigoles!"
+	para "So, did you come"
+	line "to see my #MON"
+	cont "collection?"
+	cont "You didn't?"
+	cont "That's a bummer."
 
-	para "Bon, ben,"
-	line "prends ça en"
-	cont "remerciement!"
+	para "I've got to thank"
+	line "you... Oh here,"
+	cont "maybe this'll do."
 	prompt
 
 _SSTicketReceivedText::
-	text "<PLAYER> obtient:"
-	line "@"
+	text "<PLAYER> received"
+	line "an @"
 	text_ram wStringBuffer
 	text "!@"
 	text_end
 
 _SSTicketNoRoomText::
-	text "Ton inventaire"
-	line "est plein, mec!"
+	text "You've got too"
+	line "much stuff, bud!"
 	done
 
 _BillsHouseBillWhyDontYouGoInsteadOfMeText::
-	text "L'OCEANE, le"
-	line "bateau, est à"
-	cont "CARMIN. Les"
-	cont "passagers sont"
-	cont "des dresseurs!"
+	text "That cruise ship,"
+	line "S.S.ANNE, is in"
+	cont "VERMILION CITY."
+	cont "Its passengers"
+	cont "are all trainers!"
 
-	para "Je suis invité à"
-	line "leur fête mais je"
-	cont "ne supporte pas"
-	cont "ces mariolles!"
-	cont "Vas-y à ma place."
+	para "They invited me"
+	line "to their party,"
+	cont "but I can't stand"
+	cont "fancy do's. Why"
+	cont "don't you go"
+	cont "instead of me?"
 	done
 
 _BillsHouseBillCheckOutMyRarePokemonText::
-	text "LEO: Hé, regarde"
-	line "un peu ma collec'."
-	cont "J'ai des #MON"
-	cont "très rares!"
+	text "BILL: Look, bud,"
+	line "just check out"
+	cont "some of my rare"
+	cont "#MON on my PC!"
 	done

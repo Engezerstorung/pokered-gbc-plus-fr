@@ -1,66 +1,64 @@
 _LavenderTownLittleGirlDoYouBelieveInGhostsText::
-	text "Crois-tu aux"
-	line "SPECTRES?"
+	text "Do you believe in"
+	line "GHOSTs?"
 	done
 
 _LavenderTownLittleGirlSoThereAreBelieversText::
-	text "Vraiment? Il en"
-	line "faut..."
+	text "Really? So there"
+	line "are believers..."
 	done
 
 _LavenderTownLittleGirlHaHaGuessNotText::
-	text "T'as raison."
+	text "Hahaha, I guess"
+	line "not."
 
-	para "La main toute"
-	line "blanche sur ton"
-	cont "épaule est fausse"
-	cont "alors..."
+	para "That white hand"
+	line "on your shoulder,"
+	cont "it's not real."
 	done
 
 _LavenderTownCooltrainerMText::
-	text "Cette ville est"
-	line "le cimetière des"
-	cont "#MON."
+	text "This town is known"
+	line "as the grave site"
+	cont "of #MON."
 
-	para "La TOUR #MON"
-	line "est le lieu de"
-	cont "recueillement."
+	para "Memorial services"
+	line "are held in"
+	cont "#MON TOWER."
 	done
 
 _LavenderTownSuperNerdText::
-	text "Des SPECTRES sont"
-	line "apparus dans la"
-	cont "TOUR #MON."
+	text "GHOSTs appeared"
+	line "in #MON TOWER."
 
-	para "Ils doivent être"
-	line "les esprits des"
-	cont "#MON tués par"
-	cont "la ROCKET."
+	para "I think they're"
+	line "the spirits of"
+	cont "#MON that the"
+	cont "ROCKETs killed."
 	done
 
 _LavenderTownSignText::
-	text "LAVANVILLE"
-	line "Le pourpre de"
-	cont "la noblesse"
+	text "LAVENDER TOWN"
+	line "The Noble Purple"
+	cont "Town"
 	done
 
 _LavenderTownSilphScopeSignText::
-	text "Tout nouveau"
-	line "SCOPE SYLPHE!"
+	text "New SILPH SCOPE!"
 
-	para "Voir l'invisible!"
+	para "Make the Invisible"
+	line "Plain to See!"
 
-	para "SYLPHE SARL"
+	para "SILPH CO."
 	done
 
 _LavenderTownPokemonHouseSignText::
-	text "BENEVOLAT DE"
-	line "LAVANVILLE"
-	cont "MAISON #MON"
+	text "LAVENDER VOLUNTEER"
+	line "#MON HOUSE"
 	done
 
 _LavenderTownPokemonTowerSignText::
-	text "Paix à l'âme des"
-	line "#MON"
-	cont "TOUR #MON"
+	text "May the Souls of"
+	line "#MON Rest Easy"
+	cont "#MON TOWER"
 	done

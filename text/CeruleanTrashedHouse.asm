@@ -1,42 +1,36 @@
 _CeruleanTrashedHouseFishingGuruTheyStoleATMText::
-	text "Ces ROCKET, ils"
-	line "sont si méchants!"
+	text "Those miserable"
+	line "ROCKETs!"
 
-	para "Regarde ce qu'ils"
-	line "ont fait ici!"
+	para "Look what they"
+	line "did here!"
 
-	para "Ils m'ont volé"
-	line "une CT pour"
-	cont "apprendre à leurs"
-	cont "#MON à"
-	cont "creuser des"
-	cont "TUNNELS!"
+	para "They stole a TM"
+	line "for teaching"
+	cont "#MON how to"
+	cont "DIG holes!"
 
-	para "Ca m'a coûté les"
-	line "yeux de la tête!"
+	para "That cost me a"
+	line "bundle, it did!"
 	done
 
 _CeruleanTrashedHouseFishingGuruWhatsLostIsLostText::
-	text "Contre mauvaise"
-	line "fortune bon"
-	cont "coeur!"
+	text "I figure what's"
+	line "lost is lost!"
 
-	para "Je vais apprendre"
-	line "à mon TAUPIQUEUR"
-	cont "à creuser des"
-	cont "TUNNELS sans CT!"
+	para "I decided to teach"
+	line "DIGLETT how to"
+	cont "DIG without a TM!"
 	done
 
 _CeruleanTrashedHouseGirlText::
-	text "La TEAM ROCKET"
-	line "doit maintenant"
-	cont "creuser des"
-	cont "TUNNELS dans tout"
-	cont "ce qui bouge!"
+	text "TEAM ROCKET must"
+	line "be trying to DIG"
+	cont "their way into no"
+	cont "good!"
 	done
 
 _CeruleanTrashedHouseWallHoleText::
-	text "La TEAM ROCKET a"
-	line "creusé une"
-	cont "nouvelle sortie!"
+	text "TEAM ROCKET left"
+	line "a way out!"
 	done

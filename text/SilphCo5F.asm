@@ -1,52 +1,51 @@
 _SilphCo5FSilphWorkerMThatsYouRightText::
-	text "La TEAM ROCKET"
-	line "cherche un"
-	cont "intrus. C'est"
-	cont "toi, non?"
+	text "TEAM ROCKET is"
+	line "in an uproar over"
+	cont "some intruder."
+	cont "That's you right?"
 	done
 
 _SilphCo5FSilphWorkerMYoureOurHeroText::
-	text "La TEAM ROCKET"
-	line "est battue! Tu es"
-	cont "notre héros!"
+	text "TEAM ROCKET took"
+	line "off! You're our"
+	cont "hero! Thank you!"
 	done
 
 _SilphCo5FRocket1BattleText::
-	text "Il paraît qu'un"
-	line "gosse se balade"
-	cont "dans le coin..."
+	text "I heard a kid was"
+	line "wandering around."
 	done
 
 _SilphCo5FRocket1EndBattleText::
-	text "Vlan!"
+	text "Boom!"
 	prompt
 
 _SilphCo5FRocket1AfterBattleText::
-	text "C'est pas très"
-	line "malin d'provoquer"
-	cont "la TEAM ROCKET!"
+	text "It's not smart"
+	line "to pick a fight"
+	cont "with TEAM ROCKET!"
 	done
 
 _SilphCo5FScientistBattleText::
-	text "Nous étudions la"
-	line "technologie des"
-	cont "# BALL!"
+	text "We study #"
+	line "BALL technology"
+	cont "on this floor!"
 	done
 
 _SilphCo5FScientistEndBattleText::
-	text "PAF!"
-	line "J'suis mauvais!"
+	text "Dang!"
+	line "Blast it!"
 	prompt
 
 _SilphCo5FScientistAfterBattleText::
-	text "Nous recherchons"
-	line "la # BALL"
-	cont "ultime, capable"
-	cont "de tout attraper!"
+	text "We worked on the"
+	line "ultimate #"
+	cont "BALL which would"
+	cont "catch anything!"
 	done
 
 _SilphCo5FRockerBattleText::
-	text "Mais? C'est pas"
-	line "pour les p'tits"
-	cont "morveux ici!"
+	text "Whaaat? There"
+	line "shouldn't be any"
+	cont "children here?"
 	done

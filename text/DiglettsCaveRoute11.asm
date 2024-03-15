@@ -1,8 +1,8 @@
 _DiglettsCaveRoute11GamblerText::
-	text "Whoaaaa! Les"
-	line "TAUPIQUEUR ont"
-	cont "creusé ce tunnel!"
+	text "What a surprise!"
+	line "DIGLETTs dug this"
+	cont "long tunnel!"
 
-	para "Il va tout droit"
-	line "à JADIELLE!"
+	para "It goes right to"
+	line "VIRIDIAN CITY!"
 	done

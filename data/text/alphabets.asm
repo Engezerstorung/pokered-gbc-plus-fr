@@ -4,7 +4,7 @@ LowerCaseAlphabet:
 	db "stuvwxyz "
 	db "×():;[]<PK><MN>"
 	db "-?!♂♀/<DOT>,<ED>"
-	db "MAJUSCULES@"
+	db "UPPER CASE@"
 
 UpperCaseAlphabet:
 	db "ABCDEFGHI"
@@ -12,4 +12,4 @@ UpperCaseAlphabet:
 	db "STUVWXYZ "
 	db "×():;[]<PK><MN>"
 	db "-?!♂♀/<DOT>,<ED>"
-	db "minuscules@"
+	db "lower case@"

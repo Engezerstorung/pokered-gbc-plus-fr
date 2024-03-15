@@ -1,13 +1,12 @@
 _GameCornerPrizeRoomBaldingGuyText::
-	text "JE VEUX LE JOLI"
-	line "PORYGON!"
+	text "I sure do fancy"
+	line "that PORYGON!"
 
-	para "Mais les machines"
-	line "à sous sont trop"
-	cont "dures!"
+	para "But, it's hard to"
+	line "win at slots!"
 	done
 
 _GameCornerPrizeRoomGamblerText::
-	text "La chance..."
-	line "C'est mon truc!"
+	text "I had a major"
+	line "haul today!"
 	done

@@ -1,4 +1,4 @@
 _Route12Gate1FGuardText::
-	text "Il y a un beau"
-	line "panorama là-haut."
+	text "There's a lookout"
+	line "spot upstairs."
 	done

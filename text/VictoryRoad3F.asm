@@ -1,67 +1,63 @@
 _VictoryRoad3FCooltrainerM1BattleText::
-	text "J'ai entendu"
-	line "parler d'un jeune"
-	cont "prodige!"
+	text "I heard rumors of"
+	line "a child prodigy!"
 	done
 
 _VictoryRoad3FCooltrainerM1EndBattleText::
-	text "..."
-	line "C'était vrai!"
+	text "The"
+	line "rumors were true!"
 	prompt
 
 _VictoryRoad3FCooltrainerM1AfterBattleText::
-	text "Tu as battu"
-	line "GIOVANNI de la"
-	cont "TEAM ROCKET?"
+	text "You beat GIOVANNI"
+	line "of TEAM ROCKET?"
 	done
 
 _VictoryRoad3FCooltrainerF1BattleText::
-	text "Je vais te"
-	line "montrer ma"
-	cont "puissance!"
+	text "I'll show you just"
+	line "how good you are!"
 	done
 
 _VictoryRoad3FCooltrainerF1EndBattleText::
-	text "Non!"
-	line "Je suis furieuse!"
+	text "I'm"
+	line "furious!"
 	prompt
 
 _VictoryRoad3FCooltrainerF1AfterBattleText::
-	text "Ben, j'suis pas"
-	line "si forte que ça!"
+	text "You showed me just"
+	line "how good I was!"
 	done
 
 _VictoryRoad3FCooltrainerM2BattleText::
-	text "Seuls les élus"
-	line "peuvent passer!"
+	text "Only the chosen"
+	line "can pass here!"
 	done
 
 _VictoryRoad3FCooltrainerM2EndBattleText::
-	text "Oh!"
-	line "J'y crois pas!"
+	text "I"
+	line "don't believe it!"
 	prompt
 
 _VictoryRoad3FCooltrainerM2AfterBattleText::
-	text "Ces dresseurs"
-	line "sont de la"
-	cont "LIGUE #MON!"
-	cont "Fais attention!"
+	text "All trainers here"
+	line "are headed to the"
+	cont "#MON LEAGUE!"
+	cont "Be careful!"
 	done
 
 _VictoryRoad3FCooltrainerF2BattleText::
-	text "Un dresseur est"
-	line "toujours en quête"
-	cont "d'adversaires plus"
-	cont "puissants!"
+	text "Trainers live to"
+	line "seek stronger"
+	cont "opponents!"
 	done
 
 _VictoryRoad3FCooltrainerF2EndBattleText::
 	text "Oh!"
-	line "T'es un dur toi!"
+	line "So strong!"
 	prompt
 
 _VictoryRoad3FCooltrainerF2AfterBattleText::
-	text "Bats-toi bien,"
-	line "et tu seras"
-	cont "un bon dresseur!"
+	text "By fighting tough"
+	line "battles, you get"
+	cont "stronger!"
 	done

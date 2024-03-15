@@ -288,10 +288,10 @@ LinkMenu:
 	call Delay3
 	call CloseLinkConnection
 	ld hl, LinkCanceledText
+	vc_hook Wireless_net_end
 	call PrintText
 	ld hl, wd72e
 	res 6, [hl]
-	vc_hook Wireless_net_end
 	ret
 
 WhereWouldYouLikeText:
@@ -338,18 +338,18 @@ SpecialEnterMap::
 	jp EnterMap
 
 ContinueText:
-	db "CONTINUER"
+	db "CONTINUE"
 	next ""
 	; fallthrough
 
 NewGameText:
-	db   "NOUVEAU JEU"
-	next "OPTIONS@"
+	db   "NEW GAME"
+	next "OPTION@"
 
 CableClubOptionsText:
-	db   "CENTRE TROC"
-	next "COLISEE"
-	next "RETOUR@"
+	db   "TRADE CENTER"
+	next "COLOSSEUM"
+	next "CANCEL@"
 
 DisplayContinueGameInfo:
 	xor a
@@ -432,10 +432,10 @@ PrintPlayTime:
 	jp PrintNumber
 
 SaveScreenInfoText:
-	db   "JOUEUR"
-	next "BADGES        "
-	next "#DEX       "
-	next "TEMPS@"
+	db   "PLAYER"
+	next "BADGES    "
+	next "#DEX    "
+	next "TIME@"
 
 DisplayOptionMenu:
 	hlcoord 0, 0
@@ -590,19 +590,19 @@ DisplayOptionMenu:
 	jp .eraseOldMenuCursor
 
 TextSpeedOptionText:
-	db   "VIT. TEXTE"
-	next " 3     2      1   @"
+	db   "TEXT SPEED"
+	next " FAST  MEDIUM SLOW@"
 
 BattleAnimationOptionText:
-	db   "ANIMATION COMBAT"
-	next " OUI      NON@"
+	db   "BATTLE ANIMATION"
+	next " ON       OFF@"
 
 BattleStyleOptionText:
-	db   "STYLE COMBAT"
-	next " CHOIX    DEFINI@"
+	db   "BATTLE STYLE"
+	next " SHIFT    SET@"
 
 OptionMenuCancelText:
-	db "RETOUR@"
+	db "CANCEL@"
 
 ; sets the options variable according to the current placement of the menu cursors in the options menu
 SetOptionsFromCursorPositions:

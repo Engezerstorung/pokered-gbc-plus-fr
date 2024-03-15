@@ -1,35 +1,33 @@
 _CopycatsHouse2FCopycatDoYouLikePokemonText::
-	text "<PLAYER>: Salut!"
-	line "tu aimes les"
-	cont "#MON?"
+	text "<PLAYER>: Hi! Do"
+	line "you like #MON?"
 
-	para "<PLAYER>: Bwoarf!"
-	line "J'disais ça comme"
-	cont "ça!"
+	para "<PLAYER>: Uh no, I"
+	line "just asked you."
 
-	para "<PLAYER>: Hein?"
-	line "T'es bizarre toi!"
+	para "<PLAYER>: Huh?"
+	line "You're strange!"
 
-	para "COPIEUSE: Hmm?"
-	line "Arrêter de mimer?"
+	para "COPYCAT: Hmm?"
+	line "Quit mimicking?"
 
-	para "Mais je ne sais"
-	line "faire que ça!"
+	para "But, that's my"
+	line "favorite hobby!"
 	prompt
 
 _CopycatsHouse2FCopycatTM31PreReceiveText::
-	text "Whaaaaaa!"
-	line "Une #POUPEE!"
+	text "Oh wow!"
+	line "A # DOLL!"
 
-	para "C'est pour moi?"
-	line "Merci!"
+	para "For me?"
+	line "Thank you!"
 
-	para "Tiens, prends ça"
-	line "en échange!"
+	para "You can have"
+	line "this, then!"
 	prompt
 
 _CopycatsHouse2FCopycatReceivedTM31Text::
-	text "<PLAYER> obtient:"
+	text "<PLAYER> received"
 	line "@"
 	text_ram wStringBuffer
 	text "!@"
@@ -38,71 +36,65 @@ _CopycatsHouse2FCopycatReceivedTM31Text::
 _CopycatsHouse2FCopycatTM31Explanation1Text::
 	text_start
 
-	para "CT31: COPIE!"
+	para "TM31 contains my"
+	line "favorite, MIMIC!"
 
-	para "Enseigne-la au"
-	line "bon #MON!@"
+	para "Use it on a good"
+	line "#MON!@"
 	text_end
 
 _CopycatsHouse2FCopycatTM31Explanation2Text::
-	text "<PLAYER>: Salut!"
-	line "Merci pour la"
-	cont "CT31!"
+	text "<PLAYER>: Hi!"
+	line "Thanks for TM31!"
 
 	para "<PLAYER>: Pardon?"
 
-	para "<PLAYER>: Heu..."
-	line "C'est aussi cool"
-	cont "que ça de"
-	cont "m'imiter?"
+	para "<PLAYER>: Is it"
+	line "that fun to mimic"
+	cont "my every move?"
 
-	para "COPIEUSE: Ah non!"
-	line "C'est vraiment la"
-	cont "galère, t'arrêtes"
-	cont "pas d'bouger!"
+	para "COPYCAT: You bet!"
+	line "It's a scream!"
 	done
 
 _CopycatsHouse2FCopycatTM31NoRoomText::
-	text "T'en veux pas?@"
+	text "Don't you want"
+	line "this?@"
 	text_end
 
 _CopycatsHouse2FDoduoText::
-	text "DODUO: Doduuu!"
+	text "DODUO: Giiih!"
 
-	para "AH, JE RIS DE"
-	line "ME VOIR SI BELLE"
-	cont "EN CE MIROIR!"
+	para "MIRROR MIRROR ON"
+	line "THE WALL, WHO IS"
+	cont "THE FAIREST ONE"
+	cont "OF ALL?"
 	done
 
 _CopycatsHouse2FRareDollText::
-	text "Ca, un #MON"
-	line "rare? Tu t'moques"
-	cont "de moi!"
-	cont "C'est rien qu'une"
-	cont "poupée! Pas belle"
-	cont "en plus!"
+	text "This is a rare"
+	line "#MON! Huh?"
+	cont "It's only a doll!"
 	done
 
 _CopycatsHouse2FSNESText::
-	text "Un plombier?"
-	line "Mais..."
-	cont "Kesski fait?"
-	cont "Y saute? Cool."
+	text "A game with MARIO"
+	line "wearing a bucket"
+	cont "on his head!"
 	done
 
 _CopycatsHouse2FPCMySecretsText::
 	text "..."
 
-	para "Mes secrets!"
+	para "My Secrets!"
 
-	para "Mon boulot:"
-	line "je mime!"
-	cont "Ma passion:"
-	cont "les poupées!"
-	cont "Mon #MON"
-	cont "préféré: MELOFEE!"
+	para "Skill: Mimicry!"
+	line "Hobby: Collecting"
+	cont "dolls!"
+	cont "Favorite #MON:"
+	cont "CLEFAIRY!"
 	done
 
 _CopycatsHouse2FPCCantSeeText::
-	text "J'vois rien!"
+	text "Huh? Can't see!"
 	done

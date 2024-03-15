@@ -1,43 +1,36 @@
 _Route21Fisher1BattleText::
-	text "Tu veux savoir"
-	line "s'il y a des"
-	cont "poissons ici?"
+	text "You want to know"
+	line "if the fish are"
+	cont "biting?"
 	done
 
 _Route21Fisher1EndBattleText::
-	text "Paf!"
+	text "Dang!"
 	prompt
 
 _Route21Fisher1AfterBattleText::
-	text "Y'a comme une"
-	line "absence violente"
-	cont "de poisson!"
+	text "I can't catch"
+	line "anything good!"
 	done
 
 _Route21Fisher2BattleText::
-	text "J'ai eu une bonne"
-	line "prise! Tu veux"
-	cont "tester?"
+	text "I got a big haul!"
+	line "Wanna go for it?"
 	done
 
 _Route21Fisher2EndBattleText::
-	text "Zut!"
-	line "Encore un"
-	cont "MAGICARPE!"
+	text "Darn"
+	line "MAGIKARP!"
 	prompt
 
 _Route21Fisher2AfterBattleText::
-	text "Je ne pêche que"
-	line "des MAGICARPE!"
+	text "I seem to only"
+	line "catch MAGIKARP!"
 	done
 
 _Route21Swimmer1BattleText::
-	text "Ah, se faire"
-	line "fouetter la"
-	cont "face par"
-	cont "l'écume..."
-	cont "La douleur... "
-	cont "C'est bon."
+	text "The sea cleanses"
+	line "my body and soul!"
 	done
 
 _Route21Swimmer1EndBattleText::
@@ -45,108 +38,100 @@ _Route21Swimmer1EndBattleText::
 	prompt
 
 _Route21Swimmer1AfterBattleText::
-	text "Je vais faire un"
-	line "tour en montagne!"
+	text "I like the"
+	line "mountains too!"
 	done
 
 _Route21Swimmer2BattleText::
-	text "T'aimes pas la"
-	line "nage?"
-	cont "Tu veux t'battre?"
+	text "What's wrong with"
+	line "me swimming?"
 	done
 
 _Route21Swimmer2EndBattleText::
-	text "Yah!"
-	line "Coup bas, c'est"
-	cont "pas réglo!"
+	text "Cheap"
+	line "shot!"
 	prompt
 
 _Route21Swimmer2AfterBattleText::
-	text "Hein? J'ressemble"
-	line "à un loubard?"
-	cont "Dégage!"
+	text "I look like what?"
+	line "A studded inner"
+	cont "tube? Get lost!"
 	done
 
 _Route21Swimmer3BattleText::
-	text "J'ai attrapé tous"
-	line "mes #MON"
-	cont "dans l'eau!"
+	text "I caught all my"
+	line "#MON at sea!"
 	done
 
 _Route21Swimmer3EndBattleText::
-	text "Blourb!!"
-	line "J'sais pas nager!!"
+	text "Diver!!"
+	line "Down!!"
 	prompt
 
 _Route21Swimmer3AfterBattleText::
-	text "Mais où as-tu"
-	line "attrapé autant"
-	cont "de #MON?"
+	text "Where'd you catch"
+	line "your #MON?"
 	done
 
 _Route21Swimmer4BattleText::
-	text "Hop là! J'suis en"
-	line "plein triathlon!"
+	text "Right now, I'm in"
+	line "a triathlon meet!"
 	done
 
 _Route21Swimmer4EndBattleText::
-	text "Nyien..."
-	line "J'ai perdu le"
-	cont "rythme..."
+	text "Pant..."
+	line "pant...pant..."
 	prompt
 
 _Route21Swimmer4AfterBattleText::
-	text "Tu m'as battu!"
-	line "Mais je suis le"
-	cont "champion du"
-	cont "marathon!"
+	text "I'm beat!"
+	line "But, I still have"
+	cont "the bike race and"
+	cont "marathon left!"
 	done
 
 _Route21Swimmer5BattleText::
-	text "Ah! Le ciel, le"
-	line "soleil et la mer!"
-	cont "...ça craint."
+	text "Ahh! Feel the sun"
+	line "and the wind!"
 	done
 
 _Route21Swimmer5EndBattleText::
-	text "Woh!"
-	line "J'ai perdu!"
+	text "Yow!"
+	line "I lost!"
 	prompt
 
 _Route21Swimmer5AfterBattleText::
-	text "J'ai des coups de"
-	line "soleil!"
+	text "I'm sunburnt to a"
+	line "crisp!"
 	done
 
 _Route21Fisher3BattleText::
-	text "Va-t'en, tu"
-	line "m'fais peur!"
+	text "Hey, don't scare"
+	line "away the fish!"
 	done
 
 _Route21Fisher3EndBattleText::
-	text "Heu!"
-	line "J'le ferai plus!"
+	text "Sorry!"
+	line "I didn't mean it!"
 	prompt
 
 _Route21Fisher3AfterBattleText::
-	text "J'étais énervé"
-	line "de n'avoir rien"
-	cont "attrapé."
+	text "I was just angry"
+	line "that I couldn't"
+	cont "catch anything."
 	done
 
 _Route21Fisher4BattleText::
-	text "Reste donc avec"
-	line "moi, le temps"
-	cont "d'avoir une"
-	cont "touche!"
+	text "Keep me company"
+	line "'til I get a hit!"
 	done
 
 _Route21Fisher4EndBattleText::
-	text "Argh!"
-	line "Perte de temps!"
+	text "That"
+	line "burned some time."
 	prompt
 
 _Route21Fisher4AfterBattleText::
-	text "Attends! J'ai une"
-	line "touche!"
+	text "Oh wait! I got a"
+	line "bite! Yeah!"
 	done

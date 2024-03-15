@@ -1,167 +1,152 @@
 _SaffronCityRocket1Text::
-	text "Kesstu veux?"
-	line "Du vent!"
+	text "What do you want?"
+	line "Get lost!"
 	done
 
 _SaffronCityRocket2Text::
-	text "Eul' CHEF dit"
-	line "qu'il contrôlera"
-	cont "c'te ville!"
+	text "BOSS said he'll"
+	line "take this town!"
 	done
 
 _SaffronCityRocket3Text::
-	text "Bouge eud' là!"
+	text "Get out of the"
+	line "way!"
 	done
 
 _SaffronCityRocket4Text::
-	text "SAFRANIA est à"
-	line "la TEAM ROCKET!"
+	text "SAFFRON belongs"
+	line "to TEAM ROCKET!"
 	done
 
 _SaffronCityRocket5Text::
-	text "Etre méchant,"
-	line "c'est mieux que"
-	cont "d'se laver les"
-	cont "dents!"
+	text "Being evil makes"
+	line "me feel so alive!"
 	done
 
 _SaffronCityRocket6Text::
-	text "Tu m'as marché"
-	line "sul'pied, non?"
+	text "Ow! Watch where"
+	line "you're walking!"
 	done
 
 _SaffronCityRocket7Text::
-	text "Avec la SYLPHE"
-	line "dans not' poche,"
-	cont "les #MON du"
-	cont "monde entier"
-	cont "seront notre"
-	cont "bizness!"
+	text "With SILPH under"
+	line "control, we can"
+	cont "exploit #MON"
+	cont "around the world!"
 	done
 
 _SaffronCityScientistText::
-	text "T'as tout cassé"
-	line "la ROCKET tout"
-	cont "seul? Dingue!"
+	text "You beat TEAM"
+	line "ROCKET all alone?"
+	cont "That's amazing!"
 	done
 
 _SaffronCitySilphWorkerMText::
-	text "Ouais! La TEAM"
-	line "est partie!"
-	cont "On peut enfin"
-	cont "respirer!"
+	text "Yeah! TEAM ROCKET"
+	line "is gone!"
+	cont "It's safe to go"
+	cont "out again!"
 	done
 
 _SaffronCitySilphWorkerFText::
-	text "Tout le monde va"
-	line "vite revenir à"
-	cont "SAFRANIA."
+	text "People should be"
+	line "flocking back to"
+	cont "SAFFRON now."
 	done
 
 _SaffronCityGentlemanText::
-	text "Je suis venu ici"
-	line "en volant sur mon"
-	cont "ROUCARNAGE après"
-	cont "avoir lu les"
-	cont "nouvelles de la"
-	cont "SYLPHE."
+	text "I flew here on my"
+	line "PIDGEOT when I"
+	cont "read about SILPH."
 
-	para "Tout est déjà"
-	line "fini? J'ai tout"
-	cont "loupé?"
+	para "It's already over?"
+	line "I missed the"
+	cont "media action."
 	done
 
 _SaffronCityPidgeotText::
-	text "ROUCARNAGE: Rou!@"
+	text "PIDGEOT: Bi bibii!@"
 	text_end
 
 _SaffronCityRockerText::
-	text "J'ai vu le CHEF"
-	line "de la TEAM ROCKET"
-	cont "s'enfuir de la"
-	cont "SYLPHE."
+	text "I saw ROCKET"
+	line "BOSS escaping"
+	cont "SILPH's building."
 	done
 
 _SaffronCityRocket8Text::
-	text "Moi...."
-	line "Chuis un garde."
+	text "I'm a security"
+	line "guard."
 
-	para "Les nabots tout"
-	line "louches, moi,"
-	cont "j'les laisse pas"
-	cont "passer!"
+	para "Suspicious kids I"
+	line "don't allow in!"
 	done
 
 _SaffronCityRocket9Text::
 	text "..."
-	line "(pionce)..."
+	line "Snore..."
 
-	para "Ha! Il dort!"
+	para "Hah! He's taking"
+	line "a snooze!"
 	done
 
 _SaffronCitySignText::
-	text "SAFRANIA"
-	line "Belle et dorée,"
-	cont "le commerce est"
-	cont "ici prospère"
+	text "SAFFRON CITY"
+	line "Shining, Golden"
+	cont "Land of Commerce"
 	done
 
 _SaffronCityFightingDojoSignText::
-	text "DOJO"
+	text "FIGHTING DOJO"
 	done
 
 _SaffronCityGymSignText::
-	text "SAFRANIA"
-	line "ARENE #MON"
-	cont "CHAMPION: MORGANE"
+	text "SAFFRON CITY"
+	line "#MON GYM"
+	cont "LEADER: SABRINA"
 
-	para "Maîtresse des"
-	line "forces psychiques"
+	para "The Master of"
+	line "Psychic #MON!"
 	done
 
 _SaffronCityTrainerTips1Text::
-	text "ASTUCE"
+	text "TRAINER TIPS"
 
-	para "TOTAL SOIN fait"
-	line "disparaître tous"
-	cont "les changements"
-	cont "de statut comme"
-	cont "le sommeil ou le"
-	cont "gel."
+	para "FULL HEAL cures"
+	line "all ailments like"
+	cont "sleep and burns."
 
-	para "C'est un peu cher"
-	line "mais ça vaut le"
-	cont "coup."
+	para "It costs a bit"
+	line "more, but it's"
+	cont "more convenient."
 	done
 
 _SaffronCityTrainerTips2Text::
-	text "ASTUCE"
+	text "TRAINER TIPS"
 
-	para "La SUPER BALL"
-	line "augmente les"
-	cont "chances de"
-	cont "capture."
+	para "New GREAT BALL"
+	line "offers improved"
+	cont "capture rates."
 
-	para "Faites un essai"
-	line "sur des #MON"
-	cont "très vivaces."
+	para "Try it on those"
+	line "hard-to-catch"
+	cont "#MON."
 	done
 
 _SaffronCitySilphCoSignText::
-	text "SYLPHE SARL"
-	line "SIEGE SOCIAL"
+	text "SILPH CO."
+	line "OFFICE BUILDING"
 	done
 
 _SaffronCityMrPsychicsHouseSignText::
-	text "MAISON DE"
-	line "MR. PSY"
+	text "MR.PSYCHIC's"
+	line "HOUSE"
 	done
 
 _SaffronCitySilphCoLatestProductSignText::
-	text "Dernier produit"
-	line "de la SYLPHE!"
+	text "SILPH's latest"
+	line "product!"
 
-	para "La date de sortie"
-	line "est encore à"
-	cont "déterminer..."
+	para "Release to be"
+	line "determined..."
 	done

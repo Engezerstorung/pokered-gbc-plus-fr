@@ -1,13 +1,13 @@
 _ViridianSchoolHouseBrunetteGirlText::
-	text "Pfouh! J'essaie"
-	line "d'apprendre mes"
-	cont "leçons."
+	text "Whew! I'm trying"
+	line "to memorize all"
+	cont "my notes."
 	done
 
 _ViridianSchoolHouseCooltrainerFText::
-	text "OK!"
+	text "Okay!"
 
-	para "Lis attentivement"
-	line "le tableau avant"
-	cont "de partir!"
+	para "Be sure to read"
+	line "the blackboard"
+	cont "carefully!"
 	done

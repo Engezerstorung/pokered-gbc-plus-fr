@@ -1,26 +1,21 @@
 _CinnabarPokecenterCooltrainerFText::
-	text "Tu peux empêcher"
-	line "une évolution."
+	text "You can cancel"
+	line "evolution."
 
-	para "Quand un #MON"
-	line "évolue, tu"
-	cont "peux le stopper"
-	cont "pour le laisser"
-	cont "comme avant."
+	para "When a #MON is"
+	line "evolving, you can"
+	cont "stop it and leave"
+	cont "it the way it is."
 	done
 
 _CinnabarPokecenterGentlemanText::
-	text "Dis-moi, t'as des"
-	line "copains?"
+	text "Do you have any"
+	line "friends?"
 
-	para "Un #MON"
-	line "échangé grandit"
-	cont "très vite."
+	para "#MON you get"
+	line "in trades grow"
+	cont "very quickly."
 
-	para "Alors va vite"
-	line "voir tes p'tits"
-	cont "amis et échange,"
-	cont "échange et..."
-	cont "échange encore!"
+	para "I think it's"
+	line "worth a try!"
 	done
-

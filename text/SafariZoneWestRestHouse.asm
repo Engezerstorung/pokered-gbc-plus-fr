@@ -1,20 +1,19 @@
 _SafariZoneWestRestHouseScientistText::
-	text "Une PIERRE peut"
-	line "faire fuir les"
-	cont "#MON mais ils"
-	cont "seront plus fa-"
-	cont "ciles à capturer."
+	text "Tossing ROCKs at"
+	line "#MON might"
+	cont "make them run,"
+	cont "but they'll be"
+	cont "easier to catch."
 	done
 
 _SafariZoneWestRestHouseCooltrainerMText::
-	text "Un APPAT peut"
-	line "faciliter vos"
-	cont "captures."
+	text "Using BAIT will"
+	line "make #MON"
+	cont "easier to catch."
 	done
 
 _SafariZoneWestRestHouseSilphWorkerFText::
-	text "J'ai cherché"
-	line "toute la sainte"
-	cont "journée mais j'ai"
-	cont "rien capturé."
+	text "I hiked a lot, but"
+	line "I didn't see any"
+	cont "#MON I wanted."
 	done

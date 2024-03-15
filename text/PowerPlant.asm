@@ -3,5 +3,5 @@ _PowerPlantVoltorbBattleText::
 	done
 
 _PowerPlantZapdosBattleText::
-	text "Yahoo!@"
+	text "Gyaoo!@"
 	text_end

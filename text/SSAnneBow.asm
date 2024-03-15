@@ -1,58 +1,52 @@
 _SSAnneBowSuperNerdText::
-	text "La fête est"
-	line "finie! Nous"
-
-	para "allons bientôt"
-	line "lever l'ancre!"
+	text "The party's over."
+	line "The ship will be"
+	cont "departing soon."
 	done
 
 _SSAnneBowSailor1Text::
-	text "Nyah! Briquer le"
-	line "pont c'est un"
-	cont "travail épuisant!"
+	text "Scrubbing decks"
+	line "is hard work!"
 	done
 
 _SSAnneBowCooltrainerMText::
-	text "Gueuh! J'suis"
-	line "malaaaaade..."
+	text "Urf. I feel ill."
 
-	para "Je vais bientôt"
-	line "vom... (beurp)"
+	para "I stepped out to"
+	line "get some air."
 	done
 
 _SSAnneBowSailor2BattleText::
-	text "Hé! Copain!"
+	text "Hey matey!"
 
-	para "Tu danses?"
-	line "Un tango?"
+	para "Let's do a little"
+	line "jig!"
 	done
 
 _SSAnneBowSailor2EndBattleText::
-	text "..."
-	line "T'es bon!"
+	text "You're"
+	line "impressive!"
 	prompt
 
 _SSAnneBowSailor2AfterBattleText::
-	text "Tu sais combien"
-	line "il y a de #MON"
-	cont "différents? Hein,"
-	cont "tu l'sais, hein?"
+	text "How many kinds of"
+	line "#MON do you"
+	cont "think there are?"
 	done
 
 _SSAnneBowSailor3BattleText::
-	text "Hoho! Alors, on"
-	line "a le mal de mer? "
+	text "Ahoy there!"
+	line "Are you seasick?"
 	done
 
 _SSAnneBowSailor3EndBattleText::
-	text "Oh!"
-	line "Beau combat!"
+	text "I was"
+	line "just careless!"
 	prompt
 
 _SSAnneBowSailor3AfterBattleText::
-	text "Mon Pôpa, y dit"
-	line "qu'y a 100 #MON"
-	cont "différents. J'suis"
-	cont "sûr qu'y en a"
-	cont "plus..."
+	text "My Pa said there"
+	line "are 100 kinds of"
+	cont "#MON. I think"
+	cont "there are more."
 	done

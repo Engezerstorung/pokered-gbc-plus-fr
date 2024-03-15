@@ -314,6 +314,7 @@ CheckSGB:
 	ldh a, [rJOYP]
 	ldh a, [rJOYP]
 	call Wait7000
+	vc_hook Unknown_network_reset
 	call Wait7000
 	ld a, $30
 	ldh [rJOYP], a
@@ -337,7 +338,6 @@ CheckSGB:
 SendMltReq1Packet:
 	ld hl, MltReq1Packet
 	call SendSGBPacket
-	vc_hook Unknown_network_reset
 	jp Wait7000
 
 CopyGfxToSuperNintendoVRAM:

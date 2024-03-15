@@ -1,18 +1,17 @@
 _SilphCo4FSilphWorkerMImHidingText::
-	text "Chut! Tu n'vois"
-	line "pas que je"
-	cont "suis caché?"
+	text "Sssh! Can't you"
+	line "see I'm hiding?"
 	done
 
 _SilphCo4FSilphWorkerMTeamRocketIsGoneText::
-	text "La TEAM ROCKET"
-	line "est partie? COOL!"
+	text "Huh? TEAM ROCKET"
+	line "is gone?"
 	done
 
 _SilphCo4FRocket1BattleText::
-	text "La TEAM ROCKET"
-	line "contrôle"
-	cont "la SYLPHE SARL!!!"
+	text "TEAM ROCKET has"
+	line "taken command of"
+	cont "SILPH CO.!"
 	done
 
 _SilphCo4FRocket1EndBattleText::
@@ -20,41 +19,38 @@ _SilphCo4FRocket1EndBattleText::
 	prompt
 
 _SilphCo4FRocket1AfterBattleText::
-	text "Le BOSS attend"
-	line "ce moment depuis"
-	cont "longtemps!"
+	text "Fwahahaha!"
+	line "My BOSS has been"
+	cont "after this place!"
 	done
 
 _SilphCo4FScientistBattleText::
-	text "Mes #MON sont"
-	line "mes soldats!!!"
+	text "My #MON are my"
+	line "loyal soldiers!"
 	done
 
 _SilphCo4FScientistEndBattleText::
-	text "NAN!"
-	line "Mes #MON!"
+	text "Darn!"
+	line "You weak #MON!"
 	prompt
 
 _SilphCo4FScientistAfterBattleText::
-	text "Les portes sont"
-	line "sécurisées! Il"
-	cont "te faut une"
-	cont "CARTE MAGN. pour"
-	cont "les ouvrir!"
+	text "The doors are"
+	line "electronically"
+	cont "locked! A CARD"
+	cont "KEY opens them!"
 	done
 
 _SilphCo4FRocket2BattleText::
-	text "CONTACT!"
-	line "INTRUS DETECTE!"
+	text "Intruder spotted!"
 	done
 
 _SilphCo4FRocket2EndBattleText::
-	text "Mais?"
-	line "Qui es-tu?"
+	text "Who"
+	line "are you?"
 	prompt
 
 _SilphCo4FRocket2AfterBattleText::
-	text "Je dois prévenir"
-	line "le chef au 10ème"
-	cont "étage!"
+	text "I better tell the"
+	line "BOSS on 11F!"
 	done

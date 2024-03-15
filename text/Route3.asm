@@ -1,156 +1,145 @@
 _Route3Text1::
-	text "Pfou...Je vais"
-	line "faire une halte."
-	cont "Moouarf..."
+	text "Whew... I better"
+	line "take a rest..."
+	cont "Groan..."
 
-	para "Ce tunnel"
-	line "d'AZURIA est"
-	cont "épuisant!"
+	para "That tunnel from"
+	line "CERULEAN takes a"
+	cont "lot out of you!"
 	done
 
 _Route3Youngster1BattleText::
-	text "Hé! On s'est déjà"
-	line "vu dans la FORET"
-	cont "DE JADE!"
+	text "Hey! I met you in"
+	line "VIRIDIAN FOREST!"
 	done
 
 _Route3Youngster1EndBattleText::
-	text "Ben,"
-	line "tu m'as encore"
-	cont "battu!"
+	text "You"
+	line "beat me again!"
 	prompt
 
 _Route3Youngster1AfterBattleText::
-	text "Il y a beaucoup"
-	line "de #MON"
-	cont "différents dans"
-	cont "la forêt!"
+	text "There are other"
+	line "kinds of #MON"
+	cont "than those found"
+	cont "in the forest!"
 	done
 
 _Route3Youngster2BattleText::
-	text "Yahaa! J'adore"
-	line "les shorts! Viens"
-	cont "t'battre!"
+	text "Hi! I like shorts!"
+	line "They're comfy and"
+	cont "easy to wear!"
 	done
 
 _Route3Youngster2EndBattleText::
-	text "Nyahaa,"
-	line "tu m'as taillé"
-	cont "un short!"
+	text "I don't"
+	line "believe it!"
 	prompt
 
 _Route3Youngster2AfterBattleText::
-	text "Pour ranger tes"
-	line "#MON,"
-	cont "utilise un PC."
-	cont "Chaque boîte"
-	cont "contient"
-	cont "20 #MON!"
+	text "Are you storing"
+	line "your #MON on"
+	cont "PC? Each BOX can"
+	cont "hold 20 #MON!"
 	done
 
 _Route3CooltrainerF1BattleText::
-	text "Tu veux ma"
-	line "photo?"
+	text "You looked at me,"
+	line "didn't you?"
 	done
 
 _Route3CooltrainerF1EndBattleText::
-	text "Tiens,"
-	line "c'est ma photo!"
+	text "You're"
+	line "mean!"
 	prompt
 
 _Route3CooltrainerF1AfterBattleText::
-	text "Baisse les yeux"
-	line "si tu veux éviter"
-	cont "la baston!"
+	text "Quit staring if"
+	line "you don't want to"
+	cont "fight!"
 	done
 
 _Route3Youngster3BattleText::
-	text "T'es un dresseur?"
-	line "A l'attaque!"
+	text "Are you a trainer?"
+	line "Let's fight!"
 	done
 
 _Route3Youngster3EndBattleText::
-	text "Avec"
-	line "d'autres #MON"
-	cont "j'aurais gagné!"
+	text "If I"
+	line "had new #MON I"
+	cont "would've won!"
 	prompt
 
 _Route3Youngster3AfterBattleText::
-	text "Quand l'une des"
-	line "boîtes de ton PC"
-	cont "est pleine,"
-	cont "active une autre"
-	cont "boîte!"
+	text "If a #MON BOX"
+	line "on the PC gets"
+	cont "full, just switch"
+	cont "to another BOX!"
 	done
 
 _Route3CooltrainerF2BattleText::
-	text "Dis donc beau"
-	line "ténébreux..."
-	cont "Tu veux qu'on"
-	cont "s'boxe?"
+	text "That look you"
+	line "gave me, it's so"
+	cont "intriguing!"
 	done
 
 _Route3CooltrainerF2EndBattleText::
-	text "Hmmm..."
-	line "Sois gentil!"
+	text "Be nice!"
 	prompt
 
 _Route3CooltrainerF2AfterBattleText::
-	text "Evite les regards"
-	line "si tu ne veux"
-	cont "pas combattre!"
+	text "Avoid fights by"
+	line "not letting"
+	cont "people see you!"
 	done
 
 _Route3Youngster4BattleText::
-	text "Hé! T'as pas de"
-	line "short! T'es nul!"
+	text "Hey! You're not"
+	line "wearing shorts!"
 	done
 
 _Route3Youngster4EndBattleText::
-	text "Perdu!"
-	line "Perdu, et perdu!"
+	text "Lost!"
+	line "Lost! Lost!"
 	prompt
 
 _Route3Youngster4AfterBattleText::
-	text "Je porte toujours"
-	line "des shorts, même"
-	cont "en hiver!"
+	text "I always wear"
+	line "shorts, even in"
+	cont "winter!"
 	done
 
 _Route3Youngster5BattleText::
-	text "Fais gaffe à mes"
-	line "nouveaux #MON!"
+	text "You can fight my"
+	line "new #MON!"
 	done
 
 _Route3Youngster5EndBattleText::
-	text "Ben,"
-	line "y m'en faut"
-	cont "des nouveaux!"
+	text "Done"
+	line "like dinner!"
 	prompt
 
 _Route3Youngster5AfterBattleText::
-	text "Les #MON"
-	line "domptés sont plus"
-	cont "forts que"
-	cont "les sauvages!"
+	text "Trained #MON"
+	line "are stronger than"
+	cont "the wild ones!"
 	done
 
 _Route3CooltrainerF3BattleText::
-	text "Hé! Tu m'as"
-	line "touchée là?"
+	text "Eek! Did you"
+	line "touch me?"
 	done
 
 _Route3CooltrainerF3EndBattleText::
-	text "OK!"
+	text "That's it?"
 	prompt
 
 _Route3CooltrainerF3AfterBattleText::
-	text "La ROUTE 4"
-	line "est au pied du"
-	cont "MONT SELENITE."
+	text "ROUTE 4 is at the"
+	line "foot of MT.MOON."
 	done
 
 _Route3SignText::
-	text "ROUTE 3 vers le"
-	line "MONT SELENITE"
+	text "ROUTE 3"
+	line "MT.MOON AHEAD"
 	done

@@ -1,12 +1,12 @@
 _CeladonPokecenterGentlemanText::
-	text "La #FLUTE"
-	line "réveille les"
-	cont "#MON grâce aux"
-	cont "ultrasons!"
+	text "# FLUTE awakens"
+	line "#MON with a"
+	cont "sound that only"
+	cont "they can hear!"
 	done
 
 _CeladonPokecenterBeautyText::
-	text "J'ai pris la"
-	line "PISTE CYCLABLE"
-	cont "depuis PARMANIE!"
+	text "I rode uphill on"
+	line "CYCLING ROAD from"
+	cont "FUCHSIA!"
 	done

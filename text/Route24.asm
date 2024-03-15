@@ -1,67 +1,67 @@
 _Route24CooltrainerM1YouBeatOurContestText::
-	text "Félicitations!"
-	line "Tu as battu les"
-	cont "5 dresseurs!@"
+	text "Congratulations!"
+	line "You beat our 5"
+	cont "contest trainers!@"
 	text_end
 
 _Route24CooltrainerM1YouJustEarnedAPrizeText::
 	text_start
 
-	para "Tu as gagné un"
-	line "fabuleux prix!"
+	para "You just earned a"
+	line "fabulous prize!"
 	prompt
 
 _Route24CooltrainerM1ReceivedNuggetText::
-	text "<PLAYER> obtient:"
-	line "@"
+	text "<PLAYER> received"
+	line "a @"
 	text_ram wStringBuffer
 	text "!@"
 	text_end
 
 _Route24CooltrainerM1NoRoomText::
-	text "Votre inventaire"
-	line "est plein!"
+	text "You don't have"
+	line "any room!"
 	done
 
 _Route24CooltrainerM1JoinTeamRocketText::
-	text "Veux-tu rejoindre"
-	line "les rangs de la"
+	text "By the way, would"
+	line "you like to join"
 	cont "TEAM ROCKET?"
 
-	para "Nous sommes des"
-	line "dresseurs de"
-	cont "#MON très"
-	cont "méchants!"
+	para "We're a group"
+	line "dedicated to evil"
+	cont "using #MON!"
 
-	para "Ca t'intéresse?"
+	para "Want to join?"
 
-	para "T'es sûr?"
+	para "Are you sure?"
 
-	para "Allez, viens!"
+	para "Come on, join us!"
 
-	para "Bon, je t'ai dit"
-	line "de venir avec"
-	cont "nous!"
+	para "I'm telling you"
+	line "to join!"
 
-	para "Je vois..."
+	para "OK, you need"
+	line "convincing!"
 
-	para "Je vais me"
-	line "montrer plus"
-	cont "persuasif!"
+	para "I'll make you an"
+	line "offer you can't"
+	cont "refuse!"
 	done
 
 _Route24CooltrainerM1DefeatedText::
 	text "Arrgh!"
-	line "Tu es très fort!"
+	line "You are good!"
 	prompt
 
 _Route24CooltrainerM1YouCouldBecomeATopLeaderText::
-	text "Tu pourrais vite"
-	line "devenir un chef"
-	cont "au sein de la"
+	text "With your ability,"
+	line "you could become"
+	cont "a top leader in"
 	cont "TEAM ROCKET!"
 	done
 
 _Route24CooltrainerM2BattleText::
-	text "Je t'ai vu!"
+	text "I saw your feat"
+	line "from the grass!"
 	done

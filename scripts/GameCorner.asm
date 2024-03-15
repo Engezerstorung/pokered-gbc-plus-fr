@@ -501,7 +501,7 @@ GameCornerDrawCoinBox:
 	call PlaceString
 	hlcoord 12, 3
 	ld de, wPlayerMoney
-	ld c, LEADING_ZEROES | 3
+	ld c, 3 | MONEY_SIGN | LEADING_ZEROES
 	call PrintBCDNumber
 	hlcoord 12, 4
 	ld de, GameCornerCoinText
@@ -511,20 +511,20 @@ GameCornerDrawCoinBox:
 	call PlaceString
 	hlcoord 15, 5
 	ld de, wPlayerCoins
-	ld c, LEADING_ZEROES | 2
+	ld c, $82
 	call PrintBCDNumber
 	ld hl, wd730
 	res 6, [hl]
 	ret
 
 GameCornerMoneyText:
-	db "ARG.@"
+	db "MONEY@"
 
 GameCornerCoinText:
-	db "JETONS@"
+	db "COIN@"
 
 GameCornerBlankText1:
-	db "      ¥@"
+	db "       @"
 
 GameCornerBlankText2:
 	db "       @"

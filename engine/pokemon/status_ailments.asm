@@ -12,9 +12,9 @@ PrintStatusAilment::
 	ret z
 	ld a, "S"
 	ld [hli], a
-	ld a, "O"
+	ld a, "L"
 	ld [hli], a
-	ld [hl], "M"
+	ld [hl], "P"
 	ret
 .psn
 	ld a, "P"
@@ -28,14 +28,14 @@ PrintStatusAilment::
 	ld [hli], a
 	ld a, "R"
 	ld [hli], a
-	ld [hl], "U"
+	ld [hl], "N"
 	ret
 .frz
-	ld a, "G"
+	ld a, "F"
 	ld [hli], a
-	ld a, "E"
+	ld a, "R"
 	ld [hli], a
-	ld [hl], "L"
+	ld [hl], "Z"
 	ret
 .par
 	ld a, "P"

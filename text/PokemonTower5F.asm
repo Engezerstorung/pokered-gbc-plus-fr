@@ -1,81 +1,71 @@
 _PokemonTower5FChanneler1Text::
-	text "Approche, enfant!"
-	line "J'ai scellé cet"
-	cont "endroit grâce à"
-	cont "ma sainte magie"
-	cont "blanche!"
+	text "Come, child! I"
+	line "sealed this space"
+	cont "with white magic!"
 
-	para "Tu peux te"
-	line "reposer ici!"
+	para "You can rest here!"
 	done
 
 _PokemonTower5FChanneler2BattleText::
-	text "Donne...moi..."
-	line "ton...âme..."
+	text "Give...me..."
+	line "your...soul..."
 	done
 
 _PokemonTower5FChanneler2EndBattleText::
-	text "Glargh!"
+	text "Gasp!"
 	prompt
 
 _PokemonTower5FChanneler2AfterBattleText::
-	text "J'étais possédée!"
+	text "I was under"
+	line "possession!"
 	done
 
 _PokemonTower5FChanneler3BattleText::
-	text "Viens...avec..."
-	line "nous..."
+	text "You...shall..."
+	line "join...us..."
 	done
 
 _PokemonTower5FChanneler3EndBattleText::
-	text "Hein!"
-	line "J'ai fait un"
-	cont "cauchemar!"
+	text "What"
+	line "a nightmare!"
 	prompt
 
 _PokemonTower5FChanneler3AfterBattleText::
-	text "J'étais possédée!"
+	text "I was possessed!"
 	done
 
 _PokemonTower5FChanneler4BattleText::
-	text "Zombis!"
+	text "Zombies!"
 	done
 
 _PokemonTower5FChanneler4EndBattleText::
-	text "Hein?"
+	text "Ha?"
 	prompt
 
 _PokemonTower5FChanneler4AfterBattleText::
-	text "Je suis revenue à"
-	line "la raison!"
+	text "I regained my"
+	line "senses!"
 	done
 
 _PokemonTower5FChanneler5BattleText::
-	text "Poyé Polomi!"
-	line "Le mal est parmi"
-	cont "nous...."
+	text "Urgah..."
+	line "Urff...."
 	done
 
 _PokemonTower5FChanneler5EndBattleText::
-	text "Quoi?"
-	line "Jeune taoïste, tu"
-	cont "oses m'ôter le"
-	cont "yang de la "
-	cont "bouche!"
+	text "Whoo!"
 	prompt
 
 _PokemonTower5FChanneler5AfterBattleText::
-	text "Mon Tao à moi,"
-	line "c'est le plus bô"
-	cont "des Taos!"
+	text "I fell to evil"
+	line "spirits despite"
+	cont "my training!"
 	done
 
 _PokemonTower5FPurifiedZoneText::
-	text "Vous pénétrez"
-	line "dans une zone"
-	cont "sanctuaire!"
+	text "Entered purified,"
+	line "protected zone!"
 
-	para "Les #MON de"
-	line "<PLAYER> sont"
-	cont "soignés!"
+	para "<PLAYER>'s #MON"
+	line "are fully healed!"
 	done

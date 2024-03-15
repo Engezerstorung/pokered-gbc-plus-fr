@@ -1,102 +1,99 @@
 _CeladonMart3FClerkTM18PreReceiveText::
-	text "J'ai fini!!!!"
-	line "J'ai fini"
-	cont "#MON!!!!"
+	text "Oh, hi! I finally"
+	line "finished #MON!"
 
-	para "Pas toi? Yahaha!"
-	line "Prends donc ceci,"
-	cont "petit!"
+	para "Not done yet?"
+	line "This might be"
+	cont "useful!"
 	prompt
 
 _CeladonMart3FClerkReceivedTM18Text::
-	text "<PLAYER> reçoit"
+	text "<PLAYER> received"
 	line "@"
 	text_ram wStringBuffer
 	text "!@"
 	text_end
 
 _CeladonMart3FClerkTM18ExplanationText::
-	text "CT18: RIPOSTE!"
-	line "Bon allez..."
-	cont "Bonne chance!"
+	text "TM18 is COUNTER!"
+	line "Not like the one"
+	cont "I'm leaning on,"
+	cont "mind you!"
 	done
 
 _CeladonMart3FClerkTM18NoRoomText::
-	text "Ton sac est plein"
-	line "à craquer!"
+	text "Your pack is full"
+	line "of items!"
 	done
 
 _CeladonMart3FGameBoyKid1Text::
-	text "Tous les #MON"
-	line "capturés ont un"
-	cont "numéro d'immatri-"
-	cont "culation et un"
-	cont "nom de DO"
-	cont "(Dresseur"
-	cont "d'Origine)!"
+	text "Captured #MON"
+	line "are registered"
+	cont "with an ID No."
+	cont "and OT, the name"
+	cont "of the Original"
+	cont "Trainer that"
+	cont "caught it!"
 	done
 
 _CeladonMart3FGameBoyKid2Text::
-	text "Ouaiiis!"
+	text "All right!"
 
-	para "Mon pote va"
-	line "m'échanger son"
-	cont "KANGOUREX contre"
-	cont "mon GRAVALANCH!"
+	para "My buddy's going"
+	line "to trade me his"
+	cont "KANGASKHAN for my"
+	cont "GRAVELER!"
 	done
 
 _CeladonMart3FGameBoyKid3Text::
-	text "Cool! Un"
-	line "GRAVALANCH!"
+	text "Come on GRAVELER!"
 
-	para "J'adore les"
-	line "GRAVALANCH!"
+	para "I love GRAVELER!"
+	line "I collect them!"
 
-	para "Qu...Hein??"
+	para "Huh?"
 
-	para "GRAVALANCH se"
-	line "transforme en un"
-	cont "autre #MON!"
+	para "GRAVELER turned"
+	line "into a different"
+	cont "#MON!"
 	done
 
 _CeladonMart3FLittleBoyText::
-	text "Le numéro d'imma-"
-	line "triculation d'un"
-	cont "#MON sert à"
-	cont "l'identifier lors"
-	cont "d'un échange!"
+	text "You can identify"
+	line "#MON you got"
+	cont "in trades by"
+	cont "their ID Numbers!"
 	done
 
 _CeladonMart3FSNESText::
-	text "Une SUPER"
-	line "NINTENDO!"
+	text "It's an SNES!"
 	done
 
 _CeladonMart3FRPGText::
-	text "Un RPG! Cool..."
-	line "Mais trop dur!"
+	text "An RPG! There's"
+	line "no time for that!"
 	done
 
 _CeladonMart3FSportsGameText::
-	text "Un jeu de sport!"
-	line "Vive le foot!"
+	text "A sports game!"
+	line "Dad'll like that!"
 	done
 
 _CeladonMart3FPuzzleGameText::
-	text "Quatre lignes!"
-	line "En un seul coup!"
+	text "A puzzle game!"
+	line "Looks addictive!"
 	done
 
 _CeladonMart3FFightingGameText::
-	text "Kan contre Ryo!"
-	line "Hadoh Ken!"
+	text "A fighting game!"
+	line "Looks tough!"
 	done
 
 _CeladonMart3FCurrentFloorSignText::
-	text "2ème: JEUX VIDEO"
+	text "3F: TV GAME SHOP"
 	done
 
 _CeladonMart3FPokemonPosterText::
-	text "Rouge et Bleu!"
-	line "Deux #MON!"
+	text "Red and Blue!"
+	line "Both are #MON!"
 	done

@@ -1,18 +1,16 @@
 _ViridianPokecenterGentlemanText::
-	text "Tu peux utiliser"
-	line "le PC."
+	text "You can use that"
+	line "PC in the corner."
 
-	para "C'est l'hôtesse"
-	line "qui me l'a dit!"
-	cont "Elle est cool!"
+	para "The receptionist"
+	line "told me. So kind!"
 	done
 
 _ViridianPokecenterCooltrainerMText::
-	text "Il y a un CENTRE"
-	line "#MON dans"
-	cont "chaque ville."
+	text "There's a #MON"
+	line "CENTER in every"
+	cont "town ahead."
 
-	para "Tu peux y soigner"
-	line "gratuitement tes"
-	cont "#MON!"
+	para "They don't charge"
+	line "any money either!"
 	done

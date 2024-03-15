@@ -1,7 +1,6 @@
 _Route20Swimmer1BattleText::
-	text "La mer est peu"
-	line "profonde ici,"
-	cont "n'est-ce pas?"
+	text "The water is"
+	line "shallow here."
 	done
 
 _Route20Swimmer1EndBattleText::
@@ -9,159 +8,148 @@ _Route20Swimmer1EndBattleText::
 	prompt
 
 _Route20Swimmer1AfterBattleText::
-	text "Ah, si je pouvais"
-	line "monter sur mes"
-	cont "#MON."
+	text "I wish I could"
+	line "ride my #MON."
 	done
 
 _Route20Swimmer2BattleText::
-	text "Les ILES ECUME"
-	line "sont tranquilles!"
+	text "SEAFOAM is a"
+	line "quiet getaway!"
 	done
 
 _Route20Swimmer2EndBattleText::
-	text "Nyann!"
+	text "Quit it!"
 	prompt
 
 _Route20Swimmer2AfterBattleText::
-	text "Il y a une grande"
-	line "caverne sous"
-	cont "cette île."
+	text "There's a huge"
+	line "cavern underneath"
+	cont "this island."
 	done
 
 _Route20Swimmer3BattleText::
-	text "J'aime faire la"
-	line "planche avec"
-	cont "les poissons!"
+	text "I love floating"
+	line "with the fishes!"
 	done
 
 _Route20Swimmer3EndBattleText::
-	text "Glargh!"
+	text "Yowch!"
 	prompt
 
 _Route20Swimmer3AfterBattleText::
-	text "Tu veux nager"
-	line "avec moi?"
+	text "Want to float"
+	line "with me?"
 	done
 
 _Route20Swimmer4BattleText::
-	text "T'es en vacances"
-	line "toi aussi?"
+	text "Are you on"
+	line "vacation too?"
 	done
 
 _Route20Swimmer4EndBattleText::
-	text "Non!"
-	line "Pas de pitié!"
+	text "No"
+	line "mercy at all!"
 	prompt
 
 _Route20Swimmer4AfterBattleText::
-	text "Avant, ben, les"
-	line "ILES ECUMES ne"
-	cont "formaient qu'une"
-	cont "seule île!"
+	text "SEAFOAM used to"
+	line "be one island!"
 	done
 
 _Route20Swimmer5BattleText::
-	text "Mate un peu mon"
-	line "corps de rêve!"
-	cont "C'est beau hein?"
-	cont "Fais un bisou."
+	text "Check out my buff"
+	line "physique!"
 	done
 
 _Route20Swimmer5EndBattleText::
-	text "Aïeu!"
+	text "Wimpy!"
 	prompt
 
 _Route20Swimmer5AfterBattleText::
-	text "J'aurais dû"
-	line "entraîner mes"
-	cont "#MON!"
+	text "I should've been"
+	line "buffing up my"
+	cont "#MON, not me!"
 	done
 
 _Route20Swimmer6BattleText::
-	text "Ben, t'es sur un"
-	line "#MON, tu sais"
-	cont "pas nager?"
+	text "Why are you"
+	line "riding a #MON?"
+	cont "Can't you swim?"
 	done
 
 _Route20Swimmer6EndBattleText::
 	text "Ouch!"
-	line "Je coule!"
+	line "Torpedoed!"
 	prompt
 
 _Route20Swimmer6AfterBattleText::
-	text "Surfer sur un"
-	line "#MON,"
-	cont "c'est cool!"
+	text "Riding a #MON"
+	line "sure looks fun!"
 	done
 
 _Route20CooltrainerMBattleText::
-	text "Mes oiseaux"
-	line "#MON m'ont"
-	cont "déposé ici!"
+	text "I rode my bird"
+	line "#MON here!"
 	done
 
 _Route20CooltrainerMEndBattleText::
-	text "Oh!"
-	line "NOoOoOon!"
+	text "Oh"
+	line "no!"
 	prompt
 
 _Route20CooltrainerMAfterBattleText::
-	text "Mes oiseaux ne"
-	line "peuvent plus"
-	cont "voler!"
+	text "My birds can't"
+	line "FLY me back!"
 	done
 
 _Route20Swimmer7BattleText::
-	text "Mon p'tit copain"
-	line "m'a offert des"
-	cont "perles sublimes!"
+	text "My boy friend gave"
+	line "me big pearls!"
 	done
 
 _Route20Swimmer7EndBattleText::
-	text "Non!"
-	line "Pas mes perles!"
+	text "Don't"
+	line "touch my pearls!"
 	prompt
 
 _Route20Swimmer7AfterBattleText::
-	text "Et si je mettais"
-	line "mes perles dans"
-	cont "un CRUSTABRI?"
+	text "Will my pearls"
+	line "grow bigger"
+	cont "inside CLOYSTER?"
 	done
 
 _Route20Swimmer8BattleText::
-	text "J'ai nagé depuis"
-	line "la CRAMOIS'ILE!"
+	text "I swam here from"
+	line "CINNABAR ISLAND!"
 	done
 
 _Route20Swimmer8EndBattleText::
-	text "!!!"
-	line "J'ai bu la tasse!"
+	text "I'm"
+	line "so disappointed!"
 	prompt
 
 _Route20Swimmer8AfterBattleText::
-	text "Des #MON"
-	line "infestent un"
-	cont "vieux manoir de"
-	cont "la CRAMOIS'ILE!"
+	text "#MON have"
+	line "taken over an"
+	cont "abandoned mansion"
+	cont "on CINNABAR!"
 	done
 
 _Route20Swimmer9BattleText::
-	text "Il y a un LABO"
-	line "#MON sur"
-	cont "la CRAMOIS'ILE."
+	text "CINNABAR, in the"
+	line "west, has a LAB"
+	cont "for #MON."
 	done
 
 _Route20Swimmer9EndBattleText::
-	text "Attends!"
+	text "Wait!"
 	prompt
 
 _Route20Swimmer9AfterBattleText::
-	text "La CRAMOIS'ILE"
-	line "est une île"
-	cont "volcanique!"
+	text "CINNABAR is a "
+	line "volcanic island!"
 	done
 
 _Route20SeafoamIslandsSignText::
-	text "ILES ECUME"
+	text "SEAFOAM ISLANDS"
 	done

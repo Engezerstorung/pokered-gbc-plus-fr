@@ -1,22 +1,22 @@
 _CeladonChiefHouseChiefText::
-	text "Yahahaha!"
-	line "Triple 7!!!"
-	cont "Par ici l'pognon!"
+	text "Hehehe! The slots"
+	line "just reel in the"
+	cont "dough, big time!"
 	done
 
 _CeladonChiefHouseRocketText::
-	text "CHEF!"
+	text "CHIEF!"
 
-	para "2000 #MON ont"
-	line "été envoyés comme"
-	cont "prix de casino!"
+	para "We just shipped"
+	line "2000 #MON as"
+	cont "slot prizes!"
 	done
 
 _CeladonChiefHouseSailorText::
-	text "Ne touche pas au"
-	line "bouton sur le"
-	cont "poster du CASINO!"
+	text "Don't touch the"
+	line "poster at the"
+	cont "GAME CORNER!"
 
-	para "Hein? Mais non"
-	line "j'l'ai pas dit!"
+	para "There's no secret"
+	line "switch behind it!"
 	done

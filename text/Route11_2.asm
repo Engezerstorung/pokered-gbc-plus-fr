@@ -1,29 +1,28 @@
 _Route11SuperNerd2EndBattleText::
 	text "Whoa!"
-	line "Tu fais des"
-	cont "étincelles!"
+	line "You spark plug!"
 	prompt
 
 _Route11SuperNerd2AfterBattleText::
-	text "Bon, j'ai du"
-	line "boulot, moi!"
+	text "Well, better get"
+	line "back to work."
 	done
 
 _Route11Youngster4BattleText::
-	text "Mes #MON sont"
-	line "prêts!"
+	text "My #MON should"
+	line "be ready by now!"
 	done
 
 _Route11Youngster4EndBattleText::
-	text "Trop,"
-	line "trop trop balèze!"
+	text "Too"
+	line "much, too young!"
 	prompt
 
 _Route11Youngster4AfterBattleText::
-	text "Faut qu'je chope"
-	line "des plus forts!"
+	text "I better go find"
+	line "stronger ones!"
 	done
 
 _Route11DiglettsCaveSignText::
-	text "CAVE TAUPIQUEUR"
+	text "DIGLETT's CAVE"
 	done

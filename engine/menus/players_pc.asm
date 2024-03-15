@@ -1,4 +1,6 @@
 PlayerPC::
+	ld hl, wd730
+	set 6, [hl]
 	ld a, ITEM_NAME
 	ld [wNameListType], a
 	call SaveScreenTilesToBuffer1
@@ -15,8 +17,6 @@ PlayerPC::
 	call PrintText
 
 PlayerPCMenu:
-	ld hl, wd730
-	set 6, [hl]
 	ld a, [wParentMenuItem]
 	ld [wCurrentMenuItem], a
 	ld hl, wFlags_0xcd60
@@ -241,10 +241,10 @@ PlayerPCToss:
 	jp .loop
 
 PlayersPCMenuEntries:
-	db   "RETIRER OBJET"
-	next "STOCKER OBJET"
-	next "JETER OBJET"
-	next "DECONNEXION@"
+	db   "WITHDRAW ITEM"
+	next "DEPOSIT ITEM"
+	next "TOSS ITEM"
+	next "LOG OFF@"
 
 TurnedOnPC2Text:
 	text_far _TurnedOnPC2Text

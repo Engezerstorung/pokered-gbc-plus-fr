@@ -1,145 +1,130 @@
 _FightingDojoKarateMasterText::
-	text "P'tit faiblard!"
+	text "Grunt!"
 
-	para "Je suis le GRAND"
-	line "MAITRE de KARATE!"
-	cont "Je suis le"
-	cont "CHAMPION!"
+	para "I am the KARATE"
+	line "MASTER! I am the"
+	cont "LEADER here!"
 
-	para "Tu me provoques?"
-	line "Tu veux t'battre?"
-	cont "Tu cherches le"
-	cont "contact? HAHAHA!"
+	para "You wish to"
+	line "challenge us?"
+	cont "Expect no mercy!"
 
-	para "Ayaaaaa!"
+	para "Fwaaa!"
 	done
 
 _FightingDojoKarateMasterDefeatedText::
-	text "STOP!"
-	line "Tu m'as battu!"
-	cont "J'ai honte!"
+	text "Hwa!"
+	line "Arrgh! Beaten!"
 	prompt
 
 _FightingDojoKarateMasterIWillGiveYouAPokemonText::
-	text "OK, tu as gagné!"
+	text "Indeed, I have"
+	line "lost!"
 
-	para "Mais ne va pas"
-	line "le crier sur tous"
-	cont "les toits! T'es"
-	cont "très fort, on a"
-	cont "compris!"
+	para "But, I beseech"
+	line "you, do not take"
+	cont "our emblem as"
+	cont "your trophy!"
 
-	para "Tiens, prends"
-	line "ça! Tu as gagné"
-	cont "un #MON!"
+	para "In return, I will"
+	line "give you a prized"
+	cont "fighting #MON!"
 
-	para "Choisis celui que"
-	line "tu veux!"
+	para "Choose whichever"
+	line "one you like!"
 	done
 
 _FightingDojoKarateMasterStayAndTrainWithUsText::
-	text "Oh!"
+	text "Ho!"
 
-	para "Reste avec nous"
-	line "pour faire du"
-	cont "KARATE!"
+	para "Stay and train at"
+	line "Karate with us!"
 	done
 
 _FightingDojoBlackbelt1BattleText::
-	text "Ta garde!"
-	line "Défends-toi!"
+	text "Hoargh! Take your"
+	line "shoes off!"
 	done
 
 _FightingDojoBlackbelt1EndBattleText::
-	text "Oh!"
-	line "Tu m'as éclaté!"
+	text "I give"
+	line "up!"
 	prompt
 
 _FightingDojoBlackbelt1AfterBattleText::
-	text "Tu te tais, tu"
-	line "t'assois et tu"
-	cont "attends le grand"
-	cont "maître!"
+	text "You wait 'til you"
+	line "see our Master!"
 
-	para "Tu vas dérouiller"
-	line "sévère! Il est"
-	cont "vachement balèze!"
+	para "I'm a small fry"
+	line "compared to him!"
 	done
 
 _FightingDojoBlackbelt2BattleText::
-	text "T'as des"
-	line "prétentions?"
-	cont "Montre-moi!"
+	text "I hear you're"
+	line "good! Show me!"
 	done
 
 _FightingDojoBlackbelt2EndBattleText::
-	text "Nyaha!"
-	line "T'es fort!"
+	text "Judge!"
+	line "1 point!"
 	prompt
 
 _FightingDojoBlackbelt2AfterBattleText::
-	text "Notre maître,"
-	line "c'est un costaud!"
+	text "Our Master is a"
+	line "pro fighter!"
 	done
 
 _FightingDojoBlackbelt3BattleText::
-	text "J'ai peur de"
-	line "rien!"
+	text "Nothing tough"
+	line "frightens me!"
 
-	para "Le matin, j'casse"
-	line "des pierres. Ce"
-	cont "soir, j'vais"
-	cont "t'fracasser!"
+	para "I break boulders"
+	line "for training!"
 	done
 
 _FightingDojoBlackbelt3EndBattleText::
-	text "Woaa!"
-	line "Les pierres, ça"
-	cont "rend pas les"
-	cont "coups!"
+	text "Yow!"
+	line "Stubbed fingers!"
 	prompt
 
 _FightingDojoBlackbelt3AfterBattleText::
-	text "La seule chose"
-	line "qui nous fait"
-	cont "peur c'est les"
-	cont "psys!"
+	text "The only thing"
+	line "that frightens us"
+	cont "is psychic power!"
 	done
 
 _FightingDojoBlackbelt4BattleText::
-	text "Ayah!"
+	text "Hoohah!"
 
-	para "Tu joues avec ta"
-	line "vie, p'tit!"
-	cont "Not'DOJO, c'est"
-	cont "pour les balèzes!"
+	para "You're trespassing"
+	line "in our FIGHTING"
+	cont "DOJO!"
 	done
 
 _FightingDojoBlackbelt4EndBattleText::
-	text "Ping!"
-	line "J'suis K.O.!"
+	text "Oof!"
+	line "I give up!"
 	prompt
 
 _FightingDojoBlackbelt4AfterBattleText::
-	text "Les meilleurs"
-	line "combattants sont"
-	cont "ici!"
+	text "The prime fighters"
+	line "across the land"
+	cont "train here."
 	done
 
 _FightingDojoHitmonleePokeBallText::
-	text "Tu veux"
-	line "KICKLEE, le"
-	cont "coud'latteur?"
+	text "You want the"
+	line "hard kicking"
+	cont "HITMONLEE?"
 	done
 
 _FightingDojoHitmonchanPokeBallText::
-	text "Tu veux"
-	line "TYGNON, le"
-	cont "castagneur?"
+	text "You want the"
+	line "piston punching"
+	cont "HITMONCHAN?"
 	done
 
 _FightingDojoBetterNotGetGreedyText::
-	text "Tss tss tss!"
-	line "Faut pas être"
-	cont "trop gourmand..."
+	text "Better not get"
+	line "greedy..."
 	done

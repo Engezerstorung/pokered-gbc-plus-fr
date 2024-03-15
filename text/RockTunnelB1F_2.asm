@@ -1,22 +1,20 @@
 _RockTunnelB1FHiker3AfterBattleText::
-	text "Je vais encore"
-	line "m'entraîner!"
+	text "I'll raise my"
+	line "#MON to beat"
+	cont "yours, kid!"
 	done
 
 _RockTunnelB1FSuperNerd3BattleText::
-	text "Je dessine des"
-	line "#MON quand"
-	cont "chuis tout seul."
-	cont "..."
-	cont "Cool, non?"
+	text "I draw #MON"
+	line "when I'm home."
 	done
 
 _RockTunnelB1FSuperNerd3EndBattleText::
-	text "Fouii!"
-	line "Je suis crevé!"
+	text "Whew!"
+	line "I'm exhausted!"
 	prompt
 
 _RockTunnelB1FSuperNerd3AfterBattleText::
-	text "Chuis un artiste,"
-	line "pas un violent."
+	text "I'm an artist,"
+	line "not a fighter."
 	done

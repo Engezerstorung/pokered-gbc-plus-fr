@@ -1,38 +1,35 @@
 _UndergroundPathRoute7CopyUnusedGirlText::
-	text "Je veux aller au"
-	line "centre commercial"
-	cont "de CELADOPOLE..."
+	text "I want to shop at"
+	line "the dept. store"
+	cont "in CELADON but..."
 
-	para "Mais, c'est plein"
-	line "de vilains voyous"
-	cont "là-bas."
+	para "There are so many"
+	line "rough looking"
+	cont "people there."
 	done
 
 _UndergroundPathRoute7CopyUnusedTeamRocketHadAHideoutText::
-	text "La TEAM ROCKET"
-	line "possède un abri"
-	cont "secret dans"
-	cont "CELADOPOLE!"
+	text "TEAM ROCKET had a"
+	line "secret hideout in"
+	cont "CELADON CITY?"
 	done
 
 _UndergroundPathRoute7CopyUnusedMiddleAgedManText::
-	text "Tu veux acheter"
-	line "plein de trucs?"
+	text "You're here to"
+	line "shop in CELADON?"
 
-	para "Sors d'ici et va"
-	line "vers l'ouest!"
+	para "Just step outside"
+	line "and head west!"
 	done
 
 _UndergroundPathRoute7CopyUnusedGoesUnderSaffronText::
-	text "Le SOUTERRAIN"
-	line "passe sous"
-	cont "SAFRANIA et"
-	cont "débouche sur"
-	cont "LAVANVILLE."
+	text "The UNDERGROUND"
+	line "PATH goes beneath"
+	cont "SAFFRON and leads"
+	cont "to LAVENDER."
 
-	para "Pour aller à"
-	line "AZURIA, va dans"
-	cont "la maison de"
-	cont "l'autre côté"
-	cont "de la rue."
+	para "If you're heading"
+	line "to CERULEAN, go"
+	cont "to the building"
+	cont "across the road."
 	done

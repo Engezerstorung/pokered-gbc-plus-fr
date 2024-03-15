@@ -1,77 +1,74 @@
 _RocketHideoutB1FRocket5EndBattleText::
-	text "Quoi...?@"
+	text "Why...?@"
 	text_end
 
 _RocketHideoutB1FRocket1BattleText::
-	text "T'es qui? Comment"
-	line "t'es entré ici?"
+	text "Who are you? How"
+	line "did you get here?"
 	done
 
 _RocketHideoutB1FRocket1EndBattleText::
-	text "Aïe!"
-	line "J'suis battu!"
+	text "Oww!"
+	line "Beaten!"
 	prompt
 
 _RocketHideoutB1FRocket1AfterBattleText::
-	text "Tu es pour ou"
-	line "contre la"
-	cont "TEAM ROCKET?"
+	text "Are you dissing"
+	line "TEAM ROCKET?"
 	done
 
 _RocketHideoutB1FRocket2BattleText::
-	text "Tu as tout cassé"
-	line "nos plans!!!"
+	text "You broke into"
+	line "our operation?"
 	done
 
 _RocketHideoutB1FRocket2EndBattleText::
-	text "Enfer!"
+	text "Burnt!"
 	prompt
 
 _RocketHideoutB1FRocket2AfterBattleText::
-	text "Non, non! Tu ne"
-	line "t'en tireras pas"
-	cont "comme ça!"
+	text "You're not going"
+	line "to get away with"
+	cont "this, brat!"
 	done
 
 _RocketHideoutB1FRocket3BattleText::
-	text "Intrus! "
-	line "ALERTE! ALERTE!"
+	text "Intruder alert!"
 	done
 
 _RocketHideoutB1FRocket3EndBattleText::
-	text "J'ai... "
-	line "Echoué!!!"
+	text "I"
+	line "can't do it!"
 	prompt
 
 _RocketHideoutB1FRocket3AfterBattleText::
-	text "SCOPE SYLPHE?"
-	line "C'est quoi donc?"
+	text "SILPH SCOPE?"
+	line "I don't know"
+	cont "where it is!"
 	done
 
 _RocketHideoutB1FRocket4BattleText::
-	text "Tiens, pourquoi"
-	line "t'es là?"
+	text "Why did you come"
+	line "here?"
 	done
 
 _RocketHideoutB1FRocket4EndBattleText::
-_RocketHideout1EndBattleText5::
-	text "J'suis"
-	line "pas à la hauteur!"
+	text "This"
+	line "won't do!"
 	prompt
 
 _RocketHideoutB1FRocket4AfterBattleText::
-	text "OK, OK, je parle!"
-	line "Prends donc"
-	cont "l'ascenseur et tu"
-	cont "verras mon chef!"
+	text "OK, I'll talk!"
+	line "Take the elevator"
+	cont "to see my BOSS!"
 	done
 
 _RocketHideoutB1FRocket5BattleText::
-	text "Petit rat,"
-	line "tu es perdu?"
+	text "Are you lost, you"
+	line "little rat?"
 	done
 
 _RocketHideoutB1FRocket5AfterBattleText::
-	text "Oups, ce combat à"
-	line "ouvert la porte!"
+	text "Uh-oh, that fight"
+	line "opened the door!"
 	done

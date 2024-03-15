@@ -1,6 +1,5 @@
 _UndergroundPathRoute8GirlText::
-	text "Le centre"
-	line "commercial de"
-	cont "CELADOPOLE est"
-	cont "gigantesque!"
+	text "The dept. store"
+	line "in CELADON has a"
+	cont "great selection!"
 	done

@@ -18,4 +18,4 @@ PrintWaitingText_orig: ; Name changed so color hack can hijack this
 	jp DelayFrames
 
 WaitingText:
-	db "UN MOMENT…@"
+	db "Waiting...!@"

@@ -138,11 +138,8 @@ DisplayMoneyBox:
 	ld c, 6
 	call ClearScreenArea
 	hlcoord 12, 1
-	ld de, CurrencyString
-	call PlaceString
-	hlcoord 12, 1
 	ld de, wPlayerMoney
-	ld c, LEADING_ZEROES | 3
+	ld c, $a3
 	call PrintBCDNumber
 	ld hl, wd730
 	res 6, [hl]
@@ -506,8 +503,8 @@ INCLUDE "data/moves/field_move_names.asm"
 
 PokemonMenuEntries:
 	db   "STATS"
-	next "ORDRE"
-	next "RETOUR@"
+	next "SWITCH"
+	next "CANCEL@"
 
 GetMonFieldMoves:
 	ld a, [wWhichPokemon]

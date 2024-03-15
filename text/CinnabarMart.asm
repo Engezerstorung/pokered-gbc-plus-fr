@@ -1,15 +1,10 @@
 _CinnabarMartSilphWorkerFText::
-	text "Ils n'ont pas de"
-	line "ATTAQUE +? C'est"
-	cont "vachement balèze"
-	cont "dans les bastons!"
+	text "Don't they have X"
+	line "ATTACK? It's good"
+	cont "for battles!"
 	done
 
 _CinnabarMartScientistText::
-	text "Ca fait pas de"
-	line "mal d'être plein"
-	cont "d'objets! Ca fait"
-	cont "même plutôt du"
-	cont "bien!"
+	text "It never hurts to"
+	line "have extra items!"
 	done
-

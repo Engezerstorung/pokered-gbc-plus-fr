@@ -3,19 +3,22 @@ _FuchsiaGoodRodHouseFishingGuruText::
 	line "GURU's older"
 	cont "brother!"
 
-	para "Moi, mon truc,"
-	line "c'est la pêche!"
+	para "I simply Looove"
+	line "fishing!"
 
-	para "T'aimes la"
-	line "pêche, petit?"
+	para "Do you like to"
+	line "fish?"
 	done
 
 _FuchsiaGoodRodHouseFishingGuruReceivedGoodRodText::
 	text "Grand! I like"
 	line "your style!"
 
-	para "<PLAYER> reçoit"
-	line "une @"
+	para "Take this and"
+	line "fish, young one!"
+
+	para "<PLAYER> received"
+	line "a @"
 	text_ram wStringBuffer
 	text "!@"
 	text_end
@@ -29,12 +32,13 @@ _FuchsiaGoodRodHouseFishingGuruHowAreTheFishText::
 	text "Hello there,"
 	line "<PLAYER>!"
 
-	para "Ca mord?"
+	para "How are the fish"
+	line "biting?"
 	done
 
 _FuchsiaGoodRodHouseFishingGuruNoRoomText::
 	text "Oh no!"
 
-	para "Ton inventaire"
-	line "est plein!"
+	para "You have no room"
+	line "for my gift!"
 	done

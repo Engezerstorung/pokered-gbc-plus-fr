@@ -17,19 +17,18 @@ EvolveTradeMon:
 
 ; This was fixed in Yellow.
 
-	;ld a, [wInGameTradeReceiveMonName]
+	ld a, [wInGameTradeReceiveMonName]
 
 	; GRAVELER
-	;cp "G"
-	;jr z, .ok
+	cp "G"
+	jr z, .ok
 
 	; "SPECTRE" (HAUNTER)
-	;cp "S"
-	;ret nz
-	;ld a, [wInGameTradeReceiveMonName + 1]
-	;cp "P"
-	;ret nz
-	ret
+	cp "S"
+	ret nz
+	ld a, [wInGameTradeReceiveMonName + 1]
+	cp "P"
+	ret nz
 
 .ok
 	ld a, [wPartyCount]

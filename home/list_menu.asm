@@ -210,8 +210,6 @@ DisplayChooseQuantityMenu::
 	ld a, [wListMenuID]
 	cp PRICEDITEMLISTMENU
 	jr nz, .printInitialQuantity
-	ld a,"¥"
-	ld [wTileMap + 218],a
 	hlcoord 8, 10
 .printInitialQuantity
 	ld de, InitialQuantityText
@@ -295,7 +293,7 @@ DisplayChooseQuantityMenu::
 	ld de, SpacesBetweenQuantityAndPriceText
 	call PlaceString
 	ld de, hMoney ; total price
-	ld c, LEADING_ZEROES | 3
+	ld c, $a3
 	call PrintBCDNumber
 	hlcoord 9, 10
 .printQuantity
@@ -420,9 +418,8 @@ PrintListMenuEntries::
 	pop hl
 	ld bc, SCREEN_WIDTH + 5 ; 1 row down and 5 columns right
 	add hl, bc
-	ld c, LEADING_ZEROES | 3
+	ld c, $a3 ; no leading zeroes, right-aligned, print currency symbol, 3 bytes
 	call PrintBCDNumber
-	ld [hl], "¥"
 .skipPrintingItemPrice
 	ld a, [wListMenuID]
 	and a ; PCPOKEMONLISTMENU?
@@ -526,4 +523,4 @@ PrintListMenuEntries::
 	jp PlaceString
 
 ListMenuCancelText::
-	db "RETOUR@"
+	db "CANCEL@"

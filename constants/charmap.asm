@@ -75,9 +75,8 @@
 ; Actual characters (from other graphics files)
 
 	; needed for ShowPokedexDataInternal (see engine/menus/pokedex.asm)
-	charmap "<M>",       $60 ; gfx/pokedex/pokedex.png
-	charmap "<K>",       $61 ; gfx/pokedex/pokedex.png
-	charmap "<G>",       $62 ; gfx/pokedex/pokedex.png
+	charmap "′",         $60 ; gfx/pokedex/pokedex.png
+	charmap "″",         $61 ; gfx/pokedex/pokedex.png
 
 	; needed for StatusScreen (see engine/pokemon/status_screen.asm)
 	charmap "<BOLD_P>",  $72 ; gfx/font/P.1bpp
@@ -151,51 +150,28 @@
 	charmap "y",         $b8
 	charmap "z",         $b9
 
-	charmap "à",         $ba
-	charmap "è",         $bb
-	charmap "é",         $bc
-	charmap "ù",         $bd
-	charmap "Ä",         $be
-	charmap "Ö",         $cf
-
-	charmap "Ü",         $c9
-	charmap "ä",         $ca
-	charmap "ö",         $cb
-	charmap "ü",         $cc
-	charmap "ë",         $cd
-	charmap "ï",         $ce
-	charmap "â",         $cf
-	charmap "ô",         $d0
-	charmap "û",         $d1
-	charmap "ê",         $d2
-	charmap "î",         $d3
-
-	charmap "c'",        $d4
-	charmap "d'",        $d5
-	charmap "j'",        $d6
-	charmap "l'",        $d7
-	charmap "m'",        $d8
-	charmap "n'",        $d9
-	charmap "p'",        $da
-	charmap "s'",        $db
-	charmap "'s",        $dc
-	charmap "t'",        $dd
-	charmap "u'",        $de
-	charmap "y'",        $df
+	charmap "é",         $ba
+	charmap "'d",        $bb
+	charmap "'l",        $bc
+	charmap "'s",        $bd
+	charmap "'t",        $be
+	charmap "'v",        $bf
 
 	charmap "'",         $e0
 	charmap "<PK>",      $e1
 	charmap "<MN>",      $e2
 	charmap "-",         $e3
-	charmap "+",         $e4
+
+	charmap "'r",        $e4
+	charmap "'m",        $e5
 
 	charmap "?",         $e6
 	charmap "!",         $e7
 	charmap ".",         $e8
 
 	charmap "ァ",         $e9 ; katakana small a, unused
-	charmap "ß",          $ea
-	charmap "ç",          $eb
+	charmap "ゥ",         $ea ; katakana small u, unused
+	charmap "ェ",         $eb ; katakana small e, unused
 
 	charmap "▷",         $ec
 	charmap "▶",         $ed
