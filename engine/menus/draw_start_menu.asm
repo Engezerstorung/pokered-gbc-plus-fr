@@ -60,10 +60,10 @@ DrawStartMenu::
 	ret
 
 StartMenuPokedexText:
-	db "POKÈDEX@"
+	db "POK√©DEX@"
 
 StartMenuPokemonText:
-	db "POKÈMON@"
+	db "POK√©MON@"
 
 StartMenuItemText:
 	db "ITEM@"
