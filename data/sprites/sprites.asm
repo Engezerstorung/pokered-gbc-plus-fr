@@ -68,6 +68,7 @@ SpriteSheetPointerTable:
 	overworld_sprite LoreleiSprite, 12          ; SPRITE_LORELEI
 	overworld_sprite SeelSprite, 12             ; SPRITE_SEEL
 ; Start of custom sprites
+	overworld_sprite BenchGuySprite, 12         ; SPRITE_BENCH_GUY
 	overworld_sprite BlankSprite, 12
 	overworld_sprite DomeFossilSprite, 12
 ; Gym Leaders
@@ -127,6 +128,5 @@ SpriteSheetPointerTable:
 	overworld_sprite GamblerAsleepSprite, 4     ; SPRITE_UNUSED_GAMBLER_ASLEEP_2
 	overworld_sprite GamblerAsleepSprite, 4     ; SPRITE_GAMBLER_ASLEEP
 ; Start of custom still sprites
-	overworld_sprite BenchGuySprite, 4		    ; SPRITE_BENCH_GUY
 	overworld_sprite BillsMachine, 4
 	assert_table_length NUM_SPRITES

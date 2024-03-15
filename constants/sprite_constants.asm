@@ -63,6 +63,7 @@
 	const SPRITE_LORELEI                 ; $3b
 	const SPRITE_SEEL                    ; $3c
 ; Start of custom sprites
+	const SPRITE_BENCH_GUY		     	 ; $3d
 	const SPRITE_BLANK
 	const SPRITE_DOME_FOSSIL
 ; Gym Leaders
@@ -123,6 +124,5 @@
 	const SPRITE_UNUSED_GAMBLER_ASLEEP_2 ; $47
 	const SPRITE_GAMBLER_ASLEEP          ; $48
 ; Start of custom still sprites
-	const SPRITE_BENCH_GUY		     	 ; $49
 	const SPRITE_BILLS_MACHINE
 DEF NUM_SPRITES EQU const_value - 1

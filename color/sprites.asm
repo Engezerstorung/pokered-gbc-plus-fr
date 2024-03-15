@@ -509,6 +509,8 @@ SpritePaletteAssignments: ; Characters on the overworld
 	db SPR_PAL_BLUE
 
 ; Start of custom sprites
+	; 0x3d: SPRITE_BENCH_GUY
+	db SPR_PAL_RANDOM
 	; SPRITE_BLANK
 	db SPR_PAL_BLUE
 	; SPRITE_DOME_FOSSIL
@@ -633,8 +635,6 @@ SpritePaletteAssignments: ; Characters on the overworld
 	db SPR_PAL_BROWN
 
 ; Start of custom still sprites
-	; 0x49: SPRITE_BENCH_GUY
-	db SPR_PAL_RANDOM
 	; SPRITE_BILLS_MACHINE
 	db SPR_PAL_ROCK
 
