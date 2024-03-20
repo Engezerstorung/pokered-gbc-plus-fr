@@ -110,6 +110,17 @@ LoadTilesetPalette:
 	ld a, 2
 	ldh [rSVBK], a
 
+; Check for POKECENTER tileset to load healing machine animation palette in OBJ 6	
+	push bc
+	ld a, c
+	cp POKECENTER
+	jr nz, .notpokecenter
+	lb de, SPRITE_PAL_HEALINGMACHINE, 7
+	farcall LoadMapPalette_Sprite
+
+.notpokecenter
+	pop bc
+
 ; Check Map to replace BG and Sprites palettes in special cases
 ; Like on Celadon Mansion Roof, for Gym Leaders or Psyduck
 	push bc
@@ -258,6 +269,10 @@ MapPalSwapList:
 	db CELADON_MANSION_ROOF, INDOOR_LIGHT_BLUE, 2, 0
 	db CELADON_MANSION_ROOF, MANSION_SKY, 3, 0
 	db CELADON_MANSION_ROOF, MANSION_WALLS_ROOF, 6, 0
+	db BILLS_HOUSE, SPRITE_PAL_BILLSMACHINE, 7, 1
+	db CELADON_GYM, SPRITE_PAL_INDOORTREE, 6, 1
+	db INDIGO_PLATEAU_LOBBY, SPRITE_PAL_HEALINGMACHINE, 7, 1
+; Gym Leaders	
 	db PEWTER_GYM, SPRITE_PAL_BROCK, 4, 1
 	db CERULEAN_GYM, SPRITE_PAL_MISTY, 4, 1
 	db VERMILION_GYM, SPRITE_PAL_SURGE, 4, 1
@@ -266,8 +281,8 @@ MapPalSwapList:
 	db SAFFRON_GYM, SPRITE_PAL_SABRINA, 4, 1
 	db CINNABAR_GYM, SPRITE_PAL_BLAINE, 4, 1
 	db VIRIDIAN_GYM, SPRITE_PAL_GIOVANNI, 4, 1
+; Map Pokémons	
 	db MR_FUJIS_HOUSE, SPRITE_PAL_PSYDUCK, 7, 1
-	db BILLS_HOUSE, SPRITE_PAL_BILLSMACHINE, 7, 1
 	db -1	
 
 TilePalSwapList:
@@ -277,11 +292,11 @@ TilePalSwapList:
 	db CELADON_MANSION_ROOF, $36, 3, PAL_BG_GRAY
 	db CELADON_MANSION_ROOF, $10, 6, PAL_BG_WATER
 	db CELADON_MANSION_ROOF, $16, 3, PAL_BG_GREEN
+	db CELADON_MART_1F, $07, 2, PAL_BG_YELLOW
+	db CELADON_MART_1F, $17, 2, PAL_BG_YELLOW
 	db CELADON_MART_ROOF, $4b, 2, PAL_BG_WATER
 	db CELADON_MART_ROOF, $4f, 1, PAL_BG_WATER
 	db CELADON_MART_ROOF, $28, 1, PAL_BG_ROOF
 	db CELADON_MART_ROOF, $38, 1, PAL_BG_ROOF
 	db CELADON_MART_ROOF, $4d, 2, PAL_BG_GRAY
-	db CELADON_MART_1F, $07, 2, PAL_BG_YELLOW
-	db CELADON_MART_1F, $17, 2, PAL_BG_YELLOW
 	db -1

@@ -51,31 +51,31 @@ SpritePalettes: ; Taken from pokemon GSC.
 SpritePalettesNite: ; Taken from pokemon GSC.
 
 ; PAL_OW_RED
-	RGB 27,31,27
+	RGB 30,28,26
 	RGB 31,19,10
 	RGB 31,7,1
 	RGB 0,0,0
 
 ; PAL_OW_BLUE
-	RGB 27,31,27
+	RGB 30,28,26
 	RGB 31,19,10
 	RGB 10,9,31
 	RGB 0,0,0
 
 ; PAL_OW_GREEN
-	RGB 27,31,27
+	RGB 30,28,26
 	RGB 31,19,10
 	RGB 7,23,3
 	RGB 0,0,0
 
 ; PAL_OW_BROWN
-	RGB 27,31,27
+	RGB 30,28,26
 	RGB 31,19,10
 	RGB 15,10,3
 	RGB 0,0,0
 
 ; PAL_OW_PURPLE
-	RGB 27,31,27
+	RGB 30,28,26
 	RGB 31,19,10
 	RGB 18,4,18
 	RGB 0,0,0
@@ -98,55 +98,55 @@ SpritePalettesNite: ; Taken from pokemon GSC.
 	RGB 08,04,05
 	RGB 00,00,00
 
-SpritePalettesPokecenter: ; Taken from pokemon GSC.
-
-; PAL_OW_RED
-	RGB 27,31,27
-	RGB 31,19,10
-	RGB 31,7,1
-	RGB 0,0,0
-
-; PAL_OW_BLUE
-	RGB 27,31,27
-	RGB 31,19,10
-	RGB 10,9,31
-	RGB 0,0,0
-
-; PAL_OW_GREEN
-	RGB 27,31,27
-	RGB 31,19,10
-	RGB 7,23,3
-	RGB 0,0,0
-
-; PAL_OW_BROWN
-	RGB 27,31,27
-	RGB 31,19,10
-	RGB 15,10,3
-	RGB 0,0,0
-
-; PAL_OW_PURPLE
-	RGB 27,31,27
-	RGB 31,19,10
-	RGB 29,5,13
-	RGB 0,0,0
-
-; PAL_OW_EMOJI
-	RGB 31,31,31
-	RGB 31,31,31
-	RGB 13,13,13
-	RGB 0,0,0
-
-; Heal Machine pokeballs and screen
-	RGB 27,31,27
-	RGB 31,19,10
-	RGB 31,7,1
-	RGB 0,0,0
-
-; PAL_OW_ROCK
-	RGB 27,31,27
-	RGB 24,18,7
-	RGB 20,15,3
-	RGB 7,7,7
+;SpritePalettesPokecenter: ; Taken from pokemon GSC.
+;
+;; PAL_OW_RED
+;	RGB 27,31,27
+;	RGB 31,19,10
+;	RGB 31,7,1
+;	RGB 0,0,0
+;
+;; PAL_OW_BLUE
+;	RGB 27,31,27
+;	RGB 31,19,10
+;	RGB 10,9,31
+;	RGB 0,0,0
+;
+;; PAL_OW_GREEN
+;	RGB 27,31,27
+;	RGB 31,19,10
+;	RGB 7,23,3
+;	RGB 0,0,0
+;
+;; PAL_OW_BROWN
+;	RGB 27,31,27
+;	RGB 31,19,10
+;	RGB 15,10,3
+;	RGB 0,0,0
+;
+;; PAL_OW_PURPLE
+;	RGB 27,31,27
+;	RGB 31,19,10
+;	RGB 29,5,13
+;	RGB 0,0,0
+;
+;; PAL_OW_EMOJI
+;	RGB 31,31,31
+;	RGB 31,31,31
+;	RGB 13,13,13
+;	RGB 0,0,0
+;
+;; Heal Machine pokeballs and screen
+;	RGB 27,31,27
+;	RGB 31,19,10
+;	RGB 31,7,1
+;	RGB 0,0,0
+;
+;; PAL_OW_ROCK
+;	RGB 27,31,27
+;	RGB 24,18,7
+;	RGB 20,15,3
+;	RGB 7,7,7
 
 AttackSpritePalettes:
 	; GREY
@@ -191,6 +191,16 @@ AttackSpritePalettes:
 	RGB 0,0,0
 
 MapSpritePalettes:
+	; SPRITE_PAL_HEALINGMACHINE
+	RGB 27,31,27
+	RGB 31,19,10
+	RGB 31,7,1
+	RGB 0,0,0
+	; SPRITE_PAL_INDOORTREE
+	RGB 18,24,9
+	RGB 15,20,1
+	RGB 9,13,0
+	RGB 7,7,7
 	; SPRITE_PAL_BROCK
 	RGB 27,31,27
 	RGB 31,19,10
@@ -237,12 +247,14 @@ MapSpritePalettes:
 	RGB 29,22,6
 	RGB 0,0,0
 	; SPRITE_PAL_BILLSMACHINE
-	RGB 27,31,27
+	RGB 30,28,26
 	RGB 19,19,19
 	RGB 13,13,13
 	RGB 7,7,7
 
 DEF const_value = 0
+	const SPRITE_PAL_HEALINGMACHINE
+	const SPRITE_PAL_INDOORTREE
 	const SPRITE_PAL_BROCK
 	const SPRITE_PAL_MISTY
 	const SPRITE_PAL_SURGE
