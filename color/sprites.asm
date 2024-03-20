@@ -34,10 +34,10 @@ LoadOverworldSpritePalettes:
 	ld hl, SpritePalettesNite
 	cp CAVERN
 	jr z, .gotPaletteList
-	; If it is the Pokemon Center, load different pals for the Heal Machine to flash
-	ld hl, SpritePalettesPokecenter
-	cp POKECENTER
-	jr z, .gotPaletteList
+;	; If it is the Pokemon Center, load different pals for the Heal Machine to flash
+;	ld hl, SpritePalettesPokecenter
+;	cp POKECENTER
+;	jr z, .gotPaletteList
 	; If not, load the normal Object Pals
 	ld hl, SpritePalettes
 .gotPaletteList
