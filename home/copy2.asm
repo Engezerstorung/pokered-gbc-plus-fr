@@ -66,7 +66,7 @@ CopyVideoData::
 ; de = graphic to use
 ; hl = where in vram
 ; b = wich bank the graphic is in
-; c = home many tile to copy from the source graphic
+; c = how many tile to copy from the source graphic
 ; see exemple : LoadPartyPokeballGfx
 	ldh a, [hAutoBGTransferEnabled]
 	push af
