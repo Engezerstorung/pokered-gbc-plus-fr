@@ -20,101 +20,68 @@ LoadExtraGraphics::
 ; d = palette to load (see constants/palette_constants.), e = palette index
 SetPal_FadeWhite::
 	ld a, [wCurMapTileset]
-	cp SHIP_PORT
-	jr z, .fadeshipport
-	cp UNDERGROUND
-	jr z, .fadeunderground
-	cp CAVERN
-	jr z, .fadecavern
-	cp REDS_HOUSE_1
-	jr z, .faderedshouse1
-	cp LOBBY
-	jr z, .fadelobby
-	cp MANSION
-	jr z, .fademansion
-	cp GYM
-	jr z, .fadegym
-	jp .contfadecheck
-.fadeshipport
-	lb de, INDOOR_BLUE, 6
+	ld hl, MapFadePalSwapList ; loading list for identification and properties values
+	ld de, 3 ; define the number of properties in list
+	call IsInArray ; check if Sprite is in list ; modify a/b/de
+	jr nc, .noMapFadePalSwap ; jump if not in list
+.loopMapFadePalSwap
+	ld a, [hli]
+	push af
+	ld a, [hli]
+	ld d, a
+	ld a, [hli]
+	ld e, a
+;	ld a, [hli]
+	push hl
+;	and a ; Check if BG or Sprite palette (BG=0, Sprite=1)
+;	jr nz, .swapFadeSpritePal
 	farcall LoadMapPalette
-	lb de, INDOOR_BLUE, 2
-	farcall LoadMapPalette
-	lb de, INDOOR_BROWN, 5
-	farcall LoadMapPalette
-	jr .fadecont
-.fadeunderground
-	lb de, INDOOR_RED, 1
-	farcall LoadMapPalette
-	jr .fadecont
-.fadecavern
-	lb de, CAVE_BROWN, 4
-	farcall LoadMapPalette
-	jr .fadecont
-.faderedshouse1
-	lb de, INDOOR_BROWN, 4
-	farcall LoadMapPalette
-	jr .fadecont
-.fadelobby
-	lb de, INDOOR_LIGHT_BLUE, 2
-	farcall LoadMapPalette
-	lb de, INDOOR_LIGHT_BLUE, 4
-	farcall LoadMapPalette
-	lb de, INDOOR_BLUE, 6
-	farcall LoadMapPalette
-	jr .fadecont
-.fademansion
-	lb de, INDOOR_BLUE, 3
-	farcall LoadMapPalette
-	lb de, INDOOR_BLUE, 6
-	farcall LoadMapPalette
-	jr .fadenointeriorbg
-.fadegym
-	lb de, INDOOR_FLOWER_FADE, 4
-	farcall LoadMapPalette
-	jr .fadenointeriorbg
-.fadecont
-	ld a, 1
-	ld [W2_ForceBGPUpdate], a
+;	jr .doneSwapFadePal
+;.swapFadeSpritePal	
+;	farcall LoadMapPalette_Sprite
+;.doneSwapFadePal	
+	pop hl
+	pop af
+	cp [hl]
+	jr z, .loopMapFadePalSwap
+.noMapFadePalSwap
 	ret
-.contfadecheck
-	cp CEMETERY
-	jr z, .fadegate
-	cp GATE
-	jr z, .fadegate
-	cp MUSEUM
-	jr z, .fadegate
-	cp FOREST_GATE
-	jr z, .fadenointeriorbg
-	cp MANSION
-	jr z, .fadenointeriorbg
-	cp FACILITY
-	jr z, .fadenointeriorbg
-	cp FOREST
-	jr z, .fadeoverworld
-	cp PLATEAU
-	jr z, .fadeoverworld
-	cp OVERWORLD
-	jr z, .fadeoverworld
-	jr .fadecont
-.fadegate
-	lb de, INDOOR_GRAY, 4
-	farcall LoadMapPalette
-	jr .fadecont
-.fadenointeriorbg
-	lb de, INDOOR_BROWN, 5
-	farcall LoadMapPalette
-	lb de, INDOOR_GREEN, 2
-	farcall LoadMapPalette
-	jr .fadecont
-.fadeoverworld
-	lb de, OUTDOOR_BLUE_FADE, 3
-	farcall LoadMapPalette
-	lb de, OUTDOOR_GRASS_FADE, 2
-	farcall LoadMapPalette
-	lb de, OUTDOOR_FLOWER_FADE, 1
-	farcall LoadMapPalette
-	jr .fadecont
+
+MapFadePalSwapList:
+	db CAVERN, CAVE_BROWN, 4
+	db CEMETERY, INDOOR_GRAY, 4
+	db FACILITY, INDOOR_GREEN, 2
+	db FACILITY, INDOOR_BROWN, 5
+	db FOREST, OUTDOOR_FLOWER_FADE, 1
+	db FOREST, OUTDOOR_GRASS_FADE, 2
+	db FOREST, OUTDOOR_BLUE_FADE, 3
+	db FOREST_GATE, INDOOR_GREEN, 2
+	db FOREST_GATE, INDOOR_BROWN, 5
+	db GATE, INDOOR_GRAY, 4
+	db GYM, INDOOR_GREEN, 2
+	db GYM, INDOOR_FLOWER_FADE, 4
+	db LAB, INDOOR_GREEN, 4
+	db LOBBY, INDOOR_LIGHT_BLUE, 2
+	db LOBBY, INDOOR_LIGHT_BLUE, 4
+	db LOBBY, INDOOR_BLUE, 6
+	db MANSION, INDOOR_GREEN, 2
+	db MANSION, INDOOR_BLUE, 3
+	db MANSION, INDOOR_BLUE, 6
+	db MUSEUM, INDOOR_GRAY, 4
+	db OVERWORLD, OUTDOOR_FLOWER_FADE, 1
+	db OVERWORLD, OUTDOOR_GRASS_FADE, 2
+	db OVERWORLD, OUTDOOR_BLUE_FADE, 3
+	db PLATEAU, OUTDOOR_FLOWER_FADE, 1
+	db PLATEAU, OUTDOOR_GRASS_FADE, 2
+	db PLATEAU, OUTDOOR_BLUE_FADE, 3
+	db REDS_HOUSE_1, INDOOR_BROWN, 4
+	db SHIP, INDOOR_GRAY, 4
+	db SHIP, INDOOR_GRAY, 6
+	db SHIP_PORT, INDOOR_BLUE, 2
+	db SHIP_PORT, INDOOR_BROWN, 5
+	db SHIP_PORT, INDOOR_BLUE, 6
+	db UNDERGROUND, INDOOR_RED, 1
+	db -1
 
 ; Set all palettes to black at beginning of battle
 SetPal_BattleBlack::
