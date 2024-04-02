@@ -36,13 +36,11 @@ ENDM
 .OverworldWarpTileIDs:
 	warp_tiles $1B, $58
 
-.MuseumWarpTileIDs:
-	db $3B
-	; fallthrough
 .ForestGateWarpTileIDs:
 .GateWarpTileIDs:
 	db $3B
 	; fallthrough
+.MuseumWarpTileIDs:
 .RedsHouse1WarpTileIDs:
 .RedsHouse2WarpTileIDs:
 	warp_tiles $1A, $1C
