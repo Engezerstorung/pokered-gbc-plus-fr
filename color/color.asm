@@ -17,7 +17,7 @@ LoadExtraGraphics::
 	ret
 
 ; Change palettes to alternate palettes for special case FadeOutToWhite ; see home/fade.Asm
-; d = palette to load (see constants/palette_constants.), e = palette index
+; LoadMapPalette use : d = palette to load (see constants/palette_constants.), e = palette index
 SetPal_FadeWhite::
 	ld a, [wCurMapTileset]
 	ld hl, MapFadePalSwapList ; loading list for identification and properties values
@@ -48,6 +48,7 @@ SetPal_FadeWhite::
 	ret
 
 MapFadePalSwapList:
+	; Tileset, new palette , palette slot to replace (0-7)
 	db CAVERN, CAVE_BROWN, 4
 	db CEMETERY, INDOOR_GRAY, 4
 	db FACILITY, INDOOR_GREEN, 2
@@ -698,7 +699,7 @@ SetPal_Overworld::
 	CALL_INDIRECT ClearSpritePaletteMap
 	; Make exclamation mark bubble black & white. (Note: it's possible that other
 	; sprites may use these tiles for different purposes...)
-	ld a, 5
+	ld a, 6 ; Palette slot used by Emote
 	ld hl, W2_SpritePaletteMap + $f8
 	ld [hli], a
 	ld [hli], a
@@ -706,7 +707,7 @@ SetPal_Overworld::
 	ld [hli], a
 
 	; Pokecenter uses OBP1 when healing pokemons; also cut animation
-	ld a, 2
+	ld a, 4
 	ld [W2_UseOBP1], a
 
 	CALL_INDIRECT LoadOverworldSpritePalettes
