@@ -1,7 +1,7 @@
 _FuchsiaGoodRodHouseFishingGuruText::
-	text "Je suis le grand"
-	line "frère du MAITRE"
-	cont "PECHEUR!"
+	text "I'm the FISHING"
+	line "GURU's older"
+	cont "brother!"
 
 	para "I simply Looove"
 	line "fishing!"
@@ -11,13 +11,8 @@ _FuchsiaGoodRodHouseFishingGuruText::
 	done
 
 _FuchsiaGoodRodHouseFishingGuruReceivedGoodRodText::
-	text "Cool! T'as l'air"
-	line "d'un bon gars!"
-
-	para "Prends ça!"
-	line "Que la Grand'"
-	cont "Pêche soit avec"
-	cont "toi, p'tit!"
+	text "Grand! I like"
+	line "your style!"
 
 	para "Take this and"
 	line "fish, young one!"
@@ -29,12 +24,12 @@ _FuchsiaGoodRodHouseFishingGuruReceivedGoodRodText::
 	text_end
 
 _FuchsiaGoodRodHouseFishingGuruThatsSoDisappointingText::
-	text "Oh...Pas cool!"
-	line "Pas cool du tout!"
+	text "Oh... That's so"
+	line "disappointing..."
 	done
 
 _FuchsiaGoodRodHouseFishingGuruHowAreTheFishText::
-	text "Salut,"
+	text "Hello there,"
 	line "<PLAYER>!"
 
 	para "How are the fish"
@@ -42,7 +37,7 @@ _FuchsiaGoodRodHouseFishingGuruHowAreTheFishText::
 	done
 
 _FuchsiaGoodRodHouseFishingGuruNoRoomText::
-	text "Oh non!"
+	text "Oh no!"
 
 	para "You have no room"
 	line "for my gift!"
