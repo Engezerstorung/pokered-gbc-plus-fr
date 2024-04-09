@@ -12,6 +12,7 @@ ReloadMapData::
 	pop af
 	ldh [hLoadedROMBank], a
 	ld [MBC1RomBank], a
+	farcall LoadExtraGraphics
 	ret
 
 ; reloads tileset tile patterns

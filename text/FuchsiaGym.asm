@@ -1,5 +1,5 @@
 _FuchsiaGymKogaBeforeBattleText::
-	text "KOGA: Fwahahaha!"
+	text "KOGA: Gwahahaha!"
 
 	para "A mere child like"
 	line "you dares to"
@@ -17,9 +17,9 @@ _FuchsiaGymKogaBeforeBattleText::
 	done
 
 _FuchsiaGymKogaReceivedSoulBadgeText::
-	text "Humph!"
-	line "You have proven"
-	cont "your worth!"
+	text "Gwaha...heu?"
+	line "Tu as prouvé ta"
+	cont "valeur!
 
 	para "Here! Take the"
 	line "SOULBADGE!"
