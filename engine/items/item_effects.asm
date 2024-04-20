@@ -1923,7 +1923,7 @@ ItemUseItemfinder:
 	and a
 	jp nz, ItemUseNotTime
 	call ItemUseReloadOverworldData
-	farcall HiddenItemNear ; check for hidden items
+	farcall HiddenItemNear ; check for hidden items, hooked to fix player sprite disappearing on sfx when finding an item
 	ld hl, ItemfinderFoundNothingText
 	jr nc, .printText ; if no hidden items
 	ld c, 4
