@@ -1,6 +1,6 @@
 SECTION "Audio RAM", WRAM0
 
-wUnusedC000:: db
+wUnusedMusicByte:: db
 
 wSoundID:: db
 
@@ -568,20 +568,17 @@ ENDU
 	ds 1
 
 wNPCMovementDirections2Index::
-wUnusedCD37::
+wUnusedLinkMenuByte::
 ; number of items in wFilteredBagItems list
 wFilteredBagItemsCount:: db
 
 ; the next simulated joypad state is at wSimulatedJoypadStatesEnd plus this value minus 1
 ; 0 if the joypad state is not being simulated
 wSimulatedJoypadStatesIndex:: db
-
 ; written to but nothing ever reads it
-wUnusedCD39:: db
-
+wUnusedSimulatedJoypadStatesMask:: db
 ; written to but nothing ever reads it
-wUnusedCD3A:: db
-
+wUnusedOverrideSimulatedJoypadStatesIndex:: db
 ; mask indicating which real button presses can override simulated ones
 ; XXX is it ever not 0?
 wOverrideSimulatedJoypadStatesMask:: db
@@ -787,7 +784,7 @@ wBadgeOrFaceTiles:: ds NUM_BADGES + 1
 wTempObtainedBadgesBooleans:: ds NUM_BADGES
 
 NEXTU
-wUnusedCD3D:: db
+wUnusedCreditsByte:: db
 ; the number of credits mons that have been displayed so far
 wNumCreditsMonsDisplayed:: db
 
@@ -1066,7 +1063,7 @@ wItemList:: ds 16
 wListPointer:: dw
 
 ; used to store pointers, but never read
-wUnusedCF8D:: dw
+wUnusedNamePointer:: dw
 
 wItemPrices:: dw
 
@@ -1398,7 +1395,7 @@ wOptionsInitialized::
 wNewSlotMachineBallTile::
 ; how much to add to the X/Y coord
 wCoordAdjustmentAmount::
-wUnusedD08A::
+wUnusedWaterDropletsByte::
 	db
 
 wSlideMonDelay::
@@ -1443,7 +1440,7 @@ wPartyMenuAnimMonEnabled::
 ; non-zero when enabled. causes nest locations to blink on and off.
 ; the town selection cursor will blink regardless of what this value is
 wTownMapSpriteBlinkingEnabled::
-wUnusedD09B:: db
+wUnusedMoveAnimByte:: db
 
 ; current destination address in OAM for frame blocks (big endian)
 wFBDestAddr:: dw
@@ -1554,7 +1551,7 @@ wMoveNum:: db
 
 wMovesString:: ds 56
 
-wUnusedD119:: db
+wUnusedCurMapTilesetCopy:: db
 
 ; wWalkBikeSurfState is sometimes copied here, but it doesn't seem to be used for anything
 wWalkBikeSurfStateCopy:: db
@@ -1689,7 +1686,7 @@ wSerialPlayerDataBlock:: ; ds $1a8
 ; that case, this would be ESCAPE_ROPE.
 wPseudoItemID:: db
 
-wUnusedD153:: db
+wUnusedAlreadyOwnedFlag:: db
 
 	ds 2
 
@@ -1792,8 +1789,7 @@ wYBlockCoord:: db
 wXBlockCoord:: db
 
 wLastMap:: db
-
-wUnusedD366:: db
+wUnusedLastMapWidth:: db
 
 wCurMapHeader::
 wCurMapTileset:: db
@@ -1903,7 +1899,7 @@ wCurrentBoxNum:: db
 ; number of HOF teams
 wNumHoFTeams:: db
 
-wUnusedD5A3:: db
+wUnusedMapVariable:: db
 
 wPlayerCoins:: dw ; BCD
 
@@ -2085,7 +2081,8 @@ wLastBlackoutMap:: db
 ; destination map (for certain types of special warps, not ordinary walking)
 wDestinationMap:: db
 
-wUnusedD71B:: db
+; initialized to $ff, but nothing ever reads it
+wUnusedPlayerDataByte:: db
 
 ; used to store the tile in front of the boulder when trying to push a boulder
 ; also used to store the result of the collision check ($ff for a collision and $00 for no collision)
@@ -2097,7 +2094,7 @@ wDungeonWarpDestinationMap:: db
 ; which dungeon warp within the source map was used
 wWhichDungeonWarp:: db
 
-wUnusedD71F:: db
+wUnusedCardKeyGateID:: db
 
 	ds 8
 
@@ -2255,8 +2252,7 @@ wTrainerHeaderPtr:: dw
 
 ; the trainer the player must face after getting a wrong answer in the Cinnabar
 ; gym quiz
-wOpponentAfterWrongAnswer::
-wUnusedDA38:: db
+wOpponentAfterWrongAnswer:: db
 
 ; index of current map script, mostly used as index for function pointer array
 ; mostly copied from map-specific map script pointer and written back later
