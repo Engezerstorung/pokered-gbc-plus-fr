@@ -116,21 +116,21 @@ SpriteFacingAndAnimationTable:
 
 .OddmonOAM:
 	; y, x, attributes
-	db 0, 7, OAM_HFLIP ; top left
+	db 0,  7, OAM_HFLIP ; top left
 	db 0, -1, OAM_HFLIP ; top right
-	db 8, 7, OAM_HFLIP | OAMFLAG_CANBEMASKED ; bottom left
+	db 8,  7, OAM_HFLIP | OAMFLAG_CANBEMASKED ; bottom left
 	db 8, -1, OAM_HFLIP | OAMFLAG_CANBEMASKED | OAMFLAG_ENDOFDATA ; bottom right
 
 .MachineLOAM:
 	; y, x, attributes
 	db 0, -24, $00
 	db 0, -16, $00
-	db 0, -8, OAM_HFLIP
-	db 0, 0, OAM_HFLIP | OAMFLAG_ENDOFDATA 
+	db 0,  -8, OAM_HFLIP
+	db 0,   0, OAM_HFLIP | OAMFLAG_ENDOFDATA 
 
 .MachineROAM:
 	; y, x, attributes
-	db 0, 8, $00
+	db 0,  8, $00
 	db 0, 16, $00
 	db 0, 24, OAM_HFLIP
 	db 0, 32, OAM_HFLIP | OAMFLAG_ENDOFDATA 
@@ -138,13 +138,13 @@ SpriteFacingAndAnimationTable:
 .SnorlaxOAM:
 	; y, x, attributes
 	db -3, -4, $00 ; top left
-	db -3, 4, $00 ; top center
-	db -3, 12, OAM_HFLIP ; top middle
-	db 5, -4, $00 ; middle left
-	db 5, 4, $00 ; middle center
-	db 5, 12, OAM_HFLIP ; middle right
+	db -3,  4, $00 ; top center
+	db -3, 12, OAM_HFLIP ; top right
+	db  5, -4, $00 ; middle left
+	db  5,  4, $00 ; middle center
+	db  5, 12, OAM_HFLIP ; middle right
 	db 13, -4, $00 ; bottom left
-	db 13, 4, $00 ; bottom center
+	db 13,  4, $00 ; bottom center
 	db 13, 12, OAM_HFLIP | OAMFLAG_ENDOFDATA ; bottom right
 
 SpecialOAMlist:
