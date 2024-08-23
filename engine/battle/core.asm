@@ -7146,8 +7146,8 @@ CalcEXPBarPixelLength:
 	ret
 
 .start
-	ld hl, wd72c
-	bit 1, [hl]
+	ld hl, wStatusFlags2
+	bit BIT_NO_AUDIO_FADE_OUT, [hl]
 	jr z, .isBattleScreen
 	ld hl, wLoadedMonSpecies
 	jr .skip
@@ -7186,8 +7186,8 @@ CalcEXPBarPixelLength:
 	callfar CalcExperience
 
 	; get the address of the active Pokemon's current experience
-	ld hl, wd72c
-	bit 1, [hl]
+	ld hl, wStatusFlags2
+	bit BIT_NO_AUDIO_FADE_OUT, [hl]
 	jr z, .isBattleScreen2
 	ld hl, wLoadedMonExp
 	jr .skip2

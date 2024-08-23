@@ -351,7 +351,7 @@ SetPal_TownMap:
 
 ; Status screen
 SetPal_StatusScreen:
-	ld a, [wcf91]
+	ld a, [wCurPartySpecies]
 	cp NUM_POKEMON_INDEXES + 1
 	jr c, .pokemon
 	ld a, $1 ; not pokemon
@@ -434,7 +434,7 @@ ENDC
 
 ; Show pokedex data
 SetPal_Pokedex:
-	ld a, [wcf91]
+	ld a, [wCurPartySpecies]
 	call DeterminePaletteID
 	ld d, a
 	ld e, 0
