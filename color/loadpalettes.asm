@@ -127,7 +127,7 @@ LoadTilesetPalette:
 	ld a, b
 	ld hl, MapPalSwapList ; loading list for identification and properties values
 	ld de, 4 ; define the number of properties in list
-	call IsInArray ; check if Sprite is in list ; modify a/b/de
+	call IsInArray
 	jr nc, .noMapPaletteSwap ; jump if not in list
 .loopMapPalSwap
 	ld a, [hli]
@@ -159,7 +159,7 @@ LoadTilesetPalette:
 	ld a, b
 	ld hl, TilePalSwapList ; loading list for identification and properties values
 	ld de, 4 ; define the number of properties in list
-	call IsInArray ; check if Sprite is in list ; modify a/b/de
+	call IsInArray
 	jr nc, .noTilePaletteSwap ; jump if not in list
 	ld de, W2_TilesetPaletteMap
 .loopTilepalSwapList
