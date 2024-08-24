@@ -1,7 +1,24 @@
 ; Extending bank 1C, same bank as engine/palettes.asm (for "SetPal" functions)
 SECTION "bank1C_extension", ROMX
 
-; Called by ReloadMapSpriteTilePatterns and CloseTextDisplay to reload special case graphics after text, menus and battles
+AnimateHealingMachine:
+	lb de, SPRITE_PAL_HEALINGMACHINE, 7
+	call LoadAnimationPalette
+	farcall _AnimateHealingMachine
+	lb de, SPRITE_PAL_OUTDOORTREE, 7
+	jp LoadAnimationPalette
+
+LoadAnimationPalette:
+	farcall LoadMapPalette_Sprite
+	; Update palettes
+	ld a, 2
+	ldh [rSVBK], a
+	ld a, 1
+	ld [W2_ForceOBPUpdate], a
+	ldh [rSVBK], a
+	ret
+
+; Called by ReloadMapSpriteTilePatterns, ReloadMapData and CloseTextDisplay to reload special case graphics after text, menus and battles
 LoadExtraGraphics::
 	ld a, [wCurMap]
 	cp CELADON_MANSION_ROOF
