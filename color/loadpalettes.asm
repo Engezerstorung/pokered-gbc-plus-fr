@@ -110,17 +110,6 @@ LoadTilesetPalette:
 	ld a, 2
 	ldh [rSVBK], a
 
-; Check for POKECENTER tileset to load healing machine animation palette in OBJ 6	
-	push bc
-	ld a, c
-	cp POKECENTER
-	jr nz, .notpokecenter
-	lb de, SPRITE_PAL_HEALINGMACHINE, 7
-	farcall LoadMapPalette_Sprite
-
-.notpokecenter
-	pop bc
-
 ; Check Map to replace BG and Sprites palettes in special cases
 ; Like on Celadon Mansion Roof, for Gym Leaders or Psyduck
 	push bc
@@ -275,7 +264,6 @@ MapPalSwapList:
 	db CERULEAN_GYM, SPRITE_PAL_MISTY, 4, 1
 	db CINNABAR_GYM, SPRITE_PAL_BLAINE, 4, 1
 	db FUCHSIA_GYM, SPRITE_PAL_KOGA, 4, 1
-	db INDIGO_PLATEAU_LOBBY, SPRITE_PAL_HEALINGMACHINE, 7, 1
 	db MR_FUJIS_HOUSE, SPRITE_PAL_PSYDUCK, 5, 1	
 	db PEWTER_GYM, SPRITE_PAL_BROCK, 4, 1
 	db SAFFRON_GYM, SPRITE_PAL_SABRINA, 4, 1
