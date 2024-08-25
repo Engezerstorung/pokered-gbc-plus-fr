@@ -117,11 +117,9 @@ ENDC
 	call IntroDisplayPicCenteredOrUpperRight
 	
 ; Prevent FadeInFromWhite to use SetPal_Overworld during the intro who result in messed up colors in Red Picture before Shrink
-	ld hl, wFontLoaded
+	ld hl, wCurrentMapScriptFlags
 	set 0, [hl]
 	call GBFadeInFromWhite
-	ld hl, wFontLoaded
-	res 0, [hl]
 
 	ld a, [wStatusFlags3]
 	and a ; ???
@@ -150,7 +148,7 @@ ENDC
 	ld de, ShrinkPic2
 	lb bc, BANK(ShrinkPic2), $00
 	call IntroDisplayPicCenteredOrUpperRight
-	call ResetPlayerSpriteData
+	farcall OakIntro_ResetPlayerSpriteData	; originally "call ResetPlayerSpriteData"
 	ldh a, [hLoadedROMBank]
 	push af
 	ld a, BANK(Music_PalletTown)
