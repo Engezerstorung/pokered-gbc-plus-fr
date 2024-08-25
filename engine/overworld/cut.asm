@@ -53,7 +53,7 @@ UsedCut:
 	res BIT_NO_TEXT_DELAY, [hl]
 	ld a, $ff
 	ld [wUpdateSpritesEnabled], a
-	call InitCutAnimOAM
+	farcall InitCutAnimOAM ; originally a call
 	ld de, CutTreeBlockSwaps
 	call ReplaceTreeTileBlock
 	call RedrawMapView
@@ -71,7 +71,7 @@ UsedCutText:
 	text_far _UsedCutText
 	text_end
 
-InitCutAnimOAM:
+_InitCutAnimOAM: ; hooked in color/color.asm
 	xor a
 	ld [wWhichAnimationOffsets], a
 	ld a, %11100100
