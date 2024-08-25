@@ -331,7 +331,7 @@ SpritePaletteAssignments: ; Characters on the overworld
 	db SPR_PAL_BLUE
 
 	; 0x03: SPRITE_OAK
-	db SPR_PAL_BROWN
+	db SPR_PAL_EXTRA1
 
 	; 0x04: SPRITE_BUG_CATCHER
 	db SPR_PAL_RANDOM
@@ -544,7 +544,7 @@ SpritePaletteAssignments: ; Characters on the overworld
 	; SPRITE_MOLTRES
 	db SPR_PAL_ORANGE
 	; SPRITE_NIDORINO
-	db SPR_PAL_EXTRA1
+	db SPR_PAL_EXTRA2
 	; SPRITE_OMANYTE
 	db SPR_PAL_RANDOM
 	; SPRITE_PIDGEOT
@@ -552,7 +552,7 @@ SpritePaletteAssignments: ; Characters on the overworld
 	; SPRITE_POLYWRATH
 	db SPR_PAL_BLUE
 	; SPRITE_PSYDUCK
-	db SPR_PAL_EXTRA2
+	db SPR_PAL_EXTRA1
 	; SPRITE_SLOWBRO
 	db SPR_PAL_EXTRA1
 	; SPRITE_SLOWPOKE
@@ -579,7 +579,7 @@ SpritePaletteAssignments: ; Characters on the overworld
 	; SPRITE_NIDORANF
 	db SPR_PAL_BLUE
 	; SPRITE_NIDORANM
-	db SPR_PAL_EXTRA1
+	db SPR_PAL_EXTRA2
 	; SPRITE_PIDGEY
 	db SPR_PAL_BROWN
 	; SPRITE_PIKACHU

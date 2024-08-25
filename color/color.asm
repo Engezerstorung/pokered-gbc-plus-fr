@@ -1,6 +1,12 @@
 ; Extending bank 1C, same bank as engine/palettes.asm (for "SetPal" functions)
 SECTION "bank1C_extension", ROMX
 
+; Load red sprite palette at the end of Oack Speech, before the player map sprite appear
+OakIntro_ResetPlayerSpriteData:
+	lb de, SPRITE_PAL_RED, 0
+	call LoadSpritePalette
+	jp ResetPlayerSpriteData
+
 ; Load Palettes for boulder dust or pokecenter healing machine when needed
 InitCutAnimOAM:
 	ld hl, wCurrentMapScriptFlags

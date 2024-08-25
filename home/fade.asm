@@ -25,8 +25,8 @@ GBFadeInFromBlack::
 
 GBFadeOutToWhite::
 	farcall SetPal_FadeWhite
-	ld hl, FadePal6
-	ld b, 3
+	ld hl, FadePal5
+	ld b, 4
 
 GBFadeIncCommon:
 	ld a, [hli]
@@ -35,7 +35,7 @@ GBFadeIncCommon:
 	ldh [rOBP0], a
 	ld a, [hli]
 	ldh [rOBP1], a
-	ld c, 8
+	ld c, 4
 	call DelayFrames
 	dec b
 	jr nz, GBFadeIncCommon
@@ -58,7 +58,7 @@ GBFadeDecCommon:
 	ldh [rOBP0], a
 	ld a, [hld]
 	ldh [rBGP], a
-	ld c, 8
+	ld c, 4
 	call DelayFrames
 	
 ; Load Normal map_palette_sets before the last frame of the fade as to not have the final colors suddently "pop-in"
@@ -66,10 +66,6 @@ GBFadeDecCommon:
 	cp 2
 	push hl
 	push bc
-	jr nz, .nosetpaloverworld
-; Prevent the map_palette_sets loading during Oak Speech
-	ld hl, wFontLoaded
-	bit 0, [hl]
 	jr nz, .nosetpaloverworld
 	farcall SetPal_Overworld
 .nosetpaloverworld
