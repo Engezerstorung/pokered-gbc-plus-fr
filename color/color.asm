@@ -1,14 +1,40 @@
 ; Extending bank 1C, same bank as engine/palettes.asm (for "SetPal" functions)
 SECTION "bank1C_extension", ROMX
 
+; Load red sprite palette at the end of Oack Speech, before the player map sprite appear
+OakIntro_ResetPlayerSpriteData:
+	lb de, SPRITE_PAL_RED, 0
+	call LoadSpritePalette
+	jp ResetPlayerSpriteData
+
+; Load Palettes for boulder dust or pokecenter healing machine when needed
+InitCutAnimOAM:
+	ld hl, wCurrentMapScriptFlags
+	set 0, [hl]
+	ld a, [wCurMapTileset]
+	ld d, SPRITE_PAL_OUTDOORTREE
+	and a ; check if OVERWORLD tileset
+	jr z, .paletteSelected
+	CP FOREST
+	jr z, .paletteSelected
+	CP PLATEAU
+	jr z, .paletteSelected
+	ld d, SPRITE_PAL_CAVETREE
+	cp CAVERN
+	jr z, .paletteSelected
+	ld d, SPRITE_PAL_INDOORTREE
+.paletteSelected
+	ld e, 7
+	call LoadSpritePalette
+	jpfar _InitCutAnimOAM
+
 AnimateHealingMachine:
 	lb de, SPRITE_PAL_HEALINGMACHINE, 7
-	call LoadAnimationPalette
+	call LoadSpritePalette
 	farcall _AnimateHealingMachine
-	lb de, SPRITE_PAL_OUTDOORTREE, 7
-	jp LoadAnimationPalette
+	jp SetPal_Overworld
 
-LoadAnimationPalette:
+LoadSpritePalette:
 	farcall LoadMapPalette_Sprite
 	; Update palettes
 	ld a, 2
@@ -707,6 +733,12 @@ SetPal_Generic:
 
 ; Loading a map. Called when first loading, and when transitioning between maps.
 SetPal_Overworld::
+
+	ld hl, wCurrentMapScriptFlags
+	bit 0, [hl]
+	res 0, [hl]
+	ret nz
+
 	ld a, 2
 	ldh [rSVBK], a
 	dec a ; ld a, 1
@@ -716,7 +748,7 @@ SetPal_Overworld::
 	CALL_INDIRECT ClearSpritePaletteMap
 	; Make exclamation mark bubble black & white. (Note: it's possible that other
 	; sprites may use these tiles for different purposes...)
-	ld a, 6 ; Palette slot used by Emote
+	ld a, 7 ; Palette slot used by Emote
 	ld hl, W2_SpritePaletteMap + $f8
 	ld [hli], a
 	ld [hli], a

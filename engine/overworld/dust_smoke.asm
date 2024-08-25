@@ -19,7 +19,7 @@ AnimateBoulderDust:
 	jp hl
 .returnAddress
 	ldh a, [rOBP1]
-	xor %01100100
+	xor %00100100 ; originally %01100100
 	ldh [rOBP1], a
 	call Delay3
 	pop bc

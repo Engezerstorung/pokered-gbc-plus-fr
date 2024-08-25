@@ -18,7 +18,7 @@ DEF SPR_PAL_GREEN   EQU 2
 DEF SPR_PAL_BROWN   EQU 3
 DEF SPR_PAL_EXTRA1  EQU 4
 DEF SPR_PAL_EXTRA2  EQU 5
-DEF SPR_PAL_EMOJI   EQU 6
+DEF SPR_PAL_EXTRA3   EQU 6
 DEF SPR_PAL_ANIM    EQU 7
 DEF SPR_PAL_RANDOM  EQU 8
 
@@ -34,10 +34,6 @@ LoadOverworldSpritePalettes:
 	ld hl, SpritePalettesNite
 	cp CAVERN
 	jr z, .gotPaletteList
-;	; If it is the Pokemon Center, load different pals for the Heal Machine to flash
-;	ld hl, SpritePalettesPokecenter
-;	cp POKECENTER
-;	jr z, .gotPaletteList
 	; If not, load the normal Object Pals
 	ld hl, SpritePalettes
 .gotPaletteList
@@ -335,7 +331,7 @@ SpritePaletteAssignments: ; Characters on the overworld
 	db SPR_PAL_BLUE
 
 	; 0x03: SPRITE_OAK
-	db SPR_PAL_BROWN
+	db SPR_PAL_EXTRA1
 
 	; 0x04: SPRITE_BUG_CATCHER
 	db SPR_PAL_RANDOM
@@ -512,7 +508,7 @@ SpritePaletteAssignments: ; Characters on the overworld
 	; SPRITE_BLANK
 	db SPR_PAL_BLUE
 	; SPRITE_DOME_FOSSIL
-	db SPR_PAL_ANIM
+	db SPR_PAL_EXTRA3
 ; Gym Leaders
 	; SPRITE_BROCK
 	db SPR_PAL_EXTRA1
@@ -544,11 +540,11 @@ SpritePaletteAssignments: ; Characters on the overworld
 	; SPRITE_MEOWTH
 	db SPR_PAL_BROWN
 	; SPRITE_MEWTWO
-	db SPR_PAL_EXTRA1
+	db SPR_PAL_EXTRA2
 	; SPRITE_MOLTRES
 	db SPR_PAL_ORANGE
 	; SPRITE_NIDORINO
-	db SPR_PAL_EXTRA1
+	db SPR_PAL_EXTRA2
 	; SPRITE_OMANYTE
 	db SPR_PAL_RANDOM
 	; SPRITE_PIDGEOT
@@ -556,7 +552,7 @@ SpritePaletteAssignments: ; Characters on the overworld
 	; SPRITE_POLYWRATH
 	db SPR_PAL_BLUE
 	; SPRITE_PSYDUCK
-	db SPR_PAL_EXTRA2
+	db SPR_PAL_EXTRA1
 	; SPRITE_SLOWBRO
 	db SPR_PAL_EXTRA1
 	; SPRITE_SLOWPOKE
@@ -583,7 +579,7 @@ SpritePaletteAssignments: ; Characters on the overworld
 	; SPRITE_NIDORANF
 	db SPR_PAL_BLUE
 	; SPRITE_NIDORANM
-	db SPR_PAL_EXTRA1
+	db SPR_PAL_EXTRA2
 	; SPRITE_PIDGEY
 	db SPR_PAL_BROWN
 	; SPRITE_PIKACHU
@@ -600,10 +596,10 @@ SpritePaletteAssignments: ; Characters on the overworld
 	db SPR_PAL_ORANGE
 
 	; 0x3e: SPRITE_HELIX_FOSSIL
-	db SPR_PAL_ANIM
+	db SPR_PAL_EXTRA3
 
 	; 0x3f: SPRITE_BOULDER
-	db SPR_PAL_ANIM
+	db SPR_PAL_EXTRA3
 
 	; 0x40: SPRITE_PAPER_SHEET
 	db SPR_PAL_BROWN
@@ -618,10 +614,10 @@ SpritePaletteAssignments: ; Characters on the overworld
 	db SPR_PAL_BLUE
 
 	; 0x44: SPRITE_OLD_AMBER_COPY
-	db SPR_PAL_ANIM
+	db SPR_PAL_EXTRA3
 
 	; 0x45: SPRITE_OLD_AMBER
-	db SPR_PAL_EXTRA2
+	db SPR_PAL_EXTRA3
 
 	; 0x46: SPRITE_LYING_OLD_MAN_UNUSED_1
 	db SPR_PAL_BROWN
@@ -636,7 +632,7 @@ SpritePaletteAssignments: ; Characters on the overworld
 	; SPRITE_BENCH_GUY
 	db SPR_PAL_RANDOM
 	; SPRITE_BILLS_MACHINE
-	db SPR_PAL_ANIM
+	db SPR_PAL_EXTRA2
 
 AnimationTileset1Palettes:
 	INCBIN "color/data/animtileset1palettes.bin"

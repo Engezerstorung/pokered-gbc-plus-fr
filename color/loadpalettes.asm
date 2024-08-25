@@ -110,6 +110,21 @@ LoadTilesetPalette:
 	ld a, 2
 	ldh [rSVBK], a
 
+; Check Tileset to load proper boulder dust palette if outside location
+	push bc
+	ld a, c
+	and a ; check if OVERWORLD tileset
+	jr z, .isOutside
+	cp FOREST
+	jr z, .isOutside
+	cp PLATEAU
+	jr nz, .notOutside
+.isOutside
+	lb de, SPRITE_PAL_OUTDOORDUST, 7
+	farcall LoadMapPalette_Sprite
+.notOutside
+	pop bc
+
 ; Check Map to replace BG and Sprites palettes in special cases
 ; Like on Celadon Mansion Roof, for Gym Leaders or Psyduck
 	push bc
@@ -255,21 +270,23 @@ LoadTownPalette::
 
 MapPalSwapList:
 	; Map, new palette , palette slot to replace (0-7), palette type(0=BG, 1=Sprite)
-	db BILLS_HOUSE, SPRITE_PAL_BILLSMACHINE, 7, 1
+	db BILLS_HOUSE, SPRITE_PAL_BILLSMACHINE, 5, 1
 	db CELADON_GYM, SPRITE_PAL_ERIKA, 4, 1
-	db CELADON_GYM, SPRITE_PAL_INDOORTREE, 7, 1
 	db CELADON_MANSION_ROOF, INDOOR_LIGHT_BLUE, 2, 0
 	db CELADON_MANSION_ROOF, MANSION_SKY, 3, 0
 	db CELADON_MANSION_ROOF, MANSION_WALLS_ROOF, 6, 0
 	db CERULEAN_GYM, SPRITE_PAL_MISTY, 4, 1
+	db CHAMPIONS_ROOM, SPRITE_PAL_OAK, 4, 1
 	db CINNABAR_GYM, SPRITE_PAL_BLAINE, 4, 1
 	db FUCHSIA_GYM, SPRITE_PAL_KOGA, 4, 1
-	db MR_FUJIS_HOUSE, SPRITE_PAL_PSYDUCK, 5, 1	
+	db HALL_OF_FAME, SPRITE_PAL_OAK, 4, 1
+	db MR_FUJIS_HOUSE, SPRITE_PAL_PSYDUCK, 4, 1
+	db OAKS_LAB, SPRITE_PAL_OAK, 4, 1
+	db PALLET_TOWN, SPRITE_PAL_OAK, 4, 1
 	db PEWTER_GYM, SPRITE_PAL_BROCK, 4, 1
 	db SAFFRON_GYM, SPRITE_PAL_SABRINA, 4, 1
 	db VERMILION_GYM, SPRITE_PAL_SURGE, 4, 1
 	db VIRIDIAN_GYM, SPRITE_PAL_GIOVANNI, 4, 1
-	db WARDENS_HOUSE, SPRITE_PAL_OUTDOORROCK, 7, 1
 	db -1
 
 TilePalSwapList:
