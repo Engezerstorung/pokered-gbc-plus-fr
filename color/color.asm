@@ -63,11 +63,11 @@ LoadExtraGraphics::
 ; LoadMapPalette use : d = palette to load (see constants/palette_constants.), e = palette index
 SetPal_FadeWhite::
 	ld a, [wCurMapTileset]
-	ld hl, MapFadePalSwapList ; loading list for identification and properties values
+	ld hl, TilesetFadePalList ; loading list for identification and properties values
 	ld de, 3 ; define the number of properties in list
 	call IsInArray ; check if Sprite is in list ; modify a/b/de
-	jr nc, .noMapFadePalSwap ; jump if not in list
-.loopMapFadePalSwap
+	ret nc
+.loopFadePalSwap
 	ld a, [hli]
 	push af
 	ld a, [hli]
@@ -86,45 +86,44 @@ SetPal_FadeWhite::
 	pop hl
 	pop af
 	cp [hl]
-	jr z, .loopMapFadePalSwap
-.noMapFadePalSwap
+	jr z, .loopFadePalSwap
 	ret
 
-MapFadePalSwapList:
+TilesetFadePalList:
 	; Tileset, new palette , palette slot to replace (0-7)
-	db CAVERN, CAVE_BROWN, 4
-	db CEMETERY, INDOOR_GRAY, 4
-	db FACILITY, INDOOR_GREEN, 2
-	db FACILITY, INDOOR_BROWN, 5
-	db FOREST, OUTDOOR_FLOWER_FADE, 1
-	db FOREST, OUTDOOR_GRASS_FADE, 2
-	db FOREST, OUTDOOR_BLUE_FADE, 3
-	db FOREST_GATE, INDOOR_GREEN, 2
-	db FOREST_GATE, INDOOR_BROWN, 5
-	db GATE, INDOOR_GRAY, 4
-	db GYM, INDOOR_GREEN, 2
-	db GYM, INDOOR_FLOWER_FADE, 4
-	db LAB, INDOOR_GREEN, 4
-	db LOBBY, INDOOR_LIGHT_BLUE, 2
-	db LOBBY, INDOOR_LIGHT_BLUE, 4
-	db LOBBY, INDOOR_BLUE, 6
-	db MANSION, INDOOR_GREEN, 2
-	db MANSION, INDOOR_BLUE, 3
-	db MANSION, INDOOR_BLUE, 6
-	db MUSEUM, INDOOR_GRAY, 4
-	db OVERWORLD, OUTDOOR_FLOWER_FADE, 1
-	db OVERWORLD, OUTDOOR_GRASS_FADE, 2
-	db OVERWORLD, OUTDOOR_BLUE_FADE, 3
-	db PLATEAU, OUTDOOR_FLOWER_FADE, 1
-	db PLATEAU, OUTDOOR_GRASS_FADE, 2
-	db PLATEAU, OUTDOOR_BLUE_FADE, 3
+	db CAVERN,       CAVE_BROWN, 4
+	db CEMETERY,     INDOOR_GRAY, 4
+	db FACILITY,     INDOOR_GREEN, 2
+	db FACILITY,     INDOOR_BROWN, 5
+	db FOREST,       OUTDOOR_FLOWER_FADE, 1
+	db FOREST,       OUTDOOR_GRASS_FADE, 2
+	db FOREST,       OUTDOOR_BLUE_FADE, 3
+	db FOREST_GATE,  INDOOR_GREEN, 2
+	db FOREST_GATE,  INDOOR_BROWN, 5
+	db GATE,         INDOOR_GRAY, 4
+	db GYM,          INDOOR_GREEN, 2
+	db GYM,          INDOOR_FLOWER_FADE, 4
+	db LAB,          INDOOR_GREEN, 4
+	db LOBBY,        INDOOR_LIGHT_BLUE, 2
+	db LOBBY,        INDOOR_LIGHT_BLUE, 4
+	db LOBBY,        INDOOR_BLUE, 6
+	db MANSION,      INDOOR_GREEN, 2
+	db MANSION,      INDOOR_BLUE, 3
+	db MANSION,      INDOOR_BLUE, 6
+	db MUSEUM,       INDOOR_GRAY, 4
+	db OVERWORLD,    OUTDOOR_FLOWER_FADE, 1
+	db OVERWORLD,    OUTDOOR_GRASS_FADE, 2
+	db OVERWORLD,    OUTDOOR_BLUE_FADE, 3
+	db PLATEAU,      OUTDOOR_FLOWER_FADE, 1
+	db PLATEAU,      OUTDOOR_GRASS_FADE, 2
+	db PLATEAU,      OUTDOOR_BLUE_FADE, 3
 	db REDS_HOUSE_1, INDOOR_BROWN, 4
-	db SHIP, INDOOR_GRAY, 4
-	db SHIP, INDOOR_GRAY, 6
-	db SHIP_PORT, INDOOR_BLUE, 2
-	db SHIP_PORT, INDOOR_BROWN, 5
-	db SHIP_PORT, INDOOR_BLUE, 6
-	db UNDERGROUND, INDOOR_RED, 1
+	db SHIP,         INDOOR_GRAY, 4
+	db SHIP,         INDOOR_GRAY, 6
+	db SHIP_PORT,    INDOOR_BLUE, 2
+	db SHIP_PORT,    INDOOR_BROWN, 5
+	db SHIP_PORT,    INDOOR_BLUE, 6
+	db UNDERGROUND,  INDOOR_RED, 1
 	db -1
 
 ; Set all palettes to black at beginning of battle
@@ -1044,6 +1043,11 @@ SetPal_OakIntro:
 
 	xor a
 	ldh [rSVBK], a
+
+; Set flag to prevent FadeInFromWhite from using SetPal_Overworld during the intro,
+; which would result in messed up colors in Red Picture before Shrink
+	ld hl, wCurrentMapScriptFlags
+	set 0, [hl]
 	ret
 
 ; Name entry
