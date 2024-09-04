@@ -892,8 +892,11 @@ LoadTilesetTilePatternData::
 	ld de, vTileset
 	ld bc, $600
 	ld a, [wTilesetBank]
-	jp FarCopyData2
+;	jp FarCopyData2
 
+	call FarCopyData2
+	jpfar VramSwap
+	
 ; this loads the current maps complete tile map (which references blocks, not individual tiles) to C6E8
 ; it can also load partial tile maps of connected maps into a border of length 3 around the current map
 LoadTileBlockMap::

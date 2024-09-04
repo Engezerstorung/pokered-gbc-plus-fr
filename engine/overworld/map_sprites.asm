@@ -1,3 +1,7 @@
+InitMapSprites::
+	call _InitMapSprites
+	jpfar VramSwap
+
 ; Loads tile patterns for map's sprites.
 ; For outside maps, it loads one of several fixed sets of sprites.
 ; For inside maps, it loads each sprite picture ID used in the map header.
@@ -8,7 +12,7 @@
 ; wSpriteStateData2 sprite slot, respectively, within loops. The X is the loop index.
 ; If there is an inner loop, Y is the inner loop index, i.e. y#SPRITESTATEDATA1_* and
 ; y#SPRITESTATEDATA2_* denote fields of the sprite slots iterated over in the inner loop.
-InitMapSprites::
+_InitMapSprites::
 	call InitOutsideMapSprites
 	ret c ; return if the map is an outside map (already handled by above call)
 ; if the map is an inside map (i.e. mapID >= FIRST_INDOOR_MAP)
@@ -18,6 +22,20 @@ InitMapSprites::
 ; to [x#SPRITESTATEDATA2_PICTUREID] for LoadMapSpriteTilePatterns.
 .copyPictureIDLoop
 	ld a, [hl] ; a = [x#SPRITESTATEDATA1_PICTUREID]
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;
+
+	ld [wSavedSpritePictureID], a
+	push de
+	safefarcall SpriteSwap
+	pop de
+	ld a, [wSavedSpritePictureID]
+	ld [hl], a
+
+;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
 	ld [de], a ; [x#SPRITESTATEDATA2_PICTUREID] = a
 	ld a, SPRITESTATEDATA1_LENGTH
 	add e
@@ -115,6 +133,67 @@ LoadMapSpriteTilePatterns:
 	add a
 	push bc
 	push hl
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;
+; Checking if the sprite need to be reloaded in vram
+
+;	jr .bypasscode
+
+	push af
+	push de
+	push bc
+
+	ld  a, [wSpriteFlags]
+	bit 0, a ; is the fucntion called in the overworld?
+	jr z, .loadInVram ; 0 if not called by OW spriteset loading
+	bit 1, a ; is the sprite set different than the previous one?
+	jr z, .loadInVram ; 1 if sprite set is identical
+
+	ldh a, [rLCDC]
+	bit 7, a ; is the LCD enabled?
+	jr z, .loadInVram
+
+	ldh a, [hVRAMSlot]
+	dec a
+	jr z, .alreadyInVram ; is Red sprite
+	dec a
+	ld b, a
+
+	ld hl, SpriteSets
+	ld a, [wPrevSpriteSetOffset]
+	add b
+	add l
+	ld l, a
+	jr nc, .prevNoCarry1
+	inc h
+.prevNoCarry1
+	
+	ld de, SpriteSets
+	ld a, [wCurSpriteSetOffset]
+	add b
+	add e
+	ld e, a
+	jr nc, .curNoCarry1
+	inc d
+.curNoCarry1
+
+	ld a, [de]
+	cp [hl]
+	jr nz, .loadInVram
+.alreadyInVram
+	ld hl, wSpriteFlags
+	set 2, [hl]
+
+.loadInVram
+	pop bc
+	pop de
+	pop af
+
+.bypasscode	
+;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
 	ld hl, SpriteSheetPointerTable
 	jr nc, .noCarry
 	inc h
@@ -156,18 +235,45 @@ LoadMapSpriteTilePatterns:
 	pop de
 	pop af
 	push hl
-	push hl
-	ld h, d
-	ld l, e
-	pop de
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;
+
+; Loading standing tiles
+
+	push bc
+	push af
+	swap c
 	ld b, a
 	ld a, [wFontLoaded]
 	bit 0, a ; reloading upper half of tile patterns after displaying text?
-	jr nz, .skipFirstLoad ; if so, skip loading data into the lower half
-	ld a, b
-	ld b, 0
-	call FarCopyData2 ; load tile pattern data for sprite when standing still
+	jr nz, .skipFirstLoad
+	ld a, [wSpriteFlags]
+	bit 2, a
+	jr nz, .skipFirstLoad
+
+	call z, GoodCopyVideoData
 .skipFirstLoad
+	pop af
+	pop bc
+
+;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;	push hl
+;	ld h, d
+;	ld l, e
+;	pop de
+;	ld b, a
+;	ld a, [wFontLoaded]
+;	bit 0, a ; reloading upper half of tile patterns after displaying text?
+;	jr nz, .skipFirstLoad ; if so, skip loading data into the lower half
+;	ld a, b
+;	ld b, 0
+;	call FarCopyData2 ; load tile pattern data for sprite when standing still
+;.skipFirstLoad
+
+
 	pop de
 	pop hl
 	ldh a, [hVRAMSlot]
@@ -182,28 +288,49 @@ LoadMapSpriteTilePatterns:
 	jr nc, .noCarry3
 	inc d
 .noCarry3
-	ld a, [wFontLoaded]
-	bit 0, a ; reloading upper half of tile patterns after displaying text?
-	jr nz, .loadWhileLCDOn
-	pop af
-	pop hl
-	set 3, h ; add $80 tiles to hl
-	push hl
-	ld h, d
-	ld l, e
-	pop de
-	call FarCopyData2 ; load tile pattern data for sprite when walking
-	jr .skipSecondLoad
-; When reloading the upper half of tile patterns after displaying text, the LCD
-; will be on, so CopyVideoData (which writes to VRAM only during V-blank) must
-; be used instead of FarCopyData2.
-.loadWhileLCDOn
+
+
+;	ld a, [wFontLoaded]
+;	bit 0, a ; reloading upper half of tile patterns after displaying text?
+;	jr nz, .loadWhileLCDOn
+;	pop af
+;	pop hl
+;	set 3, h ; add $80 tiles to hl
+;	push hl
+;	ld h, d
+;	ld l, e
+;	pop de
+;	call FarCopyData2 ; load tile pattern data for sprite when walking
+;	jr .skipSecondLoad
+;; When reloading the upper half of tile patterns after displaying text, the LCD
+;; will be on, so CopyVideoData (which writes to VRAM only during V-blank) must
+;; be used instead of FarCopyData2.
+;.loadWhileLCDOn
+
+
 	pop af
 	pop hl
 	set 3, h ; add $80 tiles to hl
 	ld b, a
 	swap c
-	call CopyVideoData ; load tile pattern data for sprite when walking
+
+;	call CopyVideoData ; load tile pattern data for sprite when walking
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;
+
+; Loading walking tiles
+
+	push hl
+	ld hl, wSpriteFlags
+	bit 2, [hl]
+	res 2, [hl]
+	pop hl
+	call z, GoodCopyVideoData
+	
+;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
 .skipSecondLoad
 	pop hl
 	pop bc
@@ -272,18 +399,57 @@ InitOutsideMapSprites:
 	jr nz, .loadSpriteSet ; if so, forcibly reload the sprite set
 	ld a, [wSpriteSetID]
 	cp b ; has the sprite set ID changed?
-	jr z, .skipLoadingSpriteSet ; if not, don't load it again
+	jp z, .skipLoadingSpriteSet ; if not, don't load it again
 .loadSpriteSet
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;
+; Load previous SpriteSets adresse in wPrevSpriteSet
+
+	ld a, [wSpriteSetID]
+	cp b
+
+	ld hl, wSpriteFlags
+	res 1, [hl]
+	jr z, .isSameSpriteSet2
+	set 1, [hl]
+.isSameSpriteSet2
+
+	ld c, 2
+.offsetloop
+	dec a
+	ld d, a
+	sla a
+	ld e, a
+	sla a
+	sla a
+	add e
+	add d ; a = ("spriteSetID" - 1) * SPRITE_SET_LENGTH
+	dec c
+	jr z, .isCurrentOffset
+	ld [wPrevSpriteSetOffset], a
 	ld a, b
 	ld [wSpriteSetID], a
-	dec a
-	ld b, a
-	sla a
-	ld c, a
-	sla a
-	sla a
-	add c
-	add b ; a = (spriteSetID - 1) * SPRITE_SET_LENGTH
+	jr .offsetloop
+.isCurrentOffset
+	ld [wCurSpriteSetOffset], a
+
+;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;	ld a, b
+;	ld [wSpriteSetID], a
+;
+;	dec a
+;	ld b, a
+;	sla a
+;	ld c, a
+;	sla a
+;	sla a
+;	add c
+;	add b ; a = (spriteSetID - 1) * SPRITE_SET_LENGTH
+
+
 	ld de, SpriteSets
 ; add a to de to get offset of sprite set
 	add e
@@ -304,6 +470,19 @@ InitOutsideMapSprites:
 	add l
 	ld l, a
 	ld a, [de] ; sprite picture ID from sprite set
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;
+
+	push de
+	ld [wSavedSpritePictureID], a
+	safefarcall SpriteSwap
+	ld a, [wSavedSpritePictureID]
+	pop de
+
+;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
 	ld [hl], a ; [x#SPRITESTATEDATA2_PICTUREID]
 	ld [bc], a
 	inc de
@@ -324,7 +503,22 @@ InitOutsideMapSprites:
 	push af ; save number of sprites
 	ld a, SPRITE_SET_LENGTH ; 11 sprites in sprite set
 	ld [wNumSprites], a
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;
+
+	ld hl, wSpriteFlags
+	set 0, [hl]
 	call LoadMapSpriteTilePatterns
+	ld hl, wSpriteFlags
+	res 0, [hl]
+	res 1, [hl]
+	res 2, [hl]
+
+;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+	
+;	call LoadMapSpriteTilePatterns
 	pop af
 	ld [wNumSprites], a ; restore number of sprites
 	ld hl, wSprite01StateData2ImageBaseOffset
@@ -355,6 +549,19 @@ InitOutsideMapSprites:
 	and a ; is the sprite slot used?
 	jr z, .skipGettingPictureIndex ; if the sprite slot is not used
 	ld b, a ; b = picture ID
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;
+
+	ld [wSavedSpritePictureID], a
+	safefarcall SpriteSwap
+	ld a, [wSavedSpritePictureID]
+	ld b, a
+	ld [hl], a
+
+;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
 	ld de, wSpriteSet
 ; Loop to find the index of the sprite's picture ID within the sprite set.
 .getPictureIndexLoop
@@ -427,7 +634,7 @@ GetSplitMapSpriteSetID:
 	; Use SPRITESET_FUCHSIA if X >= 62.
 	ld a, [hl]
 	cp 62
-	ld a, SPRITESET_FUCHSIA
+	ld a, SPRITESET_ROUTE_18_19
 	ret nc
 	; If 55 <= X < 62, split Y at 8; else 43 <= X < 55, so split Y at 13
 	ld a, [hl]
@@ -439,7 +646,7 @@ GetSplitMapSpriteSetID:
 	; Use SPRITESET_FUCHSIA if Y < split; else use SPRITESET_PALLET_VIRIDIAN
 	ld a, [wYCoord]
 	cp b
-	ld a, SPRITESET_FUCHSIA
+	ld a, SPRITESET_ROUTE_18_19
 	ret c
 	ld a, SPRITESET_PALLET_VIRIDIAN
 	ret

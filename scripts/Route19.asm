@@ -1,41 +1,10 @@
 Route19_Script:
-	ld hl, wCurrentMapScriptFlags
-	bit 5, [hl]
-	res 5, [hl]
-	call nz, Route19GraphicSwapScript
-	ld hl, wCurrentMapScriptFlags
-	bit 4, [hl]
-	res 4, [hl]
-	call nz, Route19GraphicSwapScript
-	
 	call EnableAutoTextBoxDrawing
 	ld hl, Route19TrainerHeaders
 	ld de, Route19_ScriptPointers
 	ld a, [wRoute19CurScript]
 	call ExecuteCurMapScriptInTable
 	ld [wRoute19CurScript], a
-	ret
-
-Route19GraphicSwapScript:
-	ld a, [wYCoord]
-	cp 2
-	ret nc
-	ld de, SwimmerSprite 
-	ld hl, vSprites tile $60
-	lb bc, BANK(SwimmerSprite), 12
-	call CopyVideoData
-	ld de, SwimmerSprite tile 12
-	ld hl, vSprites tile $E0
-	lb bc, BANK(SwimmerSprite), 12
-	call CopyVideoData
-	ld de, CooltrainerMSprite 
-	ld hl, vSprites tile $18
-	lb bc, BANK(CooltrainerMSprite), 12
-	call CopyVideoData
-	ld de, CooltrainerMSprite tile 12
-	ld hl, vSprites tile $98
-	lb bc, BANK(CooltrainerMSprite), 12
-	call CopyVideoData
 	ret
 
 Route19_ScriptPointers:

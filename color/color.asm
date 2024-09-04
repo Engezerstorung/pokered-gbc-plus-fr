@@ -44,22 +44,7 @@ LoadSpritePalette:
 	ldh [rSVBK], a
 	ret
 
-; Called by ReloadMapSpriteTilePatterns, ReloadMapData and CloseTextDisplay to reload special case graphics after text, menus and battles
-LoadExtraGraphics::
-	ld a, [wCurMap]
-	cp CELADON_MANSION_ROOF
-	jr nz, .notCeladonMansionRoof
-	farcall CeladonMansionRoofGraphicSwapScript
-	ret
-.notCeladonMansionRoof
-	cp FUCHSIA_CITY
-	ret nz
-;	jr nz, .notFuchsiaCity
-	farcall FuchsiaCityGraphicSwapScript
-;.notFuchsiaCity	
-	ret
-
-; Change palettes to alternate palettes for special case FadeOutToWhite ; see home/fade.Asm
+; Change palettes to alternate palettes for special case white fades ; see home/fade.asm
 ; LoadMapPalette use : d = palette to load (see constants/palette_constants.), e = palette index
 SetPal_FadeWhite::
 	ld hl, WhiteFadePaletteSets.pointers
