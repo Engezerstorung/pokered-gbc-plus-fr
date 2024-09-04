@@ -128,7 +128,6 @@ CloseTextDisplay::
 	call InitMapSprites ; reload sprite tile pattern data (since it was partially overwritten by text tile patterns)
 	ld hl, wFontLoaded
 	res 0, [hl]
-	farcall LoadExtraGraphics
 	ld a, [wStatusFlags6]
 	bit BIT_FLY_WARP, a
 	call z, LoadPlayerSpriteGraphics

@@ -17,6 +17,8 @@ INCLUDE "macros/scripts/text.asm"
 
 INCLUDE "macros/color.asm"
 
+INCLUDE "macros/colorplus.asm"
+
 INCLUDE "constants/charmap.asm"
 INCLUDE "constants/hardware_constants.asm"
 INCLUDE "constants/oam_constants.asm"
