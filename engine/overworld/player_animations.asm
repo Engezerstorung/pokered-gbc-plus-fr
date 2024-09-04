@@ -60,6 +60,10 @@ EnterMapAnim::
 	ld [hl], $8 ; wFlyAnimBirdSpriteImageIndex (facing right)
 	ld de, FlyAnimationEnterScreenCoords
 	call DoFlyAnimation
+
+	ld hl, wSpriteFlags
+	res 6, [hl]
+
 	call LoadPlayerSpriteGraphics
 	jr .restoreDefaultMusic
 
@@ -138,6 +142,10 @@ _LeaveMapAnim::
 	call PlayerSpinInPlace
 	jr .spinWhileMovingUp
 .flyAnimation
+
+	ld hl, wSpriteFlags
+	set 6, [hl]
+
 	call LoadBirdSpriteGraphics
 	ld hl, wFlyAnimUsingCoordList
 	ld a, $ff ; is not using coord list (flap in place)
