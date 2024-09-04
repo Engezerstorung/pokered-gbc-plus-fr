@@ -411,9 +411,9 @@ InitOutsideMapSprites:
 
 	ld hl, wSpriteFlags
 	res 1, [hl]
-	jr z, .isSameSpriteSet2
+	jr z, .isSameSpriteSet
 	set 1, [hl]
-.isSameSpriteSet2
+.isSameSpriteSet
 
 	ld c, 2
 .offsetloop
