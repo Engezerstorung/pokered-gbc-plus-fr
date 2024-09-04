@@ -473,7 +473,14 @@ WriteAsymmetricMonPartySpriteOAM:
 	ld [hli], a
 	inc a
 	ld [wOAMBaseTile], a
+
+	cp 5
+	ld a, 3
+	jr nc, .isbird
 	xor a
+.isbird
+
+;	xor a
 	ld [hli], a
 	inc d
 	ld a, 8

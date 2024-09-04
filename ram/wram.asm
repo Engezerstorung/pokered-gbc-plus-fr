@@ -1897,6 +1897,7 @@ wPrevSpriteSetOffset:: db
 ;; bit 0 - is 1 if LoadMapSpriteTilePatterns called by OW spriteset loading
 ;; bit 1 - is 1 if the Sprite set and previous Sprite set are different
 ;; bit 2 - is 1 when sprite is already loaded in the same slot in vram
+;; bit 6 - used to color the bird sprite during flying animation
 ;; bit 7 - when set prevent VramSwap to load in the vram text space
 wSpriteFlags:: db
 

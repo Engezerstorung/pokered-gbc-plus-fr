@@ -81,7 +81,22 @@ ColorOverworldSprite::
 	ld e, a
 	ld d, wSpriteStateData1 >> 8
 	ld a, [de] ; Load A with picture ID
-	ld [wPictureID], a
+
+	cp SPRITE_RED
+	jr nz, .notRed
+
+	ld a, [wWalkBikeSurfState]
+	cp 2
+	ld a, 1
+	jr z, .norandomColor
+
+	ld a, [wSpriteFlags]
+	bit 6, a
+	ld a, 3
+	jr nz, .norandomColor
+.notRed
+	ld a, [de]; Load A with picture ID
+
 	dec a
 
 	ld de, SpritePaletteAssignments
