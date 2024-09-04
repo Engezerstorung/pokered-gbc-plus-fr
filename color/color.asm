@@ -1043,11 +1043,6 @@ SetPal_OakIntro:
 
 	xor a
 	ldh [rSVBK], a
-
-; Set flag to prevent FadeInFromWhite from using SetPal_Overworld during the intro,
-; which would result in messed up colors in Red Picture before Shrink
-	ld hl, wCurrentMapScriptFlags
-	set 0, [hl]
 	ret
 
 ; Name entry
