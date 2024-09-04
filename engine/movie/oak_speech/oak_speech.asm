@@ -115,6 +115,12 @@ ENDC
 	ld de, RedPicFront
 	lb bc, BANK(RedPicFront), $00
 	call IntroDisplayPicCenteredOrUpperRight
+
+; Set flag to prevent FadeInFromWhite from using SetPal_Overworld during the intro,
+; which would result in messed up colors in Red Picture before Shrink
+	ld hl, wCurrentMapScriptFlags
+	set 0, [hl]
+
 	call GBFadeInFromWhite
 	ld a, [wStatusFlags3]
 	and a ; ???
