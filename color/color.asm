@@ -10,7 +10,7 @@ OakIntro_ResetPlayerSpriteData:
 ; Load Palettes for boulder dust or pokecenter healing machine when needed
 InitCutAnimOAM:
 	ld hl, wCurrentMapScriptFlags
-	set 0, [hl]
+	set 0, [hl] ; prevent SetPal_Overworld before cut is done
 	ld a, [wCurMapTileset]
 	ld d, SPRITE_PAL_OUTDOORTREE
 	and a ; check if OVERWORLD tileset
@@ -62,70 +62,135 @@ LoadExtraGraphics::
 ; Change palettes to alternate palettes for special case FadeOutToWhite ; see home/fade.Asm
 ; LoadMapPalette use : d = palette to load (see constants/palette_constants.), e = palette index
 SetPal_FadeWhite::
+	ld hl, WhiteFadePaletteSets.pointers
 	ld a, [wCurMapTileset]
-	ld hl, TilesetFadePalList ; loading list for identification and properties values
-	ld de, 3 ; define the number of properties in list
-	call IsInArray ; check if Sprite is in list ; modify a/b/de
-	ret nc
-.loopFadePalSwap
+	add l
+	ld l, a
+	jr nc, .noCarry
+	inc h
+.noCarry
+	ld a, [hl]
+	ld hl, WhiteFadePaletteSets
+	add l
+	ld l, a
+	jr nc, .noCarry2
+	inc h
+.noCarry2
+.loop
 	ld a, [hli]
-	push af
-	ld a, [hli]
+	cp -1
+	ret z
 	ld d, a
 	ld a, [hli]
 	ld e, a
-;	ld a, [hli]
 	push hl
-;	and a ; Check if BG or Sprite palette (BG=0, Sprite=1)
-;	jr nz, .swapFadeSpritePal
 	farcall LoadMapPalette
-;	jr .doneSwapFadePal
-;.swapFadeSpritePal	
-;	farcall LoadMapPalette_Sprite
-;.doneSwapFadePal	
 	pop hl
-	pop af
-	cp [hl]
-	jr z, .loopFadePalSwap
-	ret
+	jr .loop
 
-TilesetFadePalList:
-	; Tileset, new palette , palette slot to replace (0-7)
-	db CAVERN,       CAVE_BROWN, 4
-	db CEMETERY,     INDOOR_GRAY, 4
-	db FACILITY,     INDOOR_GREEN, 2
-	db FACILITY,     INDOOR_BROWN, 5
-	db FOREST,       OUTDOOR_FLOWER_FADE, 1
-	db FOREST,       OUTDOOR_GRASS_FADE, 2
-	db FOREST,       OUTDOOR_BLUE_FADE, 3
-	db FOREST_GATE,  INDOOR_GREEN, 2
-	db FOREST_GATE,  INDOOR_BROWN, 5
-	db GATE,         INDOOR_GRAY, 4
-	db GYM,          INDOOR_GREEN, 2
-	db GYM,          INDOOR_FLOWER_FADE, 4
-	db LAB,          INDOOR_GREEN, 4
-	db LOBBY,        INDOOR_LIGHT_BLUE, 2
-	db LOBBY,        INDOOR_LIGHT_BLUE, 4
-	db LOBBY,        INDOOR_BLUE, 6
-	db MANSION,      INDOOR_GREEN, 2
-	db MANSION,      INDOOR_BLUE, 3
-	db MANSION,      INDOOR_BLUE, 6
-	db MUSEUM,       INDOOR_GRAY, 4
-	db OVERWORLD,    OUTDOOR_FLOWER_FADE, 1
-	db OVERWORLD,    OUTDOOR_GRASS_FADE, 2
-	db OVERWORLD,    OUTDOOR_BLUE_FADE, 3
-	db PLATEAU,      OUTDOOR_FLOWER_FADE, 1
-	db PLATEAU,      OUTDOOR_GRASS_FADE, 2
-	db PLATEAU,      OUTDOOR_BLUE_FADE, 3
-	db REDS_HOUSE_1, INDOOR_BROWN, 4
-	db SHIP,         INDOOR_GRAY, 4
-	db SHIP,         INDOOR_GRAY, 6
-	db SHIP_PORT,    INDOOR_BLUE, 2
-	db SHIP_PORT,    INDOOR_BROWN, 5
-	db SHIP_PORT,    INDOOR_BLUE, 6
-	db UNDERGROUND,  INDOOR_RED, 1
+WhiteFadePaletteSets::
+.overworldWF   ; OVERWORLD
+.forestWF      ; FOREST
+	db OUTDOOR_FLOWER_FADE, 1
+	; fallthrough
+.plateauWF     ; PLATEAU
+	db OUTDOOR_GRASS_FADE, 2
+	db OUTDOOR_BLUE_FADE, 3
 	db -1
 
+.gymWF         ; GYM
+	db INDOOR_FLOWER_FADE, 4
+	; fallthrough
+.forestGateWF  ; FOREST_GATE
+.facilityWF    ; FACILITY
+.labWF         ; LAB
+	db INDOOR_GREEN, 2
+	db INDOOR_BROWN, 5
+	db -1
+
+.shipWF        ; SHIP
+	db INDOOR_GRAY, 6
+	; fallthrough
+.museumWF      ; MUSEUM
+.gateWF        ; GATE
+.cemeteryWF    ; CEMETERY
+	db INDOOR_GRAY, 4
+	db -1
+
+.redsHouse1WF  ; REDS_HOUSE_1
+	db INDOOR_BROWN, 4
+	db -1
+
+.undergroundWF ; UNDERGROUND
+	db INDOOR_RED, 1
+	db -1
+
+.shipPortWF    ; SHIP_PORT
+	db INDOOR_BLUE, 2
+	db INDOOR_BROWN, 5
+	db INDOOR_BLUE, 6
+	db -1
+
+.cavernWF      ; CAVERN
+	db CAVE_BROWN, 4
+	db -1
+
+.lobbyWF       ; LOBBY
+	db INDOOR_LIGHT_BLUE, 2
+	db INDOOR_LIGHT_BLUE, 4
+	db INDOOR_BLUE, 6
+	db -1
+
+.mansionWF     ; MANSION
+	db INDOOR_GREEN, 2
+	db INDOOR_BLUE, 3
+	db INDOOR_BLUE, 6
+	; fallthrough
+.martWF        ; MART
+.redsHouse2WF  ; REDS_HOUSE_2
+.dojoWF        ; DOJO
+.pokecenterWF  ; POKECENTER
+.houseWF       ; HOUSE
+.interiorWF    ; INTERIOR
+.clubWF        ; CLUB
+	db -1
+
+.pointers	
+	table_width 1, .pointers
+	db .overworldWF - WhiteFadePaletteSets  ; OVERWORLD
+	db .redsHouse1WF - WhiteFadePaletteSets ; REDS_HOUSE_1
+	db .martWF - WhiteFadePaletteSets       ; MART
+	db .forestWF - WhiteFadePaletteSets     ; FOREST
+	db .redsHouse2WF - WhiteFadePaletteSets ; REDS_HOUSE_2
+	db .dojoWF - WhiteFadePaletteSets       ; DOJO
+	db .pokecenterWF - WhiteFadePaletteSets ; POKECENTER
+	db .gymWF - WhiteFadePaletteSets        ; GYM
+	db .houseWF - WhiteFadePaletteSets      ; HOUSE
+	db .forestGateWF - WhiteFadePaletteSets ; FOREST_GATE
+	db .museumWF - WhiteFadePaletteSets     ; MUSEUM
+	db .undergroundWF - WhiteFadePaletteSets; UNDERGROUND
+	db .gateWF - WhiteFadePaletteSets       ; GATE
+	db .shipWF - WhiteFadePaletteSets       ; SHIP
+	db .shipPortWF - WhiteFadePaletteSets   ; SHIP_PORT
+	db .cemeteryWF - WhiteFadePaletteSets   ; CEMETERY
+	db .interiorWF - WhiteFadePaletteSets   ; INTERIOR
+	db .cavernWF - WhiteFadePaletteSets     ; CAVERN
+	db .lobbyWF - WhiteFadePaletteSets      ; LOBBY
+	db .mansionWF - WhiteFadePaletteSets    ; MANSION
+	db .labWF - WhiteFadePaletteSets        ; LAB
+	db .clubWF - WhiteFadePaletteSets       ; CLUB
+	db .facilityWF - WhiteFadePaletteSets   ; FACILITY
+	db .plateauWF - WhiteFadePaletteSets    ; PLATEAU
+	assert_table_length NUM_TILESETS	
+
+MapFadePalList:
+	; Map, new palette , palette slot to replace (0-7)
+;	db VIRIDIAN_CITY, OUTDOOR_FLOWER, 5
+;	db VIRIDIAN_FOREST_SOUTH_GATE, OUTDOOR_FLOWER, 5
+;	db DIGLETTS_CAVE_ROUTE_2, OUTDOOR_FLOWER, 5
+;	db LAVENDER_TOWN, OUTDOOR_FLOWER, 5
+	db -1
+	
 ; Set all palettes to black at beginning of battle
 SetPal_BattleBlack::
 	ld a, $02
