@@ -491,20 +491,40 @@ CheckSpriteAvailability:
 	add SPRITESTATEDATA2_MAPY
 	ld l, a
 	ld b, [hl]      ; x#SPRITESTATEDATA2_MAPY
+	ld a, [wCurMap]
+	cp OAKS_LAB
 	ld a, [wYCoord]
+	ld c, a
+	jr z, .oakLabY
+	inc a
+	ld c, a
+	dec a
+	dec a
+.oakLabY
 	cp b
 	jr z, .skipYVisibilityTest
 	jr nc, .spriteInvisible ; above screen region
+	ld a, c
 	add SCREEN_HEIGHT / 2 - 1
 	cp b
 	jr c, .spriteInvisible  ; below screen region
 .skipYVisibilityTest
 	inc l
 	ld b, [hl]      ; x#SPRITESTATEDATA2_MAPX
+	ld a, [wCurMap]
+	cp OAKS_LAB
 	ld a, [wXCoord]
+	ld c, a
+	jr z, .oakLabX
+	inc a
+	ld c, a
+	dec a
+	dec a
+.oakLabX
 	cp b
 	jr z, .skipXVisibilityTest
 	jr nc, .spriteInvisible ; left of screen region
+	ld a, c
 	add SCREEN_WIDTH / 2 - 1
 	cp b
 	jr c, .spriteInvisible  ; right of screen region
