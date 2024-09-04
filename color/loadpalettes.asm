@@ -270,23 +270,29 @@ LoadTownPalette::
 
 MapPalSwapList:
 	; Map, new palette , palette slot to replace (0-7), palette type(0=BG, 1=Sprite)
-	db BILLS_HOUSE,          SPRITE_PAL_BILLSMACHINE, 5, 1
-	db CELADON_GYM,          SPRITE_PAL_ERIKA,        4, 1
-	db CELADON_MANSION_ROOF, INDOOR_LIGHT_BLUE,       2, 0
-	db CELADON_MANSION_ROOF, MANSION_SKY,             3, 0
-	db CELADON_MANSION_ROOF, MANSION_WALLS_ROOF,      6, 0
-	db CERULEAN_GYM,         SPRITE_PAL_MISTY,        4, 1
-	db CHAMPIONS_ROOM,       SPRITE_PAL_OAK,          4, 1
-	db CINNABAR_GYM,         SPRITE_PAL_BLAINE,       4, 1
-	db FUCHSIA_GYM,          SPRITE_PAL_KOGA,         4, 1
-	db HALL_OF_FAME,         SPRITE_PAL_OAK,          4, 1
-	db MR_FUJIS_HOUSE,       SPRITE_PAL_PSYDUCK,      4, 1
-	db OAKS_LAB,             SPRITE_PAL_OAK,          4, 1
-	db PALLET_TOWN,          SPRITE_PAL_OAK,          4, 1
-	db PEWTER_GYM,           SPRITE_PAL_BROCK,        4, 1
-	db SAFFRON_GYM,          SPRITE_PAL_SABRINA,      4, 1
-	db VERMILION_GYM,        SPRITE_PAL_SURGE,        4, 1
-	db VIRIDIAN_GYM,         SPRITE_PAL_GIOVANNI,     4, 1
+	db BILLS_HOUSE,           SPRITE_PAL_BILLSMACHINE, 5, 1
+	db CELADON_GYM,           SPRITE_PAL_ERIKA,        4, 1
+	db CELADON_MANSION_1F,    SPRITE_PAL_YELLOWMON,    3, 1 ; MEOWTH
+	db CELADON_MANSION_1F,    SPRITE_PAL_BLUEMON,      5, 1 ; NIDORANF
+	db CELADON_MANSION_ROOF,  INDOOR_LIGHT_BLUE,       2, 0
+	db CELADON_MANSION_ROOF,  MANSION_SKY,             3, 0
+	db CELADON_MANSION_ROOF,  MANSION_WALLS_ROOF,      6, 0
+	db CERULEAN_GYM,          SPRITE_PAL_MISTY,        4, 1
+	db CHAMPIONS_ROOM,        SPRITE_PAL_OAK,          4, 1
+	db CINNABAR_GYM,          SPRITE_PAL_BLAINE,       4, 1
+	db FUCHSIA_GYM,           SPRITE_PAL_KOGA,         4, 1
+	db HALL_OF_FAME,          SPRITE_PAL_OAK,          4, 1
+	db LAVENDER_CUBONE_HOUSE, SPRITE_PAL_BROWNMON,     4, 1 ; CUBONE
+	db MR_FUJIS_HOUSE,        SPRITE_PAL_YELLOWMON,    5, 1 ; PSYDUCK
+	db OAKS_LAB,              SPRITE_PAL_OAK,          4, 1
+	db PALLET_TOWN,        	  SPRITE_PAL_OAK,          4, 1
+	db PEWTER_GYM,            SPRITE_PAL_BROCK,        4, 1
+	db POKEMON_FAN_CLUB,      SPRITE_PAL_REDMON,       4, 1 ; SEEL
+	db SAFFRON_GYM,           SPRITE_PAL_SABRINA,      4, 1
+	db SS_ANNE_B1F_ROOMS,     SPRITE_PAL_GREYMON,      4, 1 ; MACHOKE
+	db VERMILION_CITY,        SPRITE_PAL_GREYMON,      4, 1 ; MACHOP
+	db VERMILION_GYM,         SPRITE_PAL_SURGE,        4, 1
+	db VIRIDIAN_GYM,          SPRITE_PAL_GIOVANNI,     4, 1
 	db -1
 
 TilePalSwapList:

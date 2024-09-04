@@ -18,7 +18,7 @@ DEF SPR_PAL_GREEN   EQU 2
 DEF SPR_PAL_BROWN   EQU 3
 DEF SPR_PAL_EXTRA1  EQU 4
 DEF SPR_PAL_EXTRA2  EQU 5
-DEF SPR_PAL_EXTRA3   EQU 6
+DEF SPR_PAL_EXTRA3  EQU 6
 DEF SPR_PAL_ANIM    EQU 7
 DEF SPR_PAL_RANDOM  EQU 8
 
@@ -255,7 +255,6 @@ LoadPartyMenuSpritePalettes2::
 	dec e
 	jr nz, .loop
 .done
-
 
 ColorPartyMenuSprites::
 	ld a, 2
@@ -613,7 +612,7 @@ SpritePaletteAssignments: ; Characters on the overworld
 	db SPR_PAL_GREEN
 
 	; 0x2b: SPRITE_MR_MASTERBALL
-	db SPR_PAL_EXTRA1
+	db SPR_PAL_EXTRA2
 
 	; 0x2c: SPRITE_LAPRAS_GIVER
 	db SPR_PAL_RANDOM
@@ -668,7 +667,7 @@ SpritePaletteAssignments: ; Characters on the overworld
 
 ; Start of custom sprites
 	; SPRITE_BLANK
-	db SPR_PAL_BLUE
+	db SPR_PAL_RANDOM
 	; SPRITE_DOME_FOSSIL
 	db SPR_PAL_EXTRA3
 ; Gym Leaders
@@ -694,7 +693,7 @@ SpritePaletteAssignments: ; Characters on the overworld
 	; SPRITE_CLEFAIRY
 	db SPR_PAL_EXTRA1
 	; SPRITE_CUBONE
-	db SPR_PAL_BROWN
+	db SPR_PAL_EXTRA1
 	; SPRITE_KANGASKHAN
 	db SPR_PAL_BROWN
 	; SPRITE_LAPRAS
@@ -706,15 +705,15 @@ SpritePaletteAssignments: ; Characters on the overworld
 	; SPRITE_MOLTRES
 	db SPR_PAL_ORANGE
 	; SPRITE_NIDORINO
-	db SPR_PAL_EXTRA2
+	db SPR_PAL_EXTRA1
 	; SPRITE_OMANYTE
-	db SPR_PAL_RANDOM
+	db SPR_PAL_BLUE
 	; SPRITE_PIDGEOT
 	db SPR_PAL_BROWN
 	; SPRITE_POLYWRATH
 	db SPR_PAL_BLUE
 	; SPRITE_PSYDUCK
-	db SPR_PAL_EXTRA1
+	db SPR_PAL_EXTRA2
 	; SPRITE_SLOWBRO
 	db SPR_PAL_EXTRA1
 	; SPRITE_SLOWPOKE
@@ -735,21 +734,21 @@ SpritePaletteAssignments: ; Characters on the overworld
 	; SPRITE_KABUTO
 	db SPR_PAL_BROWN
 	; SPRITE_MACHOKE
-	db SPR_PAL_BROWN
+	db SPR_PAL_EXTRA1
 	; SPRITE_MACHOP
-	db SPR_PAL_BROWN
+	db SPR_PAL_EXTRA1
 	; SPRITE_NIDORANF
-	db SPR_PAL_BLUE
-	; SPRITE_NIDORANM
 	db SPR_PAL_EXTRA2
+	; SPRITE_NIDORANM
+	db SPR_PAL_EXTRA1
 	; SPRITE_PIDGEY
 	db SPR_PAL_BROWN
 	; SPRITE_PIKACHU
 	db SPR_PAL_ORANGE
 	; SPRITE_SEEL2
-	db SPR_PAL_ORANGE
+	db SPR_PAL_EXTRA1
 	; SPRITE_ZAPDOS
-	db SPR_PAL_BROWN
+	db SPR_PAL_EXTRA1
 ; One face but use 9 tiles
 	; SPRITE_SNORLAXBIG
 	db SPR_PAL_BLUE
