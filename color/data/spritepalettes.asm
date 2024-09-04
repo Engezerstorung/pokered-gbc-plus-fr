@@ -1,4 +1,4 @@
-SpritePalettes: ; Taken from pokemon GSC.
+MapSpritePalettes: ; Taken from pokemon GSC.
 
 ; PAL_OW_RED
 	RGB 27,31,27
@@ -48,7 +48,7 @@ SpritePalettes: ; Taken from pokemon GSC.
 	RGB 13,13,13
 	RGB 0,0,0
 
-SpritePalettesNite: ; Taken from pokemon GSC.
+MapSpritePalettesNite: ; Taken from pokemon GSC.
 
 ; PAL_OW_RED
 	RGB 15,14,24
@@ -140,7 +140,48 @@ AttackSpritePalettes:
 	RGB 12,0,13
 	RGB 0,0,0
 
-MapSpritePalettes:
+SpritePalettes:
+	; RED_MON
+	RGB 27,31,27
+	RGB 31,25,13
+	RGB 31,6,0
+	RGB 0,0,0
+	; BLUE_MON
+	RGB 27,31,27
+	RGB 31,25,13
+	RGB 14,19,26
+	RGB 0,0,0
+	; GREEN_MON
+	RGB 27,31,27
+	RGB 31,25,13
+	RGB 2,19,3
+	RGB 0,0,0
+	; BROWN_MON
+	RGB 27,31,27
+	RGB 31,25,13
+	RGB 20,14,8
+	RGB 0,0,0
+	; PINK_MON
+	RGB 27,31,27
+	RGB 31,25,13
+	RGB 30,13,22
+	RGB 0,0,0
+	; PURPLE_MON
+	RGB 27,31,27
+	RGB 31,25,13
+	RGB 20,13,28
+	RGB 0,0,0
+	; YELLOW_MON
+	RGB 27,31,27
+	RGB 31,25,13
+	RGB 31,19,0
+	RGB 0,0,0
+	; GREY_MON
+	RGB 27,31,27
+	RGB 31,25,13
+	RGB 16,16,16
+	RGB 0,0,0
+	
 	; SPRITE_PAL_RED
 	RGB 27,31,27
 	RGB 31,19,10
@@ -228,6 +269,14 @@ MapSpritePalettes:
 	RGB 7,7,7
 
 DEF const_value = 0
+	const SPRITE_PAL_REDMON
+	const SPRITE_PAL_BLUEMON
+	const SPRITE_PAL_GREENMON
+	const SPRITE_PAL_BROWNMON
+	const SPRITE_PAL_PINKMON
+	const SPRITE_PAL_PURPLEMON
+	const SPRITE_PAL_YELLOWMON
+	const SPRITE_PAL_GREYMON
 	const SPRITE_PAL_RED
 	const SPRITE_PAL_HEALINGMACHINE
 	const SPRITE_PAL_OUTDOORTREE

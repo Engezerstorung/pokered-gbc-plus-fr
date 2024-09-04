@@ -32,7 +32,7 @@ LoadMapPalette_Sprite::
 	add hl, hl
 	add hl, hl
 	add hl, hl
-	ld de, MapSpritePalettes
+	ld de, SpritePalettes
 	add hl, de
 
 	ld de, W2_BgPaletteData + $40
