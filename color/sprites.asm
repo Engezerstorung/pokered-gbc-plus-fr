@@ -102,26 +102,6 @@ ColorOverworldSprite::
 	ld a, SPR_PAL_BROWN
 	jr z, .norandomColor
 
-	; set Lapras and Fossil pokémon color in Fuschia
-	ld a, [wCurMap]
-	cp FUCHSIA_CITY
-	jr nz, .notFuchsiaCity
-	ld a, [wPictureID]
-	cp SPRITE_SWIMMER
-	jr z, .isLapras
-	cp SPRITE_COOLTRAINER_M
-	jr nz, .notFuchsiaCity
-	CheckEvent EVENT_GOT_DOME_FOSSIL
-	jr z, .nextfossil
-.isLapras
-	ld a, SPR_PAL_BLUE
-	jr .norandomColor
-.nextfossil
-	CheckEventReuseA EVENT_GOT_HELIX_FOSSIL
-	ld a, SPR_PAL_BROWN
-	jr nz, .norandomColor
-.notFuchsiaCity
-
 	; This is a (somewhat) random but consistent color
 	ldh a, [hSpriteOffset2]
 	swap a

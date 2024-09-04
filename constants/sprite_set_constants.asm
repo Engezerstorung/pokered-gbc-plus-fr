@@ -11,6 +11,7 @@
 	const SPRITESET_SAFFRON         ; 07
 	const SPRITESET_SILENCE_BRIDGE  ; 08
 	const SPRITESET_CYCLING_ROAD    ; 09
+	const SPRITESET_ROUTE_18_19     ; 0a
 	const SPRITESET_FUCHSIA         ; 0a
 DEF NUM_SPRITE_SETS EQU const_value - 1
 

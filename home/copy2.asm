@@ -230,3 +230,34 @@ ClearScreen::
 	dec b
 	jr nz, .loop
 	jp Delay3
+
+SavRegGoodCopyVideoData::
+	push af
+	push hl
+	push de
+	push bc
+	call GoodCopyVideoData
+	pop bc
+	pop de
+	pop hl
+	pop af
+	ret
+
+GoodCopyVideoData::
+	ldh a, [rLCDC]
+	bit 7, a ; is the LCD enabled?
+	jp nz, CopyVideoData ; if LCD is on, transfer during V-blank
+	ld a, b
+	push de
+	ld d, h
+	ld e, l
+	ld h, 0
+	ld l, c
+	add hl, hl
+	add hl, hl
+	add hl, hl
+	add hl, hl
+	ld b, h
+	ld c, l
+	pop hl
+	jp FarCopyData2 ; if LCD is off, transfer all at once

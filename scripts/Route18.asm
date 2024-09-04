@@ -1,33 +1,10 @@
 Route18_Script:
-	ld hl, wCurrentMapScriptFlags
-	bit 5, [hl]
-	res 5, [hl]
-	call nz, Route18GraphicSwapScript
-	ld hl, wCurrentMapScriptFlags
-	bit 4, [hl]
-	res 4, [hl]
-	call nz, Route18GraphicSwapScript
-	
 	call EnableAutoTextBoxDrawing
 	ld hl, Route18TrainerHeaders
 	ld de, Route18_ScriptPointers
 	ld a, [wRoute18CurScript]
 	call ExecuteCurMapScriptInTable
 	ld [wRoute18CurScript], a
-	ret
-
-Route18GraphicSwapScript:
-	ld a, [wXCoord]
-	cp 47
-	ret c
-	ld de, CooltrainerMSprite 
-	ld hl, vSprites tile $18
-	lb bc, BANK(CooltrainerMSprite), $0C
-	call CopyVideoData
-	ld de, CooltrainerMSprite tile 12
-	ld hl, vSprites tile $98
-	lb bc, BANK(CooltrainerMSprite), 12
-	call CopyVideoData
 	ret
 
 Route18_ScriptPointers:
