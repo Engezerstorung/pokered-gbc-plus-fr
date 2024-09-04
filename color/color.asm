@@ -414,6 +414,9 @@ FillBox:
 
 ; Load town map
 SetPal_TownMap:
+
+	farcall LoadOverworldSpritePalettes
+	
 	ld a, 2
 	ldh [rSVBK], a
 
@@ -840,10 +843,13 @@ SetPal_Overworld::
 
 ; Open pokemon menu
 SetPal_PartyMenu:
+
+	farcall LoadPartyMenuSpritePalettes
+
 	ld a, 2
 	ldh [rSVBK], a
 
-	CALL_INDIRECT LoadOverworldSpritePalettes
+;	CALL_INDIRECT LoadOverworldSpritePalettes
 
 	ld d, PAL_GREENBAR ; Filler for palette 0 (technically, green)
 	ld e, 0
