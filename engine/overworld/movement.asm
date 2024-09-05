@@ -509,10 +509,10 @@ CheckSpriteAvailability:
 	ld a, [wYCoord]
 	ld c, a
 	jr z, .oakLabY
-	inc a
+	add 2
 	ld c, a
-	dec a
-	dec a
+	sub 2
+	inc b
 .oakLabY
 	cp b
 	jr z, .skipYVisibilityTest
@@ -529,10 +529,10 @@ CheckSpriteAvailability:
 	ld a, [wXCoord]
 	ld c, a
 	jr z, .oakLabX
-	inc a
+	add 2
 	ld c, a
-	dec a
-	dec a
+	sub 2
+	inc b
 .oakLabX
 	cp b
 	jr z, .skipXVisibilityTest
