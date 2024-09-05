@@ -96,13 +96,12 @@ ColorOverworldSprite::
 
 	ld a, [wWalkBikeSurfState]
 	cp 2
-	ld a, 1
+	jr nz, .birdTest
+	dec a ; if z, then need palette 1, which is 1 lower then the 2 already in 'a'
+	jr .norandomColor
+.birdTest
+	cp 3 ; if z, then need palette 3, which is already the value of 'a'
 	jr z, .norandomColor
-
-	ld a, [wSpriteFlags]
-	bit 6, a
-	ld a, 3
-	jr nz, .norandomColor
 .notRed
 	ld a, [de]; Load A with picture ID
 
