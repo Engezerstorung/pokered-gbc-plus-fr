@@ -61,8 +61,8 @@ EnterMapAnim::
 	ld de, FlyAnimationEnterScreenCoords
 	call DoFlyAnimation
 
-	ld hl, wSpriteFlags
-	res 6, [hl]
+	xor a
+	ld [wWalkBikeSurfState], a
 
 	call LoadPlayerSpriteGraphics
 	jr .restoreDefaultMusic
@@ -143,8 +143,8 @@ _LeaveMapAnim::
 	jr .spinWhileMovingUp
 .flyAnimation
 
-	ld hl, wSpriteFlags
-	set 6, [hl]
+	ld a, 3
+	ld [wWalkBikeSurfState], a
 
 	call LoadBirdSpriteGraphics
 	ld hl, wFlyAnimUsingCoordList
