@@ -491,42 +491,36 @@ CheckSpriteAvailability:
 	add SPRITESTATEDATA2_MAPY
 	ld l, a
 	ld b, [hl]      ; x#SPRITESTATEDATA2_MAPY
+	ld c, [hl]
 	ld a, [wCurMap]
 	cp OAKS_LAB
 	ld a, [wYCoord]
-	ld c, a
 	jr z, .oakLabY
-	add 2
-	ld c, a
-	sub 2
 	inc b
+	dec c
 .oakLabY
 	cp b
 	jr z, .skipYVisibilityTest
 	jr nc, .spriteInvisible ; above screen region
-	ld a, c
 	add SCREEN_HEIGHT / 2 - 1
-	cp b
+	cp c
 	jr c, .spriteInvisible  ; below screen region
 .skipYVisibilityTest
 	inc l
 	ld b, [hl]      ; x#SPRITESTATEDATA2_MAPX
+	ld c, [hl]
 	ld a, [wCurMap]
 	cp OAKS_LAB
 	ld a, [wXCoord]
-	ld c, a
 	jr z, .oakLabX
-	add 2
-	ld c, a
-	sub 2
 	inc b
+	dec c
 .oakLabX
 	cp b
 	jr z, .skipXVisibilityTest
 	jr nc, .spriteInvisible ; left of screen region
-	ld a, c
 	add SCREEN_WIDTH / 2 - 1
-	cp b
+	cp c
 	jr c, .spriteInvisible  ; right of screen region
 .skipXVisibilityTest
 ; make the sprite invisible if a text box is in front of it
