@@ -555,8 +555,6 @@ Unused6FHiddenObjects:
 
 BillsHouseHiddenObjects:
 	hidden_object  1,  4, SPRITE_FACING_UP, BillsHousePC
-	hidden_object  2,  1, SPRITE_FACING_DOWN, PrintBenchGuyText
-	hidden_object  5,  1, SPRITE_FACING_DOWN, PrintBenchGuyText
 	db -1 ; end
 
 ViridianCityHiddenObjects:
