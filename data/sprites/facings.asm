@@ -54,22 +54,22 @@ SpriteFacingAndAnimationTable:
 	dw .StandingLeft, .FlippedOAM ; facing right, walk animation frame 2
 	dw .WalkingLeft,  .FlippedOAM ; facing right, walk animation frame 3
 ; $30 This table is used for Bill's machines
-	dw .Machine, .MachineLOAM  ; facing down, walk animation frame 0
-	dw .Machine, .MachineLOAM  ; facing down, walk animation frame 1
-	dw .Machine, .MachineLOAM  ; facing down, walk animation frame 2
-	dw .Machine, .MachineLOAM  ; facing down, walk animation frame 3
-	dw .Machine, .MachineROAM  ; facing up, walk animation frame 0
-	dw .Machine, .MachineROAM  ; facing up, walk animation frame 1
-	dw .Machine, .MachineROAM  ; facing up, walk animation frame 2
-	dw .Machine, .MachineROAM  ; facing up, walk animation frame 3
-	dw .Machine, .MachineLOAM  ; facing left, walk animation frame 0
-	dw .Machine, .MachineLOAM  ; facing left, walk animation frame 1
-	dw .Machine, .MachineLOAM  ; facing left, walk animation frame 2
-	dw .Machine, .MachineLOAM  ; facing left, walk animation frame 3
-	dw .Machine, .MachineROAM  ; facing right, walk animation frame 0
-	dw .Machine, .MachineROAM  ; facing right, walk animation frame 1
-	dw .Machine, .MachineROAM  ; facing right, walk animation frame 2
-	dw .Machine, .MachineROAM  ; facing right, walk animation frame 3
+	dw .MachineCenter, .MachineMOAM  ; facing down, walk animation frame 0
+	dw .MachineCenter, .MachineMOAM  ; facing down, walk animation frame 1
+	dw .MachineCenter, .MachineMOAM  ; facing down, walk animation frame 2
+	dw .MachineCenter, .MachineMOAM  ; facing down, walk animation frame 3
+	dw .MachineCenter, .MachineMOAM  ; facing up, walk animation frame 0
+	dw .MachineCenter, .MachineMOAM  ; facing up, walk animation frame 1
+	dw .MachineCenter, .MachineMOAM  ; facing up, walk animation frame 2
+	dw .MachineCenter, .MachineMOAM  ; facing up, walk animation frame 3
+	dw .MachineSides,  .MachineLOAM  ; facing left, walk animation frame 0
+	dw .MachineSides,  .MachineLOAM  ; facing left, walk animation frame 1
+	dw .MachineSides,  .MachineLOAM  ; facing left, walk animation frame 2
+	dw .MachineSides,  .MachineLOAM  ; facing left, walk animation frame 3
+	dw .MachineSides,  .MachineROAM  ; facing right, walk animation frame 0
+	dw .MachineSides,  .MachineROAM  ; facing right, walk animation frame 1
+	dw .MachineSides,  .MachineROAM  ; facing right, walk animation frame 2
+	dw .MachineSides,  .MachineROAM  ; facing right, walk animation frame 3
 ; $40 Snorlax 3x3
 	dw .Snorlax, .SnorlaxOAM  ; facing down, walk animation frame 0
 	dw .Snorlax, .SnorlaxOAM  ; facing down, walk animation frame 1
@@ -97,7 +97,9 @@ SpriteFacingAndAnimationTable:
 .StandingLeft: db $08, $09, $0a, $0b
 .WalkingLeft:  db $88, $89, $8a, $8b
 
-.Machine:      db $02, $03, $03, $02
+.MachineSides: db $02
+.MachineCenter:db $03, $03
+
 .Snorlax:      db $00, $01, $00, $02, $03, $02, $04, $05, $04
 
 .NormalOAM:
@@ -123,17 +125,14 @@ SpriteFacingAndAnimationTable:
 
 .MachineLOAM:
 	; y, x, attributes
-	db 0, -24, $00
-	db 0, -16, $00
-	db 0,  -8, OAM_HFLIP
-	db 0,   0, OAM_HFLIP | OAMFLAG_ENDOFDATA 
-
+	db 4, 8, OAMFLAG_ENDOFDATA 
 .MachineROAM:
 	; y, x, attributes
-	db 0,  8, $00
-	db 0, 16, $00
-	db 0, 24, OAM_HFLIP
-	db 0, 32, OAM_HFLIP | OAMFLAG_ENDOFDATA 
+	db 4, 0, OAM_HFLIP | OAMFLAG_ENDOFDATA 
+.MachineMOAM:
+	; y, x, attributes
+	db 4, 0, $00
+	db 4, 8, OAM_HFLIP | OAMFLAG_ENDOFDATA 
 
 .SnorlaxOAM:
 	; y, x, attributes
@@ -262,7 +261,7 @@ SpecialOAMlist:
 ; Still, YX offset
 	db SPRITE_BENCH_GUY,                $10, 4, 4
 ; Bill's Machines
-	db SPRITE_BILLS_MACHINE,            $30, -4, 0
+	db SPRITE_BILLS_MACHINE,            $30, 8, 0
 ; 3x3 tiles Snorlax
 	db SPRITE_SNORLAXBIG,               $40, 0, 0
 	db -1
