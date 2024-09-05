@@ -725,11 +725,26 @@ CanWalkOntoTile:
 ; this is always the lower left tile of the 2x2 tile blocks all sprites are snapped to
 ; hl: output pointer
 GetTileSpriteStandsOn:
+	ld h, HIGH(wSpriteStateData2) ; start finding sprite Y map position
+	ldh a, [hCurrentSpriteOffset]
+	add SPRITESTATEDATA2_MAPY
+	ld l, a
+	ld b, [hl]      ; load Sprite Y map position ; x#SPRITESTATEDATA2_MAPY
+	ld a, [wYCoord]
+	add SCREEN_HEIGHT / 2
+	cp b ; test if the sprite is just under the screen and such, have its head popping out from the bottom
+	ld c, 0 ; empty 'c'
+	jr nz, .notjustunderscreen ; jr if not just under screen
+	ld c, $8 ; load value to substract to x#SPRITESTATEDATA1_YPIXELS if just under screen
+.notjustunderscreen	
 	ld h, HIGH(wSpriteStateData1)
 	ldh a, [hCurrentSpriteOffset]
 	add SPRITESTATEDATA1_YPIXELS
 	ld l, a
 	ld a, [hli]     ; x#SPRITESTATEDATA1_YPIXELS
+	; Substract 'c' from the sprite Y position (in pixels), $8 if just under the screen, 0 if not 
+	; If it is just under the screen then it offset the coordinates used to determine if under the menu or not
+	sub c
 	add $4          ; align to 2*2 tile blocks (Y position is always off 4 pixels to the top)
 	and $f8         ; in case object is currently moving
 	srl a           ; screen Y tile * 4
