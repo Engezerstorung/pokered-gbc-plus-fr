@@ -232,7 +232,6 @@ ClearScreen::
 	jp Delay3
 
 SavRegGoodCopyVideoData::
-	push af
 	push hl
 	push de
 	push bc
@@ -240,7 +239,6 @@ SavRegGoodCopyVideoData::
 	pop bc
 	pop de
 	pop hl
-	pop af
 	ret
 
 GoodCopyVideoData::
