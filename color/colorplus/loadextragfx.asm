@@ -1,4 +1,7 @@
-; Called in overworld.asm and by ReloadMapSpriteTilePatterns, ReloadMapData and CloseTextDisplay to reload special case graphics after text, menus and battles
+; Called during InitMapSprites and LoadTilesetTilePatternData to load special GFX at appropriate times
+; Exemple : 
+; In the Celadon Mansion Roof map, load some duplicates tiles from mansion_gfx into unused 
+; vram space as to color them differently and be used for the building facade and external walls.
 VramSwap::
 	ld hl, VramSwapList
 	ld a, [hli] ; first byte of list is for IsInArray DE value
@@ -46,8 +49,8 @@ VramSwap::
 	ld a, [hl] ; LOW(\7 tile \8) starting tile in gfx
 	ld d, a
 	pop hl ; load value saved from DE earlier in HL
-	pop af
 	call SavRegGoodCopyVideoData
+	pop af
 	jr nc, .done
 
 	ld a, [wFontLoaded]
@@ -78,6 +81,9 @@ VramSwap::
 .noVramSwap
 	ret
 
+; Called during InitMapSprites to substitute sprites in special occasions
+; Exemple : 
+; Subsitute the blank sprite in Fuchsia City by either OMANYTE or KABUTO sprite based on the fossil events 
 SpriteSwap:
 	ld hl, SpriteSwapList
 	ld a, [hli] ; first byte of list is for IsInArray DE value
@@ -132,15 +138,16 @@ SpriteSwap:
 	ret
 
 ListEventCheck:
-	ld a, [hli] ; \2-3 bit number - to \3
+	ld a, [hli] ; \2-1 bit number - to \2-2  event_byte
 	ld b, a ; put bit number in b to count
 	cp -1
-	jr nz, .eventDone
-	and a
+	jr nz, .checkForEvent
+	and a ; unset z flag
 	ret
-.eventDone
+.checkForEvent
+;	ld d, 0 ; uncomment this line if 'd' non-zero when function is called
 	ld a, [hl]
-	ld e, a
+	ld e, a ; 'd' is already 0 if called by VramSwap or SpriteSwap
 	push hl ; \2-2 event_byte value
 	ld hl, wEventFlags
 	add hl, de
@@ -168,7 +175,7 @@ ListCoordsCheck:
 	cp [hl] ; cp with /4 Y Coordinate
 	ld a, %10
 	jr c, .doneYcheck
-	xor a
+	xor a ; %00 in 'a'
 .doneYcheck
 	add b
 	inc hl ; up to /4
@@ -182,12 +189,14 @@ VramSwapList:
 	db 12
 	map_vram_swap CELADON_MANSION_ROOF, NOEVENT, 0, 0, NOXY, tileset, Mansion_GFX, $5A, 6, $10
 	map_vram_swap CELADON_MANSION_ROOF, NOEVENT, 0, 0, NOXY, tileset, Mansion_GFX, $36, 3, $16
+IF DEF(_DEBUG)	
+	map_vram_swap ROUTE_18, NOEVENT, 47, 0, AFTER_X, sprite, LaprasSprite, 0, 12, $18 ; used to test the function for sprites
+ENDC
 	db -1
 
 SpriteSwapList:
 ; 1/ map, 2/ Sprite to replace, 3/ Event to check for, 4/ X Coordinate, 5/ Y Coordinate,
-; 6/ coordinates conditions (NOXY, AFTER/BEFORE_X/Y, AFTER/BEFORE_X_AFTER/BEFORE_Y),
-; 7/ replacement Sprite
+; 6/ coordinates conditions (NOXY, AFTER/BEFORE_X/Y, AFTER/BEFORE_X_AFTER/BEFORE_Y), 7/ replacement Sprite
 	db 8
 	map_sprite_swap FUCHSIA_CITY, SPRITE_BLANK, EVENT_GOT_DOME_FOSSIL,  0, 0, NOXY, SPRITE_OMANYTE
 	map_sprite_swap FUCHSIA_CITY, SPRITE_BLANK, EVENT_GOT_HELIX_FOSSIL, 0, 0, NOXY, SPRITE_KABUTO

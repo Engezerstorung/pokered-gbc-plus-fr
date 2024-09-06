@@ -136,19 +136,25 @@ FuchsiaCityFossilSignText:
 	jr nz, .got_helix_fossil
 	ld hl, .UndeterminedText
 	call PrintText
-;	SetEvent EVENT_GOT_DOME_FOSSIL ; debug fossil test
+IF DEF(_DEBUG)
+	SetEvent EVENT_GOT_DOME_FOSSIL ; debug fossil test
+ENDC
 	jr .done
 .got_dome_fossil
 	ld hl, .OmanyteText
 	call PrintText
-;	ResetEvent EVENT_GOT_DOME_FOSSIL ; debug fossil test
-;	SetEvent EVENT_GOT_HELIX_FOSSIL ; debug fossil test
+IF DEF(_DEBUG)	
+	ResetEvent EVENT_GOT_DOME_FOSSIL ; debug fossil test
+	SetEvent EVENT_GOT_HELIX_FOSSIL ; debug fossil test
+ENDC
 	ld a, OMANYTE
 	jr .display
 .got_helix_fossil
 	ld hl, .KabutoText
 	call PrintText
-;	ResetEvent EVENT_GOT_HELIX_FOSSIL ; debug fossil test
+IF DEF(_DEBUG)	
+	ResetEvent EVENT_GOT_HELIX_FOSSIL ; debug fossil test
+ENDC
 	ld a, KABUTO
 .display
 	call DisplayPokedex
