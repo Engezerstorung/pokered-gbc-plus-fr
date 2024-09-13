@@ -111,7 +111,7 @@ ENDR
 wSpriteStateData2::
 ; struct fields:
 ; - 0: walk animation counter (counting from $10 backwards when moving)
-; - 1:
+; - 1: Custom 'SpriteFacingAndAnimationTable' offset for special sprites (see data/sprites/facings.asm)
 ; - 2: Y displacement (initialized at 8, supposed to keep moving sprites from moving too far, but bugged)
 ; - 3: X displacement (initialized at 8, supposed to keep moving sprites from moving too far, but bugged)
 ; - 4: Y position (in 2x2 tile grid steps, topmost 2x2 tile has value 4)
@@ -120,8 +120,8 @@ wSpriteStateData2::
 ; - 7: (?) (set to $80 when in grass, else $0; may be used to draw grass above the sprite)
 ; - 8: delay until next movement (counted downwards, movement status is set to ready if reached 0)
 ; - 9: original facing direction (backed up by DisplayTextIDInit, restored by CloseTextDisplay)
-; - A
-; - B
+; - A: Custom Y pixel offset for special sprites (see data/sprites/facings.asm)
+; - B: Custom X pixel offset for special sprites (see data/sprites/facings.asm)
 ; - C
 ; - D: picture ID
 ; - E: sprite image base offset (in video ram, player always has value 1, used to compute sprite image index)
@@ -377,8 +377,7 @@ wSlotMachineSevenAndBarModeChance:: db
 	ds 2
 ; ROM back to return to when the player is done with the slot machine
 wSlotMachineSavedROMBank:: db
-	ds 165
-wPictureID:: db
+	ds 166
 wLuckySlotHiddenObjectIndex:: db
 
 NEXTU

@@ -1,5 +1,6 @@
 InitMapSprites::
 	call _InitMapSprites
+	farcall SpriteSpecialProperties
 	jpfar VramSwap
 
 ; Loads tile patterns for map's sprites.
