@@ -71,22 +71,22 @@ SpriteFacingAndAnimationTable:
 	dw .MachineSides,  .MachineROAM  ; facing right, walk animation frame 2
 	dw .MachineSides,  .MachineROAM  ; facing right, walk animation frame 3
 ; $40 Snorlax 3x3
-	dw .Snorlax, .SnorlaxOAM  ; facing down, walk animation frame 0
-	dw .Snorlax, .SnorlaxOAM  ; facing down, walk animation frame 1
-	dw .Snorlax, .SnorlaxOAM  ; facing down, walk animation frame 2
-	dw .Snorlax, .SnorlaxOAM  ; facing down, walk animation frame 3
-	dw .Snorlax, .SnorlaxOAM  ; facing up, walk animation frame 0
-	dw .Snorlax, .SnorlaxOAM  ; facing up, walk animation frame 1
-	dw .Snorlax, .SnorlaxOAM  ; facing up, walk animation frame 2
-	dw .Snorlax, .SnorlaxOAM  ; facing up, walk animation frame 3
-	dw .Snorlax, .SnorlaxOAM  ; facing left, walk animation frame 0
-	dw .Snorlax, .SnorlaxOAM  ; facing left, walk animation frame 1
-	dw .Snorlax, .SnorlaxOAM  ; facing left, walk animation frame 2
-	dw .Snorlax, .SnorlaxOAM  ; facing left, walk animation frame 3
-	dw .Snorlax, .SnorlaxOAM  ; facing right, walk animation frame 0
-	dw .Snorlax, .SnorlaxOAM  ; facing right, walk animation frame 1
-	dw .Snorlax, .SnorlaxOAM  ; facing right, walk animation frame 2
-	dw .Snorlax, .SnorlaxOAM  ; facing right, walk animation frame 3
+	dw .Snorlax1, .SnorlaxOAM  ; facing down, walk animation frame 0
+	dw .Snorlax2, .SnorlaxSleepOAM  ; facing down, walk animation frame 1
+	dw .Snorlax3, .SnorlaxSleepOAM  ; facing down, walk animation frame 2
+	dw .Snorlax2, .SnorlaxSleepOAM  ; facing down, walk animation frame 3
+	dw .Snorlax1, .SnorlaxOAM  ; facing up, walk animation frame 0
+	dw .Snorlax2, .SnorlaxSleepOAM  ; facing up, walk animation frame 1
+	dw .Snorlax3, .SnorlaxSleepOAM  ; facing up, walk animation frame 2
+	dw .Snorlax2, .SnorlaxSleepOAM  ; facing up, walk animation frame 3
+	dw .Snorlax1, .SnorlaxOAM  ; facing left, walk animation frame 0
+	dw .Snorlax2, .SnorlaxSleepOAM  ; facing left, walk animation frame 1
+	dw .Snorlax3, .SnorlaxSleepOAM  ; facing left, walk animation frame 2
+	dw .Snorlax2, .SnorlaxSleepOAM  ; facing left, walk animation frame 3
+	dw .Snorlax1, .SnorlaxOAM  ; facing right, walk animation frame 0
+	dw .Snorlax2, .SnorlaxSleepOAM  ; facing right, walk animation frame 1
+	dw .Snorlax3, .SnorlaxSleepOAM  ; facing right, walk animation frame 2
+	dw .Snorlax2, .SnorlaxSleepOAM  ; facing right, walk animation frame 3
 
 ; insert custom table starting here, each table must contain 4 facings with 4 animation frames each (16 total)
 
@@ -101,7 +101,9 @@ SpriteFacingAndAnimationTable:
 .MachineCenter:db $01, $01
 .MachineSides: ; fallthrough for $00
 
-.Snorlax:      db $00, $01, $00, $02, $03, $02, $04, $05, $04
+.Snorlax1:     db $00, $01, $00, $02, $03, $02, $08, $09, $08
+.Snorlax2:     db $0a, $00, $01, $00, $04, $05, $04, $08, $09, $08
+.Snorlax3:     db $0b, $00, $01, $00, $06, $07, $06, $08, $09, $08
 
 .NormalOAM:
 	; y, x, attributes
@@ -135,8 +137,11 @@ SpriteFacingAndAnimationTable:
 	db 12, 0, $00
 	db 12, 8, OAM_HFLIP | OAMFLAG_ENDOFDATA 
 
-.SnorlaxOAM:
+.SnorlaxSleepOAM:
 	; y, x, attributes
+	db -10, 14, $00 ; sleep
+	; fallthrough
+.SnorlaxOAM:
 	db -3, -4, $00 ; top left
 	db -3,  4, $00 ; top center
 	db -3, 12, OAM_HFLIP ; top right
