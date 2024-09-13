@@ -151,7 +151,7 @@ LoadPartyMenuSpritePalettes::
 
 ; Assign palettes slots to the party pokemons
 	ld hl, wPartySpecies ; Party pokemons IDs
-	ld de, wMonPartySpritesSavedOAM ; used as a temporary storage for the palettes asignements
+	ld de, wMonPartySpritesSavedOAM ; used as a temporary storage for the palettes assignments
 
 .copyloop
 	; Get the ID of the party pokemons and convert them to podeked index number
@@ -166,16 +166,16 @@ LoadPartyMenuSpritePalettes::
 	jr c, .notAboveMew ; Jump if not higher than Mew's
 	xor a ; if higher than Mew's then give ID 0 so that purple palette is assigned
 .notAboveMew
-	; Find the pokemon palette assignement
+	; Find the pokemon palette assignment
 	ld bc, PartyPaletteAssignments
-	add c ; Add the pokemon pokedex ID which is used as a pointer in the palette assignement list
+	add c ; Add the pokemon pokedex ID which is used as a pointer in the palette assignment list
 	ld c, a
 	jr nc, .noCarry
 	inc b
 .noCarry
 	ld a, [bc] ; Load pokemon assigned palette 
 
-	ld [de], a ; Store palette assignement
+	ld [de], a ; Store palette assignment
 	inc de ; Up to next slot
 	jr .copyloop
 
@@ -205,11 +205,11 @@ LoadPartyMenuSpritePalettes::
 	ld e, a
 	ld d, W2_SpritePaletteMap >> 8
 
-	; Add the palette slot the the tile attribute byte
+	; Add the palette slot to the tile attribute byte
 	; in GBC mode, the lower bits 0-3 are the bits attributing a slot to the tile
 	ld a, $f8 ; load %11111000
 	and [hl] ; by and-ing the [hl] value with a we get its 7-4 bits (bits 0-3 are all 0)
-	or c ; or-ing with e, that only contain the palette slot value, add this value to a
+	or c ; or-ing with c, that only contain the palette slot value, add this value to a
 	ld [hl], a ; load back the value adjusted for assigned palette slot in [hl]
 	inc hl ; up to the 1st byte of next tile (Y position)
 

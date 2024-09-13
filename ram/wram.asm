@@ -1891,12 +1891,13 @@ wMissableObjectFlagsEnd::
 
 ;; SpriteSets offsets of the current and previous sprite set
 wSpriteSetOffset::
-wCurSpriteSetOffset::db
+wCurSpriteSetOffset:: db
 wPrevSpriteSetOffset:: db
 
 ;; bit 0 - is 1 if LoadMapSpriteTilePatterns called by OW spriteset loading
 ;; bit 1 - is 1 if the Sprite set and previous Sprite set are different
 ;; bit 2 - is 1 when sprite is already loaded in the same slot in vram
+;; bit 6 - used in some Color Plus functions to check for coordinates
 ;; bit 7 - when set prevent VramSwap to load in the vram text space
 wSpriteFlags:: db
 
