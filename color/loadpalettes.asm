@@ -126,7 +126,7 @@ LoadTilesetPalette:
 	pop bc
 
 ; Check Map to replace BG and Sprites palettes in special cases
-; Like on Celadon Mansion Roof, for Gym Leaders or Psyduck
+; Like on Celadon Mansion Roof, for Gym Leaders or map Pokémons
 	push bc
 	ld a, b
 	ld hl, MapPalSwapList ; loading list for identification and properties values
@@ -261,6 +261,9 @@ LoadTownPalette::
 	pop hl
 	pop de
 
+	ld a, 1
+	ld [W2_ForceBGPUpdate], a
+	
 	ld a, [wCurMap]
 	ld [W2_TownMapLoaded], a
 
@@ -288,6 +291,7 @@ MapPalSwapList:
 	db PALLET_TOWN,        	  SPRITE_PAL_OAK,          4, 1
 	db PEWTER_GYM,            SPRITE_PAL_BROCK,        4, 1
 	db POKEMON_FAN_CLUB,      SPRITE_PAL_REDMON,       4, 1 ; SEEL
+	db POWER_PLANT,           SPRITE_PAL_YELLOWMON,    4, 1 ; ZAPDOS
 	db SAFFRON_GYM,           SPRITE_PAL_SABRINA,      4, 1
 	db SS_ANNE_B1F_ROOMS,     SPRITE_PAL_GREYMON,      4, 1 ; MACHOKE
 	db VERMILION_CITY,        SPRITE_PAL_GREYMON,      4, 1 ; MACHOP
