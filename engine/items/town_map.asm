@@ -474,11 +474,15 @@ WriteAsymmetricMonPartySpriteOAM:
 	inc a
 	ld [wOAMBaseTile], a
 
-	cp 5
+	cp 5 ; check if bird
 	ld a, 3
-	jr nc, .isbird
+	jr nc, .foundPalette
+	ld a, [wWalkBikeSurfState]
+	cp 2 ; check if surfing
+	ld a, 1
+	jr z, .foundPalette
 	xor a
-.isbird
+.foundPalette
 
 ;	xor a
 	ld [hli], a
