@@ -231,16 +231,6 @@ ClearScreen::
 	jr nz, .loop
 	jp Delay3
 
-SavRegGoodCopyVideoData::
-	push hl
-	push de
-	push bc
-	call GoodCopyVideoData
-	pop bc
-	pop de
-	pop hl
-	ret
-
 GoodCopyVideoData::
 	ldh a, [rLCDC]
 	bit 7, a ; is the LCD enabled?
