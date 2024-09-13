@@ -1,6 +1,6 @@
 SpriteSpecialProperties::
 ; This function look for sprites in SpecialOAMlist and load special proporties in wSpriteStateData2
-; it make use of the previously unused bytes $1, $A, and $B
+; it make use of the previously unused bytes $1, $A, $B and $C
 	xor a
 .spriteLoop
 	ldh [hSpriteOffset2], a
@@ -32,6 +32,30 @@ SpriteSpecialProperties::
 	ld [de], a
 
 .nextCheck
+; This part of the function look for sprites in AnimatedSpriteList and load an animation value in 
+; wSpriteStateData2 if found, it make use of the previously unused bytes $C of wSpriteStateData2.
+	ld d, HIGH(wSpriteStateData2)
+	ldh a, [hSpriteOffset2]
+	add $c
+	ld e, a
+	ld a, [wSavedSpritePictureID]
+	ld b, a
+
+	ld hl, AnimatedSpriteList
+.loop
+	ld a, [hli]
+	cp -1
+	jr z, .nextsprite
+	cp b
+	jr z, .found
+	inc hl
+	jr .loop
+
+.found
+	ld a, [hl]
+	ld [de], a
+
+.nextsprite
 	ldh a, [hSpriteOffset2]
 	add $10
 	cp LOW($100)
@@ -156,4 +180,21 @@ SpecialOAMlist:
 	db SPRITE_BILLS_MACHINE,            $30, 0, 0
 ; 3x3 tiles Snorlax
 	db SPRITE_SNORLAXBIG,               $40, 0, 0
+	db -1
+
+AnimatedSpriteList:
+; \1 Sprite to animate, 
+; \2 Ticks between animation frames, must be > 0.
+; A value of 4 is the normal walking animation speed.
+; Values > $80 are for special animation paterns.
+	db SPRITE_ARTICUNO,     4 ; normal speed
+	db SPRITE_FEAROW,       4 ; normal speed
+	db SPRITE_KABUTO,      12 ; slower speed
+	db SPRITE_LAPRAS,      12 ; slower speed
+	db SPRITE_MOLTRES,      4 ; normal speed
+	db SPRITE_OMANYTE,     12 ; slower speed
+	db SPRITE_PIDGEOT,      4 ; normal speed
+	db SPRITE_SNORLAXBIG, $80 ; snorlax breathing
+	db SPRITE_SWIMMER,     12 ; slower speed
+	db SPRITE_ZAPDOS,       4 ; normal speed
 	db -1

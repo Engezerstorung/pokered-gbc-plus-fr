@@ -122,7 +122,7 @@ wSpriteStateData2::
 ; - 9: original facing direction (backed up by DisplayTextIDInit, restored by CloseTextDisplay)
 ; - A: Custom Y pixel offset for special sprites (see data/sprites/facings.asm)
 ; - B: Custom X pixel offset for special sprites (see data/sprites/facings.asm)
-; - C
+; - C: Custom - animation status (when always animating, ticks between frames, values > $80 are for special animation paterns )
 ; - D: picture ID
 ; - E: sprite image base offset (in video ram, player always has value 1, used to compute sprite image index)
 ; - F
@@ -1885,8 +1885,10 @@ wPlayerCoins:: dw ; BCD
 wMissableObjectFlags:: flag_array $100
 wMissableObjectFlagsEnd::
 
-	ds 3
+	ds 2
 ;	ds 6
+
+wAnimationStatus:: db
 
 ;; SpriteSets offsets of the current and previous sprite set
 wSpriteSetOffset::
@@ -1896,6 +1898,9 @@ wPrevSpriteSetOffset:: db
 ;; bit 0 - is 1 if LoadMapSpriteTilePatterns called by OW spriteset loading
 ;; bit 1 - is 1 if the Sprite set and previous Sprite set are different
 ;; bit 2 - is 1 when sprite is already loaded in the same slot in vram
+;; bit 3 - unused
+;; bit 4 - unused
+;; bit 5 - used in always animating sprites during delayed movement status
 ;; bit 6 - used in some Color Plus functions to check for coordinates
 ;; bit 7 - when set prevent VramSwap to load in the vram text space
 wSpriteFlags:: db

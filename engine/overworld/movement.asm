@@ -125,6 +125,14 @@ UpdateNPCSprite:
 	ldh a, [hCurrentSpriteOffset]
 	ld l, a
 	inc l
+
+	ld d, h
+	inc d
+	add $c
+	ld e, a
+	ld a, [de]
+	ld [wAnimationStatus], a
+
 	ld a, [hl]        ; x#SPRITESTATEDATA1_MOVEMENTSTATUS
 	and a
 	jp z, InitializeSpriteStatus
@@ -304,11 +312,34 @@ UpdateSpriteInWalkingAnimation:
 	ldh a, [hCurrentSpriteOffset]
 	add $7
 	ld l, a
+
+	ld c, 4
+	ld a, [wSpriteFlags]
+	bit 5, a
+	jr z, .gotAnimationSpeed
+	ld a, [wAnimationStatus]
+	ld c, a
+	cp $80
+	jr c, .gotAnimationSpeed
+
+	inc l
+	ld a, [hld]
+	and a
+	ld c, 6
+	jr z, .gotAnimationSpeed
+	cp 2
+	jr z, .gotAnimationSpeed
+	ld c, 20
+
+.gotAnimationSpeed
 	ld a, [hl]                       ; x#SPRITESTATEDATA1_INTRAANIMFRAMECOUNTER
 	inc a
 	ld [hl], a                       ; [x#SPRITESTATEDATA1_INTRAANIMFRAMECOUNTER]++
-	cp $4
-	jr nz, .noNextAnimationFrame
+	cp c
+	jr c, .noNextAnimationFrame
+
+;	cp $4
+;	jr nz, .noNextAnimationFrame
 	xor a
 	ld [hl], a                       ; [x#SPRITESTATEDATA1_INTRAANIMFRAMECOUNTER] = 0
 	inc l
@@ -317,6 +348,11 @@ UpdateSpriteInWalkingAnimation:
 	and $3
 	ld [hl], a                       ; advance to next animation frame every 4 ticks (16 ticks total for one step)
 .noNextAnimationFrame
+
+	ld a, [wSpriteFlags]
+	bit 5, a
+	ret nz
+
 	ldh a, [hCurrentSpriteOffset]
 	add $3
 	ld l, a
@@ -376,6 +412,17 @@ UpdateSpriteInWalkingAnimation:
 
 ; update [x#SPRITESTATEDATA2_MOVEMENTDELAY] for sprites in the delayed state (x#SPRITESTATEDATA1_MOVEMENTSTATUS)
 UpdateSpriteMovementDelay:
+	ld a, [wAnimationStatus]
+	and a
+	jr z, .notAlwaysAnimating
+
+	ld hl, wSpriteFlags
+	set 5, [hl]
+	ld h, HIGH(wSpriteStateData1)
+
+	call UpdateSpriteInWalkingAnimation
+.notAlwaysAnimating
+
 	ld h, HIGH(wSpriteStateData2)
 	ldh a, [hCurrentSpriteOffset]
 	add $6
@@ -397,6 +444,12 @@ UpdateSpriteMovementDelay:
 	ld l, a
 	ld [hl], $1             ; [x#SPRITESTATEDATA1_MOVEMENTSTATUS] = 1 (mark as ready to move)
 notYetMoving:
+
+	ld hl, wSpriteFlags
+	bit 5, [hl]
+	res 5, [hl]
+	jp nz, UpdateSpriteImage
+	
 	ld h, HIGH(wSpriteStateData1)
 	ldh a, [hCurrentSpriteOffset]
 	add SPRITESTATEDATA1_ANIMFRAMECOUNTER
