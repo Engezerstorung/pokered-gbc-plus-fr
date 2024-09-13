@@ -21,17 +21,22 @@ PrepareOAMData::
 	ld d, HIGH(wSpriteStateData1)
 	ldh a, [hSpriteOffset2]
 	ld e, a
-
-	xor a
-	ld [wPictureID], a ; reset value to 0
-
 	ld a, [de] ; [x#SPRITESTATEDATA1_PICTUREID]
-	ld b, a ; store PICTUREID in b to identify sprite
-
 	and a
 	jp z, .nextSprite
 
 	inc e
+
+	inc d
+	ld a, [de]
+	ld b, a
+	and a
+	jr z, .isZero
+	sub $10
+.isZero	
+	ld c, a
+	dec d
+
 	inc e
 	ld a, [de] ; [x#SPRITESTATEDATA1_IMAGEINDEX]
 	ld [wSavedSpriteImageIndex], a
@@ -39,39 +44,21 @@ PrepareOAMData::
 	jr nz, .visible
 
 	call GetSpriteScreenXY
-	jp .nextSprite
+	jr .nextSprite
 
 .visible
-; Checking if sprite is in SpecialOAMlist ; see data/sprites/facings.asm
-	ld a, b ; loading back PICTUREID to identify sprite
-	ld hl, SpecialOAMlist ; loading list for identification and properties values
-	push de ; save d and e
-	ld de, 4 ; define the number of properties in list
-	call IsInArray ; check if Sprite is in list ; modify a/b/de
-	pop de ; restore d and e
-	ld a, [wSavedSpriteImageIndex] ; restoring a to value before sprite identification
-	jr nc, .notspecialsprite ; jump if not in list
-	ld a, 1
-	ld [wPictureID], a ; set value to 1 to later check if GetSpriteScreenXY function is called for a special sprite
-	ld a, [wSavedSpriteImageIndex] 
-	and $f
-	inc hl; select Animation table property in SpecialOAMlist
-	add [hl] ; load appropriate Animation Table value
-	ld b, l ; preserve l in b for later use in GetSpriteScreenXY
-	jr .next
-
-; Original OAM Table selection code
-.notspecialsprite
 	cp $a0 ; is the sprite unchanging like an item ball or boulder?
 	jr c, .usefacing
 
 ; unchanging
 	and $f
 	add $10 ; skip to the second part of the table which doesn't account for facing direction
+	add c
 	jr .next
 
 .usefacing
 	and $f
+	add b
 
 .next
 	ld l, a
@@ -193,40 +180,36 @@ PrepareOAMData::
 	jr .clear
 
 GetSpriteScreenXY:
-	ld c, l ; preserve l from outside of the function
 	inc e
 	inc e
-; Checking if sprite is in SpecialOAMlist ; see data/sprites/facings.asm
-	ld a, [wPictureID]
-	cp 1 ; check if function is called for a special sprite, set flag c if it's not
 	ld a, [de] ; [x#SPRITESTATEDATA1_YPIXELS]
-	push af ; save c flag from "add" operations, needed for next "jr nc, .noXoffset"
-	jr c, .noYoffset
-	ld l, b ; restore previously saved l to continue using the YX offset values from SpecialOAMlist
-	inc hl ; select Y offset property in SpecialOAMlist
-	add [hl] ; add Y offset value
-.noYoffset
 	ldh [hSpriteScreenY], a
-	pop af ; restore c flag after "add" operations, needed for next "jr nc, .noXoffset"
 	inc e
 	inc e
 	ld a, [de] ; [x#SPRITESTATEDATA1_XPIXELS]
-	jr c, .noXoffset
-	inc hl ; select X offset property in SpecialOAMlist
-	add [hl] ; add X offset value
-.noXoffset
 	ldh [hSpriteScreenX], a
-	
 	ld a, 4
 	add e
 	ld e, a
+
+	ld b, l
+	ld l, e
+	ld h, d
+	inc h
+
 	ldh a, [hSpriteScreenY]
+	add [hl]
+	ldh [hSpriteScreenY], a
 	add 4
 	and $f0
 	ld [de], a ; [x#SPRITESTATEDATA1_YADJUSTED]
 	inc e
+	inc l
 	ldh a, [hSpriteScreenX]
+	add [hl]
+	ldh [hSpriteScreenX], a
 	and $f0
 	ld [de], a  ; [x#SPRITESTATEDATA1_XADJUSTED]
-	ld l, c ; restore l from outside of the function
+	ld l, b
+
 	ret
