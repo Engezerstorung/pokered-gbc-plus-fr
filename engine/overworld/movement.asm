@@ -309,40 +309,37 @@ TryWalking:
 
 ; update the walking animation parameters for a sprite that is currently walking
 UpdateSpriteInWalkingAnimation:
-	ld c, 4
-	ld a, [wSpriteFlags]
-	bit 5, a
-	jr z, .normalAnimation
-	ld a, [wAnimationStatus]
-	ld c, a
-	cp $80
-	jr c, .normalAnimation
-
-	ldh a, [hCurrentSpriteOffset]
-	add $8
-	ld l, a
-	ld a, [hl]
-	dec l
-	and a
-	ld c, 20
-	jr z, .gotAnimationSpeed
-	cp 2
-	jr z, .gotAnimationSpeed
-	ld c, 4
-	jr .gotAnimationSpeed
-
-.normalAnimation
 	ldh a, [hCurrentSpriteOffset]
 	add $7
 	ld l, a
-.gotAnimationSpeed	
+
+	ld c, 4
+	ld a, [wSpriteFlags]
+	bit 5, a
+	jr z, .gotAnimationSpeed
+	ld a, [wAnimationStatus]
+	ld c, a
+	cp $80
+	jr c, .gotAnimationSpeed
+
+	inc l
+	ld a, [hld]
+	and a
+	ld c, 6
+	jr z, .gotAnimationSpeed
+	cp 2
+	jr z, .gotAnimationSpeed
+	ld c, 20
+
+.gotAnimationSpeed
 	ld a, [hl]                       ; x#SPRITESTATEDATA1_INTRAANIMFRAMECOUNTER
 	inc a
 	ld [hl], a                       ; [x#SPRITESTATEDATA1_INTRAANIMFRAMECOUNTER]++
 	cp c
+	jr c, .noNextAnimationFrame
 
 ;	cp $4
-	jr nz, .noNextAnimationFrame
+;	jr nz, .noNextAnimationFrame
 	xor a
 	ld [hl], a                       ; [x#SPRITESTATEDATA1_INTRAANIMFRAMECOUNTER] = 0
 	inc l
