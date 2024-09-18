@@ -1895,7 +1895,7 @@ wPrevSpriteSetOffset:: db
 ;; bit 3 - unused
 ;; bit 4 - unused
 ;; bit 5 - used in always animating sprites during delayed movement status
-;; bit 6 - used in some Color Plus functions to check for coordinates
+;; bit 6 - unused
 ;; bit 7 - when set prevent VramSwap to load in the vram text space
 wSpriteFlags:: db
 
