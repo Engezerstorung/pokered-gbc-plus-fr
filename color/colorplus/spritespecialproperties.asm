@@ -1,7 +1,7 @@
 SpriteSpecialProperties::
 ; This function look for sprites in SpecialOAMlist and load special proporties in wSpriteStateData2
 ; it make use of the previously unused bytes $1, $A, $B and $C
-	xor a
+	ld a, $10
 .spriteLoop
 	ldh [hSpriteOffset2], a
 
