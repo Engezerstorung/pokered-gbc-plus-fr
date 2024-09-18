@@ -4,12 +4,6 @@
 ; vram space as to color them differently and be used for the building facade and external walls.
 VramSwap::
 	ld hl, VramSwapList
-	jr VramSwapMain
-VramSwapCoords::
-	ld hl, wSpriteFlags
-	set 6, [hl]
-	ld hl, VramSwapListCoords
-VramSwapMain:
 	ld a, [hli] ; first byte of list is for IsInArray DE value
 	ld d, 0
 	ld e, a
@@ -27,10 +21,6 @@ VramSwapMain:
 	jp z, .done
 
 	inc hl
-
-	ld a, [wSpriteFlags]
-	bit 6, a
-	jr z, .noCoordCheck
 
 	call ListCoordsCheck ; use from \3 up to \5
 	jr nz, .done
@@ -96,10 +86,6 @@ VramSwapMain:
 	cp [hl]
 	jr z, .vramSwapLoop
 .noVramSwap
-	ld hl, wSpriteFlags
-	bit 6, [hl]
-	jp z, VramSwapCoords
-	res 6, [hl]
 	ret
 
 ; Called during InitMapSprites to substitute sprites in special occasions
@@ -203,19 +189,16 @@ ListCoordsCheck:
 	cp [hl] ; cp with /5 Coordinates Conditions
 	ret
 
-VramSwapList:
-; 1/ map, 2/ Event to check for, 3/ GFX type (sprite, stillsprite, tileset), 4/ gfx to use,
-; 5/ which gfx tile to start from, /6 amount of tiles to copy, /7 where in vram
-	db 9
-	map_vram_swap CELADON_MANSION_ROOF, NOEVENT, tileset, Mansion_GFX, $5A, 6, $10
-	map_vram_swap CELADON_MANSION_ROOF, NOEVENT, tileset, Mansion_GFX, $36, 3, $16
 
-VramSwapListCoords:
+VramSwapList:
 ; 1/ map, 2/ Event to check for, 3/ X Coordinate, 4/ Y Coordinate, 5/ coordinates conditions (NOXY, AFTER/BEFORE_X/Y, AFTER/BEFORE_X_AFTER/BEFORE_Y),
 ; 6/ GFX type (sprite, stillsprite, tileset), 7/ gfx to use, 8/ which gfx tile to start from, /9 amount of tiles to copy, /10 where in vram
-	db 12	
+	db 12
+	map_vram_swap CELADON_MANSION_ROOF, NOEVENT, 0, 0, NOXY, tileset, Mansion_GFX, $5A, 6, $10
+	map_vram_swap CELADON_MANSION_ROOF, NOEVENT, 0, 0, NOXY, tileset, Mansion_GFX, $36, 3, $16
 IF DEF(_DEBUG)	
 	map_vram_swap ROUTE_18, NOEVENT, 47, 0, AFTER_X, sprite, LaprasSprite, 0, 12, $18 ; used to test the function for sprites
+;	map_vram_swap ROUTE_18, NOEVENT, 47, 0, BEFORE_X, sprite, CooltrainerMSprite, 0, 12, $18 ; used to test the function for sprites
 ENDC
 	db -1
 
