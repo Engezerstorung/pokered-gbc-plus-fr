@@ -7168,7 +7168,7 @@ CalcEXPBarPixelLength:
 	
 .skip
 	ld a, [hl]
-	ld [wd0b5], a
+	ld [wCurSpecies], a
 	call GetMonHeader
 	ld a, [wBattleMonLevel]
 	ld d, a
