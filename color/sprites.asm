@@ -158,10 +158,10 @@ LoadPartyMenuSpritePalettes::
 	ld a, [hli] ; Load pokemon ID and up to next slot
 	cp -1 ; Check for end of the party
 	jr z, .done ; Jump if end of the party found
-	ld [wd11e], a ; Store a in wram to be used in the function
+	ld [wPokedexNum], a ; Store a in wram to be used in the function
 	predef IndexToPokedex ; Convert ID to Pokedex ID
 	call GetPredefRegisters ; Restore the 16bits registers from before the predef
-	ld a, [wd11e] ; Get the result of the function
+	ld a, [wPokedexNum] ; Get the result of the function
 	cp 152 ; check for and ID higher than Mew's
 	jr c, .notAboveMew ; Jump if not higher than Mew's
 	xor a ; if higher than Mew's then give ID 0 so that purple palette is assigned
