@@ -1892,7 +1892,6 @@ wMissableObjectFlags:: flag_array $100
 wMissableObjectFlagsEnd::
 
 	ds 2
-;	ds 6
 
 wAnimationStatus:: db
 
@@ -1911,6 +1910,7 @@ wPrevSpriteSetOffset:: db
 ;; bit 7 - when set prevent VramSwap to load in the vram text space
 wSpriteFlags:: db
 
+wPartySpritePaletteSlot::
 ; saved copy of SPRITESTATEDATA1_PICTUREID
 wSavedSpritePictureID:: db
 ; saved copy of SPRITESTATEDATA1_IMAGEINDEX (used for sprite facing/anim)
