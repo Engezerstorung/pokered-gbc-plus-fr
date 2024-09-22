@@ -27,7 +27,6 @@ VramSwap::
 
 	inc hl ; up to \6
 
-.noCoordCheck
 	ld a, [hli]
 	ld e, a
 	cp LOW(vNPCSprites tile $78)
@@ -61,7 +60,7 @@ VramSwap::
 	jr nc, .done
 
 ;	ld a, [wFontLoaded]
-;	bit 0, [hl]
+;	bit 0, a
 ;	jr nz, .done
 	push hl
 	ld hl, wSpriteFlags
@@ -208,4 +207,6 @@ SpriteSwapList:
 	db 8
 	map_sprite_swap FUCHSIA_CITY, SPRITE_BLANK, EVENT_GOT_DOME_FOSSIL,  0, 0, NOXY, SPRITE_OMANYTE
 	map_sprite_swap FUCHSIA_CITY, SPRITE_BLANK, EVENT_GOT_HELIX_FOSSIL, 0, 0, NOXY, SPRITE_KABUTO
+	map_sprite_swap ROUTE_15, SPRITE_BLANK, EVENT_GOT_DOME_FOSSIL,  9, 0, BEFORE_X, SPRITE_OMANYTE
+	map_sprite_swap ROUTE_15, SPRITE_BLANK, EVENT_GOT_HELIX_FOSSIL, 9, 0, BEFORE_X, SPRITE_KABUTO
 	db -1
