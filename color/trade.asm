@@ -62,7 +62,7 @@ Trade_InitGameboyTransferGfx_ColorHook:
 	jr nz, .loop2
 
 	; Make the Circle around the pokemon flash with the link cable
-	ld a, 4
+	ld a, %10000000
 	ld [W2_UseOBP1], a
 
 	xor a
