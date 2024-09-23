@@ -397,10 +397,13 @@ SetBlackColor:
 	ret
 
 SetWhiteColor:
-	ld a, $ff
-	ld c, 8 * 8
+	ld a, whiteLow
+	ld b, whiteHigh
+	ld c, 8 * 4
 .loop
 	ld [hli], a
+	ld [hl], b
+	inc hl
 	dec c
 	jr nz, .loop
 	ret
