@@ -109,33 +109,33 @@ SpriteFacingAndAnimationTable:
 	; y, x, attributes
 	db 0, 0, $00 ; top left
 	db 0, 8, $00 ; top right
-	db 8, 0, OAMFLAG_CANBEMASKED ; bottom left
-	db 8, 8, OAMFLAG_CANBEMASKED | OAMFLAG_ENDOFDATA ; bottom right
+	db 8, 0, UNDER_GRASS ; bottom left
+	db 8, 8, UNDER_GRASS | FACING_END ; bottom right
 
 .FlippedOAM:
 	; y, x, attributes
 	db 0, 8, OAM_HFLIP ; top left
 	db 0, 0, OAM_HFLIP ; top right
-	db 8, 8, OAM_HFLIP | OAMFLAG_CANBEMASKED ; bottom left
-	db 8, 0, OAM_HFLIP | OAMFLAG_CANBEMASKED | OAMFLAG_ENDOFDATA ; bottom right
+	db 8, 8, OAM_HFLIP | UNDER_GRASS ; bottom left
+	db 8, 0, OAM_HFLIP | UNDER_GRASS | FACING_END ; bottom right
 
 .OddmonOAM:
 	; y, x, attributes
 	db 0,  7, OAM_HFLIP ; top left
 	db 0, -1, OAM_HFLIP ; top right
-	db 8,  7, OAM_HFLIP | OAMFLAG_CANBEMASKED ; bottom left
-	db 8, -1, OAM_HFLIP | OAMFLAG_CANBEMASKED | OAMFLAG_ENDOFDATA ; bottom right
+	db 8,  7, OAM_HFLIP | UNDER_GRASS ; bottom left
+	db 8, -1, OAM_HFLIP | UNDER_GRASS | FACING_END ; bottom right
 
 .MachineLOAM:
 	; y, x, attributes
-	db 12, 8, OAMFLAG_ENDOFDATA 
+	db 12, 8, FACING_END 
 .MachineROAM:
 	; y, x, attributes
-	db 12, 0, OAM_HFLIP | OAMFLAG_ENDOFDATA 
+	db 12, 0, OAM_HFLIP | FACING_END 
 .MachineMOAM:
 	; y, x, attributes
 	db 12, 0, $00
-	db 12, 8, OAM_HFLIP | OAMFLAG_ENDOFDATA 
+	db 12, 8, OAM_HFLIP | FACING_END 
 
 .SnorlaxSleepOAM:
 	; y, x, attributes
@@ -150,4 +150,4 @@ SpriteFacingAndAnimationTable:
 	db  5, 12, OAM_HFLIP ; middle right
 	db 13, -4, $00 ; bottom left
 	db 13,  4, $00 ; bottom center
-	db 13, 12, OAM_HFLIP | OAMFLAG_ENDOFDATA ; bottom right
+	db 13, 12, OAM_HFLIP | FACING_END ; bottom right
