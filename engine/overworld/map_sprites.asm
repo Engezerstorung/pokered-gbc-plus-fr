@@ -311,7 +311,7 @@ LoadMapSpriteTilePatterns:
 
 	pop af
 	pop hl
-	set 3, h ; add $80 tiles to hl
+	set 3, h ; add $800 ($80 tiles) to hl (1 << 3 == $8)
 	ld b, a
 	swap c
 
