@@ -152,7 +152,7 @@ LoadMapSpriteTilePatterns:
 	jr z, .loadInVram ; 1 if sprite set is identical
 
 	ldh a, [rLCDC]
-	bit 7, a ; is the LCD enabled?
+	bit rLCDC_ENABLE, a ; is the LCD enabled?
 	jr z, .loadInVram
 
 	ldh a, [hVRAMSlot]
