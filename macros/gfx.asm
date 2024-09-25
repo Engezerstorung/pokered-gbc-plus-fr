@@ -102,12 +102,10 @@ MACRO RGB
 
 
 		IF LCD_COLORS ; experimental, LCD color correction
-			DEF whiteHigh = HIGH(palred wRed + palgreen wGreen + palblue wBlue)
-			DEF whiteLow = LOW(palred wRed + palgreen wGreen + palblue wBlue)
+			DEF wpWhite = (palred wRed + palgreen wGreen + palblue wBlue)
 			dw palred wpRed + palgreen wpGreen + palblue wpBlue
 		ELSE
-			DEF whiteHigh = $FF
-			DEF whiteLow = $FF
+			DEF wpWhite = $FFFF
 			dw palred (\1) + palgreen (\2) + palblue (\3)
 		ENDC
 		SHIFT 3

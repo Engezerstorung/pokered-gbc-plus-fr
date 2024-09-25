@@ -12,7 +12,6 @@ DEF COLOR_MATRIX = 1
 	; 2 : hunterk Color Mangler matrix from their gbc shader
 	; 3 : Jojobear13 matrix from their "Built-in Color Correction for GBC games" tutorial
 
-
 DEF GAMMA = 1.3
 	; 0 or 1.0 to turn OFF
 	; Don't omit the .0 for integer numbers

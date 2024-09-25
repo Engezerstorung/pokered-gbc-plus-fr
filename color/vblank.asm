@@ -409,8 +409,8 @@ SetBlackColor:
 	ret
 
 SetWhiteColor:
-	ld a, whiteLow
-	ld b, whiteHigh
+	ld a, LOW(wpWhite)
+	ld b, HIGH(wpWhite)
 	ld c, 8 * 4
 .loop
 	ld [hli], a
