@@ -181,7 +181,7 @@ SpritePalettes:
 	RGB 31,25,13
 	RGB 16,16,16
 	RGB 0,0,0
-	
+
 	; SPRITE_PAL_RED
 	RGB 27,31,27
 	RGB 31,19,10
