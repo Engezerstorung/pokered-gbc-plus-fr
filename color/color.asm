@@ -213,7 +213,7 @@ SetPal_BattleAfterBlack:
 	; Wait 3 frames (if LCD is on) to allow tilemap updates to apply. Prevents garbage
 	; from appearing on player/enemy silhouettes.
 	ldh a, [rLCDC]
-	and rLCDC_ENABLE_MASK
+	and 1 << rLCDC_ENABLE
 	jr z, .doneDelay
 	ld c, 3
 	call DelayFrames
@@ -245,7 +245,7 @@ SetPal_Battle:
 	; Wait 3 frames (if LCD is on) to allow tilemap updates to apply. Prevents garbage
 	; from appearing after closing pokemon menu.
 	ldh a, [rLCDC]
-	and rLCDC_ENABLE_MASK
+	and 1 << rLCDC_ENABLE
 	jr z, .doneDelay
 	ld c, 3
 	call DelayFrames
@@ -819,7 +819,7 @@ SetPal_Overworld::
 
 	; Wait 2 frames before updating palettes (if LCD is on)
 	ldh a, [rLCDC]
-	and rLCDC_ENABLE_MASK
+	and 1 << rLCDC_ENABLE
 	jr z, .doneDelay
 	ld c, 2
 	call DelayFrames
