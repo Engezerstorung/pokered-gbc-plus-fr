@@ -19,7 +19,7 @@ DEF W2_ScreenPalettesBuffer        EQU $d500 ; 32x6 bytes (DMA-able), $d500-$d5c
 DEF W2_TownMapLoaded               EQU $d700
 DEF W2_TileBasedPalettes           EQU $d701
 DEF W2_StaticPaletteMapChanged     EQU $d702 ; Set to a number >=3 if palette map is modified, since the window is drawn in thirds. Only for when TileBasedPalettes == 0.
-DEF W2_UseOBP1                     EQU $d703 ; If set, sprite palettes 4-7 use OBP1 instead of OBP0
+DEF W2_UseOBP1                     EQU $d703 ; Set bits of the value to have palettes use OBP1 instead of OBP0
 
 ; These are like W2_BgPaletteData/SprPaletteData, but they account for BGP/OBP0/OBP1.
 DEF W2_BgPaletteDataBuffer         EQU $d704
