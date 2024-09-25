@@ -233,7 +233,7 @@ ClearScreen::
 
 GoodCopyVideoData::
 	ldh a, [rLCDC]
-	bit 7, a ; is the LCD enabled?
+	bit rLCDC_ENABLE, a ; is the LCD enabled?
 	jp nz, CopyVideoData ; if LCD is on, transfer during V-blank
 	ld a, b
 	push de
