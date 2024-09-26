@@ -25,15 +25,16 @@ LoadTilesetPalette:
 
 	ld a, b ; Get wCurMapTileset
 	push af
-	ld hl, MapPaletteSets
+	ld hl, MapPaletteSets.pointers
 	ld b, 0
 	ld c, a
 	add hl, bc
-	add hl, bc
-	ld a, [hli]
-	ld e, a
 	ld a, [hl]
-	ld d, a
+	ld hl, MapPaletteSets
+	ld c, a
+	add hl, bc
+	ld d, h
+	ld e, l
 	ld hl, W2_BgPaletteData ; palette data to be copied to wram at hl
 	ld b, $08
 .nextPalette
@@ -122,37 +123,17 @@ LoadTilesetPalette:
 .notOutside
 	pop bc
 
-; Check Map to replace BG and Sprites palettes in special cases
-; Like on Celadon Mansion Roof, for Gym Leaders or map Pokémons
-	push bc
-	ld a, b
-	ld hl, MapPalSwapList ; loading list for identification and properties values
-	ld de, 4 ; define the number of properties in list
-	call IsInArray
-	jr nc, .noMapPaletteSwap ; jump if not in list
-.loopMapPalSwap
-	ld a, [hli]
-	push af
-	ld a, [hli]
-	ld d, a
-	ld a, [hli]
-	ld e, a
-	ld a, [hli]
-	push hl
-	and a ; Check if BG or Sprite palette (BG=0, Sprite=1)
-	jr nz, .swapSpritePal
-	farcall LoadMapPalette
-	jr .doneSwapPal
-.swapSpritePal	
-	farcall LoadMapPalette_Sprite
-.doneSwapPal	
-	pop hl
-	pop af
-	cp [hl]
-	jr z, .loopMapPalSwap
+	ld a, c
+	ld hl, TilesetBgPalSwapList ; loading list for identification and properties values
+	call BgPalSwap
 
-.noMapPaletteSwap
-	pop bc
+	ld a, b
+	ld hl, MapBgPalSwapList ; loading list for identification and properties values
+	call BgPalSwap
+
+	ld a, b
+	ld hl, MapSprPalSwapList; loading list for identification and properties values
+	call SprPalSwap
 
 ; Check Map to replace Tiles used palettes in special cases
 ; Like on Celadon Mansion Roof and on Celadon Mart 1F and Roof
@@ -268,32 +249,102 @@ LoadTownPalette::
 	ldh [rSVBK], a ; Restore wram bank
 	ret
 
-MapPalSwapList:
+; Check Map to replace BG palettes in special cases
+; Like on Celadon Mansion Roof
+BgPalSwap:
+	push bc
+	ld de, 3
+	call IsInArray
+	jr nc, .noMapPaletteSwap ; jump if not in list
+.loopMapPalSwap
+	ld a, [hli]
+	push af
+	ld a, [hli]
+	ld d, a
+	ld a, [hli]
+	ld e, a
+	push hl
+	farcall LoadMapPalette
+	pop hl
+	pop af
+	cp [hl]
+	jr z, .loopMapPalSwap
+.noMapPaletteSwap
+	pop bc
+	ret
+
+; Check Map to replace Sprites palettes in special cases
+; Like for Gym Leaders or map Pokémons
+SprPalSwap:
+	push bc
+	ld de, 3
+	call IsInArray
+	jr nc, .noMapPaletteSwap ; jump if not in list
+.loopMapPalSwap
+	ld a, [hli]
+	push af
+	ld a, [hli]
+	ld d, a
+	ld a, [hli]
+	ld e, a
+	push hl
+	farcall LoadMapPalette_Sprite
+	pop hl
+	pop af
+	cp [hl]
+	jr z, .loopMapPalSwap
+.noMapPaletteSwap
+	pop bc
+	ret
+
+TilesetBgPalSwapList:
+	db CEMETERY, CEMETERY_STAIRS, 4
+	db CEMETERY, INDOOR_PURPLE, 6
+	db FOREST, OUTDOOR_FLOWER, 1
+	db GATE, GATE_STAIRS, 4
+	db GYM, INDOOR_GREEN_BG, 2
+	db GYM, INDOOR_FLOWER, 4
+	db INTERIOR, OUTDOOR_GREEN, 2
+	db MART, PC_POKEBALL_PAL, 7
+	db MUSEUM, GATE_STAIRS, 4
+	db OVERWORLD, OUTDOOR_FLOWER, 1
+	db POKECENTER, PC_POKEBALL_PAL, 7
+	db UNDERGROUND, UNDERGROUND_STAIRS, 1
+	db -1
+
+MapBgPalSwapList:
 	; Map, new palette , palette slot to replace (0-7), palette type(0=BG, 1=Sprite)
-	db BILLS_HOUSE,           SPRITE_PAL_BILLSMACHINE, 5, 1
-	db CELADON_GYM,           SPRITE_PAL_ERIKA,        4, 1
-	db CELADON_MANSION_1F,    SPRITE_PAL_YELLOWMON,    3, 1 ; MEOWTH
-	db CELADON_MANSION_1F,    SPRITE_PAL_BLUEMON,      5, 1 ; NIDORANF
-	db CELADON_MANSION_ROOF,  INDOOR_LIGHT_BLUE,       2, 0
-	db CELADON_MANSION_ROOF,  MANSION_SKY,             3, 0
-	db CELADON_MANSION_ROOF,  MANSION_WALLS_ROOF,      6, 0
-	db CERULEAN_GYM,          SPRITE_PAL_MISTY,        4, 1
-	db CHAMPIONS_ROOM,        SPRITE_PAL_OAK,          4, 1
-	db CINNABAR_GYM,          SPRITE_PAL_BLAINE,       4, 1
-	db FUCHSIA_GYM,           SPRITE_PAL_KOGA,         4, 1
-	db HALL_OF_FAME,          SPRITE_PAL_OAK,          4, 1
-	db LAVENDER_CUBONE_HOUSE, SPRITE_PAL_BROWNMON,     4, 1 ; CUBONE
-	db MR_FUJIS_HOUSE,        SPRITE_PAL_YELLOWMON,    5, 1 ; PSYDUCK
-	db OAKS_LAB,              SPRITE_PAL_OAK,          4, 1
-	db PALLET_TOWN,        	  SPRITE_PAL_OAK,          4, 1
-	db PEWTER_GYM,            SPRITE_PAL_BROCK,        4, 1
-	db POKEMON_FAN_CLUB,      SPRITE_PAL_REDMON,       4, 1 ; SEEL
-	db POWER_PLANT,           SPRITE_PAL_YELLOWMON,    4, 1 ; ZAPDOS
-	db SAFFRON_GYM,           SPRITE_PAL_SABRINA,      4, 1
-	db SS_ANNE_B1F_ROOMS,     SPRITE_PAL_GREYMON,      4, 1 ; MACHOKE
-	db VERMILION_CITY,        SPRITE_PAL_GREYMON,      4, 1 ; MACHOP
-	db VERMILION_GYM,         SPRITE_PAL_SURGE,        4, 1
-	db VIRIDIAN_GYM,          SPRITE_PAL_GIOVANNI,     4, 1
+	db CELADON_MANSION_ROOF, INDOOR_LIGHT_BLUE,  2
+	db CELADON_MANSION_ROOF, MANSION_SKY,        3
+	db CELADON_MANSION_ROOF, MANSION_WALLS_ROOF, 6
+	db MUSEUM_1F,            ALT_TEXTBOX_PAL,    7
+	db REDS_HOUSE_1F,        REDS_STAIRS,        4
+	db ROUTE_15_GATE_2F,     ARTICUNO_TEXTBOX,   7
+	db -1
+
+MapSprPalSwapList:
+	; Map, new palette , palette slot to replace (0-7), palette type(0=BG, 1=Sprite)
+	db BILLS_HOUSE,           SPRITE_PAL_BILLSMACHINE, 5
+	db CELADON_GYM,           SPRITE_PAL_ERIKA,        4
+	db CELADON_MANSION_1F,    SPRITE_PAL_YELLOWMON,    3 ; MEOWTH
+	db CELADON_MANSION_1F,    SPRITE_PAL_BLUEMON,      5 ; NIDORANF
+	db CERULEAN_GYM,          SPRITE_PAL_MISTY,        4
+	db CHAMPIONS_ROOM,        SPRITE_PAL_OAK,          4
+	db CINNABAR_GYM,          SPRITE_PAL_BLAINE,       4
+	db FUCHSIA_GYM,           SPRITE_PAL_KOGA,         4
+	db HALL_OF_FAME,          SPRITE_PAL_OAK,          4
+	db LAVENDER_CUBONE_HOUSE, SPRITE_PAL_BROWNMON,     4 ; CUBONE
+	db MR_FUJIS_HOUSE,        SPRITE_PAL_YELLOWMON,    5 ; PSYDUCK
+	db OAKS_LAB,              SPRITE_PAL_OAK,          4
+	db PALLET_TOWN,        	  SPRITE_PAL_OAK,          4
+	db PEWTER_GYM,            SPRITE_PAL_BROCK,        4
+	db POKEMON_FAN_CLUB,      SPRITE_PAL_REDMON,       4 ; SEEL
+	db POWER_PLANT,           SPRITE_PAL_YELLOWMON,    4 ; ZAPDOS
+	db SAFFRON_GYM,           SPRITE_PAL_SABRINA,      4
+	db SS_ANNE_B1F_ROOMS,     SPRITE_PAL_GREYMON,      4 ; MACHOKE
+	db VERMILION_CITY,        SPRITE_PAL_GREYMON,      4 ; MACHOP
+	db VERMILION_GYM,         SPRITE_PAL_SURGE,        4
+	db VIRIDIAN_GYM,          SPRITE_PAL_GIOVANNI,     4
 	db -1
 
 TilePalSwapList:
