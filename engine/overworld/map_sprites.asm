@@ -146,7 +146,7 @@ LoadMapSpriteTilePatterns:
 	push bc
 
 	ld  a, [wSpriteFlags]
-	bit 0, a ; is the fucntion called in the overworld?
+	bit 0, a ; is the function called in the overworld?
 	jr z, .loadInVram ; 0 if not called by OW spriteset loading
 	bit 1, a ; is the sprite set different than the previous one?
 	jr z, .loadInVram ; 1 if sprite set is identical

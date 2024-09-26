@@ -49,18 +49,15 @@ LoadSpritePalette:
 SetPal_FadeWhite::
 	ld hl, WhiteFadePaletteSets.pointers
 	ld a, [wCurMapTileset]
-	add l
-	ld l, a
-	jr nc, .noCarry
-	inc h
-.noCarry
+	ld c, a
+	ld b, 0
+	add hl, bc
+
 	ld a, [hl]
 	ld hl, WhiteFadePaletteSets
-	add l
-	ld l, a
-	jr nc, .noCarry2
-	inc h
-.noCarry2
+	ld c, a
+	add hl, bc
+
 .loop
 	ld a, [hli]
 	cp -1
@@ -74,98 +71,98 @@ SetPal_FadeWhite::
 	jr .loop
 
 WhiteFadePaletteSets::
-.overworldWF   ; OVERWORLD
-.forestWF      ; FOREST
+.overworld   ; OVERWORLD
+.forest      ; FOREST
 	db OUTDOOR_FLOWER_FADE, 1
 	; fallthrough
-.plateauWF     ; PLATEAU
+.plateau     ; PLATEAU
 	db OUTDOOR_GRASS_FADE, 2
 	db OUTDOOR_BLUE_FADE, 3
 	db -1
 
-.gymWF         ; GYM
+.gym         ; GYM
 	db INDOOR_FLOWER_FADE, 4
 	; fallthrough
-.forestGateWF  ; FOREST_GATE
-.facilityWF    ; FACILITY
-.labWF         ; LAB
+.forestGate  ; FOREST_GATE
+.facility    ; FACILITY
+.lab         ; LAB
 	db INDOOR_GREEN, 2
 	db INDOOR_BROWN, 5
 	db -1
 
-.shipWF        ; SHIP
+.ship        ; SHIP
 	db INDOOR_GRAY, 6
 	; fallthrough
-.museumWF      ; MUSEUM
-.gateWF        ; GATE
-.cemeteryWF    ; CEMETERY
+.museum      ; MUSEUM
+.gate        ; GATE
+.cemetery    ; CEMETERY
 	db INDOOR_GRAY, 4
 	db -1
 
-.redsHouse1WF  ; REDS_HOUSE_1
+.redsHouse1  ; REDS_HOUSE_1
 	db INDOOR_BROWN, 4
 	db -1
 
-.undergroundWF ; UNDERGROUND
+.underground ; UNDERGROUND
 	db INDOOR_RED, 1
 	db -1
 
-.shipPortWF    ; SHIP_PORT
+.shipPort    ; SHIP_PORT
 	db INDOOR_BLUE, 2
 	db INDOOR_BROWN, 5
 	db INDOOR_BLUE, 6
 	db -1
 
-.cavernWF      ; CAVERN
+.cavern      ; CAVERN
 	db CAVE_BROWN, 4
 	db -1
 
-.lobbyWF       ; LOBBY
+.lobby       ; LOBBY
 	db INDOOR_LIGHT_BLUE, 2
 	db INDOOR_LIGHT_BLUE, 4
 	db INDOOR_BLUE, 6
 	db -1
 
-.mansionWF     ; MANSION
+.mansion     ; MANSION
 	db INDOOR_GREEN, 2
 	db INDOOR_BLUE, 3
 	db INDOOR_BLUE, 6
 	; fallthrough
-.martWF        ; MART
-.redsHouse2WF  ; REDS_HOUSE_2
-.dojoWF        ; DOJO
-.pokecenterWF  ; POKECENTER
-.houseWF       ; HOUSE
-.interiorWF    ; INTERIOR
-.clubWF        ; CLUB
+.mart        ; MART
+.redsHouse2  ; REDS_HOUSE_2
+.dojo        ; DOJO
+.pokecenter  ; POKECENTER
+.house       ; HOUSE
+.interior    ; INTERIOR
+.club        ; CLUB
 	db -1
 
 .pointers	
 	table_width 1, .pointers
-	db .overworldWF - WhiteFadePaletteSets  ; OVERWORLD
-	db .redsHouse1WF - WhiteFadePaletteSets ; REDS_HOUSE_1
-	db .martWF - WhiteFadePaletteSets       ; MART
-	db .forestWF - WhiteFadePaletteSets     ; FOREST
-	db .redsHouse2WF - WhiteFadePaletteSets ; REDS_HOUSE_2
-	db .dojoWF - WhiteFadePaletteSets       ; DOJO
-	db .pokecenterWF - WhiteFadePaletteSets ; POKECENTER
-	db .gymWF - WhiteFadePaletteSets        ; GYM
-	db .houseWF - WhiteFadePaletteSets      ; HOUSE
-	db .forestGateWF - WhiteFadePaletteSets ; FOREST_GATE
-	db .museumWF - WhiteFadePaletteSets     ; MUSEUM
-	db .undergroundWF - WhiteFadePaletteSets; UNDERGROUND
-	db .gateWF - WhiteFadePaletteSets       ; GATE
-	db .shipWF - WhiteFadePaletteSets       ; SHIP
-	db .shipPortWF - WhiteFadePaletteSets   ; SHIP_PORT
-	db .cemeteryWF - WhiteFadePaletteSets   ; CEMETERY
-	db .interiorWF - WhiteFadePaletteSets   ; INTERIOR
-	db .cavernWF - WhiteFadePaletteSets     ; CAVERN
-	db .lobbyWF - WhiteFadePaletteSets      ; LOBBY
-	db .mansionWF - WhiteFadePaletteSets    ; MANSION
-	db .labWF - WhiteFadePaletteSets        ; LAB
-	db .clubWF - WhiteFadePaletteSets       ; CLUB
-	db .facilityWF - WhiteFadePaletteSets   ; FACILITY
-	db .plateauWF - WhiteFadePaletteSets    ; PLATEAU
+	db .overworld - WhiteFadePaletteSets  ; OVERWORLD
+	db .redsHouse1 - WhiteFadePaletteSets ; REDS_HOUSE_1
+	db .mart - WhiteFadePaletteSets       ; MART
+	db .forest - WhiteFadePaletteSets     ; FOREST
+	db .redsHouse2 - WhiteFadePaletteSets ; REDS_HOUSE_2
+	db .dojo - WhiteFadePaletteSets       ; DOJO
+	db .pokecenter - WhiteFadePaletteSets ; POKECENTER
+	db .gym - WhiteFadePaletteSets        ; GYM
+	db .house - WhiteFadePaletteSets      ; HOUSE
+	db .forestGate - WhiteFadePaletteSets ; FOREST_GATE
+	db .museum - WhiteFadePaletteSets     ; MUSEUM
+	db .underground - WhiteFadePaletteSets; UNDERGROUND
+	db .gate - WhiteFadePaletteSets       ; GATE
+	db .ship - WhiteFadePaletteSets       ; SHIP
+	db .shipPort - WhiteFadePaletteSets   ; SHIP_PORT
+	db .cemetery - WhiteFadePaletteSets   ; CEMETERY
+	db .interior - WhiteFadePaletteSets   ; INTERIOR
+	db .cavern - WhiteFadePaletteSets     ; CAVERN
+	db .lobby - WhiteFadePaletteSets      ; LOBBY
+	db .mansion - WhiteFadePaletteSets    ; MANSION
+	db .lab - WhiteFadePaletteSets        ; LAB
+	db .club - WhiteFadePaletteSets       ; CLUB
+	db .facility - WhiteFadePaletteSets   ; FACILITY
+	db .plateau - WhiteFadePaletteSets    ; PLATEAU
 	assert_table_length NUM_TILESETS	
 
 MapFadePalList:
