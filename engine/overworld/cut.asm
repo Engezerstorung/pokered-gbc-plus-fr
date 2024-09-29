@@ -101,7 +101,7 @@ _InitCutAnimOAM: ; hooked in color/color.asm
 	call WriteCutAnimationOAMBlock
 	ld hl, wShadowOAMSprite36Attributes
 	ld de, 4
-	ld a, $37 ; Overwrite attributes (use palette 6, green)
+	ld a, $37 ; Overwrite attributes (use palette 7, animation)
 	ld c, e
 .loop
 	ld [hl], a
@@ -121,12 +121,15 @@ LoadCutGrassAnimationTilePattern:
 WriteCutAnimationOAMBlock:
 	call GetCutAnimationOffsets
 	ld a, $9
-	ld de, CutAnimationTilesAndAttributes
+	ld de, .OAMBlock
 	jp WriteOAMBlock
 
-CutAnimationTilesAndAttributes:
-	dbsprite  2, -1,  7,  4, $fd, OAM_OBP1 | 7
-	dbsprite  2, -1,  7,  6, $ff, OAM_OBP1 | 7 ; Uses palette 6 (green, specifically for cut trees)
+.OAMBlock:
+; tile ID, attributes
+	db $fc, OAM_OBP1 | 7 ; Uses palette 7 (animation)
+	db $fd, OAM_OBP1 | 7
+	db $fe, OAM_OBP1 | 7
+	db $ff, OAM_OBP1 | 7
 
 GetCutAnimationOffsets:
 	ld hl, wSpritePlayerStateData1YPixels
