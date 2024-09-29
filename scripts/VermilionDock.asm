@@ -155,7 +155,7 @@ VermilionDock_EmitSmokePuff:
 	ret
 
 VermilionDockOAMBlock:
-	; tile id, attribute
+; tile ID, attributes
 	db $fc, $13
 	db $fd, $13
 	db $fe, $13
