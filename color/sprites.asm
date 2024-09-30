@@ -49,7 +49,8 @@ LoadOverworldSpritePalettes:
 	pop bc
 	ld a, b
 	ldh [rSVBK], a
-	jr LoadSpritePaletteData
+	call LoadSpritePaletteData
+	jr LoadSpecialOverworldSpritePalettes
 
 LoadAttackSpritePalettes:
 	ld hl, AttackSpritePalettes
@@ -71,6 +72,35 @@ LoadSpritePaletteData:
 	jr nz, .sprCopyLoop
 	ld a, 1
 	ld [W2_ForceOBPUpdate], a
+
+	pop af
+	ldh [rSVBK], a
+	ret
+
+LoadSpecialOverworldSpritePalettes:
+	ldh a, [rSVBK]
+	ld b, a
+	xor a
+	ldh [rSVBK], a
+	push bc
+
+; Check Tileset to load proper boulder dust palette if outside location
+	ld a, [wCurMapTileset]
+	and a ; check if OVERWORLD tileset
+	jr z, .isOutside
+	cp FOREST
+	jr z, .isOutside
+	cp PLATEAU
+	jr nz, .notOutside
+.isOutside
+	lb de, SPRITE_PAL_OUTDOORDUST, 7
+	farcall LoadMapPalette_Sprite
+.notOutside
+
+; Check map to load sprite specific palettes (list in color/loadpalettes.asm)	
+	ld a, [wCurMap]
+	ld hl, MapSprPalSwapList; loading list for identification and properties values
+	call SprPalSwap
 
 	pop af
 	ldh [rSVBK], a
