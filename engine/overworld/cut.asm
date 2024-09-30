@@ -88,7 +88,8 @@ _InitCutAnimOAM: ; hooked in color/color.asm
 	ld hl, vChars1 tile $7e
 	lb bc, BANK(Overworld_GFX), 2
 	call CopyVideoData
-	jr WriteCutAnimationOAMBlock
+;	jr WriteCutAnimationOAMBlock
+	jr WriteCutOrBoulderDustAnimationOAMBlock
 .grass
 	ld hl, vChars1 tile $7c
 	call LoadCutGrassAnimationTilePattern
@@ -98,7 +99,8 @@ _InitCutAnimOAM: ; hooked in color/color.asm
 	call LoadCutGrassAnimationTilePattern
 	ld hl, vChars1 tile $7f
 	call LoadCutGrassAnimationTilePattern
-	call WriteCutAnimationOAMBlock
+;	call WriteCutAnimationOAMBlock
+	call WriteCutOrBoulderDustAnimationOAMBlock
 	ld hl, wShadowOAMSprite36Attributes
 	ld de, 4
 	ld a, $37 ; Overwrite attributes (use palette 7, animation)
@@ -116,10 +118,12 @@ LoadCutGrassAnimationTilePattern:
 	lb bc, BANK(MoveAnimationTiles1), 1
 	jp CopyVideoData
 
-; HAX: this used to be called "WriteCutOrBoulderDustAnimationOAMBlock", but the boulder
-; code got move out so they could use different palettes.
-WriteCutAnimationOAMBlock:
-	call GetCutAnimationOffsets
+;; HAX: this used to be called "WriteCutOrBoulderDustAnimationOAMBlock", but the boulder
+;; code got move out so they could use different palettes.
+;WriteCutAnimationOAMBlock:
+;	call GetCutAnimationOffsets
+WriteCutOrBoulderDustAnimationOAMBlock:
+	call GetCutOrBoulderDustAnimationOffsets
 	ld a, $9
 	ld de, .OAMBlock
 	jp WriteOAMBlock
@@ -131,7 +135,8 @@ WriteCutAnimationOAMBlock:
 	db $fe, OAM_OBP1 | 7
 	db $ff, OAM_OBP1 | 7
 
-GetCutAnimationOffsets:
+;GetCutAnimationOffsets:
+GetCutOrBoulderDustAnimationOffsets:
 	ld hl, wSpritePlayerStateData1YPixels
 	ld a, [hli] ; player's sprite screen Y position
 	ld b, a
@@ -145,16 +150,16 @@ GetCutAnimationOffsets:
 	ld e, a
 	ld d, $0 ; de holds direction (00: down, 02: up, 04: left, 06: right)
 
+;	ld hl, CutAnimationOffsets
+;
+;	rept 9 ; Padding to prevent data shifting
+;	nop
+;	endr
+	ld a, [wWhichAnimationOffsets]
+	and a
 	ld hl, CutAnimationOffsets
-
-	rept 9 ; Padding to prevent data shifting
-	nop
-	endr
-; 	ld a, [wWhichAnimationOffsets]
-; 	and a
-; 	ld hl, CutAnimationOffsets
-; 	jr z, .next
-; 	ld hl, BoulderDustAnimationOffsets
+	jr z, .next
+	ld hl, BoulderDustAnimationOffsets
 .next
 	add hl, de
 	ld e, [hl]
@@ -175,11 +180,18 @@ CutAnimationOffsets:
 	db -8, 20 ; player is facing left
 	db 24, 20 ; player is facing right
 
-; BoulderDustAnimationOffsets used to be here
-rept 8
-	db 0
-endr
+;; BoulderDustAnimationOffsets used to be here
+;rept 8
+;	db 0
+;endr
 
+BoulderDustAnimationOffsets:
+; Each pair represents the x and y pixels offsets from the player of where the cut tree animation should be drawn
+; These offsets represent 2 blocks away from the player
+	db  8,  52 ; player is facing down
+	db  8, -12 ; player is facing up
+	db -24, 20 ; player is facing left
+	db 40,  20 ; player is facing right
 
 ReplaceTreeTileBlock:
 ; Determine the address of the tile block that contains the tile in front of the
