@@ -9,8 +9,10 @@ WriteBoulderDustAnimationOAMBlock:
 	jp WriteOAMBlock
 
 BoulderDustAnimationTilesAndAttributes:
-	db $FC,$17,$FD,$17
-	db $FE,$17,$FF,$17 ; Uses palette 7 (brown)
+	db $FC, OAM_OBP1 | 7 ; Uses palette 7 (animation)
+	db $FD, OAM_OBP1 | 7
+	db $FE, OAM_OBP1 | 7
+	db $FF, OAM_OBP1 | 7
 
 GetBoulderDustAnimationOffsets:
 	ld hl, wSpriteStateData1 + 4
