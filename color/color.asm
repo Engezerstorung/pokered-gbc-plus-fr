@@ -794,14 +794,6 @@ SetPal_Overworld::
 
 	; Clear sprite palette map, except for exclamation marks above people's heads
 	CALL_INDIRECT ClearSpritePaletteMap
-	; Make exclamation mark bubble black & white. (Note: it's possible that other
-	; sprites may use these tiles for different purposes...)
-	ld a, 7 ; Palette slot used by Emote
-	ld hl, W2_SpritePaletteMap + $f8
-	ld [hli], a
-	ld [hli], a
-	ld [hli], a
-	ld [hli], a
 
 	; Pokecenter uses OBP1 when healing pokemons; also cut animation
 	ld a, %10000000
