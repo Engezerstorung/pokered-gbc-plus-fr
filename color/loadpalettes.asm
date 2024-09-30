@@ -108,21 +108,6 @@ LoadTilesetPalette:
 	ld a, 2
 	ldh [rSVBK], a
 
-; Check Tileset to load proper boulder dust palette if outside location
-	push bc
-	ld a, c
-	and a ; check if OVERWORLD tileset
-	jr z, .isOutside
-	cp FOREST
-	jr z, .isOutside
-	cp PLATEAU
-	jr nz, .notOutside
-.isOutside
-	lb de, SPRITE_PAL_OUTDOORDUST, 7
-	farcall LoadMapPalette_Sprite
-.notOutside
-	pop bc
-
 	ld a, c
 	ld hl, TilesetBgPalSwapList ; loading list for identification and properties values
 	call BgPalSwap
@@ -130,10 +115,6 @@ LoadTilesetPalette:
 	ld a, b
 	ld hl, MapBgPalSwapList ; loading list for identification and properties values
 	call BgPalSwap
-
-	ld a, b
-	ld hl, MapSprPalSwapList; loading list for identification and properties values
-	call SprPalSwap
 
 ; Check Map to replace Tiles used palettes in special cases
 ; Like on Celadon Mansion Roof and on Celadon Mart 1F and Roof
@@ -298,17 +279,17 @@ SprPalSwap:
 	ret
 
 TilesetBgPalSwapList:
-	db CEMETERY, CEMETERY_STAIRS, 4
-	db CEMETERY, INDOOR_PURPLE, 6
-	db FOREST, OUTDOOR_FLOWER, 1
-	db GATE, GATE_STAIRS, 4
-	db GYM, INDOOR_GREEN_BG, 2
-	db GYM, INDOOR_FLOWER, 4
-	db INTERIOR, OUTDOOR_GREEN, 2
-	db MART, PC_POKEBALL_PAL, 7
-	db MUSEUM, GATE_STAIRS, 4
-	db OVERWORLD, OUTDOOR_FLOWER, 1
-	db POKECENTER, PC_POKEBALL_PAL, 7
+	db CEMETERY,    CEMETERY_STAIRS,    4
+	db CEMETERY,    INDOOR_PURPLE,      6
+	db FOREST,      OUTDOOR_FLOWER,     1
+	db GATE,        GATE_STAIRS,        4
+	db GYM,         INDOOR_GREEN_BG,    2
+	db GYM,         INDOOR_FLOWER,      4
+	db INTERIOR,    OUTDOOR_GREEN,      2
+	db MART,        PC_POKEBALL_PAL,    7
+	db MUSEUM,      GATE_STAIRS,        4
+	db OVERWORLD,   OUTDOOR_FLOWER,     1
+	db POKECENTER,  PC_POKEBALL_PAL,    7
 	db UNDERGROUND, UNDERGROUND_STAIRS, 1
 	db -1
 
