@@ -40,6 +40,10 @@ PokemonTower6FDefaultScript:
 	ld a, SCRIPT_POKEMONTOWER6F_MAROWAK_BATTLE
 	ld [wPokemonTower6FCurScript], a
 	ld [wCurMapScript], a
+
+	ld hl, wGenderFlags
+	set 1, [hl] ; set flag to force female gender for Cubone mother
+
 	ret
 
 PokemonTower6FMarowakCoords:
