@@ -1,4 +1,3 @@
-IF GEN_2_GRAPHICS
 ; Used  to define gender ratios
 	DEF MALE_ONLY         EQU $00
 	DEF MALE_88_PERCENT   EQU $1F
@@ -7,7 +6,6 @@ IF GEN_2_GRAPHICS
 	DEF FEMALE_75_PERCENT EQU $BF
 	DEF FEMALE_ONLY       EQU $FE
 	DEF NO_GENDER         EQU $FF
-ENDC
 
 ; Determine a Pokémon's gender based on its DVs
 ; This uses the same formula as Gen 2, so gender should match if you trade them forward via Time Capsule
@@ -23,6 +21,8 @@ GetMonGender::
 	ld b, 0
 	ld hl, MonGenderRatios
 	add hl, bc ; hl now points to the species gender ratio
+
+	call CheckForcedGender
 
 ; Attack DV
 	ld a, [de]
@@ -64,6 +64,54 @@ GetMonGender::
 	ld a, " " ; GENDERLESS
 .done
 	ld [wPokedexNum], a
+	ret
+
+CheckForcedGender:
+	ld a, [hl]
+	and a ; cp MALE_ONLY
+	ret z
+	cp FEMALE_ONLY
+	ret nc
+
+	push hl
+	ld hl, wGenderFlags
+	bit 0, [hl] ; check if force male
+	res 0, [hl]
+	jr nz, .forceMale
+	bit 1, [hl] ; check if force female
+	res 1, [hl]
+	jr z, .done
+
+	ld hl, .checkFemaleDV
+	jr .forceCommon
+.forceMale
+	ld hl, .checkMaleDV
+.forceCommon
+	and $0F
+	inc a
+	ld b, a
+
+.rerollAttackDV
+	call Random
+	and $0F
+	cp b
+	jp hl
+
+.checkMaleDV
+	jr c, .rerollAttackDV
+	jr .gotAttackDV
+.checkFemaleDV
+	jr nc, .rerollAttackDV
+
+.gotAttackDV
+	ld b, a
+	swap b
+	ld a, [de]
+	and $0F
+	or b
+	ld [de], a
+.done
+	pop hl
 	ret
 
 MonGenderRatios:

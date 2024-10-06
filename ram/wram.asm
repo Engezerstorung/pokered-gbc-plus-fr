@@ -1888,7 +1888,11 @@ wPlayerCoins:: dw ; BCD
 wMissableObjectFlags:: flag_array $100
 wMissableObjectFlagsEnd::
 
-	ds 2
+	ds 1
+
+;; bit 0 - force male gender
+;; bit 1 - force female gender
+wGenderFlags:: db
 
 wAnimationStatus:: db
 
