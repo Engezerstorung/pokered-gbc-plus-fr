@@ -169,6 +169,9 @@ ENDC
 	ld de, wLoadedMonOTID
 	lb bc, LEADING_ZEROES | 2, 5
 	call PrintNumber ; ID Number
+IF GEN_2_GRAPHICS
+	call PrintGenderStatusScreen
+ENDC
 	ld d, $0
 	call PrintStatsBox
 	call Delay3
@@ -491,3 +494,15 @@ StatusScreen_PrintPP:
 	dec c
 	jr nz, StatusScreen_PrintPP
 	ret
+
+IF GEN_2_GRAPHICS
+PrintGenderStatusScreen:
+	ld a, [wLoadedMonSpecies]
+	ld [wPokedexNum], a
+	ld de, wLoadedMonDVs
+	farcall GetMonGender
+	ld a, [wPokedexNum]
+	hlcoord 17, 2
+	ld [hl], a
+	ret
+ENDC

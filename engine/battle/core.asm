@@ -1830,6 +1830,7 @@ DrawPlayerHUDAndHPBar:
 	hlcoord 10, 7
 IF GEN_2_GRAPHICS
 	call PlaceString ; Note: "CenterMonName" not called to be consistent with gen 2
+	call PrintPlayerMonGender
 	call PrintEXPBarAt1711
 ELSE
 	call CenterMonName
@@ -1895,6 +1896,10 @@ DrawEnemyHUDAndHPBar:
 	call CenterMonName
 	call PlaceString
 IF GEN_2_GRAPHICS
+	call IsGhostBattle
+    jr z, .skipGender
+    call PrintEnemyMonGender
+.skipGender
 	hlcoord 6, 1
 ELSE
 	hlcoord 4, 1
@@ -7302,4 +7307,30 @@ BattleMonPartyAttr:
 	ld a, [wPlayerMonNumber]
 	ld bc, wPartyMon2 - wPartyMon1
 	jp AddNTimes
+
+
+PrintEnemyMonGender:
+; draw a male, female, or blank symbol for the Enemy 'mon
+	ld a, [wEnemyMonSpecies]
+	ld de, wEnemyMonDVs
+	call PrintGenderCommon
+	hlcoord 9, 1
+	ld [hl], a
+	ret
+
+PrintPlayerMonGender:
+; draw a male, female, or blank symbol for the Player 'mon
+	ld a, [wBattleMonSpecies]
+	ld de, wBattleMonDVs
+	call PrintGenderCommon
+	hlcoord 17, 8
+	ld [hl], a
+	ret
+
+PrintGenderCommon: ; used by both routines
+	ld [wPokedexNum], a
+	farcall GetMonGender
+	ld a, [wPokedexNum]
+	ret
+
 ENDC
