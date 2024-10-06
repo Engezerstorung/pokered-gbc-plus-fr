@@ -1132,6 +1132,9 @@ INCLUDE "color/dmg.asm"
 
 INCLUDE "color/colorplus/loadextragfx.asm"
 INCLUDE "color/colorplus/spritespecialproperties.asm"
+IF GEN_2_GRAPHICS
+	INCLUDE "color/colorplus/mon_gender.asm"
+ENDC
 
 ; Copy of sound engine used by dmg-mode to play jingle
 SECTION "bank31", ROMX
