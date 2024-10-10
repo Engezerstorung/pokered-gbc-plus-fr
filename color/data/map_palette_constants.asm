@@ -41,7 +41,7 @@
 	const INDOOR_GREEN_BG   ; 27
 	const INDOOR_BROWN_BG   ; 28
 	const LOBBY_1STFLOOR  	; 29
-	const LOBBY_CHAIR	; 2A
+	const LOBBY_CHAIR       ; 2A
 	const UNDERGROUND_STAIRS; 2B
 	const SHIP_TRASHCANS	; 2C
 	const SHIP_DOCK1        ; 2D
@@ -58,9 +58,9 @@
 	const MANSION_WALLS     ; 38
 	const MANSION_WALLS_ROOF; 39
 	const MANSION_SKY       ; 3A
+	const BATTLE_TEXT       ; 3B
 
 	; These are unused
-	const MAP_PALETTE_3B    ; 3B
 	const MAP_PALETTE_3C    ; 3C
 	const MAP_PALETTE_3D    ; 3D
 	const MAP_PALETTE_3E    ; 3E

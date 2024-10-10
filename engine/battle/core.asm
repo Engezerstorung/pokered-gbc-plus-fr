@@ -7129,16 +7129,24 @@ PrintEXPBar:
 	jr .loop
 .skip
 	ld b, a
-	ld a, $c0
+	ld a, $CC
 	add c
 .loop2
+	cp $D4
+	jr nz, .noFullExp
+	ld a, $6B
+.noFullExp
+	cp $CC
+	jr nz, .noEmptyExp
+	ld a, $63
+.noEmptyExp
 	ld [hld], a
 	dec d
 	ret z
 	ld a, b
 	and a
 	jr nz, .loop
-	ld a, $c0
+	ld a, $63
 	jr .loop2
 
 CalcEXPBarPixelLength:
@@ -7332,5 +7340,4 @@ PrintGenderCommon: ; used by both routines
 	farcall GetMonGender
 	ld a, [wPokedexNum]
 	ret
-
 ENDC

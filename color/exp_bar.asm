@@ -5,7 +5,7 @@ AnimateEXPBarAgain:
 	xor a
 	ld [wEXPBarPixelLength], a
 	hlcoord 17, 11
-	ld a, $c0
+	ld a, $63
 	ld c, $08
 .loop
 	ld [hld], a
@@ -33,14 +33,22 @@ AnimateEXPBar:
 	hlcoord 17, 11
 .loop1
 	ld a, [hl]
-	cp $c8
+	cp $6B
 	jr nz, .loop2
 	dec hl
 	dec c
 	jr z, .done
 	jr .loop1
 .loop2
+	cp $63
+	jr nz, .notEmptyExp
+	ld a, $CC
+.notEmptyExp
 	inc a
+	cp $D4
+	jr nz, .notFullExp
+	ld a, $6B
+.notFullExp
 	ld [hl], a
 	call DelayFrame
 	dec b

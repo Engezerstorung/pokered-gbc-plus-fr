@@ -16,7 +16,9 @@ ENDC
 	ret
 
 ; Only called when GEN_2_GRAPHICS is set
+IF GEN_2_GRAPHICS
 StatusScreen2Hook:
 	hlcoord 19, 1
 	lb bc, 6, 10
 	jp DrawLineBox ; Draws the box around name, HP and status
+ENDC
