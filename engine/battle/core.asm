@@ -2018,7 +2018,12 @@ CenterMonName:
 	ret
 
 DisplayBattleMenu::
+IF GEN_2_GRAPHICS
+	call LoadScreenTilesFromBuffer1_BattleExpBarPalHook
+ELSE
 	call LoadScreenTilesFromBuffer1 ; restore saved screen
+ENDC
+
 	ld a, [wBattleType]
 	and a
 	jr nz, .nonstandardbattle
@@ -2209,7 +2214,11 @@ DisplayBattleMenu::
 	jr UseBagItem
 
 BagWasSelected:
+IF GEN_2_GRAPHICS
+	call LoadScreenTilesFromBuffer1_BattleBagExpBarPalHook
+ELSE
 	call LoadScreenTilesFromBuffer1
+ENDC
 	ld a, [wBattleType]
 	and a ; is it a normal battle?
 	jr nz, .next
@@ -2693,7 +2702,11 @@ SelectMenuItem:
 	ld hl, MoveNoPPText
 .print
 	call PrintText
+IF GEN_2_GRAPHICS
+	call LoadScreenTilesFromBuffer1_BattleExpBarPalHook
+ELSE
 	call LoadScreenTilesFromBuffer1
+ENDC
 	jp MoveSelectionMenu
 
 MoveNoPPText:
@@ -2853,7 +2866,11 @@ SwapMovesInMenu:
 	ld [wMenuItemToSwap], a ; select the current menu item for swapping
 	jp MoveSelectionMenu
 
+IF GEN_2_GRAPHICS
+_PrintMenuItem:
+ELSE
 PrintMenuItem:
+ENDC
 	xor a
 	ldh [hAutoBGTransferEnabled], a
 	hlcoord 0, 8
@@ -7129,7 +7146,7 @@ PrintEXPBar:
 	jr .loop
 .skip
 	ld b, a
-	ld a, $c0
+	ld a, $63
 	add c
 .loop2
 	ld [hld], a
@@ -7138,7 +7155,7 @@ PrintEXPBar:
 	ld a, b
 	and a
 	jr nz, .loop
-	ld a, $c0
+	ld a, $63
 	jr .loop2
 
 CalcEXPBarPixelLength:
@@ -7332,5 +7349,20 @@ PrintGenderCommon: ; used by both routines
 	farcall GetMonGender
 	ld a, [wPokedexNum]
 	ret
+
+LoadScreenTilesFromBuffer1_BattleExpBarPalHook:
+	call LoadScreenTilesFromBuffer1
+	ld b, SET_PAL_BATTLE_EXPBAR
+	jp RunPaletteCommand
+
+LoadScreenTilesFromBuffer1_BattleBagExpBarPalHook:
+	call LoadScreenTilesFromBuffer1
+	ld b, SET_PAL_BATTLE_BAGEXPBAR
+	jp RunPaletteCommand
+
+PrintMenuItem:
+	ld b, SET_PAL_BATTLE_ATKEXPBAR
+	call RunPaletteCommand
+	jp _PrintMenuItem
 
 ENDC
