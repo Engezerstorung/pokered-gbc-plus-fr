@@ -2018,7 +2018,12 @@ CenterMonName:
 	ret
 
 DisplayBattleMenu::
+IF GEN_2_GRAPHICS
+	call LoadScreenTilesFromBuffer1_BattleExpBarPalHook
+ELSE
 	call LoadScreenTilesFromBuffer1 ; restore saved screen
+ENDC
+
 	ld a, [wBattleType]
 	and a
 	jr nz, .nonstandardbattle
@@ -2209,7 +2214,11 @@ DisplayBattleMenu::
 	jr UseBagItem
 
 BagWasSelected:
+IF GEN_2_GRAPHICS
+	call LoadScreenTilesFromBuffer1_BattleBagExpBarPalHook
+ELSE
 	call LoadScreenTilesFromBuffer1
+ENDC
 	ld a, [wBattleType]
 	and a ; is it a normal battle?
 	jr nz, .next
@@ -2512,7 +2521,11 @@ MoveSelectionMenu:
 	ld c, 14
 	di ; out of pure coincidence, it is possible for vblank to occur between the di and ei
 	   ; so it is necessary to put the di ei block to not cause tearing
+IF GEN_2_GRAPHICS
+	call TextBoxBorder_BattleExpBarPalHook
+ELSE
 	call TextBoxBorder
+ENDC
 	hlcoord 4, 12
 	ld [hl], "─"
 	hlcoord 10, 12
@@ -2529,7 +2542,11 @@ MoveSelectionMenu:
 	hlcoord 0, 7
 	ld b, 4
 	ld c, 14
+IF GEN_2_GRAPHICS
+	call TextBoxBorder_BattleExpBarPalHook
+ELSE
 	call TextBoxBorder
+ENDC
 	hlcoord 2, 8
 	call .writemoves
 	ld b, $1
@@ -2544,7 +2561,11 @@ MoveSelectionMenu:
 	hlcoord 4, 7
 	ld b, 4
 	ld c, 14
+IF GEN_2_GRAPHICS
+	call TextBoxBorder_BattleExpBarPalHook
+ELSE
 	call TextBoxBorder
+ENDC
 	hlcoord 6, 8
 	call .writemoves
 	ld b, $5
@@ -2930,7 +2951,11 @@ DisabledText:
 TypeText:
 	db "TYPE@"
 
+IF GEN_2_GRAPHICS
+_SelectEnemyMove:
+ELSE
 SelectEnemyMove:
+ENDC
 	ld a, [wLinkState]
 	sub LINK_STATE_BATTLING
 	jr nz, .noLinkBattle
@@ -7129,7 +7154,7 @@ PrintEXPBar:
 	jr .loop
 .skip
 	ld b, a
-	ld a, $c0
+	ld a, $63
 	add c
 .loop2
 	ld [hld], a
@@ -7138,7 +7163,7 @@ PrintEXPBar:
 	ld a, b
 	and a
 	jr nz, .loop
-	ld a, $c0
+	ld a, $63
 	jr .loop2
 
 CalcEXPBarPixelLength:
@@ -7333,4 +7358,23 @@ PrintGenderCommon: ; used by both routines
 	ld a, [wPokedexNum]
 	ret
 
+SelectEnemyMove:
+	ld b, SET_PAL_BATTLE_EXPBAR
+	call RunPaletteCommand
+	jp _SelectEnemyMove
+
+LoadScreenTilesFromBuffer1_BattleExpBarPalHook:
+	call LoadScreenTilesFromBuffer1
+	ld b, SET_PAL_BATTLE_EXPBAR
+	jp RunPaletteCommand
+
+LoadScreenTilesFromBuffer1_BattleBagExpBarPalHook:
+	call LoadScreenTilesFromBuffer1
+	ld b, SET_PAL_BATTLE_BAGEXPBAR
+	jp RunPaletteCommand
+
+TextBoxBorder_BattleExpBarPalHook:
+	call TextBoxBorder
+	ld b, SET_PAL_BATTLE_ATKEXPBAR
+	jp RunPaletteCommand
 ENDC
