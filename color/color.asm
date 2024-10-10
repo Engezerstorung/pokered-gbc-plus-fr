@@ -326,30 +326,30 @@ ENDC
 	ld c, 11
 	call FillBox
 
-IF GEN_2_GRAPHICS
-	; Bottom half; player lifebar
-	ld hl, W2_TilesetPaletteMap + 7 * 20 + 9
-	ld a, 2
-	ld b, 4
-	ld c, 11
-	call FillBox
+;IF GEN_2_GRAPHICS
+;	; Bottom half; player lifebar
+;	ld hl, W2_TilesetPaletteMap + 7 * 20 + 9
+;	ld a, 2
+;	ld b, 4
+;	ld c, 11
+;	call FillBox
 
-	; Player exp bar
-	ld hl, W2_TilesetPaletteMap + 9 + 11 * 20
-	ld a, 4
-	ld b, 1
-	ld c, 11
-	call FillBox
-ENDC
+;	; Player exp bar
+;	ld hl, W2_TilesetPaletteMap + 9 + 11 * 20
+;	ld a, 4
+;	ld b, 1
+;	ld c, 11
+;	call FillBox
+;ENDC
 
-IF !GEN_2_GRAPHICS
+;IF !GEN_2_GRAPHICS
 	; Bottom half; player lifebar
 	ld hl, W2_TilesetPaletteMap + 7 * 20 + 9
 	ld a, 2
 	ld b, 5
 	ld c, 11
 	call FillBox
-ENDC
+;ENDC
 
 	; Player pokemon
 	ld hl, W2_TilesetPaletteMap + 4 * 20
@@ -383,7 +383,11 @@ ENDC
 	ld a, SET_PAL_BATTLE
 	ld [wDefaultPaletteCommand], a
 
+IF GEN_2_GRAPHICS
+	jp SetPal_BattleExpBar
+ELSE
 	ret
+ENDC
 
 ; hl: starting address
 ; a: pal number
@@ -514,15 +518,71 @@ IF GEN_2_GRAPHICS
 	; Player exp bar
 	ld hl, W2_TilesetPaletteMap + 11 + 5 * SCREEN_WIDTH
 	ld b, 8
-	ld a, 4
-.expLoop
-	ld [hli], a
-	dec b
-	jr nz, .expLoop
+	ld a, 4 | %00100000 ; load palette 4 and set bit 5 for H flip
+	call FillLine
 ENDC
 
 	xor a
 	ldh [rSVBK], a
+	ret
+
+IF GEN_2_GRAPHICS
+ ; SetPal functions related to the exp bar
+
+SetPal_StatusScreen2:
+	ld a, 2
+	ldh [rSVBK], a
+
+	ld hl, W2_TilesetPaletteMap + 11 + 5 * SCREEN_WIDTH
+	ld b, 8
+	ld a, 1
+	call FillLine
+
+	jr SetPal_BattleExpBar.end
+
+SetPal_BattleAtkExpBar:
+	ld a, 2
+	ldh [rSVBK], a
+
+	ld hl, W2_TilesetPaletteMap + 10 + 11 * 20
+	ld [hl], 2
+
+	jr SetPal_BattleExpBar.end
+
+SetPal_BattleBagExpBar:
+	ld c, 2
+	jr SetPal_BattleExpBar.common
+
+SetPal_BattleExpBar:
+	ld c, 4 | %00100000 ; palette 4 and set bit 5 for H flip
+
+.common
+	ld a, 2
+	ldh [rSVBK], a
+
+	ld hl, W2_TilesetPaletteMap + 10 + 11 * 20
+	ld b, 8
+	ld a, c
+	call FillLine
+
+.end
+	; Set palette map
+	ld a, 3
+	ld [W2_StaticPaletteMapChanged], a
+	xor a
+	ld [W2_TileBasedPalettes], a ; Use a direct color map instead of assigning colors to tiles
+	ldh [rSVBK], a
+	ret
+ENDC
+
+; hl: starting address
+; a: pal number
+; b: number of tiles
+FillLine:
+.loop
+	ld [hli], a
+	dec b
+	jr nz, .loop
 	ret
 
 ; Show pokedex data
