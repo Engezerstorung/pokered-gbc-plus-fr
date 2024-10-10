@@ -5,9 +5,9 @@ LoadHPBarAndEXPBar::
 	ld hl, vChars2 tile $62
 	lb bc, BANK(HpBarAndStatusGraphics), (HpBarAndStatusGraphicsEnd - HpBarAndStatusGraphics) / $10
 	call GoodCopyVideoData
-	ld de, EXPBarGraphics
-	ld hl, vChars1 tile $40
-	lb bc, BANK(EXPBarGraphics), (EXPBarGraphicsEnd - EXPBarGraphics) / $10
+	ld de, EXPBarGraphics tile $1
+	ld hl, vChars1 tile $4D
+	lb bc, BANK(EXPBarGraphics), ((EXPBarGraphicsEnd - EXPBarGraphics) - 32) / $10
 
 	jp GoodCopyVideoData
 ;GoodCopyVideoData:

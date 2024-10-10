@@ -315,7 +315,10 @@ ELSE
 ENDC
 	ld e, 4
 	farcall LoadSGBPalette
-
+	
+	ld d, BATTLE_TEXT
+	ld e, 7
+	farcall LoadMapPalette
 
 	; Now set the tilemap
 
@@ -326,29 +329,37 @@ ENDC
 	ld c, 11
 	call FillBox
 
-IF GEN_2_GRAPHICS
-	; Bottom half; player lifebar
-	ld hl, W2_TilesetPaletteMap + 7 * 20 + 9
-	ld a, 2
-	ld b, 4
-	ld c, 11
-	call FillBox
+;IF GEN_2_GRAPHICS
+;	; Bottom half; player lifebar
+;	ld hl, W2_TilesetPaletteMap + 7 * 20 + 9
+;	ld a, 2
+;	ld b, 4
+;	ld c, 11
+;	call FillBox
 
-	; Player exp bar
-	ld hl, W2_TilesetPaletteMap + 9 + 11 * 20
-	ld a, 4
-	ld b, 1
-	ld c, 11
-	call FillBox
-ENDC
+;	; Player exp bar
+;	ld hl, W2_TilesetPaletteMap + 9 + 11 * 20
+;	ld a, 4
+;	ld b, 1
+;	ld c, 11
+;	call FillBox
+;ENDC
 
-IF !GEN_2_GRAPHICS
+;IF !GEN_2_GRAPHICS
 	; Bottom half; player lifebar
 	ld hl, W2_TilesetPaletteMap + 7 * 20 + 9
 	ld a, 2
 	ld b, 5
 	ld c, 11
 	call FillBox
+;ENDC
+
+IF GEN_2_GRAPHICS
+	; Player exp bar
+	ld hl, W2_TilesetPaletteMap + 10 + 11 * 20
+	ld a, 4
+	ld b, 8
+	call FillLine
 ENDC
 
 	; Player pokemon
@@ -367,7 +378,7 @@ ENDC
 
 	; text box
 	ld hl, W2_TilesetPaletteMap + 12 * 20
-	ld a, 0
+	ld a, 7
 	ld b, 6
 	ld c, 20
 	call FillBox
@@ -515,14 +526,21 @@ IF GEN_2_GRAPHICS
 	ld hl, W2_TilesetPaletteMap + 11 + 5 * SCREEN_WIDTH
 	ld b, 8
 	ld a, 4
-.expLoop
-	ld [hli], a
-	dec b
-	jr nz, .expLoop
+	call FillLine
 ENDC
 
 	xor a
 	ldh [rSVBK], a
+	ret
+
+; hl: starting address
+; a: pal number
+; b: number of tiles
+FillLine:
+.loop
+	ld [hli], a
+	dec b
+	jr nz, .loop
 	ret
 
 ; Show pokedex data
