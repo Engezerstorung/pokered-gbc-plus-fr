@@ -38,3 +38,14 @@ GotPalID:
 	ldh [rSVBK], a
 	ret
 
+; Load red sprite palette at the end of Oack Speech, before the player map sprite appear
+OakIntro_ResetPlayerSpriteData:
+	lb de, SPRITE_PAL_RED, 0
+	farcall LoadMapPalette_Sprite
+	; Update palettes
+	ld a, 2
+	ldh [rSVBK], a
+	ld a, 1
+	ld [W2_ForceOBPUpdate], a
+	ldh [rSVBK], a
+	jp ResetPlayerSpriteData

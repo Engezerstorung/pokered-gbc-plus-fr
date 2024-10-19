@@ -245,7 +245,7 @@ BgPalSwap:
 	ld a, [hli]
 	ld e, a
 	push hl
-	farcall LoadMapPalette
+	call LoadMapPalette
 	pop hl
 	pop af
 	cp [hl]
@@ -269,7 +269,7 @@ SprPalSwap:
 	ld a, [hli]
 	ld e, a
 	push hl
-	farcall LoadMapPalette_Sprite
+	call LoadMapPalette_Sprite
 	pop hl
 	pop af
 	cp [hl]
@@ -281,15 +281,14 @@ SprPalSwap:
 TilesetBgPalSwapList:
 	db CEMETERY,    CEMETERY_STAIRS,    4
 	db CEMETERY,    INDOOR_PURPLE,      6
-	db FOREST,      OUTDOOR_FLOWER,     1
 	db GATE,        GATE_STAIRS,        4
 	db GYM,         INDOOR_GREEN_BG,    2
 	db GYM,         INDOOR_FLOWER,      4
 	db INTERIOR,    OUTDOOR_GREEN,      2
 	db MART,        PC_POKEBALL_PAL,    7
 	db MUSEUM,      GATE_STAIRS,        4
-	db OVERWORLD,   OUTDOOR_FLOWER,     1
 	db POKECENTER,  PC_POKEBALL_PAL,    7
+	db PLATEAU,     OUTDOOR_RED,        1
 	db UNDERGROUND, UNDERGROUND_STAIRS, 1
 	db -1
 
