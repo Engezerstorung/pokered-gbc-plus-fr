@@ -94,7 +94,7 @@ LoadSpecialOverworldSpritePalettes:
 	jr nz, .notOutside
 .isOutside
 	lb de, SPRITE_PAL_OUTDOORDUST, 7
-	farcall LoadMapPalette_Sprite
+	call LoadMapPalette_Sprite
 .notOutside
 
 ; Check map to load sprite specific palettes (list in color/loadpalettes.asm)	

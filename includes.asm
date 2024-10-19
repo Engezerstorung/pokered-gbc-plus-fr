@@ -35,7 +35,7 @@ ELIF WHITE_POINT == 2 ; Lighter BGB white point
 	DEF wGreen = 27
 	DEF wBlue = 24
 
-ELIF WHITE_POINT == 3 ; Lighter BGB white point
+ELIF WHITE_POINT == 3 ; Darker BGB white point
 	DEF wRed = 16
 	DEF wGreen = 17
 	DEF wBlue = 15

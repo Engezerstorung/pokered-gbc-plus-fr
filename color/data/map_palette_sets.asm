@@ -4,7 +4,7 @@ MapPaletteSets:
 .forestPalSet:
 .plateauPalSet:
 	db OUTDOOR_GRAY
-	db OUTDOOR_RED
+	db OUTDOOR_FLOWER
 	db OUTDOOR_GREEN
 	db OUTDOOR_BLUE
 	db OUTDOOR_YELLOW
