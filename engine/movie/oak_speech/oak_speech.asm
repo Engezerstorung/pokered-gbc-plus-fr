@@ -149,7 +149,7 @@ ENDC
 	ld de, ShrinkPic2
 	lb bc, BANK(ShrinkPic2), $00
 	call IntroDisplayPicCenteredOrUpperRight
-	farcall OakIntro_ResetPlayerSpriteData	; originally "call ResetPlayerSpriteData"
+	call OakIntro_ResetPlayerSpriteData	; originally "call ResetPlayerSpriteData"
 	ldh a, [hLoadedROMBank]
 	push af
 	ld a, BANK(Music_PalletTown)
