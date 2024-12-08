@@ -159,7 +159,8 @@ ListEventCheck:
 	add hl, de
 	ld a, [hl] ; byte containing the event bit
 	pop hl
-	and a
+	inc b
+	dec b
 	jr z, .bitIs0
 .rrcaLoop
 	rrca
