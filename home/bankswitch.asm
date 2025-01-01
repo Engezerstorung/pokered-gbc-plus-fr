@@ -28,11 +28,8 @@ Bankswitch::
 	ld a, b
 	ldh [hLoadedROMBank], a
 	ld [MBC1RomBank], a
-	ld bc, .Return
-	push bc
 	ldh a, [hColorHackTmp] ; [hColorHackTmps]
-	jp hl
-.Return
+	call JumpToAddress
 	ldh [hColorHackTmp], a ; [hColorHackTmps]
 	pop bc
 	ld a, b
@@ -40,3 +37,5 @@ Bankswitch::
 	ld [MBC1RomBank], a
 	ldh a, [hColorHackTmp] ; [hColorHackTmps]
 	ret
+JumpToAddress::
+	jp hl
