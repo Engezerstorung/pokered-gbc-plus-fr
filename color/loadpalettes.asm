@@ -20,8 +20,8 @@ LoadTilesetPalette:
 	ldh [rSVBK], a
 	push de ; push previous wram bank
 
-	ld a, 1
-	ld [W2_TileBasedPalettes], a
+;	ld a, 1
+;	ld [W2_TileBasedPalettes], a
 
 	ld a, b ; Get wCurMapTileset
 	push af
@@ -66,6 +66,9 @@ LoadTilesetPalette:
 	dec b
 	jr nz, .nextPalette
 
+;	pop af
+;	jr .end
+
 	; Start copying palette assignments
 	pop af ; Retrieve wCurMapTileset
 	ld hl, MapPaletteAssignments
@@ -75,10 +78,26 @@ LoadTilesetPalette:
 	add hl, bc
 	ld a, [hli]
 	ld e, a
-	ld a, [hl]
-	ld d, a
+;	ld a, [hl]
+;	ld d, a
+	ld d, [hl]
 	ld hl, W2_TilesetPaletteMap
-	ld b, TILESET_SIZE
+	lb bc, TILESET_SIZE, $7
+
+	push bc
+	call .copyLoop
+
+;	ld b, 32
+;.decLoop
+;	inc de
+;	dec b
+;	jr nz, .decLoop
+
+	pop bc
+	set 3, c
+	call .copyLoop
+	jr .end
+
 .copyLoop
 	ld a, [de]
 	inc de
@@ -87,12 +106,18 @@ LoadTilesetPalette:
 	jr nz, .copyLoop
 
 	; Set the remaining values to 7 for text
-	ld b, $100 - TILESET_SIZE
-	ld a, 7
+;	ld b, $100 - TILESET_SIZE
+	ld b, 32
+
+	ld a, c
 .fillLoop
 	ld [hli], a
+	inc de
 	dec b
-	jr nz, .fillLoop
+	jr nz, .fillLoop	
+	ret
+
+.end
 
 	; There used to be special-case code for tile $78 here (pokeball in pc), but now
 	; it uses palette 7 as well. Those areas still need to load the variant of the
@@ -342,3 +367,181 @@ TilePalSwapList:
 	db CELADON_MART_ROOF,    $38, 1, PAL_BG_ROOF
 	db CELADON_MART_ROOF,    $4d, 2, PAL_BG_GRAY
 	db -1
+
+
+TileMapPalMapping2::
+	ldh a, [rSVBK]
+	ld b, a
+	ld a, 2
+	ldh [rSVBK], a
+	push bc
+
+	ld hl, wTileMap
+	ld de, W2_TileMapPalMap
+	ld bc, 20*18
+
+.palLoop
+	push bc
+	ld b, HIGH(W2_TilesetPaletteMap)
+	ld a, [hl]
+	ld c, a
+	res 7, [hl]
+	ld a, [bc]
+	ld [de], a
+	inc de
+	inc hl
+
+	pop bc
+	dec bc
+	ld a, c
+	or b
+	jr nz, .palLoop
+
+	pop af
+	ldh [rSVBK], a
+	ret
+
+ClearTileMapPalMap::
+	ldh a, [rSVBK]
+	ld b, a
+	ld a, 2
+	ldh [rSVBK], a
+	push bc
+
+	ld a, 7
+	ld hl, W2_TileMapPalMap
+	ld bc, SCREEN_WIDTH * SCREEN_HEIGHT
+	call FillMemory
+
+	pop af
+	ldh [rSVBK], a
+	ret
+
+ClearBGMap0_sVBK1::
+	ld a, 1
+	ldh [rVBK], a
+
+	call ClearBGMap0
+	
+	xor a
+	ldh [rVBK], a
+	ret
+
+ClearBGMap0::
+	ld hl, vBGMap0
+	ld bc, BG_MAP_WIDTH * BG_MAP_HEIGHT
+	call FillMemory
+	ret
+
+FarUpdateTileMapPaletteMap::
+	ld b, a
+UpdateTileMapPaletteMap::
+	ld h, d
+	ld l, e
+
+	ldh a, [rSVBK]
+	ld d, a
+	ld a, 2
+	ldh [rSVBK], a
+	push de
+
+	ld de, W2_TileMapPalMap-wTileMap
+	add hl, de
+
+	inc b
+	inc b
+	inc c
+	inc c
+
+	ld a, 7
+	push af
+	ld a, SCREEN_WIDTH
+	sub c
+	ld e, a
+	ld d, 0
+	pop af
+	push bc
+.loop
+	ld [hli], a
+	dec c
+	jr nz, .loop
+	add hl, de
+	pop bc
+	dec b
+	push bc
+	jr nz, .loop
+	pop bc
+
+	pop af
+	ldh [rSVBK], a
+	ret
+
+
+_SaveScreenTilesToBuffer1::
+	hlcoord 0, 0
+	ld de, wTileMapBackup
+	call CopyData_TileMap
+SavePalMap1::
+	ld de, W2_TileMapPalMapBackup1
+	jp Save_PalMap
+
+_LoadScreenTilesFromBuffer1::
+	xor a
+	ldh [hAutoBGTransferEnabled], a
+	ld hl, wTileMapBackup
+	decoord 0, 0
+	call CopyData_TileMap
+
+	call LoadPalMap1
+
+	ld a, 1
+	ldh [hAutoBGTransferEnabled], a
+	ret
+LoadPalMap1::
+	ld hl, W2_TileMapPalMapBackup1
+	jp Load_PalMap
+
+
+_SaveScreenTilesToBuffer2::
+	hlcoord 0, 0
+	ld de, wTileMapBackup2
+	call CopyData_TileMap
+SavePalMap2::
+	ld de, W2_TileMapPalMapBackup2
+	jp Save_PalMap
+
+_LoadScreenTilesFromBuffer2::
+	call _LoadScreenTilesFromBuffer2DisableBGTransfer
+	ld a, 1
+	ldh [hAutoBGTransferEnabled], a
+	ret
+
+; loads screen tiles stored in wTileMapBackup2 but leaves hAutoBGTransferEnabled disabled
+_LoadScreenTilesFromBuffer2DisableBGTransfer::
+	xor a
+	ldh [hAutoBGTransferEnabled], a
+	ld hl, wTileMapBackup2
+	decoord 0, 0
+	call CopyData_TileMap
+LoadPalMap2::
+	ld hl, W2_TileMapPalMapBackup2
+	jp Load_PalMap
+
+
+CopyData_TileMap:
+	ld bc, SCREEN_WIDTH * SCREEN_HEIGHT
+	jp CopyData	
+
+Save_PalMap:
+	ld hl, W2_TileMapPalMap
+	jr CopyData_PalMap
+Load_PalMap:
+	ld de, W2_TileMapPalMap
+CopyData_PalMap:
+	ld bc, SCREEN_WIDTH * SCREEN_HEIGHT
+	ld a, 2
+	ldh [rSVBK], a	
+	call CopyData
+	xor a
+	ldh [rSVBK], a
+	ret

@@ -4,4 +4,7 @@ BikeRidingTilesets::
 	db UNDERGROUND
 	db SHIP_PORT
 	db CAVERN
+
+	db PLATEAU
+
 	db -1 ; end

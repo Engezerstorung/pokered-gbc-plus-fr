@@ -1,5 +1,14 @@
 TextBoxBorder::
 ; Draw a c×b text box at hl.
+	push hl
+	push bc
+	ld d, h
+	ld e, l
+	ld a, b
+	farcall FarUpdateTileMapPaletteMap
+	pop bc
+	pop hl
+	
 
 	; top row
 	push hl

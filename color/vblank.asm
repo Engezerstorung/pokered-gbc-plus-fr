@@ -191,11 +191,18 @@ RefreshWindowPalettesPreVBlank:
 	ld b, 6
 
 	ld a, [W2_TileBasedPalettes]
+	cp 2
+;	ld bc, W2_TileMapPalMap - wTileMap
+	jp z, .overworld
+;	jp z, .staticMapPalettes
 	and a
+;	ld b, 6
 	jr nz, .tileBasedPalettes
+;	ld bc, W2_TilesetPaletteMap - wTileMap
 
 .staticMapPalettes: ; Palettes are loaded from a 20x18 grid of palettes
 	; If the window transfer destination changed, we'll need to rewrite everything
+;	push bc
 	ld a, [W2_LastAutoCopyDest]
 	ld b, a
 	ldh a, [hAutoBGTransferDest + 1]
@@ -208,6 +215,7 @@ RefreshWindowPalettesPreVBlank:
 
 	ld a, [W2_StaticPaletteMapChanged]
 	and a
+;	pop bc
 	jp z, .palettesDone
 
 	ld [W2_StaticPaletteMapChanged_vbl], a ; Only this will signal vblank to refresh the window palettes
@@ -219,7 +227,9 @@ RefreshWindowPalettesPreVBlank:
 	ld h, d
 	ld l, e
 	ld de, W2_TilesetPaletteMap - wTileMap
+;	ld de, W2_TileMapPalMap - wTileMap
 	add hl, de
+;	add hl, bc
 	ld d, h
 	ld e, l ; de now points to the appropriate location in the palette grid @ W2_TilesetPaletteMap
 	pop hl
@@ -243,7 +253,7 @@ RefreshWindowPalettesPreVBlank:
 	dec b
 	jr nz, .drawRow_Pal
 
-	jr .palettesDone
+	jp .palettesDone
 
 .tileBasedPalettes: ; Palettes are loaded based on the tile at that location
 	push hl
@@ -270,6 +280,54 @@ ENDR
 	pop bc
 	dec b
 	jr nz, .drawRow
+
+	jp .palettesDone
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+.overworld
+	push hl ; W2_ScreenPalettesBuffer
+
+	push de
+
+	ld h, d
+	ld l, e
+	ld bc, W2_TileMapPalMap - wTileMap
+	add hl, bc
+	ld d, h
+	ld e, l
+	pop hl ; third of wTileMap
+	push de ; third of W2_TileMapPalMap
+
+	ld b, 6
+.updateRow
+
+REPT 20
+	ld a, [hli]
+	cp $ff
+	jr nz, .notTransitionTile\@
+	ld a, 7
+	ld [de], a
+.notTransitionTile\@
+	inc de
+ENDR
+	dec b
+	jp nz, .updateRow
+
+	pop de ; third of W2_TileMapPalMap
+	pop hl ; W2_ScreenPalettesBuffer
+
+	ld b, 6
+.drawRow2
+	push bc
+REPT 20
+	ld a, [de]
+	inc de
+	ld [hli], a
+ENDR
+	ld bc, 32 - 20
+	add hl, bc
+	pop bc
+	dec b
+	jp nz, .drawRow2
 
 .palettesDone:
 	pop af

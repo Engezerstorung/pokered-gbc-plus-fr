@@ -14,10 +14,10 @@ Mansion_GFX::       INCBIN "gfx/tilesets/mansion.2bpp"
 Mansion_Block::     INCBIN "gfx/blocksets/mansion.bst"
 ShipPort_GFX::      INCBIN "gfx/tilesets/ship_port.2bpp"
 ShipPort_Block::    INCBIN "gfx/blocksets/ship_port.bst"
-Interior_GFX::      INCBIN "gfx/tilesets/interior.2bpp"
-Interior_Block::    INCBIN "gfx/blocksets/interior.bst"
-Plateau_GFX::       INCBIN "gfx/tilesets/plateau.2bpp"
-Plateau_Block::     INCBIN "gfx/blocksets/plateau.bst"
+;Interior_GFX::      INCBIN "gfx/tilesets/interior.2bpp"
+;Interior_Block::    INCBIN "gfx/blocksets/interior.bst"
+;Plateau_GFX::       INCBIN "gfx/tilesets/plateau.2bpp"
+;Plateau_Block::     INCBIN "gfx/blocksets/plateau.bst"
 
 
 SECTION "Tilesets 2", ROMX
@@ -66,3 +66,8 @@ Underground_Block:: INCBIN "gfx/blocksets/underground.bst"
 SECTION "Tilesets 4", ROMX
 Museum_GFX::        INCBIN "gfx/tilesets/museum.2bpp"
 Museum_Block::      INCBIN "gfx/blocksets/museum.bst"
+
+Interior_GFX::      INCBIN "gfx/tilesets/interior.2bpp"
+Interior_Block::    INCBIN "gfx/blocksets/interior.bst"
+Plateau_GFX::       INCBIN "gfx/tilesets/plateau.2bpp"
+Plateau_Block::     INCBIN "gfx/blocksets/plateau.bst"

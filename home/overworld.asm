@@ -859,27 +859,31 @@ IsBikeRidingAllowed::
 ; or maps with tilesets in BikeRidingTilesets.
 ; Return carry if biking is allowed.
 
-	ld a, [wCurMap]
-	cp ROUTE_23
-	jr z, .allowed
-	cp INDIGO_PLATEAU
-	jr z, .allowed
-
+;	ld a, [wCurMap]
+;	cp ROUTE_23
+;	jr z, .allowed
+;	cp INDIGO_PLATEAU
+;	jr z, .allowed
+;
 	ld a, [wCurMapTileset]
-	ld b, a
+;	ld b, a
 	ld hl, BikeRidingTilesets
-.loop
-	ld a, [hli]
-	cp b
-	jr z, .allowed
-	inc a
-	jr nz, .loop
-	and a
-	ret
 
-.allowed
-	scf
-	ret
+	ld de, 1
+	jp IsInArray
+
+;.loop
+;	ld a, [hli]
+;	cp b
+;	jr z, .allowed
+;	inc a
+;	jr nz, .loop
+;	and a
+;	ret
+;
+;.allowed
+;	scf
+;	ret
 
 INCLUDE "data/tilesets/bike_riding_tilesets.asm"
 
@@ -893,8 +897,21 @@ LoadTilesetTilePatternData::
 	ld bc, $600
 	ld a, [wTilesetBank]
 ;	jp FarCopyData2
-
+	
+	push af
+	push bc
+	push de
 	call FarCopyData2
+	pop de
+	pop bc
+
+	ld a, 1
+	ldh [rVBK], a
+	pop af
+	call FarCopyData2
+	xor a
+	ldh [rVBK], a
+
 	jpfar VramSwap
 	
 ; this loads the current maps complete tile map (which references blocks, not individual tiles) to wOverworldMap
@@ -1432,24 +1449,48 @@ LoadCurrentMapView::
 	ld bc, $2
 	add hl, bc
 .copyToVisibleAreaBuffer
-	decoord 0, 0 ; base address for the tiles that are directly transferred to VRAM during V-blank
+	ld d, h
+	ld e, l
+	hlcoord 0, 0 ; base address for the tiles that are directly transferred to VRAM during V-blank
+
+	ld a, 2
+	ldh [rSVBK], a
+
 	ld b, SCREEN_HEIGHT
 .rowLoop2
 	ld c, SCREEN_WIDTH
 .rowInnerLoop2
-	ld a, [hli]
-	ld [de], a
+	push bc
+	ld b, HIGH(W2_TilesetPaletteMap)
+	ld a, [de]
 	inc de
+
+	ld c, a
+	res 7, a
+	ld [hli], a
+	ld a, [bc]
+
+	push hl
+	ld bc, W2_TileMapPalMap - wTileMap - 1
+	add hl, bc
+	ld [hl], a
+	pop hl
+
+	pop bc
 	dec c
 	jr nz, .rowInnerLoop2
 	ld a, $04
-	add l
-	ld l, a
+	add e
+	ld e, a
 	jr nc, .noCarry3
-	inc h
+	inc d
 .noCarry3
 	dec b
 	jr nz, .rowLoop2
+
+	xor a
+	ldh [rSVBK], a
+
 	pop af
 	ldh [hLoadedROMBank], a
 	ld [MBC1RomBank], a ; restore previous ROM bank
@@ -1716,7 +1757,23 @@ ScheduleNorthRowRedraw::
 	ret
 
 CopyToRedrawRowOrColumnSrcTiles::
+	ld a, 2
+	ldh [rSVBK], a
+
+	push hl
 	ld de, wRedrawRowOrColumnSrcTiles
+	call .copy
+	pop hl
+	ld bc, W2_TileMapPalMap - wTileMap
+	add hl, bc
+	ld de, W2_RedrawRowOrColumnSrcTiles
+	call .copy
+
+	xor a
+	ldh [rSVBK], a
+	ret
+
+.copy
 	ld c, 2 * SCREEN_WIDTH
 .loop
 	ld a, [hli]
@@ -1764,7 +1821,23 @@ ScheduleEastColumnRedraw::
 	ret
 
 ScheduleColumnRedrawHelper::
+	ld a, 2
+	ldh [rSVBK], a
+
+	push hl
 	ld de, wRedrawRowOrColumnSrcTiles
+	call .copy
+	pop hl
+	ld bc, W2_TileMapPalMap - wTileMap
+	add hl, bc
+	ld de, W2_RedrawRowOrColumnSrcTiles
+	call .copy
+
+	xor a
+	ldh [rSVBK], a
+	ret
+
+.copy
 	ld c, SCREEN_HEIGHT
 .loop
 	ld a, [hli]
@@ -2333,11 +2406,12 @@ LoadMapData::
 	farcall InitMapSprites ; load tile pattern data for sprites
 	call LoadTileBlockMap
 	call LoadTilesetTilePatternData
-	call LoadCurrentMapView
+;	call LoadCurrentMapView
 
 	ld b, SET_PAL_OVERWORLD
 	call RunPaletteCommand ; HAX: this function call was moved to be above _LoadMapVramAndColors
 ; copy current map view + corresponding palettes to VRAM
+	call LoadCurrentMapView
 	call _LoadMapVramAndColors ; HAX
 
 	ld a, $01

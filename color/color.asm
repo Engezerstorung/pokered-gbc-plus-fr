@@ -801,7 +801,8 @@ SetPal_Overworld::
 
 	ld a, 2
 	ldh [rSVBK], a
-	dec a ; ld a, 1
+;	dec a ; ld a, 1
+;	xor a
 	ld [W2_TileBasedPalettes], a
 
 	; Clear sprite palette map, except for exclamation marks above people's heads
@@ -1019,6 +1020,9 @@ SetPal_TrainerCard:
 	ld a, 2
 	ldh [rSVBK], a
 
+	ld a, 1
+	ld [W2_TileBasedPalettes], a
+
 	ld d, PAL_MEWMON
 	ld e, 0
 	farcall LoadSGBPalette
@@ -1069,6 +1073,7 @@ ENDC
 	call DelayFrames
 
 	ld a, 1
+;	ld [W2_TileBasedPalettes], a
 	ld [W2_ForceBGPUpdate], a ; Signal to update palettes
 	ldh [rSVBK], a
 	ret

@@ -52,5 +52,10 @@ DEF W2_BattleMonPalette            EQU $d78c
 ; Used by "WindowTransferBgRowsAndColors" function. Analagous to H_VBCOPYBGNUMROWS.
 DEF W2_VBCOPYBGNUMROWS             EQU $d78d
 
+DEF W2_TileMapPalMap               EQU $d78e
+DEF W2_TileMapPalMapBackup1        EQU $d8f6
+DEF W2_TileMapPalMapBackup2        EQU $da5e
+DEF W2_RedrawRowOrColumnSrcTiles   EQU $dbc6
+DEF W2_VBlankCopyBGSource          EQU $dcef
 ; In bank 1, the stack starts at $dfff. So, that's also the stack here when bank 2 is
 ; loaded. Don't use anything too close to there.
