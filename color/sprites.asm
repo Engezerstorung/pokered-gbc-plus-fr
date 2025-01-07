@@ -106,34 +106,23 @@ LoadSpecialOverworldSpritePalettes:
 	ldh [rSVBK], a
 	ret
 
+; Set the overworld sprites's colors when entering a map
+; Load the palette data in the sprite's byte $D of its wSpriteStateData2 struct
+; This is called during InitMapSprites in engine/overworld/map_sprites.asm
+
 ; Set an overworld sprite's colors
 ; On entering, A contains the flags (without a color palette) and de is the destination.
 ; This is called in the middle of a loop in engine/overworld/oam.asm, once per sprite.
 ColorOverworldSprite::
-	push af
-	push bc
-	push de
-	and $f8
-	ld b, a
+	ld a, $10 ; start with sprite 1 (sprite 0 being the player), player is done at the end
+.spriteLoop
+	ldh [hSpriteOffset2], a
 
-	ldh a, [hSpriteOffset2]
-	ld e, a
-	ld d, wSpriteStateData1 >> 8
-	ld a, [de] ; Load A with picture ID
-
-	cp SPRITE_RED
-	jr nz, .notRed
-
-	ld a, [wWalkBikeSurfState]
-	cp 2
-	jr nz, .birdTest
-	dec a ; if z, then need palette 1, which is 1 lower then the 2 already in 'a'
-	jr .norandomColor
-.birdTest
-	cp 3 ; if z, then need palette 3, which is already the value of 'a'
-	jr z, .norandomColor
-.notRed
-	ld a, [de]; Load A with picture ID
+	ld h, HIGH(wSpriteStateData1) ; start by searching the PictureID of the current map object
+	ld l, a
+	ld a, [hl] ; [x#SPRITESTATEDATA1_PICTUREID]
+	and a
+	jr z, .nextsprite
 
 	dec a
 
@@ -161,14 +150,31 @@ ColorOverworldSprite::
 	and 3
 
 .norandomColor
+	lb bc, $1, $f
+	add hl,bc
+	ld [hl], a
 
-	pop de
-	or b
-	ld [de], a
-	inc hl
-	inc e
-	pop bc
-	pop af
+.nextsprite
+	ldh a, [hSpriteOffset2]
+	add $10
+	cp LOW($100)
+	jp nz, .spriteLoop
+
+	;fallthrough
+
+ColorPlayerSprite::
+	lb hl, HIGH(wSpriteStateData2), $f
+	ld a, [wWalkBikeSurfState]
+	cp 2
+	jr nz, .birdTest
+	dec a ; if z, then need palette 1, which is 1 lower then the 2 already in 'a'
+	jr .gotPlayerColor
+.birdTest
+	cp 3 ; if z, then need palette 3, which is already the value of 'a'
+	jr z, .gotPlayerColor
+	ld a, 0
+.gotPlayerColor
+	ld [hl], a
 	ret
 
 ; Color the Party menu pokemon sprites

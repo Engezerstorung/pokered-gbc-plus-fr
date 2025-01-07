@@ -44,7 +44,7 @@ PrepareOAMData::
 	jr nz, .visible
 
 	call GetSpriteScreenXY
-	jr .nextSprite
+	jp .nextSprite
 
 .visible
 	cp $a0 ; is the sprite unchanging like an item ball or boulder?
@@ -134,18 +134,32 @@ PrepareOAMData::
 
 .next2
 	add b ; add the tile offset from the table (based on frame and facing direction)
-	pop bc
+;	pop bc
 	ld [de], a ; tile id
 	inc hl
 	inc e
 	ld a, [hl]
+	ld b, a
 	bit BIT_SPRITE_UNDER_GRASS, a
 	jr z, .skipPriority
 	ldh a, [hSpritePriority]
-	or [hl]
+	or [hl] ; merge with tile flag bits and x/y flip attribute bits
 .skipPriority
-	call _ColorOverworldSprite	; HAX
-	bit BIT_END_OF_OAM_DATA, a ; OAMFLAG_ENDOFDATA
+;	call _ColorOverworldSprite	; HAX
+	inc hl
+
+	and %11110000 ; keep priority and x/y flip attribute bits
+	ld c, a
+	ldh a, [hSpritePriority]
+	and %00001111 ; keep vbank and palette attribute bits
+	or c ; merge all attribute bits
+	ld [de], a ; transfer attributes in wShadowOAM
+	inc e
+
+	bit BIT_END_OF_OAM_DATA, b ; BIT_END_OF_OAM_DATA
+;	bit BIT_END_OF_OAM_DATA, a ; BIT_END_OF_OAM_DATA
+	pop bc
+
 	jr z, .tileLoop
 
 	ld a, e
@@ -180,36 +194,41 @@ PrepareOAMData::
 	jr .clear
 
 GetSpriteScreenXY:
+	ld b, l
+	lb hl, 1, 8
+	add hl, de
+
 	inc e
 	inc e
 	ld a, [de] ; [x#SPRITESTATEDATA1_YPIXELS]
+	add [hl]
+	inc l
 	ldh [hSpriteScreenY], a
 	inc e
 	inc e
 	ld a, [de] ; [x#SPRITESTATEDATA1_XPIXELS]
+	add [hl]
 	ldh [hSpriteScreenX], a
 	ld a, 4
 	add e
 	ld e, a
 
-	ld b, l
-	ld l, e
-	ld h, d
-	inc h
-
 	ldh a, [hSpriteScreenY]
-	add [hl]
-	ldh [hSpriteScreenY], a
 	add 4
 	and $f0
 	ld [de], a ; [x#SPRITESTATEDATA1_YADJUSTED]
 	inc e
-	inc l
 	ldh a, [hSpriteScreenX]
-	add [hl]
-	ldh [hSpriteScreenX], a
 	and $f0
 	ld [de], a  ; [x#SPRITESTATEDATA1_XADJUSTED]
+
+	ld a, 4 ; add to l to go from $b to $f
+	add l
+	ld l, a
+	ldh a, [hSpritePriority]
+	or [hl] ; merge vbank and palette bits with the priority bit
+	ldh [hSpritePriority], a
+
 	ld l, b
 
 	ret

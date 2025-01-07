@@ -823,6 +823,8 @@ LoadPlayerSpriteGraphics::
 	; 1: biking
 	; 2: surfing
 
+	homecall ColorPlayerSprite
+
 	ld a, [wWalkBikeSurfState]
 	dec a
 	jr z, .ridingBike
@@ -859,27 +861,31 @@ IsBikeRidingAllowed::
 ; or maps with tilesets in BikeRidingTilesets.
 ; Return carry if biking is allowed.
 
-	ld a, [wCurMap]
-	cp ROUTE_23
-	jr z, .allowed
-	cp INDIGO_PLATEAU
-	jr z, .allowed
-
+;	ld a, [wCurMap]
+;	cp ROUTE_23
+;	jr z, .allowed
+;	cp INDIGO_PLATEAU
+;	jr z, .allowed
+;
 	ld a, [wCurMapTileset]
-	ld b, a
+;	ld b, a
 	ld hl, BikeRidingTilesets
-.loop
-	ld a, [hli]
-	cp b
-	jr z, .allowed
-	inc a
-	jr nz, .loop
-	and a
-	ret
 
-.allowed
-	scf
-	ret
+	ld de, 1
+	jp IsInArray
+
+;.loop
+;	ld a, [hli]
+;	cp b
+;	jr z, .allowed
+;	inc a
+;	jr nz, .loop
+;	and a
+;	ret
+;
+;.allowed
+;	scf
+;	ret
 
 INCLUDE "data/tilesets/bike_riding_tilesets.asm"
 
@@ -893,8 +899,21 @@ LoadTilesetTilePatternData::
 	ld bc, $600
 	ld a, [wTilesetBank]
 ;	jp FarCopyData2
-
+	
+	push af
+	push bc
+	push de
 	call FarCopyData2
+	pop de
+	pop bc
+
+	ld a, 1
+	ldh [rVBK], a
+	pop af
+	call FarCopyData2
+	xor a
+	ldh [rVBK], a
+
 	jpfar VramSwap
 	
 ; this loads the current maps complete tile map (which references blocks, not individual tiles) to wOverworldMap
@@ -1377,48 +1396,126 @@ LoadCurrentMapView::
 	ld d, a
 	ld hl, wTileMapBackup
 	ld b, $05
-.rowLoop ; each loop iteration fills in one row of tile blocks
-	push hl
+
+.rowLoop
 	push de
+	push hl
 	ld c, $06
-.rowInnerLoop ; loop to draw each tile block of the current row
-	push bc
+
+.rowInnerLoop
+
 	push de
 	push hl
-	ld a, [de]
-	ld c, a ; tile block number
-	call DrawTileBlock
+	; Load the current map block.
+ 	ld a, [de]
+
+; 	; If the current map block is a border block, load the border block.
+;	and a
+;	jr nz, .ok
+;	ld a, [wMapBorderBlock]
+;.ok
+
+	; Load the current wSurroundingTiles address into de.
+	ld e, l
+	ld d, h
+	; Set hl to the address of the current metatile data ([wTilesetBlocksPtr] + (a) tiles).
+	ld l, a
+	ld h, 0
+	add hl, hl
+	add hl, hl
+	add hl, hl
+	add hl, hl
+	ld a, [wTilesetBlocksPtr]
+	add l
+	ld l, a
+	ld a, [wTilesetBlocksPtr + 1]
+	adc h
+	ld h, a
+	; copy the 4x4 metatile
+rept 4 + -1
+rept 4
+	ld a, [hli]
+	ld [de], a
+	inc de
+endr
+	ld a, e
+	add 24 - 4
+	ld e, a
+	adc d
+	sub e
+	ld d, a
+endr
+rept 4
+	ld a, [hli]
+	ld [de], a
+	inc de
+endr
+	; Next metatile
 	pop hl
+	ld de, 4
+	add hl, de
 	pop de
-	pop bc
-	inc hl
-	inc hl
-	inc hl
-	inc hl
 	inc de
 	dec c
-	jr nz, .rowInnerLoop
-; update tile block map pointer to next row's address
+	jp nz, .rowInnerLoop
+	; Next metarow
+	pop hl
+	ld de, 24 * 4
+	add hl, de
 	pop de
 	ld a, [wCurMapWidth]
 	add MAP_BORDER * 2
 	add e
 	ld e, a
-	jr nc, .noCarry
-	inc d
-.noCarry
-; update tile map pointer to next row's address
-	pop hl
-	ld a, $60
-	add l
-	ld l, a
-	jr nc, .noCarry2
-	inc h
-.noCarry2
+	adc d
+	sub e
+	ld d, a
 	dec b
-	jr nz, .rowLoop
+	jp nz, .rowLoop
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;.rowLoop ; each loop iteration fills in one row of tile blocks
+;	push hl
+;	push de
+;	ld c, $06
+;.rowInnerLoop ; loop to draw each tile block of the current row
+;	push bc
+;	push de
+;	push hl
+;	ld a, [de]
+;	ld c, a ; tile block number
+;	call DrawTileBlock
+;	pop hl
+;	pop de
+;	pop bc
+;	inc hl
+;	inc hl
+;	inc hl
+;	inc hl
+;	inc de
+;	dec c
+;	jr nz, .rowInnerLoop
+;; update tile block map pointer to next row's address
+;	pop de
+;	ld a, [wCurMapWidth]
+;	add MAP_BORDER * 2
+;	add e
+;	ld e, a
+;	jr nc, .noCarry
+;	inc d
+;.noCarry
+;; update tile map pointer to next row's address
+;	pop hl
+;	ld a, $60
+;	add l
+;	ld l, a
+;	jr nc, .noCarry2
+;	inc h
+;.noCarry2
+;	dec b
+;	jr nz, .rowLoop
+
 	ld hl, wTileMapBackup
-	ld bc, $0
 .adjustForYCoordWithinTileBlock
 	ld a, [wYBlockCoord]
 	and a
@@ -1429,27 +1526,12 @@ LoadCurrentMapView::
 	ld a, [wXBlockCoord]
 	and a
 	jr z, .copyToVisibleAreaBuffer
-	ld bc, $2
-	add hl, bc
+	inc hl
+	inc hl
 .copyToVisibleAreaBuffer
-	decoord 0, 0 ; base address for the tiles that are directly transferred to VRAM during V-blank
-	ld b, SCREEN_HEIGHT
-.rowLoop2
-	ld c, SCREEN_WIDTH
-.rowInnerLoop2
-	ld a, [hli]
-	ld [de], a
-	inc de
-	dec c
-	jr nz, .rowInnerLoop2
-	ld a, $04
-	add l
-	ld l, a
-	jr nc, .noCarry3
-	inc h
-.noCarry3
-	dec b
-	jr nz, .rowLoop2
+
+	homecall MakeTileMapAndPalMap
+
 	pop af
 	ldh [hLoadedROMBank], a
 	ld [MBC1RomBank], a ; restore previous ROM bank
@@ -1716,7 +1798,29 @@ ScheduleNorthRowRedraw::
 	ret
 
 CopyToRedrawRowOrColumnSrcTiles::
+;	ld a, h
+;	ld [wRedrawRowOrColumnSrcTiles+1], a
+;	ld a, l
+;	ld [wRedrawRowOrColumnSrcTiles], a
+;	ret
+
+	ld a, 2
+	ldh [rSVBK], a
+
+	push hl
 	ld de, wRedrawRowOrColumnSrcTiles
+	call .copy
+	pop hl
+	ld bc, W2_TileMapPalMap - wTileMap
+	add hl, bc
+	ld de, W2_RedrawRowOrColumnSrcTiles
+	call .copy
+
+	xor a
+	ldh [rSVBK], a
+	ret
+
+.copy
 	ld c, 2 * SCREEN_WIDTH
 .loop
 	ld a, [hli]
@@ -1764,7 +1868,23 @@ ScheduleEastColumnRedraw::
 	ret
 
 ScheduleColumnRedrawHelper::
+	ld a, 2
+	ldh [rSVBK], a
+
+	push hl
 	ld de, wRedrawRowOrColumnSrcTiles
+	call .copy
+	pop hl
+	ld bc, W2_TileMapPalMap - wTileMap
+	add hl, bc
+	ld de, W2_RedrawRowOrColumnSrcTiles
+	call .copy
+
+	xor a
+	ldh [rSVBK], a
+	ret
+
+.copy
 	ld c, SCREEN_HEIGHT
 .loop
 	ld a, [hli]
@@ -1796,45 +1916,45 @@ ScheduleWestColumnRedraw::
 
 ; function to write the tiles that make up a tile block to memory
 ; Input: c = tile block ID, hl = destination address
-DrawTileBlock::
-	push hl
-	ld a, [wTilesetBlocksPtr] ; pointer to tiles
-	ld l, a
-	ld a, [wTilesetBlocksPtr + 1]
-	ld h, a
-	ld a, c
-	swap a
-	ld b, a
-	and $f0
-	ld c, a
-	ld a, b
-	and $0f
-	ld b, a ; bc = tile block ID * 0x10
-	add hl, bc
-	ld d, h
-	ld e, l ; de = address of the tile block's tiles
-	pop hl
-	ld c, $04 ; 4 loop iterations
-.loop ; each loop iteration, write 4 tile numbers
-	push bc
-	ld a, [de]
-	ld [hli], a
-	inc de
-	ld a, [de]
-	ld [hli], a
-	inc de
-	ld a, [de]
-	ld [hli], a
-	inc de
-	ld a, [de]
-	ld [hl], a
-	inc de
-	ld bc, $15
-	add hl, bc
-	pop bc
-	dec c
-	jr nz, .loop
-	ret
+;DrawTileBlock::
+;	push hl
+;	ld a, [wTilesetBlocksPtr] ; pointer to tiles
+;	ld l, a
+;	ld a, [wTilesetBlocksPtr + 1]
+;	ld h, a
+;	ld a, c
+;	swap a
+;	ld b, a
+;	and $f0
+;	ld c, a
+;	ld a, b
+;	and $0f
+;	ld b, a ; bc = tile block ID * 0x10
+;	add hl, bc
+;	ld d, h
+;	ld e, l ; de = address of the tile block's tiles
+;	pop hl
+;	ld c, $04 ; 4 loop iterations
+;.loop ; each loop iteration, write 4 tile numbers
+;	push bc
+;	ld a, [de]
+;	ld [hli], a
+;	inc de
+;	ld a, [de]
+;	ld [hli], a
+;	inc de
+;	ld a, [de]
+;	ld [hli], a
+;	inc de
+;	ld a, [de]
+;	ld [hl], a
+;	inc de
+;	ld bc, $15
+;	add hl, bc
+;	pop bc
+;	dec c
+;	jr nz, .loop
+;	ret
 
 ; function to update joypad state and simulate button presses
 JoypadOverworld::
@@ -2333,11 +2453,12 @@ LoadMapData::
 	farcall InitMapSprites ; load tile pattern data for sprites
 	call LoadTileBlockMap
 	call LoadTilesetTilePatternData
-	call LoadCurrentMapView
+;	call LoadCurrentMapView
 
 	ld b, SET_PAL_OVERWORLD
 	call RunPaletteCommand ; HAX: this function call was moved to be above _LoadMapVramAndColors
 ; copy current map view + corresponding palettes to VRAM
+	call LoadCurrentMapView
 	call _LoadMapVramAndColors ; HAX
 
 	ld a, $01

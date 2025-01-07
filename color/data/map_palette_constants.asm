@@ -59,9 +59,9 @@
 	const MANSION_WALLS_ROOF; 39
 	const MANSION_SKY       ; 3A
 	const BATTLE_TEXT       ; 3B
+	const BILLS_MACHINE_DOOR; 3C
 
 	; These are unused
-	const MAP_PALETTE_3C    ; 3C
 	const MAP_PALETTE_3D    ; 3D
 	const MAP_PALETTE_3E    ; 3E
 	const MAP_PALETTE_3F    ; 3F

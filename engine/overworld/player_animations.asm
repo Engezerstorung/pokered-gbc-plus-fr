@@ -45,6 +45,7 @@ EnterMapAnim::
 	jr .done
 .flyAnimation
 	pop hl
+;	farcall ColorPlayerSprite
 	ld de, BirdSprite
 	ld hl, vNPCSprites
 	lb bc, BANK(BirdSprite), $0c
@@ -256,6 +257,7 @@ DoFlyAnimation:
 	ret
 
 LoadBirdSpriteGraphics:
+	farcall ColorPlayerSprite
 	ld de, BirdSprite
 	ld hl, vNPCSprites
 	lb bc, BANK(BirdSprite), 12

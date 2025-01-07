@@ -28,7 +28,7 @@ DEF W2_SprPaletteDataBuffer        EQU $d744
 DEF W2_BgPaletteDataModified       EQU $d784
 DEF W2_SprPaletteDataModified      EQU $d785
 
-; Analagous to StaticPaletteMapChanged, but only used between Pre-vblank and
+; Analogous to StaticPaletteMapChanged, but only used between Pre-vblank and
 ; actual-vblank routines.
 DEF W2_StaticPaletteMapChanged_vbl EQU $d786
 
@@ -49,8 +49,15 @@ DEF W2_DrewRowOrColumn             EQU $d78b
 ; transformed)
 DEF W2_BattleMonPalette            EQU $d78c
 
-; Used by "WindowTransferBgRowsAndColors" function. Analagous to H_VBCOPYBGNUMROWS.
+; Used by "WindowTransferBgRowsAndColors" function. Analogous to H_VBCOPYBGNUMROWS.
 DEF W2_VBCOPYBGNUMROWS             EQU $d78d
+
+DEF W2_TileMapPalMap               EQU $d78e ; 360 bytes
+DEF W2_TileMapPalMapBackup1        EQU $d8f6 ; 360 bytes
+DEF W2_TileMapPalMapBackup2        EQU $da5e ; 360 bytes
+DEF W2_RedrawRowOrColumnSrcTiles   EQU $dbc6 ; 40 bytes
+DEF W2_VBlankCopyBGSource          EQU $dcef ; 2 bytes
+DEF W2_Buffer                      EQU $dcf1 ; 30 bytes ; Analogous to wBuffer, is used to store screen palettes for yes/no menus
 
 ; In bank 1, the stack starts at $dfff. So, that's also the stack here when bank 2 is
 ; loaded. Don't use anything too close to there.

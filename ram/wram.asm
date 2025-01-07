@@ -125,7 +125,7 @@ wSpriteStateData2::
 ; - C: Custom - animation status (when always animating, ticks between frames, values > $80 are for special animation paterns )
 ; - D: picture ID
 ; - E: sprite image base offset (in video ram, player always has value 1, used to compute sprite image index)
-; - F
+; - F: Custom - Palette used by the sprite
 wSpritePlayerStateData2::  spritestatedata2 wSpritePlayerStateData2 ; player is struct 0
 ; wSprite01StateData2 - wSprite15StateData2
 FOR n, 1, NUM_SPRITESTATEDATA_STRUCTS

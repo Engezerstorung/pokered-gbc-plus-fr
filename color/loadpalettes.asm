@@ -20,8 +20,8 @@ LoadTilesetPalette:
 	ldh [rSVBK], a
 	push de ; push previous wram bank
 
-	ld a, 1
-	ld [W2_TileBasedPalettes], a
+;	ld a, 1
+;	ld [W2_TileBasedPalettes], a
 
 	ld a, b ; Get wCurMapTileset
 	push af
@@ -66,6 +66,9 @@ LoadTilesetPalette:
 	dec b
 	jr nz, .nextPalette
 
+;	pop af
+;	jr .end
+
 	; Start copying palette assignments
 	pop af ; Retrieve wCurMapTileset
 	ld hl, MapPaletteAssignments
@@ -75,10 +78,26 @@ LoadTilesetPalette:
 	add hl, bc
 	ld a, [hli]
 	ld e, a
-	ld a, [hl]
-	ld d, a
+;	ld a, [hl]
+;	ld d, a
+	ld d, [hl]
 	ld hl, W2_TilesetPaletteMap
-	ld b, TILESET_SIZE
+	lb bc, TILESET_SIZE, $7
+
+	push bc
+	call .copyLoop
+
+;	ld b, 32
+;.decLoop
+;	inc de
+;	dec b
+;	jr nz, .decLoop
+
+	pop bc
+	set 3, c
+	call .copyLoop
+	jr .end
+
 .copyLoop
 	ld a, [de]
 	inc de
@@ -87,12 +106,18 @@ LoadTilesetPalette:
 	jr nz, .copyLoop
 
 	; Set the remaining values to 7 for text
-	ld b, $100 - TILESET_SIZE
-	ld a, 7
+;	ld b, $100 - TILESET_SIZE
+	ld b, 32
+
+	ld a, c
 .fillLoop
 	ld [hli], a
+	inc de
 	dec b
-	jr nz, .fillLoop
+	jr nz, .fillLoop	
+	ret
+
+.end
 
 	; There used to be special-case code for tile $78 here (pokeball in pc), but now
 	; it uses palette 7 as well. Those areas still need to load the variant of the
@@ -294,6 +319,7 @@ TilesetBgPalSwapList:
 
 MapBgPalSwapList:
 	; Map, new palette , palette slot to replace (0-7), palette type(0=BG, 1=Sprite)
+	db BILLS_HOUSE,          BILLS_MACHINE_DOOR, 4
 	db CELADON_MANSION_ROOF, INDOOR_LIGHT_BLUE,  2
 	db CELADON_MANSION_ROOF, MANSION_SKY,        3
 	db CELADON_MANSION_ROOF, MANSION_WALLS_ROOF, 6
