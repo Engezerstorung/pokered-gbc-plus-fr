@@ -62,7 +62,9 @@ VermilionDockSSAnneLeavesScript:
 	xor a
 	ldh [hAutoBGTransferEnabled], a
 	ld [wSSAnneSmokeDriftAmount], a
-	ldh [rOBP1], a
+	nop ; prevent data shift
+	nop
+;	ldh [rOBP1], a
 	ld a, 88
 	ld [wSSAnneSmokeX], a
 	ld hl, wMapViewVRAMPointer
@@ -156,10 +158,10 @@ VermilionDock_EmitSmokePuff:
 
 VermilionDockOAMBlock:
 ; tile ID, attributes
-	db $fc, $13
-	db $fd, $13
-	db $fe, $13
-	db $ff, $13
+	db $fc, $07 ; use palette OBJ7
+	db $fd, $07
+	db $fe, $07
+	db $ff, $07
 
 VermilionDock_SyncScrollWithLY:
 	ld h, d
