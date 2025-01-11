@@ -75,8 +75,7 @@ LoadTilesetPalette:
 	add hl, bc
 	ld a, [hli]
 	ld e, a
-	ld a, [hl]
-	ld d, a
+	ld d, [hl]
 	ld hl, W2_TilesetPaletteMap
 	ld b, TILESET_SIZE
 .copyLoop
@@ -294,6 +293,7 @@ TilesetBgPalSwapList:
 
 MapBgPalSwapList:
 	; Map, new palette , palette slot to replace (0-7), palette type(0=BG, 1=Sprite)
+	db BILLS_HOUSE,          BILLS_MACHINE_DOOR, 4
 	db CELADON_MANSION_ROOF, INDOOR_LIGHT_BLUE,  2
 	db CELADON_MANSION_ROOF, MANSION_SKY,        3
 	db CELADON_MANSION_ROOF, MANSION_WALLS_ROOF, 6

@@ -575,13 +575,13 @@ CheckSpriteAvailability:
 	inc l
 	ld b, [hl]      ; x#SPRITESTATEDATA2_MAPX
 	ld c, [hl]
-	ld a, [wCurMap]
-	cp OAKS_LAB
+;	ld a, [wCurMap]
+;	cp OAKS_LAB
 	ld a, [wXCoord]
-	jr z, .oakLabX
+;	jr z, .oakLabX
 	inc b
 	dec c
-.oakLabX
+;.oakLabX
 	cp b
 	jr z, .skipXVisibilityTest
 	jr nc, .spriteInvisible ; left of screen region
@@ -786,19 +786,18 @@ GetTileSpriteStandsOn:
 	ld a, [wYCoord]
 	add SCREEN_HEIGHT / 2
 	cp b ; test if the sprite is just under the screen and such, have its head popping out from the bottom
-	ld c, 0 ; empty 'c'
+	ld c, 4 ; value to add to an on-screen sprite to align to 2*2 tile blocks (Y position is always off 4 pixels to the top)
 	jr nz, .notjustunderscreen ; jr if not just under screen
-	ld c, -$8 ; load value to add (actually substract here since negative number) to x#SPRITESTATEDATA1_YPIXELS if just under screen
-.notjustunderscreen	
+	ld c, -4 ; value to add to a just-under-screen sprite so the head is considered under the text (Y position is always off 4 pixels to the top)
+.notjustunderscreen
 	ld h, HIGH(wSpriteStateData1)
 	ldh a, [hCurrentSpriteOffset]
 	add SPRITESTATEDATA1_YPIXELS
 	ld l, a
 	ld a, [hli]     ; x#SPRITESTATEDATA1_YPIXELS
-	; Add 'c' from the sprite Y position (in pixels), $8 if just under the screen, 0 if not 
-	; If it is just under the screen then it offset the coordinates used to determine if under the menu or not
+	; Add 'c' from the sprite Y position (in pixels), -4 if just under the screen, 4 if not 
+	; If it is just under the screen then it offset the Y coordinate used to determine if under the menu or not
 	add c
-	add $4          ; align to 2*2 tile blocks (Y position is always off 4 pixels to the top)
 	and $f8         ; in case object is currently moving
 	srl a           ; screen Y tile * 4
 	ld c, a

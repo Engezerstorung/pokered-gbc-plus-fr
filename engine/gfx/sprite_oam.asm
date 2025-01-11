@@ -180,34 +180,31 @@ PrepareOAMData::
 	jr .clear
 
 GetSpriteScreenXY:
+	ld b, l
+	lb hl, 1, 8
+	add hl, de
+
 	inc e
 	inc e
 	ld a, [de] ; [x#SPRITESTATEDATA1_YPIXELS]
+	add [hl]
+	inc l
 	ldh [hSpriteScreenY], a
 	inc e
 	inc e
 	ld a, [de] ; [x#SPRITESTATEDATA1_XPIXELS]
+	add [hl]
 	ldh [hSpriteScreenX], a
 	ld a, 4
 	add e
 	ld e, a
 
-	ld b, l
-	ld l, e
-	ld h, d
-	inc h
-
 	ldh a, [hSpriteScreenY]
-	add [hl]
-	ldh [hSpriteScreenY], a
 	add 4
 	and $f0
 	ld [de], a ; [x#SPRITESTATEDATA1_YADJUSTED]
 	inc e
-	inc l
 	ldh a, [hSpriteScreenX]
-	add [hl]
-	ldh [hSpriteScreenX], a
 	and $f0
 	ld [de], a  ; [x#SPRITESTATEDATA1_XADJUSTED]
 	ld l, b

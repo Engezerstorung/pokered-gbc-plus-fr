@@ -187,14 +187,14 @@ AnimatedSpriteList:
 ; \2 Ticks between animation frames, must be > 0.
 ; A value of 4 is the normal walking animation speed.
 ; Values > $80 are for special animation paterns.
-	db SPRITE_ARTICUNO,     4 ; normal speed
-	db SPRITE_FEAROW,       4 ; normal speed
+	db SPRITE_ARTICUNO,     6 ; slightly slower speed
+	db SPRITE_FEAROW,       6 ; slightly slower speed
 	db SPRITE_KABUTO,      12 ; slower speed
 	db SPRITE_LAPRAS,      12 ; slower speed
-	db SPRITE_MOLTRES,      4 ; normal speed
+	db SPRITE_MOLTRES,      6 ; slightly slower speed
 	db SPRITE_OMANYTE,     12 ; slower speed
-	db SPRITE_PIDGEOT,      4 ; normal speed
+	db SPRITE_PIDGEOT,      6 ; slightly slower speed
 	db SPRITE_SNORLAXBIG, $80 ; snorlax breathing
 	db SPRITE_SWIMMER,     12 ; slower speed
-	db SPRITE_ZAPDOS,       4 ; normal speed
+	db SPRITE_ZAPDOS,       6 ; slightly slower speed
 	db -1
