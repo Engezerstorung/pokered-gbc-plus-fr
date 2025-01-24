@@ -106,7 +106,7 @@ MapPaletteSets:
 	db PC_POKEBALL_PAL
 
 .pointers
-	table_width 1, .pointers
+	table_width 1
 	db .overworldPalSet - MapPaletteSets   ; OVERWORLD
 	db .redsHouse1PalSet - MapPaletteSets  ; REDS_HOUSE_1
 	db .martPalSet - MapPaletteSets        ; MART
