@@ -132,7 +132,7 @@ WhiteFadePaletteSets::
 	db -1
 
 .pointers	
-	table_width 1, .pointers
+	table_width 1
 	db .overworld - WhiteFadePaletteSets  ; OVERWORLD
 	db .redsHouse1 - WhiteFadePaletteSets ; REDS_HOUSE_1
 	db .mart - WhiteFadePaletteSets       ; MART
