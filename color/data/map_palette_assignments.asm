@@ -5,7 +5,7 @@
 ; Also, this repo can use Polished Map's "Priority Colors" already
 ; In the event of Duplicate tilesets, the asm files are named to match the png files
 MapPaletteAssignments:
-	table_width 2, MapPaletteAssignments
+	table_width 2
 	dw OverworldPalMap   ; OVERWORLD
 	dw RedsHouse1PalMap  ; REDS_HOUSE_1
 	dw MartPalMap        ; MART
