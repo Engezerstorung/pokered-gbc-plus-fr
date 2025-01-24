@@ -454,7 +454,7 @@ ClearSpritePaletteMap:
 
 
 SpritePaletteAssignments: ; Characters on the overworld
-	table_width 1, SpritePaletteAssignments
+	table_width 1
 	; 0x01: SPRITE_RED
 	db SPR_PAL_ORANGE
 
@@ -775,7 +775,7 @@ AnimationTileset2Palettes:
 	INCBIN "color/data/animtileset2palettes.bin"
 
 TypeColorTable: ; Used for a select few sprites to be colorized based on attack type
-	table_width 1, TypeColorTable
+	table_width 1
 	db 0 ; NORMAL EQU $00
 	db 0 ; FIGHTING EQU $01
 	db 0 ; FLYING EQU $02
