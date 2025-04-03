@@ -21,41 +21,52 @@ UncompressSpriteFromDE::
 	jp UncompressSpriteData
 
 SaveScreenTilesToBuffer2::
-	hlcoord 0, 0
-	ld de, wTileMapBackup2
-	ld bc, SCREEN_WIDTH * SCREEN_HEIGHT
-	call CopyData
-	ret
+	farjp _SaveScreenTilesToBuffer2
+;	hlcoord 0, 0
+;	ld de, wTileMapBackup2
+;	ld bc, SCREEN_WIDTH * SCREEN_HEIGHT
+;	call CopyData
+;;	ret
+;	farjp _SaveScreenPalsToBuffer2
 
 LoadScreenTilesFromBuffer2::
-	call LoadScreenTilesFromBuffer2DisableBGTransfer
-	ld a, 1
-	ldh [hAutoBGTransferEnabled], a
-	ret
+	farjp _LoadScreenTilesFromBuffer2
+;	call LoadScreenTilesFromBuffer2DisableBGTransfer
+;	ld a, 1
+;	ldh [hAutoBGTransferEnabled], a
+;;	ret
+;	farjp _LoadScreenPalsFromBuffer2
 
 ; loads screen tiles stored in wTileMapBackup2 but leaves hAutoBGTransferEnabled disabled
 LoadScreenTilesFromBuffer2DisableBGTransfer::
-	xor a
-	ldh [hAutoBGTransferEnabled], a
-	ld hl, wTileMapBackup2
-	decoord 0, 0
-	ld bc, SCREEN_WIDTH * SCREEN_HEIGHT
-	call CopyData
-	ret
+	farjp _LoadScreenTilesFromBuffer2DisableBGTransfer
+;	xor a
+;	ldh [hAutoBGTransferEnabled], a
+;	ld hl, wTileMapBackup2
+;	decoord 0, 0
+;	ld bc, SCREEN_WIDTH * SCREEN_HEIGHT
+;	call CopyData
+;;	ret
+;	farjp _LoadScreenPalsFromBuffer2DisableBGTransfer
 
 SaveScreenTilesToBuffer1::
-	hlcoord 0, 0
-	ld de, wTileMapBackup
-	ld bc, SCREEN_WIDTH * SCREEN_HEIGHT
-	jp CopyData
+	farjp _SaveScreenTilesToBuffer1
+;	hlcoord 0, 0
+;	ld de, wTileMapBackup
+;	ld bc, SCREEN_WIDTH * SCREEN_HEIGHT
+;;	jp CopyData
+;	call CopyData
+;	farjp _SaveScreenPalsToBuffer1
 
 LoadScreenTilesFromBuffer1::
-	xor a
-	ldh [hAutoBGTransferEnabled], a
-	ld hl, wTileMapBackup
-	decoord 0, 0
-	ld bc, SCREEN_WIDTH * SCREEN_HEIGHT
-	call CopyData
-	ld a, 1
-	ldh [hAutoBGTransferEnabled], a
-	ret
+	farjp _LoadScreenTilesFromBuffer1
+;	xor a
+;	ldh [hAutoBGTransferEnabled], a
+;	ld hl, wTileMapBackup
+;	decoord 0, 0
+;	ld bc, SCREEN_WIDTH * SCREEN_HEIGHT
+;	call CopyData
+;	ld a, 1
+;	ldh [hAutoBGTransferEnabled], a
+;;	ret
+;	farjp _LoadScreenPalsFromBuffer1

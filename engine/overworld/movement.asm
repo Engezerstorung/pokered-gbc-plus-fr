@@ -15,8 +15,16 @@ UpdatePlayerSprite:
 .checkIfTextBoxInFrontOfSprite
 	lda_coord 8, 9
 	ldh [hTilePlayerStandingOn], a
-	cp MAP_TILESET_SIZE
-	jr c, .lowerLeftTileIsMapTile
+
+	ld a, 2
+	ldh [rSVBK], a
+	lda_coord 8, 9, W2_TileMapPalMap
+	and 7
+	cp 7
+	ld a, 0
+	ldh [rSVBK], a
+	jr nz, .lowerLeftTileIsMapTile
+
 .disableSprite
 	ld a, $ff
 	ld [wSpritePlayerStateData1ImageIndex], a
@@ -93,9 +101,10 @@ UpdatePlayerSprite:
 	ld c, a
 	ld a, [wGrassTile]
 	cp c
-	ld a, 0
+	ld a, [wSpritePlayerStateData2GrassPriority]
+	res OAM_PRIORITY, a
 	jr nz, .next2
-	ld a, OAM_BEHIND_BG
+	set OAM_PRIORITY, a
 .next2
 	ld [wSpritePlayerStateData2GrassPriority], a
 	ret
@@ -590,24 +599,44 @@ CheckSpriteAvailability:
 	jr c, .spriteInvisible  ; right of screen region
 .skipXVisibilityTest
 ; make the sprite invisible if a text box is in front of it
-; $5F is the maximum number for map tiles
+; do so by checking if a tile in front of the sprite is using the text palette
 	call GetTileSpriteStandsOn
-	ld d, MAP_TILESET_SIZE
+	ld c, [hl] ; get bottom left tile for grass detection
+
+	ld a, [wFontLoaded]
+	bit 0, a ; check if text is loaded, skip visibility check if not
+	jr z, .skipVisibilityCheck
+	ld a, [wSpriteFlags]
+	bit 6, a ; test the flag signifying that the sprite is just under the screen
+	ld a, 2
+	ldh [rSVBK], a
+	ld d, 7 ; used both as a mask for palette bits and as value for text palette
+	ld bc, W2_TileMapPalMap - wTileMap
+	add hl, bc
+	jr nz, .onlyCheckTop ; if wSpriteFlags bit 6 is set, pass the check of the bottom tiles
+
 	ld a, [hli]
+	and d
 	cp d
-	jr nc, .spriteInvisible ; standing on tile with ID >=MAP_TILESET_SIZE (bottom left tile)
+	jr z, .spriteInvisible ; standing on tile with text palette (bottom left tile)
 	ld a, [hld]
+	and d
 	cp d
-	jr nc, .spriteInvisible ; standing on tile with ID >=MAP_TILESET_SIZE (bottom right tile)
+	jr z, .spriteInvisible ; standing on tile with text palette (bottom right tile)
+.onlyCheckTop
 	ld bc, -SCREEN_WIDTH
 	add hl, bc              ; go back one row of tiles
 	ld a, [hli]
+	and d
 	cp d
-	jr nc, .spriteInvisible ; standing on tile with ID >=MAP_TILESET_SIZE (top left tile)
-	ld a, [hl]
+	jr z, .spriteInvisible ; standing on tile with text palette (top left tile)
+	ld a, [hld]
+	and d
 	cp d
-	jr c, .spriteVisible    ; standing on tile with ID >=MAP_TILESET_SIZE (top right tile)
+	jr nz, .spriteVisible ; not standing on tile with text palette (top right tile)
 .spriteInvisible
+	xor a
+	ldh [rSVBK], a
 	ld h, HIGH(wSpriteStateData1)
 	ldh a, [hCurrentSpriteOffset]
 	add SPRITESTATEDATA1_IMAGEINDEX
@@ -616,7 +645,12 @@ CheckSpriteAvailability:
 	scf
 	jr .done
 .spriteVisible
-	ld c, a
+	xor a
+	ldh [rSVBK], a
+	ld bc, - ((W2_TileMapPalMap - wTileMap) + SCREEN_WIDTH) ; go back to the bottom left tile
+	add hl, bc
+	ld c, [hl] ; get bottom left tile for grass detection
+.skipVisibilityCheck
 	ld a, [wWalkCounter]
 	and a
 	jr nz, .done           ; if player is currently walking, we're done
@@ -627,11 +661,10 @@ CheckSpriteAvailability:
 	ld l, a
 	ld a, [wGrassTile]
 	cp c
-	ld a, 0
+	res OAM_PRIORITY, [hl] ; x#SPRITESTATEDATA2_GRASSPRIORITY
 	jr nz, .notInGrass
-	ld a, OAM_BEHIND_BG
+	set OAM_PRIORITY, [hl] ; x#SPRITESTATEDATA2_GRASSPRIORITY
 .notInGrass
-	ld [hl], a       ; x#SPRITESTATEDATA2_GRASSPRIORITY
 	and a
 .done
 	ret
@@ -787,13 +820,18 @@ GetTileSpriteStandsOn:
 	add SCREEN_HEIGHT / 2
 	cp b ; test if the sprite is just under the screen and such, have its head popping out from the bottom
 	ld c, 4 ; value to add to an on-screen sprite to align to 2*2 tile blocks (Y position is always off 4 pixels to the top)
+;	push af
+	ld hl, wSpriteFlags
+	res 6, [hl] ; reset the flag signifying that the sprite is just under the screen
 	jr nz, .notjustunderscreen ; jr if not just under screen
 	ld c, -4 ; value to add to a just-under-screen sprite so the head is considered under the text (Y position is always off 4 pixels to the top)
+	set 6, [hl] ; set the flag signifying that the sprite is just under the screen
 .notjustunderscreen
 	ld h, HIGH(wSpriteStateData1)
 	ldh a, [hCurrentSpriteOffset]
 	add SPRITESTATEDATA1_YPIXELS
 	ld l, a
+;	pop af
 	ld a, [hli]     ; x#SPRITESTATEDATA1_YPIXELS
 	; Add 'c' from the sprite Y position (in pixels), -4 if just under the screen, 4 if not 
 	; If it is just under the screen then it offset the Y coordinate used to determine if under the menu or not

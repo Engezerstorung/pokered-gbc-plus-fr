@@ -92,7 +92,7 @@ CopyVideoData::
 
 .loop
 	ld a, c
-	cp 8
+	cp 12
 	jr nc, .keepgoing
 
 .done
@@ -106,11 +106,11 @@ CopyVideoData::
 	ret
 
 .keepgoing
-	ld a, 8
+	ld a, 12
 	ldh [hVBlankCopySize], a
 	call DelayFrame
 	ld a, c
-	sub 8
+	sub 12
 	ld c, a
 	jr .loop
 
@@ -141,7 +141,7 @@ CopyVideoDataDouble::
 
 .loop
 	ld a, c
-	cp 8
+	cp 12
 	jr nc, .keepgoing
 
 .done
@@ -155,11 +155,11 @@ CopyVideoDataDouble::
 	ret
 
 .keepgoing
-	ld a, 8
+	ld a, 12
 	ldh [hVBlankCopyDoubleSize], a
 	call DelayFrame
 	ld a, c
-	sub 8
+	sub 12
 	ld c, a
 	jr .loop
 
@@ -190,17 +190,20 @@ CopyScreenTileBufferToVRAM::
 	ld hl, $600 * 0
 	decoord 0, 6 * 0
 	call .setup
-	call DelayFrame
+	decoord 0, 6 * 0, W2_TileMapPalMap
+	call .setup2_DelayFrame
 
 	ld hl, $600 * 1
 	decoord 0, 6 * 1
 	call .setup
-	call DelayFrame
+	decoord 0, 6 * 1, W2_TileMapPalMap
+	call .setup2_DelayFrame
 
 	ld hl, $600 * 2
 	decoord 0, 6 * 2
 	call .setup
-	jp DelayFrame
+	decoord 0, 6 * 2, W2_TileMapPalMap
+	jp .setup2_DelayFrame
 
 .setup
 	ld a, d
@@ -216,9 +219,23 @@ CopyScreenTileBufferToVRAM::
 	ldh [hVBlankCopyBGSource], a
 	ret
 
+.setup2_DelayFrame
+	ld a, 2
+	ldh [rSVBK], a
+	ld a, d
+	ld [W2_VBlankCopyBGSource+1], a
+	ld a, e
+	ld [W2_VBlankCopyBGSource], a
+	xor a
+	ldh [rSVBK], a
+	jp DelayFrame
+
 ClearScreen::
 ; Clear wTileMap, then wait
 ; for the bg map to update.
+
+	farcall FillTileMapPalMapWithTextPal
+
 	ld bc, 20 * 18
 	inc b
 	hlcoord 0, 0

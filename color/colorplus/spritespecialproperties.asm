@@ -10,13 +10,35 @@ SpriteSpecialProperties::
 	ld a, [de] ; [x#SPRITESTATEDATA1_PICTUREID]
 	ld [wSavedSpritePictureID], a
 
+;	call _SpriteSwap
+;	ld [de], a
+;	lb hl, 1, $d
+;	add hl, de
+;	ld [hl], a
+;	ld [wSavedSpritePictureID], a
+
 	ld hl, SpecialOAMlist ; loading list for identification and properties values
 	push de ; save d and e
 	ld de, 4 ; define the number of properties in list
 	call IsInArray ; check if Sprite is in list ; modify a/b/de
 	pop de
-	jr nc, .nextCheck
+;	jr nc, .nextCheck
 
+	jr c, .foundMatch
+	xor a
+	inc e
+	inc d
+	ld [de], a
+	ld a, $9
+	add e
+	ld e, a
+	xor a
+	ld [de], a
+	inc e
+	ld [de], a
+	jr .nextCheck
+
+.foundMatch
 	inc hl
 	inc e
 	inc d
@@ -45,11 +67,17 @@ SpriteSpecialProperties::
 .loop
 	ld a, [hli]
 	cp -1
-	jr z, .nextsprite
+;	jr z, .nextsprite
+	jr z, .noMatch
 	cp b
 	jr z, .found
 	inc hl
 	jr .loop
+	
+.noMatch
+	xor a
+	ld [de], a
+	jr .nextsprite
 
 .found
 	ld a, [hl]
@@ -157,6 +185,9 @@ SpecialOAMlist:
 ;	db SPRITE_UNUSED_GAMBLER_ASLEEP_2,	$10, 0, 0
 ;	db SPRITE_GAMBLER_ASLEEP,			$10, 0, 0
 
+IF DEF(_DEBUG)	
+	db SPRITE_BLANK,                    $00, 16, 0
+ENDC
 	db SPRITE_DOME_FOSSIL,              $10, 0, 0
 ; Regular sprites with -1 X offset on down/up flipped walking frame 
 	db SPRITE_DODUO,                    $20, 0, 0

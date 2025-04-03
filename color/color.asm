@@ -316,37 +316,33 @@ ENDC
 
 	; Now set the tilemap
 
+	; Player pokemon
+	ld hl, W2_TilesetPaletteMap + 5 * 20
+	ld a, 0
+	ld b, 7
+	ld c, 10
+	call FillBox
+
+	; Enemy pokemon
+	ld hl, W2_TilesetPaletteMap + 10
+	ld a, 1
+	ld b, 7
+	ld c, 10
+	call FillBox
+
 	; Top half; enemy lifebar
 	ld hl, W2_TilesetPaletteMap
 	ld a, 3
-	ld b, 4
+	ld b, 5
 	ld c, 11
 	call FillBox
 
-;IF GEN_2_GRAPHICS
-;	; Bottom half; player lifebar
-;	ld hl, W2_TilesetPaletteMap + 7 * 20 + 9
-;	ld a, 2
-;	ld b, 4
-;	ld c, 11
-;	call FillBox
-
-;	; Player exp bar
-;	ld hl, W2_TilesetPaletteMap + 9 + 11 * 20
-;	ld a, 4
-;	ld b, 1
-;	ld c, 11
-;	call FillBox
-;ENDC
-
-;IF !GEN_2_GRAPHICS
 	; Bottom half; player lifebar
 	ld hl, W2_TilesetPaletteMap + 7 * 20 + 9
 	ld a, 2
 	ld b, 5
 	ld c, 11
 	call FillBox
-;ENDC
 
 IF GEN_2_GRAPHICS
 	; Player exp bar
@@ -355,20 +351,6 @@ IF GEN_2_GRAPHICS
 	ld b, 8
 	call FillLine
 ENDC
-
-	; Player pokemon
-	ld hl, W2_TilesetPaletteMap + 4 * 20
-	ld a, 0
-	ld b, 8
-	ld c, 9
-	call FillBox
-
-	; Enemy pokemon
-	ld hl, W2_TilesetPaletteMap + 11
-	ld a, 1
-	ld b, 7
-	ld c, 9
-	call FillBox
 
 	; text box
 	ld hl, W2_TilesetPaletteMap + 12 * 20
@@ -801,7 +783,6 @@ SetPal_Overworld::
 
 	ld a, 2
 	ldh [rSVBK], a
-	dec a ; ld a, 1
 	ld [W2_TileBasedPalettes], a
 
 	; Clear sprite palette map, except for exclamation marks above people's heads
@@ -1019,6 +1000,9 @@ SetPal_TrainerCard:
 	ld a, 2
 	ldh [rSVBK], a
 
+	ld a, 1
+	ld [W2_TileBasedPalettes], a
+
 	ld d, PAL_MEWMON
 	ld e, 0
 	farcall LoadSGBPalette
@@ -1151,3 +1135,6 @@ ENDC
 ; Copy of sound engine used by dmg-mode to play jingle
 SECTION "bank31", ROMX
 INCBIN "color/data/bank31.bin", $0000, $c8000 - $c4000
+
+SECTION "TileMapping", ROMX
+INCLUDE "color/colorplus/tilemapping.asm"

@@ -17,6 +17,9 @@ SlidePlayerAndEnemySilhouettesOnScreen:
 	call DisableLCD
 	call LoadFontTilePatterns
 	call LoadHudAndHpBarAndStatusTilePatterns
+
+	farcall ClearBGMap0Attributes
+
 	ld hl, vBGMap0
 	ld bc, BG_MAP_WIDTH * BG_MAP_HEIGHT
 .clearBackgroundLoop

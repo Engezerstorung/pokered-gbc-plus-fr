@@ -17,14 +17,19 @@ LoadMapVramAndColors::
 	ldh [rVBK], a
 	ld a, [hl]
 	push hl
-	ld h, W2_TilesetPaletteMap >> 8
-	ld l, a
+
+	push bc
+	ld bc, W2_TileMapPalMap - wTileMap
+	add hl, bc
+	pop bc
+
 	ld a, [hl]
 	ld [de], a
 	pop hl
 	xor a
 	ldh [rVBK], a
 	ld a, [hli]
+	res 7, a
 	ld [de], a
 	inc e
 
@@ -61,43 +66,34 @@ RefreshWindow::
 	jp z, .palettesDone
 	ld [hl], 0
 
-	ld hl, sp + 0
-	ld a, h
-	ldh [hSPTemp], a
-	ld a, l
-	ldh [hSPTemp + 1], a ; save stack pointer
+	ld [hSPTemp], sp
+
+	ld sp, hAutoBGTransferDest
+	pop hl
+
 	ldh a, [hAutoBGTransferPortion]
 	and a
 	jr z, .transferTopThird
 	dec a
 	jr z, .transferMiddleThird
 .transferBottomThird
-	hlcoord 0, 12
-	ld sp, hl
-	ldh a, [hAutoBGTransferDest + 1]
-	ld h, a
-	ldh a, [hAutoBGTransferDest]
-	ld l, a
+;	ld sp, hAutoBGTransferDest
+;	pop hl
+	coord sp, 0, 12
 	ld de, (12 * 32)
 	add hl, de
 	xor a ; TRANSFERTOP
 	jr .doTransfer
 .transferTopThird
-	hlcoord 0, 0
-	ld sp, hl
-	ldh a, [hAutoBGTransferDest + 1]
-	ld h, a
-	ldh a, [hAutoBGTransferDest]
-	ld l, a
+;	ld sp, hAutoBGTransferDest
+;	pop hl
+	coord sp, 0, 0
 	ld a, TRANSFERMIDDLE
 	jr .doTransfer
 .transferMiddleThird
-	hlcoord 0, 6
-	ld sp, hl
-	ldh a, [hAutoBGTransferDest + 1]
-	ld h, a
-	ldh a, [hAutoBGTransferDest]
-	ld l, a
+;	ld sp, hAutoBGTransferDest
+;	pop hl
+	coord sp, 0, 6
 	ld de, (6 * 32)
 	add hl, de
 	ld a, TRANSFERBOTTOM
@@ -125,12 +121,15 @@ ENDR
 	; Careful here, because credits break due to carry if you inc l and add a
 	; with 12 instead of 13.
 
-	ld a, 13
-	add l
-	ld l, a
-	jr nc, .noCarry
-	inc h
-.noCarry
+;	ld a, 13
+;	add l
+;	ld l, a
+;	jr nc, .noCarry
+;	inc h
+;.noCarry
+	ld de, 13
+	add hl, de
+
 	dec b
 	jr nz, .drawRow
 
@@ -138,10 +137,8 @@ ENDR
 	ld b, h
 	ld c, l
 
-	ldh a, [hSPTemp]
-	ld h, a
-	ldh a, [hSPTemp + 1]
-	ld l, a
+	ld sp, hSPTemp
+	pop hl
 	ld sp, hl
 
 	ld h, b
@@ -196,73 +193,84 @@ ENDR
 ; Replaces the "TransferBgRows" function. Called when menus first appear on top of bg
 ; layer. (called 3 times to fully draw it)
 ; b = # rows to copy
-; hl = destination
-; sp = source (need to restore sp after this)
+; hl = destination ; hVBlankCopyBGDest
+; sp = source (need to restore sp after this) ; hVBlankCopyBGSource
 WindowTransferBgRowsAndColors::
 	; Store # of rows to ocpy
 	ld a, $02
 	ldh [rSVBK], a
 	ld a, b
 	ld [W2_VBCOPYBGNUMROWS], a
-	xor a
-	ldh [rSVBK], a
 
-.nextRow
-	ld c, l
-; Copy tilemap
+.drawTiles
 REPT SCREEN_WIDTH / 2 - 1
 	pop de
-	ld [hl], e
-	inc l
-	ld [hl], d
-	inc l
+	res 7, d
+	res 7, e
+	ld a, e
+	ld [hli], a
+	ld a, d
+	ld [hli], a
 ENDR
 	pop de
-	ld [hl], e
-	inc l
+	res 7, d
+	res 7, e
+	ld a, e
+	ld [hli], a
 	ld [hl], d
 
-	; Go back to start of row to do palettes
-	ld l, c
-	add sp, -SCREEN_WIDTH
-	ld a, $01
-	ldh [rVBK], a
-	ld a, $02
-	ldh [rSVBK], a
-
-	ld d, W2_TilesetPaletteMap >> 8
-REPT SCREEN_WIDTH / 2
-	pop bc
-	ld e, c
-	ld a, [de]
-	ld [hli], a
-	ld e, b
-	ld a, [de]
-	ld [hli], a
-ENDR
-
 	; Advance through "unused" tiles
-	ld a, $0c
-	add l
-	ld l, a
-	jr nc, .noCarry
-	inc h
-.noCarry
+	ld de, $0d
+	add hl, de
+
 	ld a, [W2_VBCOPYBGNUMROWS]
 	dec a
 	ld [W2_VBCOPYBGNUMROWS], a
+	jp nz, .drawTiles
 
-	ld a, $00 ; Don't xor so we don't change the flags
+	ld a, b
+	ld [W2_VBCOPYBGNUMROWS], a
+
+	ld a, 1
+	ldh [rVBK], a
+
+	ld sp, W2_VBlankCopyBGSource
+	pop hl
+	ld sp, hl
+
+	ldh a, [hVBlankCopyBGDest]
+	ld l, a
+	ldh a, [hVBlankCopyBGDest+1]
+	ld h, a
+
+.drawPalettes
+REPT SCREEN_WIDTH / 2 - 1
+	pop de
+	ld a, e
+	ld [hli], a
+	ld a, d
+	ld [hli], a
+ENDR
+	pop de
+	ld a, e
+	ld [hli], a
+	ld [hl], d
+
+	; Advance through "unused" tiles
+	ld de, $0d
+	add hl, de
+
+	ld a, [W2_VBCOPYBGNUMROWS]
+	dec a
+	ld [W2_VBCOPYBGNUMROWS], a
+	jp nz, .drawPalettes
+
+	xor a
 	ldh [rVBK], a
 	ldh [rSVBK], a
 
-	; Jump if W2_VBCOPYBGNUMROWS is nonzero
-	jp nz, .nextRow
-
-	ldh a, [hSPTemp]
-	ld h, a
-	ldh a, [hSPTemp + 1]
-	ld l, a
+	ld sp, hSPTemp
+	pop hl
 	ld sp, hl
 
 	; Restore ROM bank (we obviously can't do that here, so jump to bank 0)
@@ -284,38 +292,60 @@ DrawMapRow::
 	ldh a, [hRedrawRowOrColumnDest + 1]
 	ld d, a
 	push de
-	call .drawHalf ; draw upper half
+	push de
+
+REPT SCREEN_WIDTH / 2
+	ld a, [hli]
+	res 7, a
+	ld [de], a
+	inc de
+	ld a, [hli]
+	res 7, a
+	ld [de], a
+	ld a, e
+	inc a
+; the following 6 lines wrap us from the right edge to the left edge if necessary
+	and $1f
+	ld b, a
+	ld a, e
+	and $e0
+	or b
+	ld e, a
+ENDR
+
 	pop de
 	ld a, BG_MAP_WIDTH ; width of VRAM background map
 	add e
 	ld e, a
-	call .drawHalf ; draw lower half
+
+REPT SCREEN_WIDTH / 2
+	ld a, [hli]
+	res 7, a
+	ld [de], a
+	inc de
+	ld a, [hli]
+	res 7, a
+	ld [de], a
+	ld a, e
+	inc a
+; the following 6 lines wrap us from the right edge to the left edge if necessary
+	and $1f
+	ld b, a
+	ld a, e
+	and $e0
+	or b
+	ld e, a
+ENDR
 
 	; Start drawing palettes
 	ld a, 1
 	ldh [rVBK], a
-	ld hl, wRedrawRowOrColumnSrcTiles
-	ldh a, [hRedrawRowOrColumnDest]
-	ld e, a
-	ldh a, [hRedrawRowOrColumnDest + 1]
-	ld d, a
+	pop de
+	ld hl, W2_RedrawRowOrColumnSrcTiles
 
 	push de
-	call .drawHalfPalette ; draw upper half
-	pop de
-	ld a, BG_MAP_WIDTH ; width of VRAM background map
-	add e
-	ld e, a
-	call .drawHalfPalette ; draw lower half
 
-	xor a
-	ldh [rSVBK], a
-	ldh [rVBK], a
-	ret
-
-.drawHalf
-	ld c, SCREEN_WIDTH / 2
-.loop2
+REPT SCREEN_WIDTH / 2
 	ld a, [hli]
 	ld [de], a
 	inc de
@@ -330,34 +360,34 @@ DrawMapRow::
 	and $e0
 	or b
 	ld e, a
-	dec c
-	jr nz, .loop2
-	ret
+ENDR
 
-.drawHalfPalette
-	ld b, W2_TilesetPaletteMap >> 8
-REPT 10
+	pop de
+	ld a, BG_MAP_WIDTH ; width of VRAM background map
+	add e
+	ld e, a
+
+REPT SCREEN_WIDTH / 2
 	ld a, [hli]
-	ld c, a
-	ld a, [bc]
 	ld [de], a
 	inc de
 	ld a, [hli]
-	ld c, a
-	ld a, [bc]
 	ld [de], a
 	ld a, e
 	inc a
 ; the following 6 lines wrap us from the right edge to the left edge if necessary
 	and $1f
-	ld c, a
+	ld b, a
 	ld a, e
 	and $e0
-	or c
+	or b
 	ld e, a
 ENDR
-	ret
 
+	xor a
+	ldh [rSVBK], a
+	ldh [rVBK], a
+	ret
 
 ; Called when scrolling the screen horizontally (at vblank)
 DrawMapColumn::
@@ -367,66 +397,56 @@ DrawMapColumn::
 	ld a, 1
 	ld [W2_DrewRowOrColumn], a
 
-	; Draw tiles
-	ld hl, wRedrawRowOrColumnSrcTiles
-	ldh a, [hRedrawRowOrColumnDest]
-	ld e, a
-	ldh a, [hRedrawRowOrColumnDest + 1]
-	ld d, a
-	ld c, SCREEN_HEIGHT
-.loop1
-	ld a, [hli]
-	ld [de], a
-	inc de
-	ld a, [hli]
-	ld [de], a
-	ld a, BG_MAP_WIDTH - 1
-	add e
-	ld e, a
-	jr nc, .noCarry
-	inc d
-.noCarry
+	ld [hSPTemp], sp
+
+	ld sp, hRedrawRowOrColumnDest
+	pop hl
+	ld sp, wRedrawRowOrColumnSrcTiles
+
+; Draw tiles
+REPT SCREEN_HEIGHT
+	pop de
+	res 7, d
+	res 7, e
+	ld a, e
+	ld [hli], a
+	ld [hl], d
+
+	ld bc, BG_MAP_WIDTH - 1
+	add hl, bc
 ; the following 4 lines wrap us from bottom to top if necessary
-	ld a, d
+	ld a, h
 	and $3
 	or $98
-	ld d, a
-	dec c
-	jr nz, .loop1
+	ld h, a
+ENDR
 
-; =======================
-	; Draw palettes
 	ld a, 1
 	ldh [rVBK], a
 
-	ld hl, wRedrawRowOrColumnSrcTiles
-	ldh a, [hRedrawRowOrColumnDest]
-	ld e, a
-	ldh a, [hRedrawRowOrColumnDest + 1]
-	ld d, a
-	ld b, W2_TilesetPaletteMap >> 8
+	ld sp, hRedrawRowOrColumnDest
+	pop hl
+	ld sp, W2_RedrawRowOrColumnSrcTiles
+
+; Draw tiles attributes
 REPT SCREEN_HEIGHT
-	ld a, [hli]
-	ld c, a
-	ld a, [bc]
-	ld [de], a
-	inc de
-	ld a, [hli]
-	ld c, a
-	ld a, [bc]
-	ld [de], a
-	ld a, BG_MAP_WIDTH - 1
-	add e
-	ld e, a
-	jr nc, .noCarry\@
-	inc d
-.noCarry\@
+	pop de
+	ld a, e
+	ld [hli], a
+	ld [hl], d
+
+	ld bc, BG_MAP_WIDTH - 1
+	add hl, bc
 ; the following 4 lines wrap us from bottom to top if necessary
-	ld a, d
-	and $03
+	ld a, h
+	and $3
 	or $98
-	ld d, a
+	ld h, a
 ENDR
+
+	ld sp, hSPTemp
+	pop hl
+	ld sp, hl
 
 	xor a
 	ldh [hRedrawRowOrColumnMode], a

@@ -1,6 +1,10 @@
 PrepareOAMData::
 ; Determine OAM data for currently visible
 ; sprites and write it to wShadowOAM.
+.wait
+	ldh a, [rLY]
+	cp $80
+	jr nc, .wait
 
 	ld a, [wUpdateSpritesEnabled]
 	dec a
@@ -44,7 +48,7 @@ PrepareOAMData::
 	jr nz, .visible
 
 	call GetSpriteScreenXY
-	jr .nextSprite
+	jp .nextSprite
 
 .visible
 	cp $a0 ; is the sprite unchanging like an item ball or boulder?
@@ -70,7 +74,7 @@ PrepareOAMData::
 	add $5
 	ld e, a
 	ld a, [de] ; [x#SPRITESTATEDATA2_GRASSPRIORITY]
-	and $80
+	and OAM_BEHIND_BG | OAM_PALETTE
 	ldh [hSpritePriority], a ; temp store sprite priority
 	pop de
 
@@ -134,18 +138,27 @@ PrepareOAMData::
 
 .next2
 	add b ; add the tile offset from the table (based on frame and facing direction)
-	pop bc
 	ld [de], a ; tile id
 	inc hl
 	inc e
-	ld a, [hl]
-	bit BIT_SPRITE_UNDER_GRASS, a
-	jr z, .skipPriority
+
+	bit BIT_END_OF_OAM_DATA, [hl]
+	push af ; save end of OAM data flag
+	bit BIT_SPRITE_UNDER_GRASS, [hl]
 	ldh a, [hSpritePriority]
-	or [hl]
-.skipPriority
-	call _ColorOverworldSprite	; HAX
-	bit BIT_END_OF_OAM_DATA, a ; OAMFLAG_ENDOFDATA
+	jr nz, .hasPriority
+	res OAM_PRIORITY, a ; res priority bit if not priority tile
+.hasPriority
+	ld b, a
+	ld a, [hli]
+	and OAM_VFLIP | OAM_HFLIP ; keep x/y flip attribute bits
+	or b ; merge all attribute bits
+	ld [de], a ; transfer attributes in wShadowOAM
+	inc e
+	pop af ; restore end of OAM data flag
+
+	pop bc
+
 	jr z, .tileLoop
 
 	ld a, e

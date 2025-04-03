@@ -4,6 +4,7 @@ LoadTilesetHeader:
 	ld d, 0
 	ld a, [wCurMapTileset]
 	add a
+	ld c, a
 	add a
 	ld b, a
 	add a
@@ -11,11 +12,18 @@ LoadTilesetHeader:
 	jr nc, .noCarry
 	inc d
 .noCarry
+
+	add c ; a = tileset * 14
+	jr nc, .noCarry2
+	inc d
+.noCarry2
+
 	ld e, a
 	ld hl, Tilesets
 	add hl, de
 	ld de, wTilesetBank
-	ld c, $b
+;	ld c, $b
+	ld c, $d
 .copyTilesetHeaderLoop
 	ld a, [hli]
 	ld [de], a

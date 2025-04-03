@@ -1,5 +1,7 @@
 TextBoxBorder::
 ; Draw a c×b text box at hl.
+	push hl
+	push bc
 
 	; top row
 	push hl
@@ -35,6 +37,12 @@ TextBoxBorder::
 	ld a, "─"
 	call .PlaceChars
 	ld [hl], "┘"
+
+	pop bc
+	pop de
+	ld a, b
+	farcall FarDrawTextPalBoxOnTileMapPalMap
+
 	ret
 
 .PlaceChars::

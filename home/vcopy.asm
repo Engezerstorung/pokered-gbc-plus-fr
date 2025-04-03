@@ -100,16 +100,13 @@ VBlankCopyBgMap::
 	ldh a, [hVBlankCopyBGSource] ; doubles as enabling byte
 	and a
 	ret z
-	ld hl, sp + 0
-	ld a, h
-	ldh [hSPTemp], a
-	ld a, l
-	ldh [hSPTemp + 1], a ; save stack pointer
-	ldh a, [hVBlankCopyBGSource]
-	ld l, a
-	ldh a, [hVBlankCopyBGSource + 1]
-	ld h, a
+
+	ld [hSPTemp], sp ; save stack pointer
+
+	ld sp, hVBlankCopyBGSource
+	pop hl
 	ld sp, hl
+
 	ldh a, [hVBlankCopyBGDest]
 	ld l, a
 	ldh a, [hVBlankCopyBGDest + 1]
@@ -133,16 +130,10 @@ VBlankCopyDouble::
 	and a
 	ret z
 
-	ld hl, sp + 0
-	ld a, h
-	ldh [hSPTemp], a
-	ld a, l
-	ldh [hSPTemp + 1], a
+	ld [hSPTemp], sp
 
-	ldh a, [hVBlankCopyDoubleSource]
-	ld l, a
-	ldh a, [hVBlankCopyDoubleSource + 1]
-	ld h, a
+	ld sp, hVBlankCopyDoubleSource
+	pop hl
 	ld sp, hl
 
 	ldh a, [hVBlankCopyDoubleDest]
@@ -156,44 +147,25 @@ VBlankCopyDouble::
 	ldh [hVBlankCopyDoubleSize], a
 
 .loop
-REPT LEN_2BPP_TILE / 4 - 1
+REPT LEN_2BPP_TILE / 4
 	pop de
-	ld [hl], e
-	inc l
-	ld [hl], e
-	inc l
-	ld [hl], d
-	inc l
-	ld [hl], d
-	inc l
+	ld a, e
+	ld [hli], a
+	ld [hli], a
+	ld a, d
+	ld [hli], a
+	ld [hli], a
 ENDR
-	pop de
-	ld [hl], e
-	inc l
-	ld [hl], e
-	inc l
-	ld [hl], d
-	inc l
-	ld [hl], d
-	inc hl
 	dec b
 	jr nz, .loop
 
-	ld a, l
-	ldh [hVBlankCopyDoubleDest], a
-	ld a, h
-	ldh [hVBlankCopyDoubleDest + 1], a
+	ld [hVBlankCopyDoubleSource], sp
 
-	ld hl, sp + 0
-	ld a, l
-	ldh [hVBlankCopyDoubleSource], a
-	ld a, h
-	ldh [hVBlankCopyDoubleSource + 1], a
+	ld sp, hVBlankCopyDoubleDest + 2
+	push hl
 
-	ldh a, [hSPTemp]
-	ld h, a
-	ldh a, [hSPTemp + 1]
-	ld l, a
+	ld sp, hSPTemp
+	pop hl
 	ld sp, hl
 
 	ret
@@ -210,16 +182,10 @@ VBlankCopy::
 	and a
 	ret z
 
-	ld hl, sp + 0
-	ld a, h
-	ldh [hSPTemp], a
-	ld a, l
-	ldh [hSPTemp + 1], a
+	ld [hSPTemp], sp
 
-	ldh a, [hVBlankCopySource]
-	ld l, a
-	ldh a, [hVBlankCopySource + 1]
-	ld h, a
+	ld sp, hVBlankCopySource
+	pop hl
 	ld sp, hl
 
 	ldh a, [hVBlankCopyDest]
@@ -248,21 +214,13 @@ ENDR
 	dec b
 	jr nz, .loop
 
-	ld a, l
-	ldh [hVBlankCopyDest], a
-	ld a, h
-	ldh [hVBlankCopyDest + 1], a
+	ld [hVBlankCopySource], sp
 
-	ld hl, sp + 0
-	ld a, l
-	ldh [hVBlankCopySource], a
-	ld a, h
-	ldh [hVBlankCopySource + 1], a
+	ld sp, hVBlankCopyDest + 2
+	push hl
 
-	ldh a, [hSPTemp]
-	ld h, a
-	ldh a, [hSPTemp + 1]
-	ld l, a
+	ld sp, hSPTemp
+	pop hl
 	ld sp, hl
 
 	ret

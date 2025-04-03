@@ -20,9 +20,6 @@ LoadTilesetPalette:
 	ldh [rSVBK], a
 	push de ; push previous wram bank
 
-	ld a, 1
-	ld [W2_TileBasedPalettes], a
-
 	ld a, b ; Get wCurMapTileset
 	push af
 	ld hl, MapPaletteSets.pointers
@@ -77,7 +74,16 @@ LoadTilesetPalette:
 	ld e, a
 	ld d, [hl]
 	ld hl, W2_TilesetPaletteMap
-	ld b, TILESET_SIZE
+	lb bc, TILESET_SIZE, $7
+
+	push bc
+	call .copyLoop
+
+	pop bc
+	set 3, c
+	call .copyLoop
+	jr .end
+
 .copyLoop
 	ld a, [de]
 	inc de
@@ -86,12 +92,16 @@ LoadTilesetPalette:
 	jr nz, .copyLoop
 
 	; Set the remaining values to 7 for text
-	ld b, $100 - TILESET_SIZE
-	ld a, 7
+	ld b, 32
+	ld a, c
 .fillLoop
 	ld [hli], a
+	inc de
 	dec b
-	jr nz, .fillLoop
+	jr nz, .fillLoop	
+	ret
+
+.end
 
 	; There used to be special-case code for tile $78 here (pokeball in pc), but now
 	; it uses palette 7 as well. Those areas still need to load the variant of the
@@ -114,35 +124,6 @@ LoadTilesetPalette:
 	ld a, b
 	ld hl, MapBgPalSwapList ; loading list for identification and properties values
 	call BgPalSwap
-
-; Check Map to replace Tiles used palettes in special cases
-; Like on Celadon Mansion Roof and on Celadon Mart 1F and Roof
-	push bc
-	ld a, b
-	ld hl, TilePalSwapList ; loading list for identification and properties values
-	ld de, 4 ; define the number of properties in list
-	call IsInArray
-	jr nc, .noTilePaletteSwap ; jump if not in list
-	ld de, W2_TilesetPaletteMap
-.loopTilepalSwapList
-	ld a, [hli]
-	ld b, a
-	ld a, [hli]
-	ld e, a
-	ld a, [hli]
-	ld c, a
-	ld a, [hli]
-.loopTilePalSwap
-	ld [de], a
-	inc de
-	dec c
-	jr nz, .loopTilePalSwap
-	ld a, b
-	cp [hl]
-	jr z, .loopTilepalSwapList
-
-.noTilePaletteSwap
-	pop bc
 
 	; Retrieve former wram bank
 	pop af
@@ -278,6 +259,7 @@ SprPalSwap:
 	ret
 
 TilesetBgPalSwapList:
+	; Tileset, new palette , palette slot to replace (0-7)
 	db CEMETERY,    CEMETERY_STAIRS,    4
 	db CEMETERY,    INDOOR_PURPLE,      6
 	db GATE,        GATE_STAIRS,        4
@@ -292,7 +274,7 @@ TilesetBgPalSwapList:
 	db -1
 
 MapBgPalSwapList:
-	; Map, new palette , palette slot to replace (0-7), palette type(0=BG, 1=Sprite)
+	; Map, new palette , palette slot to replace (0-7)
 	db BILLS_HOUSE,          BILLS_MACHINE_DOOR, 4
 	db CELADON_MANSION_ROOF, INDOOR_LIGHT_BLUE,  2
 	db CELADON_MANSION_ROOF, MANSION_SKY,        3
@@ -303,7 +285,7 @@ MapBgPalSwapList:
 	db -1
 
 MapSprPalSwapList:
-	; Map, new palette , palette slot to replace (0-7), palette type(0=BG, 1=Sprite)
+	; Map, new palette , palette slot to replace (0-7)
 	db BILLS_HOUSE,           SPRITE_PAL_BILLSMACHINE, 5
 	db CELADON_GYM,           SPRITE_PAL_ERIKA,        4
 	db CELADON_MANSION_1F,    SPRITE_PAL_YELLOWMON,    3 ; MEOWTH
@@ -325,20 +307,4 @@ MapSprPalSwapList:
 	db VERMILION_CITY,        SPRITE_PAL_GREYMON,      4 ; MACHOP
 	db VERMILION_GYM,         SPRITE_PAL_SURGE,        4
 	db VIRIDIAN_GYM,          SPRITE_PAL_GIOVANNI,     4
-	db -1
-
-TilePalSwapList:
-	; Map, first tile to replace, number of tiles to replace, palette slot to use
-	db CELADON_MANSION_ROOF, $1,  1, PAL_BG_GRAY
-	db CELADON_MANSION_ROOF, $26, 3, PAL_BG_GRAY
-	db CELADON_MANSION_ROOF, $36, 3, PAL_BG_GRAY
-	db CELADON_MANSION_ROOF, $10, 6, PAL_BG_WATER
-	db CELADON_MANSION_ROOF, $16, 3, PAL_BG_GREEN
-	db CELADON_MART_1F,      $07, 2, PAL_BG_YELLOW
-	db CELADON_MART_1F,      $17, 2, PAL_BG_YELLOW
-	db CELADON_MART_ROOF,    $4b, 2, PAL_BG_WATER
-	db CELADON_MART_ROOF,    $4f, 1, PAL_BG_WATER
-	db CELADON_MART_ROOF,    $28, 1, PAL_BG_ROOF
-	db CELADON_MART_ROOF,    $38, 1, PAL_BG_ROOF
-	db CELADON_MART_ROOF,    $4d, 2, PAL_BG_GRAY
 	db -1

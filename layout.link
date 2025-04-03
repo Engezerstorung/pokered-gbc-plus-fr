@@ -35,9 +35,9 @@ ROM0
 	"Header"
 	org $150
 	"Home"
-	org $1665
+;	org $1665
 	"LoadMonFrontSprite"
-	org $1dd9
+;	org $1dd9
 	"JpPoint"
 ROMX $1
 	"bank1"
@@ -149,7 +149,7 @@ ROMX $1B
 	"Tilesets 3"
 ROMX $1C
 	"bank1C"
-	org $4a6e
+;	org $4a6e
 	"BattleTransition_BlackScreen"
 	org $5fb6
 	"InitPartyMenuBlkPacket"
@@ -222,7 +222,8 @@ ROMX $39
 	"Party Mon Sprites Gfx 2"
 	"Party Mon Sprites Routines"
 WRAM0
-	"Audio RAM"
+	"Stack"
+;	"Audio RAM"
 	org $c100
 	"Sprite State Data"
 	"OAM Buffer"
@@ -233,7 +234,8 @@ WRAM0
 	"Main Data"
 	"Current Box Data"
 	org $df00
-	"Stack"
+	"Audio RAM"
+;	"Stack"
 VRAM
 	"VRAM"
 SRAM $0

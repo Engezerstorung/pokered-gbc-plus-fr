@@ -236,7 +236,8 @@ wPlayerMonNumber:: db
 ; the address of the menu cursor's current location within wTileMap
 wMenuCursorLocation:: dw
 
-	ds 2
+;	ds 2
+wTilesetDataPtr:: dw
 
 ; how many times should HandleMenuInput poll the joypad state before it returns?
 wMenuJoypadPollCount:: db
@@ -1874,7 +1875,10 @@ wTilesetTalkingOverTiles:: ds 3
 
 wGrassTile:: db
 
-	ds 4
+wTilesetAttributesPtr:: dw
+	
+	ds 2
+;	ds 4
 
 wNumBoxItems:: db
 ; item, quantity
@@ -1916,7 +1920,7 @@ wPrevSpriteSetOffset:: db
 ;; bit 3 - unused
 ;; bit 4 - unused
 ;; bit 5 - used in always animating sprites during delayed movement status
-;; bit 6 - unused
+;; bit 6 - set when a sprite is one coordinate under the screen, used when determinining visibility under text
 ;; bit 7 - when set prevent VramSwap to load in the vram text space
 wSpriteFlags:: db
 
