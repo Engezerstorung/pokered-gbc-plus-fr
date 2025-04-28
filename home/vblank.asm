@@ -17,7 +17,13 @@ VBlank::
 	and a
 	jr nz, .ok
 	ldh a, [hWY]
+
+	and a
+	jr nz, .not0
+	ldh a, [hWYBK]
+.not0
 	ldh [rWY], a
+
 .ok
 
 	ldh a, [hBlink]
