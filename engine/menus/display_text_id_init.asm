@@ -71,7 +71,8 @@ DisplayTextIDInit::
 	jr nz, .spriteStandStillLoop
 	ld b, $9c ; window background address
 	call CopyScreenTileBufferToVRAM ; transfer background in WRAM to VRAM
-	xor a
+;	xor a
+	ldh a, [hWYBK]
 	ldh [hWY], a ; put the window on the screen
 	call LoadFontTilePatterns
 	ld a, $01

@@ -191,6 +191,8 @@ RefreshWindowPalettesPreVBlank:
 	ld b, 6
 
 	ld a, [W2_TileBasedPalettes]
+	cp 2
+	jp z, .overworld
 	and a
 	jr nz, .tileBasedPalettes
 
@@ -243,7 +245,7 @@ RefreshWindowPalettesPreVBlank:
 	dec b
 	jr nz, .drawRow_Pal
 
-	jr .palettesDone
+	jp .palettesDone
 
 .tileBasedPalettes: ; Palettes are loaded based on the tile at that location
 	push hl
@@ -270,6 +272,63 @@ ENDR
 	pop bc
 	dec b
 	jr nz, .drawRow
+
+	jp .palettesDone
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+.overworld
+	push hl ; W2_ScreenPalettesBuffer
+
+	push de ; third of wTileMap
+	ld hl, W2_TileMapPalMap - wTileMap
+	add hl, de
+	ld d, h
+	ld e, l
+	pop hl ; third of wTileMap
+	
+	push de ; third of W2_TileMapPalMap
+
+	ld c, 7 ; used both as a mask for palette bits and as value for text palette
+.updateRow
+REPT SCREEN_WIDTH
+	; check if a tile is the battle transition tile
+	ld a, [hl]
+	cp $ff
+	jr nz, .notTransitionTile\@
+	; if battle transition tile, load text palette in the palette map
+	ld a, c
+	ld [de], a
+	jr .isText\@
+.notTransitionTile\@
+	; if not battle transition tile, check if the palette is text
+	ld a, [de]
+	and c ; mask the attribute info to keep only palette bits
+	cp c ; check if text palette
+	jr z, .isText\@
+	; if the palette is not text, correct the tile ID by substracting $80
+	res 7, [hl]
+.isText\@
+	inc de
+	inc hl
+ENDR
+	dec b
+	jp nz, .updateRow
+
+	pop de ; third of W2_TileMapPalMap
+	pop hl ; W2_ScreenPalettesBuffer
+
+	ld b, SCREEN_HEIGHT / 3
+.drawRow2
+	push bc
+REPT SCREEN_WIDTH
+	ld a, [de]
+	inc de
+	ld [hli], a
+ENDR
+	ld bc, BG_MAP_WIDTH - SCREEN_WIDTH
+	add hl, bc
+	pop bc
+	dec b
+	jp nz, .drawRow2
 
 .palettesDone:
 	pop af

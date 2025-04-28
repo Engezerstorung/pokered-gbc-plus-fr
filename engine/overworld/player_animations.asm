@@ -256,6 +256,7 @@ DoFlyAnimation:
 	ret
 
 LoadBirdSpriteGraphics:
+	farcall ColorPlayerSprite
 	ld de, BirdSprite
 	ld hl, vNPCSprites
 	lb bc, BANK(BirdSprite), 12
@@ -388,6 +389,7 @@ FishingAnim:
 	call DelayFrames
 	ld hl, wMovementFlags
 	set BIT_LEDGE_OR_FISHING, [hl]
+	set BIT_LEDGE_OR_FISHING -  1, [hl]
 	ld de, RedSprite
 	ld hl, vNPCSprites tile $00
 	lb bc, BANK(RedSprite), 12
@@ -455,6 +457,7 @@ FishingAnim:
 	call PrintText
 	ld hl, wMovementFlags
 	res BIT_LEDGE_OR_FISHING, [hl]
+	res BIT_LEDGE_OR_FISHING -  1, [hl]
 	call LoadFontTilePatterns
 	ret
 

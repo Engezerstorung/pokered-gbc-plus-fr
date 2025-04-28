@@ -7,6 +7,7 @@ Route15GateLeftBinoculars:
 	ld a, ARTICUNO
 	ld [wCurPartySpecies], a
 	call PlayCry
+	ld d, PAL_ARTICUNO
 	jp DisplayMonFrontSpriteInBox
 
 Route15UpstairsBinocularsText::

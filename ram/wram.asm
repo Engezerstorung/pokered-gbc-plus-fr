@@ -236,7 +236,8 @@ wPlayerMonNumber:: db
 ; the address of the menu cursor's current location within wTileMap
 wMenuCursorLocation:: dw
 
-	ds 2
+;	ds 2
+wTilesetDataPtr:: dw
 
 ; how many times should HandleMenuInput poll the joypad state before it returns?
 wMenuJoypadPollCount:: db
@@ -1874,7 +1875,10 @@ wTilesetTalkingOverTiles:: ds 3
 
 wGrassTile:: db
 
-	ds 4
+wTilesetAttributesPtr:: dw
+	
+	ds 2
+;	ds 4
 
 wNumBoxItems:: db
 ; item, quantity
@@ -1897,26 +1901,24 @@ wPlayerCoins:: dw ; BCD
 wMissableObjectFlags:: flag_array $100
 wMissableObjectFlagsEnd::
 
-	ds 1
+;	ds 2
+	ds 3
 
 ;; bit 0 - force male gender
 ;; bit 1 - force female gender
 wGenderFlags:: db
 
-wAnimationStatus:: db
+;wAnimationStatus:: db
 
-;; SpriteSets offsets of the current and previous sprite set
-wSpriteSetOffset::
-wCurSpriteSetOffset:: db
-wPrevSpriteSetOffset:: db
+wPrevSpriteSetID:: db
 
-;; bit 0 - is 1 if LoadMapSpriteTilePatterns called by OW spriteset loading
-;; bit 1 - is 1 if the Sprite set and previous Sprite set are different
-;; bit 2 - is 1 when sprite is already loaded in the same slot in vram
+;; bit 0 - unused
+;; bit 1 - unused
+;; bit 2 - unused
 ;; bit 3 - unused
-;; bit 4 - unused
+;; bit 4 - used for CopySpriteVideoData
 ;; bit 5 - used in always animating sprites during delayed movement status
-;; bit 6 - unused
+;; bit 6 - set when a sprite is one coordinate under the screen, used when determinining visibility under text
 ;; bit 7 - when set prevent VramSwap to load in the vram text space
 wSpriteFlags:: db
 

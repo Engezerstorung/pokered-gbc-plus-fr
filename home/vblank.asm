@@ -20,6 +20,25 @@ VBlank::
 	ldh [rWY], a
 .ok
 
+	ldh a, [hBlink]
+	xor 1
+	ldh [hBlink], a
+;
+;	ld a, [wMovementFlags]
+;	bit BIT_LEDGE_OR_FISHING, a
+;	jr z, .nothing
+;	ld c, $48
+;	ld b, $54
+;	ldh a, [hBlink]
+;	and a
+;	jr z, .visible
+;	ld b, 160
+;.visible
+;	ld a, $9
+;	ld de, LedgeHoppingShadowOAMBlock2
+;	call WriteOAMBlock
+;.nothing
+
 	call AutoBgMapTransfer
 	call VBlankCopyBgMap
 	call RedrawRowOrColumn
@@ -27,24 +46,30 @@ VBlank::
 	call VBlankCopyDouble
 	;call UpdateMovingBgTiles
 	call hDMARoutine
-	rst $10 ; HAX: VBlank hook (loads palettes)
-	nop
-	nop
-	; HAX: don't update sprites here. They're updated elsewhere to prevent wobbliness.
-	;ld a, BANK(PrepareOAMData)
-	nop
-	nop
-	;ldh [hLoadedROMBank], a
-	nop
-	nop
-	;ld [MBC1RomBank], a
-	nop
-	nop
-	nop
-	;call PrepareOAMData
-	nop
-	nop
-	nop
+
+	ld a, BANK(GbcVBlankHook)
+	rst SetRomBank
+	call GbcVBlankHook
+
+;	rst $10 ; HAX: VBlank hook (loads palettes)
+
+;	nop
+;	nop
+;	; HAX: don't update sprites here. They're updated elsewhere to prevent wobbliness.
+;	;ld a, BANK(PrepareOAMData)
+;	nop
+;	nop
+;	;ldh [hLoadedROMBank], a
+;	nop
+;	nop
+;	;ld [MBC1RomBank], a
+;	nop
+;	nop
+;	nop
+;	;call PrepareOAMData
+;	nop
+;	nop
+;	nop
 
 	; VBlank-sensitive operations end.
 
@@ -110,12 +135,19 @@ DelayFrame::
 DEF NOT_VBLANKED EQU 1
 
 	call DelayFrameHook ; HAX
-	nop
-	;ld a, NOT_VBLANKED
-	;ldh [hVBlankOccurred], a
+;	nop
+;	;ld a, NOT_VBLANKED
+;	;ldh [hVBlankOccurred], a
 .halt
 	halt
 	ldh a, [hVBlankOccurred]
 	and a
 	jr nz, .halt
 	ret
+
+;LedgeHoppingShadowOAMBlock2:
+;; tile ID, attributes
+;	db $ff, OAM_OBP1
+;	db $ff, OAM_HFLIP
+;	db $ff, OAM_VFLIP
+;	db $ff, OAM_HFLIP | OAM_VFLIP

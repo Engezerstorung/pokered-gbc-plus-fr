@@ -106,44 +106,25 @@ LoadSpecialOverworldSpritePalettes:
 	ldh [rSVBK], a
 	ret
 
-; Set an overworld sprite's colors
-; On entering, A contains the flags (without a color palette) and de is the destination.
-; This is called in the middle of a loop in engine/overworld/oam.asm, once per sprite.
-ColorOverworldSprite::
-	push af
-	push bc
-	push de
-	and $f8
-	ld b, a
-
-	ldh a, [hSpriteOffset2]
-	ld e, a
-	ld d, wSpriteStateData1 >> 8
-	ld a, [de] ; Load A with picture ID
-
-	cp SPRITE_RED
-	jr nz, .notRed
-
-	ld a, [wWalkBikeSurfState]
-	cp 2
-	jr nz, .birdTest
-	dec a ; if z, then need palette 1, which is 1 lower then the 2 already in 'a'
-	jr .norandomColor
-.birdTest
-	cp 3 ; if z, then need palette 3, which is already the value of 'a'
-	jr z, .norandomColor
-.notRed
-	ld a, [de]; Load A with picture ID
+; Set the overworld sprites's colors when entering a map
+; Load the palette data in the sprite's byte $7 of its wSpriteStateData2 struct
+; This is called during InitMapSprites in engine/overworld/map_sprites.asm
+ColorOverworldSprite2::
+	ld bc, $10 ; start with sprite 1 (sprite 0 being the player), player is done at the end
+.spriteLoop
+	ld h, HIGH(wSpriteStateData1) ; start by searching the PictureID of the current map object
+	ld l, c
+	ld a, [hl] ; [x#SPRITESTATEDATA1_PICTUREID]
+	and a
+	jr z, .nextsprite
 
 	dec a
-
-	ld de, SpritePaletteAssignments
-	add e
+	ld d, b
 	ld e, a
-	jr nc, .noCarry
-	inc d
-.noCarry
-	ld a, [de] ; Get the picture ID's palette
+
+	ld hl, SpritePaletteAssignments
+	add hl, de
+	ld a, [hl] ; Get the picture ID's palette
 
 	; If it's 8, that means no particular palette is assigned
 	cp SPR_PAL_RANDOM
@@ -156,19 +137,104 @@ ColorOverworldSprite::
 	jr z, .norandomColor
 
 	; This is a (somewhat) random but consistent color
-	ldh a, [hSpriteOffset2]
+	ld a, c
 	swap a
 	and 3
 
 .norandomColor
+	lb hl, HIGH(wSpriteStateData2), $7
+	add hl,bc
+	ld d, a
+	ld a, [hl]
+	and %10000000 ; need to preserve in-grass flag
+	or d
+	ld [hl], a
 
-	pop de
-	or b
-	ld [de], a
-	inc hl
-	inc e
-	pop bc
-	pop af
+.nextsprite
+	ld a, c
+	add $10
+	ld c, a
+	cp LOW($100)
+	jp nz, .spriteLoop
+
+	; fallthrough	
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+; Set the overworld sprites's colors when entering a map
+; Load the palette data in the sprite's byte $7 of its wSpriteStateData2 struct
+; This is called during InitMapSprites in engine/overworld/map_sprites.asm
+ColorOverworldSprite::
+	ld hl, wSprite01StateData1
+	ld bc, wSprite01StateData2GrassPriority - wSprite01StateData1
+	ld d, 0
+.spriteLoop
+	ld a, [hl] ; [x#SPRITESTATEDATA1_PICTUREID]
+	and a
+	jr z, .nextsprite
+
+	dec a
+	ld e, a
+
+	push hl
+	add hl, bc
+	ld a, [hl] ; [x#SPRITESTATEDATA2_GRASSPRIORITY]
+	and OAM_BEHIND_BG ; erase palette bits but keep grass priority bit
+	ld [hl], a
+
+	push hl
+	ld hl, SpritePaletteAssignments
+	add hl, de
+	ld a, [hl] ; Get the picture ID's palette
+	pop hl
+
+	; If it's 8, that means no particular palette is assigned
+	cp SPR_PAL_RANDOM
+	jr nz, .norandomColor
+
+	; Bill is always brown
+	ld a, [wCurMap]
+	cp BILLS_HOUSE
+	ld a, SPR_PAL_BROWN
+	jr z, .norandomColor
+
+	; This is a (somewhat) random but consistent color
+	ld a, l
+	swap a
+	and OAM_PALETTE - 4 ; palette will be one of the first four slot
+
+.norandomColor
+	or [hl] ; merge palette slot bits with grass priority bit in [x#SPRITESTATEDATA2_GRASSPRIORITY]
+	ld [hl], a
+	pop hl
+
+.nextsprite
+	ld a, l
+	add SPRITESTATEDATA1_LENGTH
+	ld l, a
+;	cp LOW(wSpriteStateData2)
+	jp nz, .spriteLoop
+
+	; fallthrough
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+ColorPlayerSprite::
+	ld hl, wSpritePlayerStateData2GrassPriority
+	ld a, [wWalkBikeSurfState]
+	cp 2
+	jr nz, .birdTest
+	dec a ; if z, then need palette 1, which is 1 lower then the 2 already in 'a'
+	jr .gotPlayerColor
+.birdTest
+	cp 3 ; if z, then need palette 3, which is already the value of 'a'
+	jr z, .gotPlayerColor
+	xor a ; if neither surf nor bird then need palette 0
+.gotPlayerColor
+	ld d, a
+	ld a, [hl]
+	and OAM_BEHIND_BG ; need to preserve in-grass flag
+	or d
+	ld [hl], a
 	ret
 
 ; Color the Party menu pokemon sprites

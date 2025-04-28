@@ -57,11 +57,21 @@ HandleLedges::
 INCLUDE "data/tilesets/ledge_tiles.asm"
 
 LoadHoppingShadowOAM:
+
 	ld hl, vChars1 tile $7f
 	ld de, LedgeHoppingShadow
 	lb bc, BANK(LedgeHoppingShadow), (LedgeHoppingShadowEnd - LedgeHoppingShadow) / $8
 	call CopyVideoDataDouble
 	ld a, $9
+
+;	ld b, $54
+;	ldh a, [hBlink]
+;	and a
+;	jr z, .visible
+;	ld b, 160
+;.visible
+;	ld a, $9	
+
 	lb bc, $54, $48 ; b, c = y, x coordinates of shadow
 	ld de, LedgeHoppingShadowOAMBlock
 	call WriteOAMBlock

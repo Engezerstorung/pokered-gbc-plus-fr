@@ -94,4 +94,35 @@ startPaletteTransfer:
 	ldh [rSVBK], a
 	ret
 
+LoadAndUpdateSGBTextPalette:
+	ld e, 7
+LoadAndUpdateSGBPalette:
+	call LoadSGBPalette
+	jr UpdatePalette
+
+ReloadDefaultTextPalette:
+	ld d, CRYS_TEXTBOX
+LoadAndUpdateMapTextPalette:
+	ld e, 7
+LoadAndUpdateMapPalette:
+	call LoadMapPalette
+	jr UpdatePalette
+
+LoadAndUpdateAnimationPalette:
+	ld e, 7
+LoadAndUpdateMapPalette_Sprite:
+	call LoadMapPalette_Sprite
+
+UpdatePalette:
+	; Update palettes
+	ldh a, [rSVBK]
+	ld d, a
+	ld a, 2
+	ldh [rSVBK], a
+	ld [W2_ForceBGPUpdate], a
+	ld [W2_ForceOBPUpdate], a
+	ld a, d
+	ldh [rSVBK], a
+	ret
+
 INCLUDE "data/sgb/sgb_palettes.asm"

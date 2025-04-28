@@ -823,6 +823,8 @@ LoadPlayerSpriteGraphics::
 	; 1: biking
 	; 2: surfing
 
+	homecall ColorPlayerSprite
+
 	ld a, [wWalkBikeSurfState]
 	dec a
 	jr z, .ridingBike
@@ -858,28 +860,10 @@ IsBikeRidingAllowed::
 ; The bike can be used on Route 23 and Indigo Plateau,
 ; or maps with tilesets in BikeRidingTilesets.
 ; Return carry if biking is allowed.
-
-	ld a, [wCurMap]
-	cp ROUTE_23
-	jr z, .allowed
-	cp INDIGO_PLATEAU
-	jr z, .allowed
-
 	ld a, [wCurMapTileset]
-	ld b, a
 	ld hl, BikeRidingTilesets
-.loop
-	ld a, [hli]
-	cp b
-	jr z, .allowed
-	inc a
-	jr nz, .loop
-	and a
-	ret
-
-.allowed
-	scf
-	ret
+	ld de, 1
+	jp IsInArray
 
 INCLUDE "data/tilesets/bike_riding_tilesets.asm"
 
@@ -893,8 +877,20 @@ LoadTilesetTilePatternData::
 	ld bc, $600
 	ld a, [wTilesetBank]
 ;	jp FarCopyData2
-
+	
+	push af
+	push bc
+	push de
 	call FarCopyData2
+	pop de
+	pop bc
+
+	ld a, 1
+	ldh [rVBK], a
+	pop af
+	call FarCopyData2
+	xor a
+	ldh [rVBK], a
 	jpfar VramSwap
 	
 ; this loads the current maps complete tile map (which references blocks, not individual tiles) to wOverworldMap
@@ -1345,7 +1341,7 @@ CheckForTilePairCollisions::
 	jr .retry
 .currentTileMatchesFirstInPair
 	inc hl
-	ld a, [hl]
+	ld a, [hli]
 	cp c
 	jr z, .foundMatch
 	jr .tilePairCollisionLoop
@@ -1364,61 +1360,24 @@ CheckForTilePairCollisions::
 
 INCLUDE "data/tilesets/pair_collision_tile_ids.asm"
 
-; this builds a tile map from the tile block map based on the current X/Y coordinates of the player's character
+; this builds a tile map and palette map from the tile block map based on the current X/Y coordinates of the player's character
 LoadCurrentMapView::
+	; save the loaded ROM bank
+	; ROM bank will be changed manually multiple time in this function
 	ldh a, [hLoadedROMBank]
 	push af
-	ld a, [wTilesetBank] ; tile data ROM bank
+
+	ld a, BANK(GetScreenViewBlocksIDs)
 	ldh [hLoadedROMBank], a
-	ld [MBC1RomBank], a ; switch to ROM bank that contains tile data
-	ld a, [wCurrentTileBlockMapViewPointer] ; address of upper left corner of current map view
-	ld e, a
-	ld a, [wCurrentTileBlockMapViewPointer + 1]
-	ld d, a
+	ld [MBC1RomBank], a ; switch to function ROM bank
+
+	call GetScreenViewBlocksIDs
+
+;	ld de, 0
+	ld hl, wTilesetBlocksPtr
+	call LoadBlocksTileData
+
 	ld hl, wTileMapBackup
-	ld b, $05
-.rowLoop ; each loop iteration fills in one row of tile blocks
-	push hl
-	push de
-	ld c, $06
-.rowInnerLoop ; loop to draw each tile block of the current row
-	push bc
-	push de
-	push hl
-	ld a, [de]
-	ld c, a ; tile block number
-	call DrawTileBlock
-	pop hl
-	pop de
-	pop bc
-	inc hl
-	inc hl
-	inc hl
-	inc hl
-	inc de
-	dec c
-	jr nz, .rowInnerLoop
-; update tile block map pointer to next row's address
-	pop de
-	ld a, [wCurMapWidth]
-	add MAP_BORDER * 2
-	add e
-	ld e, a
-	jr nc, .noCarry
-	inc d
-.noCarry
-; update tile map pointer to next row's address
-	pop hl
-	ld a, $60
-	add l
-	ld l, a
-	jr nc, .noCarry2
-	inc h
-.noCarry2
-	dec b
-	jr nz, .rowLoop
-	ld hl, wTileMapBackup
-	ld bc, $0
 .adjustForYCoordWithinTileBlock
 	ld a, [wYBlockCoord]
 	and a
@@ -1429,31 +1388,112 @@ LoadCurrentMapView::
 	ld a, [wXBlockCoord]
 	and a
 	jr z, .copyToVisibleAreaBuffer
-	ld bc, $2
-	add hl, bc
+	inc hl
+	inc hl
 .copyToVisibleAreaBuffer
+
+	push hl
 	decoord 0, 0 ; base address for the tiles that are directly transferred to VRAM during V-blank
-	ld b, SCREEN_HEIGHT
-.rowLoop2
-	ld c, SCREEN_WIDTH
-.rowInnerLoop2
-	ld a, [hli]
-	ld [de], a
-	inc de
-	dec c
-	jr nz, .rowInnerLoop2
-	ld a, $04
-	add l
-	ld l, a
-	jr nc, .noCarry3
-	inc h
-.noCarry3
-	dec b
-	jr nz, .rowLoop2
+	call MakeTileMapOrPalMap
+
+;	ld de, 2
+	ld hl, wTilesetAttributesPtr
+	call LoadBlocksTileData
+
+	pop hl
+	decoord 0, 0, W2_TileMapPalMap ; base address for the tiles attributes that are directly transferred to VRAM during V-blank
+	call MakeTileMapOrPalMap
+
 	pop af
 	ldh [hLoadedROMBank], a
 	ld [MBC1RomBank], a ; restore previous ROM bank
 	ret
+
+LoadBlocksTileData:
+	ld a, [wTilesetBank] ; tileset data ROM bank
+	ldh [hLoadedROMBank], a
+	ld [MBC1RomBank], a ; switch to ROM bank that contains tileset data
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;	ld hl, wTilesetBlocksPtr
+;	ld a, [hli]
+;	ld h, [hl]
+;	ld l, a
+;	add hl, de
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+	ld a, [hli]
+	ld [wTilesetDataPtr], a
+	ld a, [hl]
+	ld [wTilesetDataPtr + 1], a
+
+	ld de, wBuffer
+	ld hl, wTileMapBackup
+	ld b, $05
+.rowLoop ; each loop iteration fills in one row of blocks tile data
+	ld c, $06
+	jr .startRowInnerLoop
+.rowInnerLoop ; loop to draw each block tile data of the current row
+	ld de, -76 + 4 ; go back to the destination adress for the next block tile data
+	add hl, de
+	pop de
+.startRowInnerLoop ; first loop to draw each block tile data of the current row
+	; Load the current map block ID.
+	ld a, [de]
+	inc de
+	push de
+
+; 	; If the current map block is a border block, load the border block data.
+;	and a
+;	jr nz, .ok
+;	ld a, [wMapBorderBlock]
+;.ok
+
+	; Set de to the address of the current block tile data ([wTilesetBlocksPtr] or [wTilesetAttributesPtr] + (a) tiles).
+	push hl
+	ld l, a
+	ld h, 0
+	add hl, hl
+	add hl, hl
+	add hl, hl
+	add hl, hl
+	ld a, [wTilesetDataPtr]
+	add l
+	ld e, a
+	ld a, [wTilesetDataPtr + 1]
+	adc h
+	ld d, a
+	pop hl
+
+	push bc
+	ld bc, 24 - 4
+	; copy the 4x4 block tile data
+REPT 4 - 1
+REPT 4
+	ld a, [de]
+	inc de
+	ld [hli], a
+ENDR
+	add hl, bc
+ENDR
+REPT 4
+	ld a, [de]
+	inc de
+	ld [hli], a
+ENDR
+	pop bc
+	dec c
+	jp nz, .rowInnerLoop
+	pop de
+	dec b
+	jp nz, .rowLoop
+	ret
+
+MakeTileMapOrPalMap:
+	ld a, BANK(_MakeTileMapOrPalMap)
+	ldh [hLoadedROMBank], a
+	ld [MBC1RomBank], a ; switch to function ROM bank
+	jp _MakeTileMapOrPalMap
 
 AdvancePlayerSprite::
 	ld a, [wSpritePlayerStateData1YStepVector]
@@ -1615,6 +1655,14 @@ AdvancePlayerSprite::
 ; if moving west
 	call ScheduleWestColumnRedraw
 .scrollBackgroundAndSprites
+
+;; If too close to vblank wait to insure that there is enough time to both
+;; scroll and update the sprites OAM data to prevent sprite tearing.
+;.wait
+;	ldh a, [rLY]
+;	cp $7e
+;	jr nc, .wait
+
 	ld a, [wSpritePlayerStateData1YStepVector]
 	ld b, a
 	ld a, [wSpritePlayerStateData1XStepVector]
@@ -1716,7 +1764,23 @@ ScheduleNorthRowRedraw::
 	ret
 
 CopyToRedrawRowOrColumnSrcTiles::
+	ld a, 2
+	ldh [rSVBK], a
+
+	push hl
 	ld de, wRedrawRowOrColumnSrcTiles
+	call .copy
+	pop hl
+	ld bc, W2_TileMapPalMap - wTileMap
+	add hl, bc
+	ld de, W2_RedrawRowOrColumnSrcTiles
+	call .copy
+
+	xor a
+	ldh [rSVBK], a
+	ret
+
+.copy
 	ld c, 2 * SCREEN_WIDTH
 .loop
 	ld a, [hli]
@@ -1764,7 +1828,23 @@ ScheduleEastColumnRedraw::
 	ret
 
 ScheduleColumnRedrawHelper::
+	ld a, 2
+	ldh [rSVBK], a
+
+	push hl
 	ld de, wRedrawRowOrColumnSrcTiles
+	call .copy
+	pop hl
+	ld bc, W2_TileMapPalMap - wTileMap
+	add hl, bc
+	ld de, W2_RedrawRowOrColumnSrcTiles
+	call .copy
+
+	xor a
+	ldh [rSVBK], a
+	ret
+
+.copy
 	ld c, SCREEN_HEIGHT
 .loop
 	ld a, [hli]
@@ -1792,48 +1872,6 @@ ScheduleWestColumnRedraw::
 	ldh [hRedrawRowOrColumnDest + 1], a
 	ld a, REDRAW_COL
 	ldh [hRedrawRowOrColumnMode], a
-	ret
-
-; function to write the tiles that make up a tile block to memory
-; Input: c = tile block ID, hl = destination address
-DrawTileBlock::
-	push hl
-	ld a, [wTilesetBlocksPtr] ; pointer to tiles
-	ld l, a
-	ld a, [wTilesetBlocksPtr + 1]
-	ld h, a
-	ld a, c
-	swap a
-	ld b, a
-	and $f0
-	ld c, a
-	ld a, b
-	and $0f
-	ld b, a ; bc = tile block ID * 0x10
-	add hl, bc
-	ld d, h
-	ld e, l ; de = address of the tile block's tiles
-	pop hl
-	ld c, $04 ; 4 loop iterations
-.loop ; each loop iteration, write 4 tile numbers
-	push bc
-	ld a, [de]
-	ld [hli], a
-	inc de
-	ld a, [de]
-	ld [hli], a
-	inc de
-	ld a, [de]
-	ld [hli], a
-	inc de
-	ld a, [de]
-	ld [hl], a
-	inc de
-	ld bc, $15
-	add hl, bc
-	pop bc
-	dec c
-	jr nz, .loop
 	ret
 
 ; function to update joypad state and simulate button presses
@@ -2333,11 +2371,11 @@ LoadMapData::
 	farcall InitMapSprites ; load tile pattern data for sprites
 	call LoadTileBlockMap
 	call LoadTilesetTilePatternData
-	call LoadCurrentMapView
 
 	ld b, SET_PAL_OVERWORLD
 	call RunPaletteCommand ; HAX: this function call was moved to be above _LoadMapVramAndColors
 ; copy current map view + corresponding palettes to VRAM
+	call LoadCurrentMapView
 	call _LoadMapVramAndColors ; HAX
 
 	ld a, $01

@@ -492,7 +492,10 @@ DisplayOptionMenu:
 	bit BIT_B_BUTTON, b
 	jr nz, .exitMenu
 	bit BIT_START, b
-	jr nz, .exitMenu
+;	jr nz, .exitMenu
+
+	jp z, .start
+
 	bit BIT_A_BUTTON, b
 	jr z, .checkDirectionKeys
 	ld a, [wTopMenuItemY]
@@ -592,6 +595,65 @@ DisplayOptionMenu:
 .updateTextSpeedXCoord
 	ld [wOptionsTextSpeedCursorX], a ; text speed cursor X coordinate
 	jp .eraseOldMenuCursor
+
+.start
+	ldh a, [hWY]
+	ldh [hWYBK], a
+	call JoypadLowSensitivity
+	ldh a, [hJoy5]
+	ld b, a
+	jr z, .start
+	and B_BUTTON | D_RIGHT | D_LEFT | D_UP | D_DOWN
+	bit BIT_D_DOWN, b
+	jr z, .checkup
+	ldh a, [hWY]
+	add 8
+	ldh [hWY], a
+	jr .start
+
+.checkup	
+	bit BIT_D_UP, b
+	jr z, .checkright
+	ldh a, [hWY]
+	sub 8
+	ldh [hWY], a
+	jr .start
+
+.checkright	
+	bit BIT_D_RIGHT, b
+	jr z, .checkleft
+	ldh a, [rWX]
+	ld c, 8
+	cp 0
+	jr nz, .notborder
+	ld c, 7
+.notborder
+	add c
+	ldh [rWX], a
+	jr .start
+
+.checkleft	
+	bit BIT_D_LEFT, b
+	jr z, .checkb
+	ldh a, [rWX]
+	ld c, 8
+	cp 7
+	jr nz, .notborder2
+	ld c, 7
+.notborder2
+	and a
+	jr nz, .notborder3
+	ld c, 9
+.notborder3
+	sub c
+	ldh [rWX], a
+	jr .start
+
+.checkb
+	bit BIT_B_BUTTON, b
+	jp nz, .loop
+	jr .start
+
 
 TextSpeedOptionText:
 	db   "VIT. TEXTE"

@@ -3,19 +3,42 @@ LoadTilesetHeader:
 	push hl
 	ld d, 0
 	ld a, [wCurMapTileset]
-	add a
-	add a
-	ld b, a
-	add a
-	add b ; a = tileset * 12
-	jr nc, .noCarry
-	inc d
-.noCarry
-	ld e, a
-	ld hl, Tilesets
+;	add a
+;	add a
+;	ld b, a
+;	add a
+;	add b ; a = tileset * 12
+;	jr nc, .noCarry
+;	inc d
+;.noCarry
+;	ld e, a
+;	ld hl, Tilesets
+;	add hl, de
+;	ld de, wTilesetBank
+;	ld c, $b
+
+	ld h, 0
+	ld l, a
+	add a ; x2 = 2
+	add l ; +1 = 3
+	add a ; x2 = 6
+	add l ; +1 = 7
+	ld l, a
+
+;	ld e, a
+;	ld h, d
+;	ld l, e
+;	add hl, hl ; x2 = 2
+;	add hl, de ; +1 = 3
+;	add hl, hl ; x2 = 6
+;	add hl, de ; +1 = 7
+
+	add hl, hl ; x2 = 14 ; hl = tileset * 14
+	ld de, Tilesets
 	add hl, de
 	ld de, wTilesetBank
-	ld c, $b
+	ld c, 13
+
 .copyTilesetHeaderLoop
 	ld a, [hli]
 	ld [de], a

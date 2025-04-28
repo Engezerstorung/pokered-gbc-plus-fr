@@ -20,18 +20,36 @@ GetRowColAddressBgMap::
 ; INPUT: h - high byte of background tile map address in VRAM
 ClearBgMap::
 	ld a, " "
-	jr .next
-	ld a, l
-.next
-	ld de, BG_MAP_WIDTH * BG_MAP_HEIGHT
-	ld l, e
-.loop
-	ld [hli], a
-	dec e
-	jr nz, .loop
-	dec d
-	jr nz, .loop
-	ret
+	; fallthrough
+
+FillBgMap::
+	ld bc, BG_MAP_WIDTH * BG_MAP_HEIGHT
+	ld l, c
+	jp FillMemory
+
+;	jr .next
+;	ld a, l
+;.next
+;	ld de, BG_MAP_WIDTH * BG_MAP_HEIGHT
+;	ld l, e
+;.loop
+;	ld [hli], a
+;	dec e
+;	jr nz, .loop
+;	dec d
+;	jr nz, .loop
+;	ret
+
+; clears a VRAM background map attributes with text palette (BGP7)
+; INPUT: h - high byte of background tile map address in VRAM
+ClearBgMapAttributes::
+	di
+	ld a, 7
+	ldh [rVBK], a
+	call FillBgMap
+	xor a
+	ldh [rVBK], a
+	reti
 
 ; This function redraws a BG row of height 2 or a BG column of width 2.
 ; One of its main uses is redrawing the row or column that will be exposed upon
@@ -41,19 +59,26 @@ ClearBgMap::
 ; when necessary. It is also used in trade animation and elevator code.
 ; This function has beex HAXed to call other functions, which will also refresh palettes.
 RedrawRowOrColumn::
-	ldh a, [hRedrawRowOrColumnMode]
-	and a
-	ret z
-	ld b, a
-	xor a
-	ldh [hRedrawRowOrColumnMode], a
-	dec b
-	jr nz, .redrawRow
-	CALL_INDIRECT DrawMapColumn
+	ld a, BANK(_RedrawRowOrColumn)
+	ld [MBC1RomBank], a
+	call _RedrawRowOrColumn
+	ldh a, [hLoadedROMBank]
+	ld [MBC1RomBank], a
 	ret
-.redrawRow
-	CALL_INDIRECT DrawMapRow
-	ret
+
+;	ldh a, [hRedrawRowOrColumnMode]
+;	and a
+;	ret z
+;	ld b, a
+;	xor a
+;	ldh [hRedrawRowOrColumnMode], a
+;	dec b
+;	jr nz, .redrawRow
+;	CALL_INDIRECT DrawMapColumn
+;	ret
+;.redrawRow
+;	CALL_INDIRECT DrawMapRow
+;	ret
 
 ; This function automatically transfers tile number data from the tile map at
 ; wTileMap to VRAM during V-blank. Note that it only transfers one third of the
@@ -100,16 +125,13 @@ VBlankCopyBgMap::
 	ldh a, [hVBlankCopyBGSource] ; doubles as enabling byte
 	and a
 	ret z
-	ld hl, sp + 0
-	ld a, h
-	ldh [hSPTemp], a
-	ld a, l
-	ldh [hSPTemp + 1], a ; save stack pointer
-	ldh a, [hVBlankCopyBGSource]
-	ld l, a
-	ldh a, [hVBlankCopyBGSource + 1]
-	ld h, a
+
+	ld [hSPTemp], sp ; save stack pointer
+
+	ld sp, hVBlankCopyBGSource
+	pop hl
 	ld sp, hl
+
 	ldh a, [hVBlankCopyBGDest]
 	ld l, a
 	ldh a, [hVBlankCopyBGDest + 1]
@@ -133,16 +155,10 @@ VBlankCopyDouble::
 	and a
 	ret z
 
-	ld hl, sp + 0
-	ld a, h
-	ldh [hSPTemp], a
-	ld a, l
-	ldh [hSPTemp + 1], a
+	ld [hSPTemp], sp
 
-	ldh a, [hVBlankCopyDoubleSource]
-	ld l, a
-	ldh a, [hVBlankCopyDoubleSource + 1]
-	ld h, a
+	ld sp, hVBlankCopyDoubleSource
+	pop hl
 	ld sp, hl
 
 	ldh a, [hVBlankCopyDoubleDest]
@@ -156,44 +172,25 @@ VBlankCopyDouble::
 	ldh [hVBlankCopyDoubleSize], a
 
 .loop
-REPT LEN_2BPP_TILE / 4 - 1
+REPT LEN_2BPP_TILE / 4
 	pop de
-	ld [hl], e
-	inc l
-	ld [hl], e
-	inc l
-	ld [hl], d
-	inc l
-	ld [hl], d
-	inc l
+	ld a, e
+	ld [hli], a
+	ld [hli], a
+	ld a, d
+	ld [hli], a
+	ld [hli], a
 ENDR
-	pop de
-	ld [hl], e
-	inc l
-	ld [hl], e
-	inc l
-	ld [hl], d
-	inc l
-	ld [hl], d
-	inc hl
 	dec b
 	jr nz, .loop
 
-	ld a, l
-	ldh [hVBlankCopyDoubleDest], a
-	ld a, h
-	ldh [hVBlankCopyDoubleDest + 1], a
+	ld [hVBlankCopyDoubleSource], sp
 
-	ld hl, sp + 0
-	ld a, l
-	ldh [hVBlankCopyDoubleSource], a
-	ld a, h
-	ldh [hVBlankCopyDoubleSource + 1], a
+	ld sp, hVBlankCopyDoubleDest + 2
+	push hl
 
-	ldh a, [hSPTemp]
-	ld h, a
-	ldh a, [hSPTemp + 1]
-	ld l, a
+	ld sp, hSPTemp
+	pop hl
 	ld sp, hl
 
 	ret
@@ -210,16 +207,16 @@ VBlankCopy::
 	and a
 	ret z
 
-	ld hl, sp + 0
-	ld a, h
-	ldh [hSPTemp], a
-	ld a, l
-	ldh [hSPTemp + 1], a
+	ld hl, wSpriteFlags
+	bit 4, [hl]
+	jp nz, VBlankSpriteCopy
 
-	ldh a, [hVBlankCopySource]
-	ld l, a
-	ldh a, [hVBlankCopySource + 1]
-	ld h, a
+.doCopy	
+
+	ld [hSPTemp], sp
+
+	ld sp, hVBlankCopySource
+	pop hl
 	ld sp, hl
 
 	ldh a, [hVBlankCopyDest]
@@ -248,21 +245,13 @@ ENDR
 	dec b
 	jr nz, .loop
 
-	ld a, l
-	ldh [hVBlankCopyDest], a
-	ld a, h
-	ldh [hVBlankCopyDest + 1], a
+	ld [hVBlankCopySource], sp
 
-	ld hl, sp + 0
-	ld a, l
-	ldh [hVBlankCopySource], a
-	ld a, h
-	ldh [hVBlankCopySource + 1], a
+	ld sp, hVBlankCopyDest + 2
+	push hl
 
-	ldh a, [hSPTemp]
-	ld h, a
-	ldh a, [hSPTemp + 1]
-	ld l, a
+	ld sp, hSPTemp
+	pop hl
 	ld sp, hl
 
 	ret
@@ -344,3 +333,38 @@ UpdateMovingBgTiles::
 FlowerTile1: INCBIN "gfx/tilesets/flower/flower1.2bpp"
 FlowerTile2: INCBIN "gfx/tilesets/flower/flower2.2bpp"
 FlowerTile3: INCBIN "gfx/tilesets/flower/flower3.2bpp"
+
+VBlankSpriteCopy::
+	cp 12
+	push af
+	jr c, .canCopy
+
+	ldh a, [hMovingBGTilesCounter1]
+	cp 19
+	jr c, .canCopy
+	pop af
+	ret
+
+.canCopy
+	res 4, [hl]
+
+	ldh a, [hVBlankCopyDest]
+	ld l, a
+	ldh a, [hVBlankCopyDest + 1]
+	ld h, a
+	push hl
+
+	call VBlankCopy.doCopy
+
+	pop hl
+	pop af
+	ret c
+
+	ldh [hVBlankCopySize], a
+	set 3, h ; add $800 ($80 tiles) to hl (1 << 3 == $8)
+	ld a, l
+	ldh [hVBlankCopyDest], a
+	ld a, h
+	ldh [hVBlankCopyDest + 1], a
+
+	jp VBlankCopy.doCopy

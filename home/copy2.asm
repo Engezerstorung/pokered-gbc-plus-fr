@@ -59,6 +59,11 @@ FarCopyDataDouble::
 	ld [MBC1RomBank], a
 	ret
 
+;DoCopySpriteVideoData:
+;	push hl
+;	ld hl, wSpriteFlags
+;	set 4, [hl]
+;	pop hl
 CopyVideoData::
 ; Wait for the next VBlank, then copy c 2bpp
 ; tiles from b:de to hl, 8 tiles at a time.
@@ -92,7 +97,7 @@ CopyVideoData::
 
 .loop
 	ld a, c
-	cp 8
+	cp 12
 	jr nc, .keepgoing
 
 .done
@@ -106,11 +111,18 @@ CopyVideoData::
 	ret
 
 .keepgoing
-	ld a, 8
+	ld a, 12
 	ldh [hVBlankCopySize], a
+;	call DelayFrame
+
+.retry
 	call DelayFrame
+	ldh a, [hVBlankCopySize]
+	and a
+	jr nz, .retry
+
 	ld a, c
-	sub 8
+	sub 12
 	ld c, a
 	jr .loop
 
@@ -141,7 +153,7 @@ CopyVideoDataDouble::
 
 .loop
 	ld a, c
-	cp 8
+	cp 12
 	jr nc, .keepgoing
 
 .done
@@ -155,11 +167,11 @@ CopyVideoDataDouble::
 	ret
 
 .keepgoing
-	ld a, 8
+	ld a, 12
 	ldh [hVBlankCopyDoubleSize], a
 	call DelayFrame
 	ld a, c
-	sub 8
+	sub 12
 	ld c, a
 	jr .loop
 
@@ -187,54 +199,116 @@ CopyScreenTileBufferToVRAM::
 
 	ld c, 6
 
-	ld hl, $600 * 0
+	hlbgcoord 0, 0, $0
+;	ld hl, $600 * 0
 	decoord 0, 6 * 0
 	call .setup
-	call DelayFrame
+;	decoord 0, 6 * 0, W2_TileMapPalMap
+;	call .setup2_DelayFrame
 
-	ld hl, $600 * 1
+	hlbgcoord 0, 6, $0
+;	ld hl, $600 * 1
 	decoord 0, 6 * 1
 	call .setup
-	call DelayFrame
+;	decoord 0, 6 * 1, W2_TileMapPalMap
+;	call .setup2_DelayFrame
 
-	ld hl, $600 * 2
+	hlbgcoord 0, 12, $0
+;	ld hl, $600 * 2
 	decoord 0, 6 * 2
-	call .setup
-	jp DelayFrame
+;	call .setup
+;	decoord 0, 6 * 2, W2_TileMapPalMap
+;	jp .setup2_DelayFrame
 
 .setup
 	ld a, d
 	ldh [hVBlankCopyBGSource+1], a
-	call GetRowColAddressBgMap
+;	call GetRowColAddressBgMap
 	ld a, l
 	ldh [hVBlankCopyBGDest], a
 	ld a, h
+	add b
 	ldh [hVBlankCopyBGDest+1], a
 	ld a, c
 	ldh [hVBlankCopyBGNumRows], a
 	ld a, e
 	ldh [hVBlankCopyBGSource], a
-	ret
+
+	ld hl, W2_TileMapPalMap - wTileMap
+	add hl, de
+
+	ld a, 2
+	ldh [rSVBK], a
+	ld a, h
+	ld [W2_VBlankCopyBGSource+1], a
+	ld a, l
+	ld [W2_VBlankCopyBGSource], a
+	xor a
+	ldh [rSVBK], a
+
+	jp DelayFrame
+
+;	ret
+
+;.setup2_DelayFrame
+;	ld a, 2
+;	ldh [rSVBK], a
+;	ld a, d
+;	ld [W2_VBlankCopyBGSource+1], a
+;	ld a, e
+;	ld [W2_VBlankCopyBGSource], a
+;	xor a
+;	ldh [rSVBK], a
+;	jp DelayFrame
 
 ClearScreen::
 ; Clear wTileMap, then wait
 ; for the bg map to update.
-	ld bc, 20 * 18
-	inc b
+	ldh a, [rSVBK]
+	ld b, a
+	ld a, 2
+	ldh [rSVBK], a
+	push bc
+
 	hlcoord 0, 0
 	ld a, " "
-.loop
-	ld [hli], a
-	dec c
-	jr nz, .loop
-	dec b
-	jr nz, .loop
+	ld bc, SCREEN_WIDTH * SCREEN_HEIGHT
+	push bc
+	call FillMemory
+	pop bc
+	hlcoord 0, 0, W2_TileMapPalMap
+	ld a, 7
+	call FillMemory
+
+	pop af
+	ldh [rSVBK], a
+
 	jp Delay3
 
+;	farcall FillTileMapPalMapWithTextPal
+;
+;	ld bc, 20 * 18
+;;	inc b
+;	hlcoord 0, 0
+;	ld a, " "
+;;.loop
+;;	ld [hli], a
+;;	dec c
+;;	jr nz, .loop
+;;	dec b
+;;	jr nz, .loop
+;	call FillMemory
+;	jp Delay3
+
 GoodCopyVideoData::
+	call CopyVideoDataToFarCopyData2
+	jp nz, CopyVideoData ; if LCD is on, transfer during V-blank
+	jp FarCopyData2 ; if LCD is off, transfer all at once
+
+CopyVideoDataToFarCopyData2:
 	ldh a, [rLCDC]
 	bit rLCDC_ENABLE, a ; is the LCD enabled?
-	jp nz, CopyVideoData ; if LCD is on, transfer during V-blank
+	ret nz
 	ld a, b
 	push de
 	ld d, h
@@ -248,4 +322,31 @@ GoodCopyVideoData::
 	ld b, h
 	ld c, l
 	pop hl
-	jp FarCopyData2 ; if LCD is off, transfer all at once
+	ret
+
+;CopySpriteVideoData::
+;	call CopyVideoDataToFarCopyData2
+;;	jp nz, DoCopySpriteVideoData ; if LCD is on, transfer during V-blank
+;
+;	jp nz, CopyVideoData ; if LCD is on, transfer during V-blank
+;
+;;	jr z, FarCopySpriteData2 ; if LCD is off, transfer all at once
+;	; fallthrough if LCD is off, transfer all at once
+;FarCopySpriteData2:
+;	push de
+;	push af
+;
+;	push bc
+;	call FarCopyData2
+;	pop bc
+;
+;	ld a, c
+;	cp 12 tiles
+;	pop de ; pop af into de to preserve flags
+;	ld a, d
+;	pop de
+;	ret c
+;
+;	set 3, d ; add $800 ($80 tiles) to de (1 << 3 == $8)
+;	jp FarCopyData2
+;

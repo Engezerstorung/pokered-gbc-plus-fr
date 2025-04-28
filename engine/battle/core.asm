@@ -17,15 +17,21 @@ SlidePlayerAndEnemySilhouettesOnScreen:
 	call DisableLCD
 	call LoadFontTilePatterns
 	call LoadHudAndHpBarAndStatusTilePatterns
-	ld hl, vBGMap0
-	ld bc, BG_MAP_WIDTH * BG_MAP_HEIGHT
-.clearBackgroundLoop
-	ld a, " "
-	ld [hli], a
-	dec bc
-	ld a, b
-	or c
-	jr nz, .clearBackgroundLoop
+	ld h, HIGH(vBGMap0)
+	call ClearBgMap
+
+	ld h, HIGH(vBGMap0)
+	call ClearBgMapAttributes
+;	ld hl, vBGMap0
+;	ld bc, BG_MAP_WIDTH * BG_MAP_HEIGHT
+;.clearBackgroundLoop
+;	ld a, " "
+;	ld [hli], a
+;	dec bc
+;	ld a, b
+;	or c
+;	jr nz, .clearBackgroundLoop
+
 ; copy the work RAM tile map to VRAM
 	hlcoord 0, 0
 	ld de, vBGMap0
@@ -6157,6 +6163,20 @@ LoadEnemyMonData:
 	ld b, SPDSPCDV_TRAINER
 	jr z, .storeDVs
 ; random DVs for wild mon
+
+;;; SHINY DVS HERE ;;;;
+;	call BattleRandom
+;	and a
+;	jr nz, .notShiny
+;.shinyretry	
+;	call BattleRandom
+;	bit 5, a
+;	jr z, .shinyretry
+;	and $f0
+;	or $a
+;	ld b, $aa
+;.notShiny
+
 	call BattleRandom
 	ld b, a
 	call BattleRandom

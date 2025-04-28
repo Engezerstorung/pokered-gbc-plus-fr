@@ -56,6 +56,16 @@ VermilionDockSSAnneLeavesScript:
 	ld bc, SCREEN_WIDTH * 6
 	ld a, $14 ; water tile
 	call FillMemory
+
+	ld a, 2
+	ldh [rSVBK], a
+	hlcoord 0, 10, W2_TileMapPalMap
+	ld bc, SCREEN_WIDTH * 6
+	ld a, PAL_BG_WATER
+	call FillMemory
+	xor a
+	ldh [rSVBK], a
+
 	ld a, 1
 	ldh [hAutoBGTransferEnabled], a
 	call Delay3
