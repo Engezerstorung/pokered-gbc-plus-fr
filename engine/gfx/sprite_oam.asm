@@ -152,7 +152,7 @@ PrepareOAMData::
 	ld a, [wMovementFlags]
 	bit BIT_LEDGE_OR_FISHING, a
 
-;	push af
+	push af
 
 	ld a, $a0
 	jr z, .clear
@@ -174,7 +174,7 @@ PrepareOAMData::
 	cp l
 	jr nz, .clear
 
-	ret
+;	ret
 
 	pop af
 	ret z
@@ -194,7 +194,7 @@ PrepareOAMData::
 	ld [hl], a
 	add hl, de
 	dec c
-	jr nz, .visibleShadow
+	jr nz, .visibleShadowLoop
 	dec b
 	ret z
 	add 8
