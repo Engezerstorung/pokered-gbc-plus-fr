@@ -26,6 +26,7 @@ UpdatePlayerSprite:
 	ld h, HIGH(wSpriteStateData1)
 	ld a, [wWalkCounter]
 	and a
+	ld b, 4
 	jr nz, .moving
 	ld a, [wPlayerMovingDirection]
 ; check if down
@@ -45,9 +46,16 @@ UpdatePlayerSprite:
 	jr .next
 .checkIfRight
 	bit PLAYER_DIR_BIT_RIGHT, a
-	jr z, .notMoving
+	jr z, .checkForIdleAnimation
 	ld a, SPRITE_FACING_RIGHT
 	jr .next
+
+.checkForIdleAnimation
+	ld a, [wWalkBikeSurfState]
+	cp 2
+	ld b, 12
+	jr z, .idleAnimation
+
 .notMoving
 ; zero the animation counters
 	xor a
@@ -56,6 +64,7 @@ UpdatePlayerSprite:
 	jr .calcImageIndex
 .next
 	ld [wSpritePlayerStateData1FacingDirection], a
+.idleAnimation
 	ld a, [wFontLoaded]
 	bit BIT_FONT_LOADED, a
 	jr nz, .notMoving
@@ -69,8 +78,8 @@ UpdatePlayerSprite:
 	ld a, [hl]
 	inc a
 	ld [hl], a
-	cp 4
-	jr nz, .calcImageIndex
+	cp b
+	jr c, .calcImageIndex
 	xor a
 	ld [hl], a
 	inc hl
