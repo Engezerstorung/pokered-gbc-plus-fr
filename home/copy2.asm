@@ -187,34 +187,30 @@ CopyScreenTileBufferToVRAM::
 
 	ld c, 6
 
-	ld hl, $600 * 0
+	hlbgcoord 0, 0, $0
 	decoord 0, 6 * 0
 	call .setup
-	call DelayFrame
 
-	ld hl, $600 * 1
+	hlbgcoord 0, 6, $0
 	decoord 0, 6 * 1
 	call .setup
-	call DelayFrame
 
-	ld hl, $600 * 2
+	hlbgcoord 0, 12, $0
 	decoord 0, 6 * 2
-	call .setup
-	jp DelayFrame
 
 .setup
 	ld a, d
 	ldh [hVBlankCopyBGSource+1], a
-	call GetRowColAddressBgMap
 	ld a, l
 	ldh [hVBlankCopyBGDest], a
 	ld a, h
+	add b
 	ldh [hVBlankCopyBGDest+1], a
 	ld a, c
 	ldh [hVBlankCopyBGNumRows], a
 	ld a, e
 	ldh [hVBlankCopyBGSource], a
-	ret
+	jp DelayFrame
 
 ClearScreen::
 ; Clear wTileMap, then wait
