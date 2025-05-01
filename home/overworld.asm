@@ -858,28 +858,10 @@ IsBikeRidingAllowed::
 ; The bike can be used on Route 23 and Indigo Plateau,
 ; or maps with tilesets in BikeRidingTilesets.
 ; Return carry if biking is allowed.
-
-	ld a, [wCurMap]
-	cp ROUTE_23
-	jr z, .allowed
-	cp INDIGO_PLATEAU
-	jr z, .allowed
-
 	ld a, [wCurMapTileset]
-	ld b, a
 	ld hl, BikeRidingTilesets
-.loop
-	ld a, [hli]
-	cp b
-	jr z, .allowed
-	inc a
-	jr nz, .loop
-	and a
-	ret
-
-.allowed
-	scf
-	ret
+	ld de, 1
+	jp IsInArray
 
 INCLUDE "data/tilesets/bike_riding_tilesets.asm"
 
@@ -1532,10 +1514,7 @@ AdvancePlayerSprite::
 	or $98
 	ld [wMapViewVRAMPointer + 1], a
 .adjustXCoordWithinBlock
-	ld a, c
-	and a
-	jr z, .pointlessJump ; mistake?
-.pointlessJump
+	ld e, 1
 	ld hl, wXBlockCoord
 	ld a, [hl]
 	add c
@@ -1547,8 +1526,7 @@ AdvancePlayerSprite::
 	ld [hl], a
 	ld hl, wXOffsetSinceLastSpecialWarp
 	inc [hl]
-	ld de, wCurrentTileBlockMapViewPointer
-	call MoveTileBlockMapPointerEast
+	call IncTileBlockMapPointer
 	jr .updateMapView
 .checkForMoveToWestBlock
 	cp $ff
@@ -1558,10 +1536,12 @@ AdvancePlayerSprite::
 	ld [hl], a
 	ld hl, wXOffsetSinceLastSpecialWarp
 	dec [hl]
-	ld de, wCurrentTileBlockMapViewPointer
-	call MoveTileBlockMapPointerWest
+	call DecTileBlockMapPointer
 	jr .updateMapView
 .adjustYCoordWithinBlock
+	ld a, [wCurMapWidth]
+	add MAP_BORDER * 2
+	ld e, a
 	ld hl, wYBlockCoord
 	ld a, [hl]
 	add b
@@ -1573,9 +1553,7 @@ AdvancePlayerSprite::
 	ld [hl], a
 	ld hl, wYOffsetSinceLastSpecialWarp
 	inc [hl]
-	ld de, wCurrentTileBlockMapViewPointer
-	ld a, [wCurMapWidth]
-	call MoveTileBlockMapPointerSouth
+	call IncTileBlockMapPointer
 	jr .updateMapView
 .checkForMoveToNorthBlock
 	cp $ff
@@ -1585,9 +1563,7 @@ AdvancePlayerSprite::
 	ld [hl], a
 	ld hl, wYOffsetSinceLastSpecialWarp
 	dec [hl]
-	ld de, wCurrentTileBlockMapViewPointer
-	ld a, [wCurMapWidth]
-	call MoveTileBlockMapPointerNorth
+	call DecTileBlockMapPointer
 .updateMapView
 	call LoadCurrentMapView
 	ld a, [wSpritePlayerStateData1YStepVector]
@@ -1650,56 +1626,27 @@ AdvancePlayerSprite::
 .done
 	ret
 
-; the following four functions are used to move the pointer to the upper left
+; the following two functions are used to move the pointer to the upper left
 ; corner of the tile block map in the direction of motion
 
-MoveTileBlockMapPointerEast::
-	ld a, [de]
-	add $01
-	ld [de], a
+IncTileBlockMapPointer::
+	ld hl, wCurrentTileBlockMapViewPointer
+	ld a, [hl]
+	add e
+	ld [hli], a
 	ret nc
-	inc de
-	ld a, [de]
-	inc a
-	ld [de], a
+	inc [hl]
 	ret
 
-MoveTileBlockMapPointerWest::
-	ld a, [de]
-	sub $01
-	ld [de], a
+DecTileBlockMapPointer::
+	ld hl, wCurrentTileBlockMapViewPointer
+	ld a, [hl]
+	sub e
+	ld [hli], a
 	ret nc
-	inc de
-	ld a, [de]
-	dec a
-	ld [de], a
+	dec [hl]
 	ret
 
-MoveTileBlockMapPointerSouth::
-	add MAP_BORDER * 2
-	ld b, a
-	ld a, [de]
-	add b
-	ld [de], a
-	ret nc
-	inc de
-	ld a, [de]
-	inc a
-	ld [de], a
-	ret
-
-MoveTileBlockMapPointerNorth::
-	add MAP_BORDER * 2
-	ld b, a
-	ld a, [de]
-	sub b
-	ld [de], a
-	ret nc
-	inc de
-	ld a, [de]
-	dec a
-	ld [de], a
-	ret
 
 ; the following 6 functions are used to tell the V-blank handler to redraw
 ; the portion of the map that was newly exposed due to the player's movement
