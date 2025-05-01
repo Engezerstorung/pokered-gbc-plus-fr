@@ -18,25 +18,15 @@ InitCutAnimOAM:
 	jr z, .paletteSelected
 	ld d, SPRITE_PAL_INDOORTREE
 .paletteSelected
-	call LoadAndUpdateAnimationPalette
+	farcall LoadAndUpdateAnimationPalette
 	jpfar _InitCutAnimOAM
 
 AnimateHealingMachine:
 	ld d, SPRITE_PAL_HEALINGMACHINE
-	call LoadAndUpdateAnimationPalette
+	farcall LoadAndUpdateAnimationPalette
 	farcall _AnimateHealingMachine
 	jp SetPal_Overworld
 
-LoadAndUpdateAnimationPalette:
-	ld e, 7
-	farcall LoadMapPalette_Sprite
-	; Update palettes
-	ld a, 2
-	ldh [rSVBK], a
-	ld a, 1
-	ld [W2_ForceOBPUpdate], a
-	ldh [rSVBK], a
-	ret
 
 ; Change palettes to alternate palettes for special case white fades ; see home/fade.asm
 ; LoadMapPalette use : d = palette to load (see constants/palette_constants.), e = palette index
