@@ -296,7 +296,11 @@ LoadTownMap:
 	ld de, vSprites tile $04
 	ld bc, MonNestIconEnd - MonNestIcon
 	ld a, BANK(MonNestIcon)
+IF GEN_2_GRAPHICS
+	call FarCopyData2
+ELSE
 	call FarCopyDataDouble
+ENDC
 	hlcoord 0, 0
 	ld de, CompressedMap
 .nextTile
@@ -601,7 +605,11 @@ INCLUDE "data/maps/town_map_entries.asm"
 INCLUDE "data/maps/names.asm"
 
 MonNestIcon:
+IF GEN_2_GRAPHICS
+	INCBIN "gfx/town_map/mon_nest_icon_gs.2bpp"
+ELSE
 	INCBIN "gfx/town_map/mon_nest_icon.1bpp"
+ENDC
 MonNestIconEnd:
 
 TownMapSpriteBlinkingAnimation::
