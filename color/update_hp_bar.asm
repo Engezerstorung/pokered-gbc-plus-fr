@@ -5,7 +5,24 @@
 ; e: # pixels to fill
 ; hl: where to draw
 DrawHPBarWithColor:
+;	ld a, [wHPBarType]
+;	cp 2
+;	jr c, .gotPortion
+;	ld a, [wLastMenuItem]
+;	inc a
+;	rlca
+;	swap a
+;.gotPortion
+;	ldh [hAutoBGTransferPortion], a
+;	xor a
+;	ldh [hAutoBGTransferEnabled], a
+
 	call DrawHPBar
+;	push af
+
+;	ld a, 1
+;	ldh [hAutoBGTransferEnabled], a
+
 	push bc
 	push de
 	push hl
@@ -79,4 +96,7 @@ DrawHPBarWithColor:
 	pop hl
 	pop de
 	pop bc
+
+;	pop af
+
 	ret

@@ -9,7 +9,7 @@ Underground_Coll::
 	coll_tiles $0b, $0c, $0f, $13, $15, $18
 
 Overworld_Coll::
-	coll_tiles $00, $10, $1b, $20, $21, $23, $2c, $2d, $2e, $30, $31, $33, $39, $3c, $3e, $52, $54, $58, $5b
+	coll_tiles $00, $10, $1b, $20, $21, $23, $2c, $2d, $2e, $30, $31, $33, $39, $3c, $3e, $52, $54, $58, $5b, $db
 
 RedsHouse1_Coll::
 RedsHouse2_Coll::
@@ -17,7 +17,7 @@ RedsHouse2_Coll::
 
 Mart_Coll::
 Pokecenter_Coll::
-	coll_tiles $11, $1a, $1c, $3c, $5e
+	coll_tiles $11, $1a, $1c, $30, $5e
 
 Dojo_Coll::
 Gym_Coll::

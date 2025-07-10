@@ -94,34 +94,17 @@ RefreshPalettesPreVBlank:
 	jr .end
 .obpNotBlack
 
+	; Palettes react to r0BP1 according to set bits in W2_UseOBP1
+	ld a, [W2_UseOBP1]
+	ld c, a
 .doNextSprPal
 	ld e, 4
-
-	ld a, -7
-	add b
-	ld c, a
-
-	ld a, [W2_UseOBP1]
-	and a
-	jr z, .obp0
-
-	dec c
-	jr z, .alreadyZero
-.loop
-	rrca
-	dec c
-	jr nz, .loop
-.alreadyZero
-	bit 0, a
-	jr z, .obp0
-
-.obp1
-	ldh a, [rOBP1]
-	ld d, a
-	jr .doNextSprColor
-.obp0
+	rrc c ; set c flag if bit 0 is 1 and rotate to the right
 	ldh a, [rOBP0]
-	ld d, a
+	jr nc, .obp0
+	ldh a, [rOBP1]
+.obp0
+	ld d, a	
 
 .doNextSprColor
 	ld a, d
@@ -191,6 +174,8 @@ RefreshWindowPalettesPreVBlank:
 	ld b, 6
 
 	ld a, [W2_TileBasedPalettes]
+	cp 2
+	jp z, .overworld
 	and a
 	jr nz, .tileBasedPalettes
 
@@ -243,7 +228,7 @@ RefreshWindowPalettesPreVBlank:
 	dec b
 	jr nz, .drawRow_Pal
 
-	jr .palettesDone
+	jp .palettesDone
 
 .tileBasedPalettes: ; Palettes are loaded based on the tile at that location
 	push hl
@@ -270,6 +255,69 @@ ENDR
 	pop bc
 	dec b
 	jr nz, .drawRow
+
+	jp .palettesDone
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+.overworld
+	push hl ; W2_ScreenPalettesBuffer
+
+;	push de ; third of wTileMap
+	ld hl, W2_TileMapPalMap - wTileMap
+	add hl, de
+	ld d, h
+	ld e, l
+	pop hl ; third of wTileMap
+;	
+;	push de ; third of W2_TileMapPalMap
+
+;	ld c, 7 ; used both as a mask for palette bits and as value for text palette
+;.updateRow
+;REPT SCREEN_WIDTH
+;	; check if a tile is the battle transition tile
+;	ld a, [hl]
+;	cp $ff
+;	jr nz, .notTransitionTile\@
+;	; if battle transition tile, load text palette in the palette map
+;	ld a, c
+;	ld [de], a
+;
+;	jr .isText\@
+;.notTransitionTile\@
+;	; if not battle transition tile, check if the palette is text
+;	ld a, [de]
+;	and c ; mask the attribute info to keep only palette bits
+;	cp c ; check if text palette
+;	jr z, .isText\@
+;	; if the palette is not text, correct the tile ID by substracting $80
+;	res 7, [hl]
+;.isText\@
+;	inc de
+;	inc hl
+;ENDR
+;	dec b
+;	jp nz, .updateRow
+
+;	pop de ; third of W2_TileMapPalMap
+;	pop hl ; W2_ScreenPalettesBuffer
+
+;	ld b, SCREEN_HEIGHT / 3
+	ld a, b
+	ld bc, BG_MAP_WIDTH - SCREEN_WIDTH
+.drawRow2
+;	push bc
+	push af
+REPT SCREEN_WIDTH
+	ld a, [de]
+	inc de
+	ld [hli], a
+ENDR
+;	ld bc, BG_MAP_WIDTH - SCREEN_WIDTH
+	add hl, bc
+;	pop bc
+;	dec b
+	pop af
+	dec a
+	jp nz, .drawRow2
 
 .palettesDone:
 	pop af

@@ -144,6 +144,10 @@ UpdateHPBar_AnimateHPBar:
 	push de
 	ld d, $6
 	call DrawHPBarWithColor ; HAX: call changed to update color as well
+;	jr c, .skipOneDelay
+;	call DelayFrame
+;.skipOneDelay
+;	call DelayFrame
 	ld c, 2
 	call DelayFrames
 	pop de

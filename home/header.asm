@@ -11,24 +11,46 @@ _LoadMapVramAndColors:
 
 ;SECTION "rst8", ROM0[$0008]
 
+	ds $10 - @, 0
+
 ; HAX: rst10 is used for the vblank hook
 SECTION "rst10", ROM0[$0010]
-	ld b, BANK(GbcVBlankHook)
-	ld hl, GbcVBlankHook
-	jp Bankswitch
+	ret
+;	ld b, BANK(GbcVBlankHook)
+;	ld hl, GbcVBlankHook
+;	jp Bankswitch
+
+	ds $18 - @, 0 ; unused
 
 ; HAX: rst18 can be used for "Bankswitch"
 SECTION "rst18", ROM0[$0018]
 _Bankswitch::
 	jp Bankswitch
 
-; memory for rst vectors $20-$38 used by color hack
+	ds $20 - @, 0
 
+SECTION "rst20", ROM0[$0020]
 SetRomBank::
 	ldh [hLoadedROMBank], a
 	ld [MBC1RomBank], a
 	ret
 
+	ds $28 - @, 0
+
+SECTION "rst28", ROM0[$0028]
+	ret
+
+	ds $30 - @, 0 ; unused
+
+SECTION "rst30", ROM0[$0030]
+	ret
+
+	ds $38 - @, 0 ; unused
+
+SECTION "rst38", ROM0[$0038]
+	ret
+
+	ds $40 - @, 0 ; unused
 
 ; Game Boy hardware interrupts
 
@@ -37,20 +59,29 @@ SECTION "vblank", ROM0[$0040]
 	ld hl, VBlank
 	jp InterruptWrapper
 
+	ds $48 - @, 0 ; unused
+
 SECTION "lcd", ROM0[$0048] ; HAX: interrupt wasn't used in original game
-	push hl
-	ld hl, _GbcPrepareVBlank
-	jp InterruptWrapper
+;	push hl
+;	ld hl, _GbcPrepareVBlank
+;	jp InterruptWrapper
+	jp STATInterrupt
+
+	ds $50 - @, 0
 
 SECTION "timer", ROM0[$0050]
 	push hl
 	ld hl, Timer
 	jp InterruptWrapper
 
+	ds $58 - @, 0 ; unused
+
 SECTION "serial", ROM0[$0058]
 	push hl
 	ld hl, Serial
 	jp InterruptWrapper
+
+	ds $60 - @, 0 ; unused
 
 SECTION "joypad", ROM0[$0060]
 	reti

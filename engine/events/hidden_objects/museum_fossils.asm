@@ -31,6 +31,8 @@ DisplayMonFrontSpriteInBox:
 	call Delay3
 
 	farcall LoadAndUpdateSGBTextPalette
+	ld hl, wFontLoaded
+	set 0, [hl]
 
 	xor a
 	ldh [hWY], a
@@ -54,6 +56,8 @@ DisplayMonFrontSpriteInBox:
 	ld a, $90
 	ldh [hWY], a
 
+	ld hl, wFontLoaded
+	res 0, [hl]
 	farcall ReloadDefaultTextPalette
 
 	ret

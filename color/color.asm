@@ -149,13 +149,91 @@ WhiteFadePaletteSets::
 	db .plateau - WhiteFadePaletteSets    ; PLATEAU
 	assert_table_length NUM_TILESETS	
 
-MapFadePalList:
-	; Map, new palette , palette slot to replace (0-7)
-;	db VIRIDIAN_CITY, OUTDOOR_FLOWER, 5
-;	db VIRIDIAN_FOREST_SOUTH_GATE, OUTDOOR_FLOWER, 5
-;	db DIGLETTS_CAVE_ROUTE_2, OUTDOOR_FLOWER, 5
-;	db LAVENDER_TOWN, OUTDOOR_FLOWER, 5
+; Change palettes to alternate palettes for special case white fades ; see home/fade.asm
+; LoadMapPalette use : d = palette to load (see constants/palette_constants.), e = palette index
+SetPal_FadeBlack::
+	ld hl, BlackFadePaletteSets.pointers
+	ld a, [wCurMapTileset]
+	ld c, a
+	ld b, 0
+	add hl, bc
+
+	ld a, [hl]
+	ld hl, BlackFadePaletteSets
+	ld c, a
+	add hl, bc
+
+.loop
+	ld a, [hli]
+	cp -1
+	ret z
+	ld d, a
+	ld a, [hli]
+	ld e, a
+	push hl
+	farcall LoadMapPalette
+	pop hl
+	jr .loop
+
+BlackFadePaletteSets::
+.overworld   ; OVERWORLD
+.forest      ; FOREST
+	db OUTDOOR_RED, 1
 	db -1
+.gym         ; GYM
+	db INDOOR_BLUE, 4
+	; fallthrough
+.plateau     ; PLATEAU
+.forestGate  ; FOREST_GATE
+.facility    ; FACILITY
+.lab         ; LAB
+.ship        ; SHIP
+.museum      ; MUSEUM
+.gate        ; GATE
+.cemetery    ; CEMETERY
+.redsHouse1  ; REDS_HOUSE_1
+.underground ; UNDERGROUND
+.shipPort    ; SHIP_PORT
+.cavern      ; CAVERN
+.lobby       ; LOBBY
+.mansion     ; MANSION
+.mart        ; MART
+.redsHouse2  ; REDS_HOUSE_2
+.dojo        ; DOJO
+.pokecenter  ; POKECENTER
+.house       ; HOUSE
+.interior    ; INTERIOR
+.club        ; CLUB
+	db -1
+
+.pointers	
+	table_width 1
+	db .overworld - BlackFadePaletteSets  ; OVERWORLD
+	db .redsHouse1 - BlackFadePaletteSets ; REDS_HOUSE_1
+	db .mart - BlackFadePaletteSets       ; MART
+	db .forest - BlackFadePaletteSets     ; FOREST
+	db .redsHouse2 - BlackFadePaletteSets ; REDS_HOUSE_2
+	db .dojo - BlackFadePaletteSets       ; DOJO
+	db .pokecenter - BlackFadePaletteSets ; POKECENTER
+	db .gym - BlackFadePaletteSets        ; GYM
+	db .house - BlackFadePaletteSets      ; HOUSE
+	db .forestGate - BlackFadePaletteSets ; FOREST_GATE
+	db .museum - BlackFadePaletteSets     ; MUSEUM
+	db .underground - BlackFadePaletteSets; UNDERGROUND
+	db .gate - BlackFadePaletteSets       ; GATE
+	db .ship - BlackFadePaletteSets       ; SHIP
+	db .shipPort - BlackFadePaletteSets   ; SHIP_PORT
+	db .cemetery - BlackFadePaletteSets   ; CEMETERY
+	db .interior - BlackFadePaletteSets   ; INTERIOR
+	db .cavern - BlackFadePaletteSets     ; CAVERN
+	db .lobby - BlackFadePaletteSets      ; LOBBY
+	db .mansion - BlackFadePaletteSets    ; MANSION
+	db .lab - BlackFadePaletteSets        ; LAB
+	db .club - BlackFadePaletteSets       ; CLUB
+	db .facility - BlackFadePaletteSets   ; FACILITY
+	db .plateau - BlackFadePaletteSets    ; PLATEAU
+	assert_table_length NUM_TILESETS	
+
 	
 ; Set all palettes to black at beginning of battle
 SetPal_BattleBlack::
@@ -306,37 +384,33 @@ ENDC
 
 	; Now set the tilemap
 
+	; Player pokemon
+	ld hl, W2_TilesetPaletteMap + 5 * 20
+	ld a, 0
+	ld b, 7
+	ld c, 10
+	call FillBox
+
+	; Enemy pokemon
+	ld hl, W2_TilesetPaletteMap + 10
+	ld a, 1
+	ld b, 7
+	ld c, 10
+	call FillBox
+
 	; Top half; enemy lifebar
 	ld hl, W2_TilesetPaletteMap
 	ld a, 3
-	ld b, 4
+	ld b, 5
 	ld c, 11
 	call FillBox
 
-;IF GEN_2_GRAPHICS
-;	; Bottom half; player lifebar
-;	ld hl, W2_TilesetPaletteMap + 7 * 20 + 9
-;	ld a, 2
-;	ld b, 4
-;	ld c, 11
-;	call FillBox
-
-;	; Player exp bar
-;	ld hl, W2_TilesetPaletteMap + 9 + 11 * 20
-;	ld a, 4
-;	ld b, 1
-;	ld c, 11
-;	call FillBox
-;ENDC
-
-;IF !GEN_2_GRAPHICS
 	; Bottom half; player lifebar
 	ld hl, W2_TilesetPaletteMap + 7 * 20 + 9
 	ld a, 2
 	ld b, 5
 	ld c, 11
 	call FillBox
-;ENDC
 
 IF GEN_2_GRAPHICS
 	; Player exp bar
@@ -345,20 +419,6 @@ IF GEN_2_GRAPHICS
 	ld b, 8
 	call FillLine
 ENDC
-
-	; Player pokemon
-	ld hl, W2_TilesetPaletteMap + 4 * 20
-	ld a, 0
-	ld b, 8
-	ld c, 9
-	call FillBox
-
-	; Enemy pokemon
-	ld hl, W2_TilesetPaletteMap + 11
-	ld a, 1
-	ld b, 7
-	ld c, 9
-	call FillBox
 
 	; text box
 	ld hl, W2_TilesetPaletteMap + 12 * 20
@@ -793,7 +853,6 @@ SetPal_Overworld::
 
 	ld a, 2
 	ldh [rSVBK], a
-	dec a ; ld a, 1
 	ld [W2_TileBasedPalettes], a
 
 	; Clear sprite palette map, except for exclamation marks above people's heads
@@ -1011,6 +1070,9 @@ SetPal_TrainerCard:
 	ld a, 2
 	ldh [rSVBK], a
 
+	ld a, 1
+	ld [W2_TileBasedPalettes], a
+
 	ld d, PAL_MEWMON
 	ld e, 0
 	farcall LoadSGBPalette
@@ -1143,3 +1205,6 @@ ENDC
 ; Copy of sound engine used by dmg-mode to play jingle
 SECTION "bank31", ROMX
 INCBIN "color/data/bank31.bin", $0000, $c8000 - $c4000
+
+SECTION "TileMapping", ROMX
+INCLUDE "color/colorplus/tilemapping.asm"

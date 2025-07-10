@@ -16,9 +16,32 @@ VBlank::
 	ld a, [wDisableVBlankWYUpdate]
 	and a
 	jr nz, .ok
+
+;	ldh a, [hWUp]
+;	and a
+;	jr z, .pass2
+;	dec a
+;	ldh [hWUp], a
+;	jr nz, .pass2
+;	ld a, 160
+;	ldh [hWY], a
+;.pass2
+
 	ldh a, [hWY]
 	ldh [rWY], a
 .ok
+
+	ldh a, [hBlink]
+	xor 1
+	ldh [hBlink], a
+
+	ldh a, [rHDMA5]
+	cp $ff
+	jr z, .pass
+;.breakpoint
+	res 7, a
+	ldh [rHDMA5], a
+.pass
 
 	call AutoBgMapTransfer
 	call VBlankCopyBgMap
@@ -26,25 +49,39 @@ VBlank::
 	call VBlankCopy
 	call VBlankCopyDouble
 	;call UpdateMovingBgTiles
-	call hDMARoutine
-	rst $10 ; HAX: VBlank hook (loads palettes)
-	nop
-	nop
-	; HAX: don't update sprites here. They're updated elsewhere to prevent wobbliness.
-	;ld a, BANK(PrepareOAMData)
-	nop
-	nop
-	;ldh [hLoadedROMBank], a
-	nop
-	nop
-	;ld [MBC1RomBank], a
-	nop
-	nop
-	nop
-	;call PrepareOAMData
-	nop
-	nop
-	nop
+;	call hDMARoutine
+
+	ld a, HIGH(wShadowOAM)
+	ldh [rDMA], a
+	; wait for DMA to finish
+	ld a, $28
+.wait
+	dec a
+	jr nz, .wait
+
+;	ld a, BANK(GbcVBlankHook)
+;	rst SetRomBank
+	setrombank BANK(GbcVBlankHook)
+	call GbcVBlankHook
+
+;	rst $10 ; HAX: VBlank hook (loads palettes)
+;	nop
+;	nop
+;	; HAX: don't update sprites here. They're updated elsewhere to prevent wobbliness.
+;	;ld a, BANK(PrepareOAMData)
+;	nop
+;	nop
+;	;ldh [hLoadedROMBank], a
+;	nop
+;	nop
+;	;ld [MBC1RomBank], a
+;	nop
+;	nop
+;	nop
+;	;call PrepareOAMData
+;	nop
+;	nop
+;	nop
 
 	; VBlank-sensitive operations end.
 
@@ -108,14 +145,37 @@ DelayFrame::
 ; As a bonus, this saves battery.
 
 DEF NOT_VBLANKED EQU 1
-
+;	di
 	call DelayFrameHook ; HAX
+;	ei
 	nop
-	;ld a, NOT_VBLANKED
-	;ldh [hVBlankOccurred], a
+;	;ld a, NOT_VBLANKED
+;	;ldh [hVBlankOccurred], a
 .halt
 	halt
 	ldh a, [hVBlankOccurred]
 	and a
 	jr nz, .halt
 	ret
+
+STATInterrupt::
+	push af
+	ldh a, [rSTAT]
+	and %01000100
+	jr nz, LYC_LY
+
+HBlank:
+	pop af
+	reti
+
+LYC_LY:
+	xor %01000100
+	jr nz, HBlank
+;	ldh a, [rSTAT]
+;	and %01000000
+;	jr z, HBlank
+
+	pop af
+	push hl
+	ld hl, _GbcPrepareVBlank
+	jp InterruptWrapper

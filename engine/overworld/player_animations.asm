@@ -256,14 +256,30 @@ DoFlyAnimation:
 	ret
 
 LoadBirdSpriteGraphics:
+	farcall ColorPlayerSprite
 	ld de, BirdSprite
 	ld hl, vNPCSprites
 	lb bc, BANK(BirdSprite), 12
+;	call CopyVideoData
+
+	push hl
+	push bc
 	call CopyVideoData
+	pop bc
+	pop hl
 	ld de, BirdSprite tile 12 ; moving animation sprite
-	ld hl, vNPCSprites2
-	lb bc, BANK(BirdSprite), 12
-	jp CopyVideoData
+
+	ld a, 1
+	ldh [rVBK], a
+	call CopyVideoData
+	xor a
+	ldh [rVBK], a
+	ret
+
+;	ld de, BirdSprite tile 12 ; moving animation sprite
+;	ld hl, vNPCSprites2
+;	lb bc, BANK(BirdSprite), 12
+;	jp CopyVideoData
 
 InitFacingDirectionList:
 	ld a, [wSpritePlayerStateData1ImageIndex] ; (image index is locked to standing images)
@@ -522,6 +538,7 @@ _HandleMidJump::
 	ld [wPlayerJumpingYScreenCoordsIndex], a
 	ld hl, wMovementFlags
 	res BIT_LEDGE_OR_FISHING, [hl]
+	res BIT_LEDGE_OR_FISHING -  1, [hl]
 	ld hl, wStatusFlags5
 	res BIT_SCRIPTED_MOVEMENT_STATE, [hl]
 	xor a

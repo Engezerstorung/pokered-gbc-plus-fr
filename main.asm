@@ -88,6 +88,13 @@ SECTION "Font Graphics", ROMX
 
 INCLUDE "gfx/font.asm"
 
+;IF GEN_2_GRAPHICS
+;EXPBarGraphics:
+;;DS ALIGN [align, 0]
+;INCBIN "gfx/gs/exp_bar.2bpp"
+;EXPBarGraphicsEnd:
+;ENDC
+
 
 SECTION "Battle Engine 1", ROMX
 
@@ -108,10 +115,10 @@ INCLUDE "engine/math/random.asm"
 
 INCLUDE "color/status_screen.asm"
 
-IF GEN_2_GRAPHICS
-EXPBarGraphics:  INCBIN "gfx/gs/exp_bar.2bpp"
-EXPBarGraphicsEnd:
-ENDC
+;IF GEN_2_GRAPHICS
+;EXPBarGraphics:  INCBIN "gfx/gs/exp_bar.2bpp"
+;EXPBarGraphicsEnd:
+;ENDC
 
 SECTION "Battle Engine 2", ROMX
 

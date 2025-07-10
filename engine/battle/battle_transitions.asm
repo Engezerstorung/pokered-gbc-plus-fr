@@ -79,9 +79,11 @@ DEF NUM_BATTLE_TRANSITION_BITS EQU const_value
 BattleTransitions:
 	table_width 2
 	dw BattleTransition_DoubleCircle      ; %000
-	dw BattleTransition_Spiral            ; %001
+	dw BattleTransition_InwardSpiral      ; %001
+;	dw BattleTransition_Spiral            ; %001
 	dw BattleTransition_Circle            ; %010
-	dw BattleTransition_Spiral            ; %011
+	dw BattleTransition_OutwardSpiral     ; %011
+;	dw BattleTransition_Spiral            ; %011
 	dw BattleTransition_HorizontalStripes ; %100
 	dw BattleTransition_Shrink            ; %101
 	dw BattleTransition_VerticalStripes   ; %110
@@ -162,12 +164,12 @@ INCLUDE "data/maps/dungeon_maps.asm"
 ; HAXed to set the palette as well.
 ; The tile itself was relocated to make room.
 LoadBattleTransitionTile:
-	ld a, 2
-	ldh [rSVBK], a
-	ld a, 7
-	ld [W2_TilesetPaletteMap + $ff], a
-	xor a
-	ldh [rSVBK], a
+;	ld a, 2
+;	ldh [rSVBK], a
+;	ld a, 7
+;	ld [W2_TilesetPaletteMap + $ff], a
+;	xor a
+;	ldh [rSVBK], a
 
 	ld hl, vChars1 tile $7f
 	ld de, BlackTile
@@ -188,20 +190,27 @@ BattleTransition_BlackScreen:
 ; called regardless of mon levels, but does an
 ; outward spiral if enemy is at least 3 levels
 ; higher than player and does an inward spiral otherwise
-BattleTransition_Spiral:
-	ld a, [wBattleTransitionSpiralDirection]
-	and a
-	jr z, .outwardSpiral
-	call BattleTransition_InwardSpiral
-	jr .done
-.outwardSpiral
+;BattleTransition_Spiral:
+;	ld a, [wBattleTransitionSpiralDirection]
+;	and a
+;	jr z, .outwardSpiral
+;	call BattleTransition_InwardSpiral
+;	jr .done
+;.outwardSpiral
+
+; used for high level trainer non-dungeon battles
+BattleTransition_OutwardSpiral:
 	hlcoord 10, 10
 	ld a, $3
 	ld [wOutwardSpiralCurrentDirection], a
-	ld a, l
-	ld [wOutwardSpiralTileMapPointer + 1], a
-	ld a, h
-	ld [wOutwardSpiralTileMapPointer], a
+
+	ld a, 2
+	ldh [rSVBK], a
+
+;	ld a, l
+;	ld [wOutwardSpiralTileMapPointer + 1], a
+;	ld a, h
+;	ld [wOutwardSpiralTileMapPointer], a
 	ld b, 120
 .loop
 	ld c, 3
@@ -214,16 +223,139 @@ BattleTransition_Spiral:
 	call DelayFrame
 	dec b
 	jr nz, .loop
-.done
-	call BattleTransition_BlackScreen
+;.done
+
 	xor a
-	ld [wOutwardSpiralTileMapPointer + 1], a
-	ld [wOutwardSpiralTileMapPointer], a
+	ldh [rSVBK], a
+
+	call BattleTransition_BlackScreen
+;	xor a
+;	ld [wOutwardSpiralTileMapPointer + 1], a
+;	ld [wOutwardSpiralTileMapPointer], a
 	ret
 
+BattleTransition_OutwardSpiral_:
+;	ld a, [wOutwardSpiralTileMapPointer + 1]
+;	ld l, a
+;	ld a, [wOutwardSpiralTileMapPointer]
+;	ld h, a
+	xor a
+	ldh [rSVBK], a
+	ld a, [wOutwardSpiralCurrentDirection]
+	ld b, a
+	ld a, 2
+	ldh [rSVBK], a
+	ld a, b
+
+	ld bc, -SCREEN_WIDTH
+	ld de, SCREEN_WIDTH
+
+;	cp $0
+;	jr z, .up
+;	cp $1
+;	jr z, .left
+;	cp $2
+;	jr z, .down
+;	cp $3
+;	jr z, .right
+;.keepSameDirection
+;	ld [hl], $ff
+;	push hl
+;	ld bc, W2_TileMapPalMap - wTileMap
+;	add hl, bc
+;	ld [hl], 7
+;	pop hl
+;.done
+;	ld a, l
+;	ld [wOutwardSpiralTileMapPointer + 1], a
+;	ld a, h
+;	ld [wOutwardSpiralTileMapPointer], a
+;	ret
+
+	and a ; 0
+	jr z, .up
+	dec a ; 1
+	jr z, .left
+	dec a ; 2
+	jr z, .down
+	dec a ; 3
+	jr nz, .keepSameDirection
+.right
+	add hl, bc
+	ld a, [hl]
+;	cp $ff
+	inc a
+	jr nz, .changeDirection
+	add hl, de
+	inc hl
+	jr .keepSameDirection
+
+.up
+	dec hl
+	ld a, [hl]
+;	cp $ff
+	inc a
+	jr nz, .changeDirection
+	inc hl
+	add hl, bc
+	jr .keepSameDirection
+.left
+	add hl, de
+	ld a, [hl]
+;	cp $ff
+	inc a
+	jr nz, .changeDirection
+	add hl, bc
+	dec hl
+	jr .keepSameDirection
+.down
+	inc hl
+	ld a, [hl]
+;	cp $ff
+	inc a
+	jr nz, .changeDirection
+	dec hl
+	add hl, de
+	jr .keepSameDirection
+;.right
+;	add hl, bc
+;	ld a, [hl]
+;	cp $ff
+;	jr nz, .changeDirection
+;	add hl, de
+;	inc hl
+;	jr .keepSameDirection
+
+.changeDirection
+;	ld [hl], $ff
+	xor a
+	ldh [rSVBK], a
+	ld a, [wOutwardSpiralCurrentDirection]
+	inc a
+	cp $4
+	jr nz, .skip
+	xor a
+.skip
+	ld [wOutwardSpiralCurrentDirection], a
+	ld a, 2
+	ldh [rSVBK], a
+
+.keepSameDirection
+	ld [hl], $ff
+	push hl
+	ld bc, W2_TileMapPalMap - wTileMap
+	add hl, bc
+	ld [hl], 7
+	pop hl
+	ret
+
+; used for low level trainer non-dungeon battles
 BattleTransition_InwardSpiral:
+	ld a, 2
+	ldh [rSVBK], a
+
 	ld a, 7
-	ld [wInwardSpiralUpdateScreenCounter], a
+;	ld [wInwardSpiralUpdateScreenCounter], a
 	hlcoord 0, 0
 	ld c, SCREEN_HEIGHT - 1
 	ld de, SCREEN_WIDTH
@@ -246,130 +378,129 @@ BattleTransition_InwardSpiral:
 	call BattleTransition_InwardSpiral_
 	dec c
 	dec c
-	ld a, c
-	and a
+;	ld a, c
+;	and a
 	jr nz, .loop
+
+	xor a
+	ldh [rSVBK], a
+	call BattleTransition_BlackScreen
+
 	ret
 
 BattleTransition_InwardSpiral_:
 	push bc
 .loop
 	ld [hl], $ff
-	add hl, de
+
 	push bc
-	ld a, [wInwardSpiralUpdateScreenCounter]
+	push af
+
+	push hl
+	ld bc, W2_TileMapPalMap - wTileMap
+	add hl, bc
+	ld [hl], 7
+	pop hl
+
+	add hl, de
+;	push bc
+;	ld a, [wInwardSpiralUpdateScreenCounter]
+
+	pop af
+
 	dec a
 	jr nz, .skip
 	call BattleTransition_TransferDelay3
 	ld a, 7
 .skip
-	ld [wInwardSpiralUpdateScreenCounter], a
+;	ld [wInwardSpiralUpdateScreenCounter], a
 	pop bc
 	dec c
 	jr nz, .loop
 	pop bc
 	ret
 
-BattleTransition_OutwardSpiral_:
-	ld bc, -SCREEN_WIDTH
-	ld de, SCREEN_WIDTH
-	ld a, [wOutwardSpiralTileMapPointer + 1]
-	ld l, a
-	ld a, [wOutwardSpiralTileMapPointer]
-	ld h, a
-	ld a, [wOutwardSpiralCurrentDirection]
-	cp $0
-	jr z, .up
-	cp $1
-	jr z, .left
-	cp $2
-	jr z, .down
-	cp $3
-	jr z, .right
-.keepSameDirection
-	ld [hl], $ff
-.done
-	ld a, l
-	ld [wOutwardSpiralTileMapPointer + 1], a
-	ld a, h
-	ld [wOutwardSpiralTileMapPointer], a
-	ret
-.up
-	dec hl
-	ld a, [hl]
-	cp $ff
-	jr nz, .changeDirection
-	inc hl
-	add hl, bc
-	jr .keepSameDirection
-.left
-	add hl, de
-	ld a, [hl]
-	cp $ff
-	jr nz, .changeDirection
-	add hl, bc
-	dec hl
-	jr .keepSameDirection
-.down
-	inc hl
-	ld a, [hl]
-	cp $ff
-	jr nz, .changeDirection
-	dec hl
-	add hl, de
-	jr .keepSameDirection
-.right
-	add hl, bc
-	ld a, [hl]
-	cp $ff
-	jr nz, .changeDirection
-	add hl, de
-	inc hl
-	jr .keepSameDirection
-.changeDirection
-	ld [hl], $ff
-	ld a, [wOutwardSpiralCurrentDirection]
-	inc a
-	cp $4
-	jr nz, .skip
-	xor a
-.skip
-	ld [wOutwardSpiralCurrentDirection], a
-	jr .done
-
 FlashScreen:
 BattleTransition_FlashScreen_:
+;	ld hl, BattleTransition_FlashScreenPalettes
+;.loop
+;	ld a, [hli]
+;	cp 1
+;	jr z, .done
+;	ldh [rBGP], a
+;	ld c, 2
+;	call DelayFrames
+;	jr .loop
+;.done
+;	dec b
+;	jr nz, BattleTransition_FlashScreen_
+;	ret
+
+BattleTransition_FlashScreen_2:
 	ld hl, BattleTransition_FlashScreenPalettes
+	push bc
+
+	push hl
+	farcall SetPal_FadeBlack
+	pop hl
+	call .flashingLoop
+	push hl
+	farcall SetPal_FadeWhite
+	pop hl
+	call .flashingLoop
+
+	pop bc
+	dec b
+	jr nz, BattleTransition_FlashScreen_2
+	ret
+
+.flashingLoop
+	ld a, 2
+	ld [rSVBK], a
+	ld [W2_ForceBGPUpdate], a
+	xor a
+	ld [rSVBK], a
+	ld b, 5
 .loop
 	ld a, [hli]
-	cp 1
-	jr z, .done
 	ldh [rBGP], a
 	ld c, 2
 	call DelayFrames
-	jr .loop
-.done
 	dec b
-	jr nz, BattleTransition_FlashScreen_
+	jr nz, .loop
+
+	ld a, [hli]
+	ldh [rBGP], a
+	push hl
+	farcall SetPal_Overworld
+	pop hl
 	ret
 
 BattleTransition_FlashScreenPalettes:
+	; load fade to black palettes function
 	dc 3, 3, 2, 1
 	dc 3, 3, 3, 2
 	dc 3, 3, 3, 3
 	dc 3, 3, 3, 2
 	dc 3, 3, 2, 1
+	; load normal palettes function
 	dc 3, 2, 1, 0
+	; load fade to white palettes function
 	dc 2, 1, 0, 0
 	dc 1, 0, 0, 0
 	dc 0, 0, 0, 0
 	dc 1, 0, 0, 0
 	dc 2, 1, 0, 0
+	; load normal palettes palettes function
 	dc 3, 2, 1, 0
-	db 1 ; end
+;	db 1 ; end
 
 ; used for low level trainer dungeon battles
 BattleTransition_Shrink:
+
+	ld a, 2
+	ldh [rSVBK], a
+
 	ld c, SCREEN_HEIGHT / 2
 .loop
 	push bc
@@ -398,12 +529,20 @@ BattleTransition_Shrink:
 	pop bc
 	dec c
 	jr nz, .loop
+
+	xor a
+	ldh [rSVBK], a
+
 	call BattleTransition_BlackScreen
 	ld c, 10
 	jp DelayFrames
 
 ; used for high level trainer dungeon battles
 BattleTransition_Split:
+
+	ld a, 2
+	ldh [rSVBK], a
+
 	ld c, SCREEN_HEIGHT / 2
 	xor a
 	ldh [hAutoBGTransferEnabled], a
@@ -430,52 +569,79 @@ BattleTransition_Split:
 	pop bc
 	dec c
 	jr nz, .loop
+
+	xor a
+	ldh [rSVBK], a
+
 	call BattleTransition_BlackScreen
 	ld c, 10
 	jp DelayFrames
 
 BattleTransition_CopyTiles1:
-	ld a, c
-	ld [wBattleTransitionCopyTilesOffset], a
-	ld a, b
-	ld [wBattleTransitionCopyTilesOffset + 1], a
-	ld c, 8
-.loop1
 	push bc
 	push hl
 	push de
-	ld bc, SCREEN_WIDTH
-	call CopyData
+
+	ld a, $ff
+	call .copy
+
 	pop hl
-	pop de
-	ld a, [wBattleTransitionCopyTilesOffset]
-	ld c, a
-	ld a, [wBattleTransitionCopyTilesOffset + 1]
-	ld b, a
+	ld bc, W2_TileMapPalMap - wTileMap
+	add hl, bc
+	ld d, h
+	ld e, l
+	pop hl
 	add hl, bc
 	pop bc
-	dec c
+
+	ld a, 7
+.copy
+	push af
+	ld a, 8
+.loop1
+	push af
+	push hl
+	push de
+
+REPT SCREEN_WIDTH - 1
+	ld a, [hli]
+	ld [de], a
+	inc de
+ENDR
+	ld a, [hl]
+	ld [de], a
+
+	pop hl
+	pop de
+	add hl, bc
+	pop af
+	dec a
 	jr nz, .loop1
-	ld l, e
+
 	ld h, d
-	ld a, $ff
-	ld c, SCREEN_WIDTH
-.loop2
+	ld l, e
+
+	pop af
+REPT SCREEN_WIDTH - 1
 	ld [hli], a
-	dec c
-	jr nz, .loop2
+ENDR
+	ld [hl], a
 	ret
 
 BattleTransition_CopyTiles2:
-	ld a, c
-	ld [wBattleTransitionCopyTilesOffset], a
-	ld a, b
-	ld [wBattleTransitionCopyTilesOffset + 1], a
-	ld c, SCREEN_HEIGHT / 2
+	ld a, SCREEN_HEIGHT / 2
+
 .loop1
+	push af
 	push bc
 	push hl
 	push de
+
+	ld b, 2
+.bigloop
+	push hl
+	push de
+
 	ld c, SCREEN_HEIGHT
 .loop2
 	ld a, [hl]
@@ -494,25 +660,50 @@ BattleTransition_CopyTiles2:
 	ld l, a
 	dec c
 	jr nz, .loop2
+
+	pop hl
+	ld de, W2_TileMapPalMap - wTileMap
+	add hl, de
+	ld d, h
+	ld e, l
+	pop hl
+	push de
+	ld de, W2_TileMapPalMap - wTileMap
+	add hl, de
+	pop de
+	dec b
+	jr nz, .bigloop
+
 	pop hl
 	pop de
-	ld a, [wBattleTransitionCopyTilesOffset]
-	ld c, a
-	ld a, [wBattleTransitionCopyTilesOffset + 1]
-	ld b, a
-	add hl, bc
 	pop bc
-	dec c
+	add hl, bc
+	pop af
+	dec a
 	jr nz, .loop1
 	ld l, e
 	ld h, d
+
 	ld de, SCREEN_WIDTH
+
+	ld b, 2
+	ld a, $ff
+.bigloop2
+	push hl
 	ld c, SCREEN_HEIGHT
 .loop3
-	ld [hl], $ff
+	ld [hl], a
 	add hl, de
 	dec c
 	jr nz, .loop3
+	pop hl
+	push de
+	ld de,  W2_TileMapPalMap - wTileMap
+	add hl, de
+	pop de
+	ld a, 7
+	dec b
+	jr nz, .bigloop2
 	ret
 
 ; used for high level wild dungeon battles
@@ -545,9 +736,28 @@ BattleTransition_VerticalStripes:
 	jp BattleTransition_BlackScreen
 
 BattleTransition_VerticalStripes_:
+	ld a, 2
+	ldh [rSVBK], a
+
 	ld c, SCREEN_WIDTH / 2
+
+	push hl
+	ld a, $ff
+	call .loop
+	pop hl
+	ld bc,  W2_TileMapPalMap - wTileMap
+	add hl, bc
+	ld c, SCREEN_WIDTH / 2
+	ld a, 7
+	call .loop
+
+	xor a
+	ldh [rSVBK], a
+	ret
+
 .loop
-	ld [hl], $ff
+	ld [hl], a
+;	ld [hl], $ff
 	inc hl
 	inc hl
 	dec c
@@ -580,10 +790,29 @@ BattleTransition_HorizontalStripes:
 	jp BattleTransition_BlackScreen
 
 BattleTransition_HorizontalStripes_:
+	ld a, 2
+	ldh [rSVBK], a
+
 	ld c, SCREEN_HEIGHT / 2
 	ld de, SCREEN_WIDTH * 2
+
+	push hl
+	ld a, $ff
+	call .loop
+	pop hl
+	ld bc,  W2_TileMapPalMap - wTileMap
+	add hl, bc
+	ld c, SCREEN_HEIGHT / 2
+	ld a, 7
+	call .loop
+	xor a
+	ldh [rSVBK], a
+
+	ret
+
 .loop
-	ld [hl], $ff
+	ld [hl], a
+;	ld [hl], $ff
 	add hl, de
 	dec c
 	jr nz, .loop
@@ -674,7 +903,25 @@ BattleTransition_Circle_Sub2:
 	ld a, [hli]
 	ld h, [hl]
 	ld l, a
-	jp BattleTransition_Circle_Sub3
+;	jp BattleTransition_Circle_Sub3
+
+	push hl
+	push de
+	ld b, $ff
+	call BattleTransition_Circle_Sub3
+	pop de
+	pop hl
+
+	ld a, 2
+	ldh [rSVBK], a
+	ld bc,  W2_TileMapPalMap - wTileMap
+	add hl, bc
+	ld b, 7
+	call BattleTransition_Circle_Sub3
+	xor a
+	ldh [rSVBK], a
+	ret
+
 
 ; halves
 	const_def
@@ -718,7 +965,8 @@ BattleTransition_Circle_Sub3:
 	ld c, a
 	inc de
 .loop1
-	ld [hl], $ff
+;	ld [hl], $ff
+	ld [hl], b
 	ld a, [wBattleTransitionCircleScreenQuadrantX]
 	and a
 	jr z, .skip1
@@ -732,11 +980,17 @@ BattleTransition_Circle_Sub3:
 	pop hl
 	ld a, [wBattleTransitionCircleScreenQuadrantY]
 	and a
+
+	push bc
+
 	ld bc, SCREEN_WIDTH
 	jr z, .skip3
 	ld bc, -SCREEN_WIDTH
 .skip3
 	add hl, bc
+
+	pop bc
+
 	ld a, [de]
 	inc de
 	cp -1
