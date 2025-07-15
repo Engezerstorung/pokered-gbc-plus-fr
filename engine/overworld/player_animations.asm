@@ -45,10 +45,6 @@ EnterMapAnim::
 	jr .done
 .flyAnimation
 	pop hl
-	ld de, BirdSprite
-	ld hl, vNPCSprites
-	lb bc, BANK(BirdSprite), $0c
-	call CopyVideoData
 	call LoadBirdSpriteGraphics
 	ld a, SFX_FLY
 	call PlaySound
@@ -162,6 +158,8 @@ _LeaveMapAnim::
 	ld a, $c
 	ld [hli], a ; wFlyAnimCounter
 	ld [hl], $c ; wFlyAnimBirdSpriteImageIndex (facing right)
+	ld hl, wSpritePlayerStateData2GrassPriority
+	res OAM_PRIORITY, [hl]
 	ld de, FlyAnimationScreenCoords1
 	call DoFlyAnimation
 	ld c, 40
@@ -256,13 +254,10 @@ DoFlyAnimation:
 	ret
 
 LoadBirdSpriteGraphics:
+	farcall ColorPlayerSprite
 	ld de, BirdSprite
 	ld hl, vNPCSprites
-	lb bc, BANK(BirdSprite), 12
-	call CopyVideoData
-	ld de, BirdSprite tile 12 ; moving animation sprite
-	ld hl, vNPCSprites2
-	lb bc, BANK(BirdSprite), 12
+	lb bc, BANK(BirdSprite), 24
 	jp CopyVideoData
 
 InitFacingDirectionList:

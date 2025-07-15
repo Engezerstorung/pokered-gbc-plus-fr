@@ -18,7 +18,13 @@ VramSwap::
 	push af
 
 	call ListEventCheck
-	jp z, .done
+	inc hl
+	cp -1
+	jr z, .noEventCheck
+	and 1
+	cp [hl]
+	jr nz, .done
+.noEventCheck
 
 	inc hl
 
@@ -29,53 +35,25 @@ VramSwap::
 
 	ld a, [hli]
 	ld e, a
-	cp LOW(vNPCSprites tile $78)
 	ld a, [hli]
 	ld d, a
-	jr nc, .noWCarry
-	jr z, .noWCarry
-	dec a
-.noWCarry
-	cp HIGH(vNPCSprites tile $78)
-	push af
 
 	push de ; save DE value to load it in HL as its final position
-	ld a, [hli] ; \9 amount of tiles to copy from gfx - up to BANK(7\)
+	ld a, [hli] ; \8 amount of tiles to copy from gfx - up to BANK(6\)
 	ld c, a
-	ld a, [hli] ; BANK(7\) bank of gfx to use - up to HIGH(\10)
+	ld a, [hli] ; BANK(6\) bank of gfx to use - up to HIGH(\9)
 	ld b, a
-	ld a, [hli] ; HIGH(\7 tile \8) starting tile in gfx - up to LOW(\7 tile \8)
+	ld a, [hli] ; LOW(\6 tile \7) starting tile in gfx - up to HIGH(\6 tile \7)
 	ld e, a
-	ld a, [hl] ; LOW(\7 tile \8) starting tile in gfx
+	ld a, [hli] ; HIGH(\6 tile \7) starting tile in gfx - up to \10 vram bank destination
 	ld d, a
-	pop hl ; load value saved from DE earlier in HL
-	push hl
-	push de
-	push bc
-	call GoodCopyVideoData
-	pop bc
-	pop de
-	pop hl
-	pop af
-	jr nc, .done
 
-;	ld a, [wFontLoaded]
-;	bit 0, a
-;	jr nz, .done
-	push hl
-	ld hl, wSpriteFlags
-	bit 7, [hl]
-	res 7, [hl]
-	pop hl
-	jr nz, .done
-	set 3, h ; add "tile $80" to hl
-	ld a, tile 12 ; start to adding "tile 12" to de
-	add e
-	ld e, a
-	jr nc, .noCarry
-	inc d
-.noCarry
-	call GoodCopyVideoData
+	ld a, [hl] ; \10 vram bank destination
+	ldh [rVBK], a
+
+	pop hl ; load value saved from DE earlier in HL
+
+	call GoodCopyVideoDataHDMA
 
 .done
 	pop af
@@ -84,18 +62,28 @@ VramSwap::
 	add hl, de
 	cp [hl]
 	jr z, .vramSwapLoop
+	xor a
+	ldh [rVBK], a
 .noVramSwap
 	ret
 
 ; Called during InitMapSprites to substitute sprites in special occasions
-; Exemple : 
-; Subsitute the blank sprite in Fuchsia City by either OMANYTE or KABUTO sprite based on the fossil events 
-SpriteSwap:
-	ld hl, SpriteSwapList
-	ld a, [hli] ; first byte of list is for IsInArray DE value
-	ld d, 0
-	ld e, a
+; Exemple : subsitute SPRITE_BLANK in Fuchsia City by either OMANYTE or KABUTO sprite based on the fossil events
+; Input : PICTUREID in [wSavedSpritePictureID]
+_SpriteSwap:
+	push de
+	ld a, [wCurMapTileset]
+	and a
+	ld hl, SpriteSetSpriteSwapList
+	ld a, [wSpriteSetID]
+	jr z, .useSpriteSet ; if Overworld tileset then the map use a SpriteSet
+	ld hl, MapSpriteSwapList
 	ld a, [wCurMap]
+.useSpriteSet
+
+	ld d, 0
+	ld e, [hl] ; first byte of list is for IsInArray DE value
+	inc hl
 	call IsInArray
 	ld a, [wSavedSpritePictureID]
 	jr nc, .return
@@ -113,7 +101,13 @@ SpriteSwap:
 	jr nz, .checkNextLine
 
 	call ListEventCheck
-	jp z, .checkNextLine
+	inc hl
+	cp -1
+	jr z, .noEventCheck
+	and 1
+	cp [hl]
+	jr nz, .checkNextLine
+.noEventCheck
 
 	inc hl
 
@@ -126,21 +120,23 @@ SpriteSwap:
 	jr .preReturn
 
 .checkNextLine
-	pop bc
-	ld a, b
+	pop af
 	pop de
 	pop hl
 	add hl, de
 	cp [hl]
 	ld a, [wSavedSpritePictureID]
 	jr z, .SpriteSwapLoop
+	and a
 	jr .return
 .preReturn
 	pop bc
 	pop de
 	pop hl
+	scf
 .return
-	ld [wSavedSpritePictureID], a
+;	ld [wSavedSpritePictureID], a
+	pop de
 	ret
 
 ListEventCheck:
@@ -192,22 +188,47 @@ ListCoordsCheck:
 
 VramSwapList:
 ; 1/ map, 2/ Event to check for, 3/ X Coordinate, 4/ Y Coordinate, 5/ coordinates conditions (NOXY, AFTER/BEFORE_X/Y, AFTER/BEFORE_X_AFTER/BEFORE_Y),
-; 6/ GFX type (sprite, stillsprite, tileset), 7/ gfx to use, 8/ which gfx tile to start from, /9 amount of tiles to copy, /10 where in vram
-	db 12
-	map_vram_swap CELADON_MANSION_ROOF, NOEVENT, 0, 0, NOXY, tileset, Mansion_GFX, $5A, 6, $10
-	map_vram_swap CELADON_MANSION_ROOF, NOEVENT, 0, 0, NOXY, tileset, Mansion_GFX, $36, 3, $16
-IF DEF(_DEBUG)	
-	map_vram_swap ROUTE_18, NOEVENT, 47, 0, AFTER_X, sprite, LaprasSprite, 0, 12, $18 ; used to test the function for sprites
-;	map_vram_swap ROUTE_18, NOEVENT, 47, 0, BEFORE_X, sprite, CooltrainerMSprite, 0, 12, $18 ; used to test the function for sprites
+; 6/ gfx to use, 7/ which gfx tile to start from, /8 amount of tiles to copy, /9 where in vram, /10 vram bank
+	db 14
+	map_vram_swap CELADON_MANSION_ROOF, NOEVENT, 0, 0, 0, NOXY, Mansion_GFX, $5A, 6, vTileset tile $10, 0
+	map_vram_swap CELADON_MANSION_ROOF, NOEVENT, 0, 0, 0, NOXY, Mansion_GFX, $36, 3, vTileset tile $16, 0
+IF DEF(_DEBUG)
+;	map_vram_swap ROUTE_18, NOEVENT, 0, 0, 0, NOXY, LaprasSprite, 0, 24, vNPCSprites tile $30, 0 ; used to test the function for sprites
+	map_vram_swap ROUTE_18, NOEVENT, 0, 47, 0, AFTER_X, LaprasSprite, 0, 24, vNPCSprites tile $30, 0 ; used to test the function for sprites
+;	map_vram_swap ROUTE_18, NOEVENT, 0, 47, 0, BEFORE_X, CooltrainerMSprite, 0, 12, vNPCSprites tile $18, 0 ; used to test the function for sprites
 ENDC
 	db -1
 
-SpriteSwapList:
+MapSpriteSwapList:
 ; 1/ map, 2/ Sprite to replace, 3/ Event to check for, 4/ X Coordinate, 5/ Y Coordinate,
 ; 6/ coordinates conditions (NOXY, AFTER/BEFORE_X/Y, AFTER/BEFORE_X_AFTER/BEFORE_Y), 7/ replacement Sprite
-	db 8
-	map_sprite_swap FUCHSIA_CITY, SPRITE_BLANK, EVENT_GOT_DOME_FOSSIL,  0, 0, NOXY, SPRITE_OMANYTE
-	map_sprite_swap FUCHSIA_CITY, SPRITE_BLANK, EVENT_GOT_HELIX_FOSSIL, 0, 0, NOXY, SPRITE_KABUTO
-	map_sprite_swap ROUTE_15, SPRITE_BLANK, EVENT_GOT_DOME_FOSSIL,  9, 0, BEFORE_X, SPRITE_OMANYTE
-	map_sprite_swap ROUTE_15, SPRITE_BLANK, EVENT_GOT_HELIX_FOSSIL, 9, 0, BEFORE_X, SPRITE_KABUTO
+	db 9
+IF DEF(_DEBUG)
+	map_sprite_swap CELADON_CHIEF_HOUSE, SPRITE_ROCKET, EVENT_GOT_DOME_FOSSIL, TRUE, 0, 0, NOXY, SPRITE_OMANYTE
+	map_sprite_swap FUCHSIA_MART, SPRITE_CLERK, EVENT_GOT_DOME_FOSSIL, TRUE, 0, 0, NOXY, SPRITE_OMANYTE
+ENDC
+;	map_sprite_swap FUCHSIA_CITY, SPRITE_BLANK,   EVENT_GOT_DOME_FOSSIL,  TRUE,  0, 0, NOXY, SPRITE_OMANYTE
+;	map_sprite_swap FUCHSIA_CITY, SPRITE_BLANK,   EVENT_GOT_HELIX_FOSSIL, TRUE,  0, 0, NOXY, SPRITE_KABUTO
+;IF DEF(_DEBUG)	
+;	map_sprite_swap FUCHSIA_CITY, SPRITE_KABUTO,  EVENT_GOT_DOME_FOSSIL,  TRUE,  0, 0, NONE, SPRITE_OMANYTE
+;	map_sprite_swap FUCHSIA_CITY, SPRITE_KABUTO,  EVENT_GOT_HELIX_FOSSIL, FALSE, 0, 0, NONE, SPRITE_BLANK
+;	map_sprite_swap FUCHSIA_CITY, SPRITE_OMANYTE, EVENT_GOT_HELIX_FOSSIL, TRUE,  0, 0, NONE, SPRITE_KABUTO
+;	map_sprite_swap FUCHSIA_CITY, SPRITE_OMANYTE, EVENT_GOT_DOME_FOSSIL,  FALSE, 0, 0, NONE, SPRITE_BLANK
+;ENDC
+;	map_sprite_swap ROUTE_15, SPRITE_BLANK, EVENT_GOT_DOME_FOSSIL,  TRUE, 9, 0, BEFORE_X, SPRITE_OMANYTE
+;	map_sprite_swap ROUTE_15, SPRITE_BLANK, EVENT_GOT_HELIX_FOSSIL, TRUE, 9, 0, BEFORE_X, SPRITE_KABUTO
+	db -1
+
+SpriteSetSpriteSwapList:
+; 1/ map, 2/ Sprite to replace, 3/ Event to check for, 4/ X Coordinate, 5/ Y Coordinate,
+; 6/ coordinates conditions (NOXY, AFTER/BEFORE_X/Y, AFTER/BEFORE_X_AFTER/BEFORE_Y), 7/ replacement Sprite
+	db 9
+	map_sprite_swap SPRITESET_FUCHSIA, SPRITE_BLANK,   EVENT_GOT_DOME_FOSSIL,  TRUE,  0, 0, NOXY, SPRITE_OMANYTE
+	map_sprite_swap SPRITESET_FUCHSIA, SPRITE_BLANK,   EVENT_GOT_HELIX_FOSSIL, TRUE,  0, 0, NOXY, SPRITE_KABUTO
+IF DEF(_DEBUG) ; used in debug to test the function when cycling through the events with the enclosure sign
+;	map_sprite_swap SPRITESET_FUCHSIA, SPRITE_KABUTO,  EVENT_GOT_DOME_FOSSIL,  TRUE,  0, 0, NOXY, SPRITE_OMANYTE
+	map_sprite_swap SPRITESET_FUCHSIA, SPRITE_KABUTO,  EVENT_GOT_HELIX_FOSSIL, FALSE, 0, 0, NOXY, SPRITE_BLANK
+	map_sprite_swap SPRITESET_FUCHSIA, SPRITE_OMANYTE, EVENT_GOT_HELIX_FOSSIL, TRUE,  0, 0, NOXY, SPRITE_KABUTO
+;	map_sprite_swap SPRITESET_FUCHSIA, SPRITE_OMANYTE, EVENT_GOT_DOME_FOSSIL,  FALSE, 0, 0, NOXY, SPRITE_BLANK
+ENDC
 	db -1
