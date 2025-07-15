@@ -147,6 +147,9 @@ PrepareOAMData::
 	ld b, $a0
 	ld a, [wMovementFlags]
 	bit BIT_LEDGE_OR_FISHING, a
+IF SHADOW_TRANSPARENCY
+	push af
+ENDC
 	ld a, LOW(wShadowOAMEnd)
 	jr z, .clear
 ; Don't clear the last 4 entries because they are used for the shadow in the
@@ -158,7 +161,33 @@ PrepareOAMData::
 	add hl, de
 	cp l
 	jr nz, .clear
+IF SHADOW_TRANSPARENCY
+; Done if not jumping down ledge
+	pop af
+	bit BIT_LEDGE_OR_FISHING - 1, a
+	ret z
+
+; Hide the jumping down ledge shadow every other frame for transparency effect
+	ldh a, [hBlink]
+	and a
+	ld b, 2
+	ld a, $54
+	jr z, .visibleShadow
+	ld a, 160
+.visibleShadow
+	ld c, 2
+.visibleShadowLoop
+	ld [hl], a
+	add hl, de
+	dec c
+	jr nz, .visibleShadowLoop
+	dec b
+	ret z
+	add 8
+	jr .visibleShadow
+ELSE
 	ret
+ENDC
 
 GetSpriteScreenXY:
 	push de
