@@ -1891,27 +1891,22 @@ wPlayerCoins:: dw ; BCD
 wMissableObjectFlags:: flag_array $100
 wMissableObjectFlagsEnd::
 
-	ds 1
+	ds 3
 
 ;; bit 0 - force male gender
 ;; bit 1 - force female gender
 wGenderFlags:: db
 
-wAnimationStatus:: db
+wPrevSpriteSetID:: db
 
-;; SpriteSets offsets of the current and previous sprite set
-wSpriteSetOffset::
-wCurSpriteSetOffset:: db
-wPrevSpriteSetOffset:: db
-
-;; bit 0 - is 1 if LoadMapSpriteTilePatterns called by OW spriteset loading
-;; bit 1 - is 1 if the Sprite set and previous Sprite set are different
-;; bit 2 - is 1 when sprite is already loaded in the same slot in vram
+;; bit 0 - unused
+;; bit 1 - unused
+;; bit 2 - unused
 ;; bit 3 - unused
 ;; bit 4 - unused
-;; bit 5 - used in always animating sprites during delayed movement status
 ;; bit 6 - unused
-;; bit 7 - when set prevent VramSwap to load in the vram text space
+;; bit 5 - unused
+;; bit 7 - unused
 wSpriteFlags:: db
 
 wPartySpritePaletteSlot::

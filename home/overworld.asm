@@ -823,6 +823,8 @@ LoadPlayerSpriteGraphics::
 	; 1: biking
 	; 2: surfing
 
+	homecall ColorPlayerSprite
+
 	ld a, [wWalkBikeSurfState]
 	dec a
 	jr z, .ridingBike
@@ -1327,7 +1329,7 @@ CheckForTilePairCollisions::
 	jr .retry
 .currentTileMatchesFirstInPair
 	inc hl
-	ld a, [hl]
+	ld a, [hli]
 	cp c
 	jr z, .foundMatch
 	jr .tilePairCollisionLoop
@@ -1942,34 +1944,23 @@ RunMapScript::
 
 LoadWalkingPlayerSpriteGraphics::
 	ld de, RedSprite
-	ld hl, vNPCSprites
 	jr LoadPlayerSpriteGraphicsCommon
 
 LoadSurfingPlayerSpriteGraphics::
 	ld de, SeelSprite
-	ld hl, vNPCSprites
 	jr LoadPlayerSpriteGraphicsCommon
 
 LoadBikePlayerSpriteGraphics::
 	ld de, RedBikeSprite
-	ld hl, vNPCSprites
+	; Fallthrough
 
 LoadPlayerSpriteGraphicsCommon::
-	push de
-	push hl
-	lb bc, BANK(RedSprite), $0c
-	call CopyVideoData
-	pop hl
-	pop de
-	ld a, $c0
-	add e
-	ld e, a
-	jr nc, .noCarry
-	inc d
-.noCarry
-	set 3, h ; add $800 ($80 tiles) to hl (1 << 3 == $8)
-	lb bc, BANK(RedSprite), $0c
+	ld hl, vNPCSprites
+	lb bc, BANK(RedSprite), 24
 	jp CopyVideoData
+
+ASSERT BANK(SeelSprite) == BANK(RedSprite)
+ASSERT BANK(RedBikeSprite) == BANK(RedSprite)
 
 ; function to load data from the map header
 LoadMapHeader::

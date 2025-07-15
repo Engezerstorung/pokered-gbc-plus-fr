@@ -1,6 +1,6 @@
 MACRO overworld_sprite
 	dw \1
-	db \2 tiles
+	db \2
 	db BANK(\1)
 ENDM
 
@@ -111,7 +111,7 @@ SpriteSheetPointerTable:
 	overworld_sprite PikachuSprite, 12
 	overworld_sprite Seel2Sprite, 12
 	overworld_sprite ZapdosSprite, 12
-; One face but use 9 tiles
+; One face but use 12 tiles
 	overworld_sprite SnorlaxBigSprite, 12
 ; Still sprites
 	overworld_sprite PokeBallSprite, 4          ; SPRITE_POKE_BALL
@@ -126,7 +126,7 @@ SpriteSheetPointerTable:
 	overworld_sprite GamblerAsleepSprite, 4     ; SPRITE_UNUSED_GAMBLER_ASLEEP_1
 	overworld_sprite GamblerAsleepSprite, 4     ; SPRITE_UNUSED_GAMBLER_ASLEEP_2
 	overworld_sprite GamblerAsleepSprite, 4     ; SPRITE_GAMBLER_ASLEEP
-	overworld_sprite BenchGuySprite, 4         ; SPRITE_BENCH_GUY
+	overworld_sprite BenchGuySprite, 4          ; SPRITE_BENCH_GUY
 ; Start of custom still sprites
 	overworld_sprite BillsMachine, 4
 	assert_table_length NUM_SPRITES
