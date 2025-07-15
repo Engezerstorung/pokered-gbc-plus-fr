@@ -149,13 +149,91 @@ WhiteFadePaletteSets::
 	db .plateau - WhiteFadePaletteSets    ; PLATEAU
 	assert_table_length NUM_TILESETS	
 
-MapFadePalList:
-	; Map, new palette , palette slot to replace (0-7)
-;	db VIRIDIAN_CITY, OUTDOOR_FLOWER, 5
-;	db VIRIDIAN_FOREST_SOUTH_GATE, OUTDOOR_FLOWER, 5
-;	db DIGLETTS_CAVE_ROUTE_2, OUTDOOR_FLOWER, 5
-;	db LAVENDER_TOWN, OUTDOOR_FLOWER, 5
+; Change palettes to alternate palettes for special case white fades ; see home/fade.asm
+; LoadMapPalette use : d = palette to load (see constants/palette_constants.), e = palette index
+SetPal_FadeBlack::
+	ld hl, BlackFadePaletteSets.pointers
+	ld a, [wCurMapTileset]
+	ld c, a
+	ld b, 0
+	add hl, bc
+
+	ld a, [hl]
+	ld hl, BlackFadePaletteSets
+	ld c, a
+	add hl, bc
+
+.loop
+	ld a, [hli]
+	cp -1
+	ret z
+	ld d, a
+	ld a, [hli]
+	ld e, a
+	push hl
+	farcall LoadMapPalette
+	pop hl
+	jr .loop
+
+BlackFadePaletteSets::
+.overworld   ; OVERWORLD
+.forest      ; FOREST
+	db OUTDOOR_RED, 1
 	db -1
+.gym         ; GYM
+	db INDOOR_BLUE, 4
+	; fallthrough
+.plateau     ; PLATEAU
+.forestGate  ; FOREST_GATE
+.facility    ; FACILITY
+.lab         ; LAB
+.ship        ; SHIP
+.museum      ; MUSEUM
+.gate        ; GATE
+.cemetery    ; CEMETERY
+.redsHouse1  ; REDS_HOUSE_1
+.underground ; UNDERGROUND
+.shipPort    ; SHIP_PORT
+.cavern      ; CAVERN
+.lobby       ; LOBBY
+.mansion     ; MANSION
+.mart        ; MART
+.redsHouse2  ; REDS_HOUSE_2
+.dojo        ; DOJO
+.pokecenter  ; POKECENTER
+.house       ; HOUSE
+.interior    ; INTERIOR
+.club        ; CLUB
+	db -1
+
+.pointers	
+	table_width 1
+	db .overworld - BlackFadePaletteSets  ; OVERWORLD
+	db .redsHouse1 - BlackFadePaletteSets ; REDS_HOUSE_1
+	db .mart - BlackFadePaletteSets       ; MART
+	db .forest - BlackFadePaletteSets     ; FOREST
+	db .redsHouse2 - BlackFadePaletteSets ; REDS_HOUSE_2
+	db .dojo - BlackFadePaletteSets       ; DOJO
+	db .pokecenter - BlackFadePaletteSets ; POKECENTER
+	db .gym - BlackFadePaletteSets        ; GYM
+	db .house - BlackFadePaletteSets      ; HOUSE
+	db .forestGate - BlackFadePaletteSets ; FOREST_GATE
+	db .museum - BlackFadePaletteSets     ; MUSEUM
+	db .underground - BlackFadePaletteSets; UNDERGROUND
+	db .gate - BlackFadePaletteSets       ; GATE
+	db .ship - BlackFadePaletteSets       ; SHIP
+	db .shipPort - BlackFadePaletteSets   ; SHIP_PORT
+	db .cemetery - BlackFadePaletteSets   ; CEMETERY
+	db .interior - BlackFadePaletteSets   ; INTERIOR
+	db .cavern - BlackFadePaletteSets     ; CAVERN
+	db .lobby - BlackFadePaletteSets      ; LOBBY
+	db .mansion - BlackFadePaletteSets    ; MANSION
+	db .lab - BlackFadePaletteSets        ; LAB
+	db .club - BlackFadePaletteSets       ; CLUB
+	db .facility - BlackFadePaletteSets   ; FACILITY
+	db .plateau - BlackFadePaletteSets    ; PLATEAU
+	assert_table_length NUM_TILESETS	
+
 	
 ; Set all palettes to black at beginning of battle
 SetPal_BattleBlack::

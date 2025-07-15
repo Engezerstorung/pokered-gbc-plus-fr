@@ -340,33 +340,61 @@ BattleTransition_OutwardSpiral_:
 FlashScreen:
 BattleTransition_FlashScreen_:
 	ld hl, BattleTransition_FlashScreenPalettes
-.loop
-	ld a, [hli]
-	cp 1
-	jr z, .done
-	ldh [rBGP], a
-	ld c, 2
-	call DelayFrames
-	jr .loop
-.done
+	push bc
+
+	push hl
+	farcall SetPal_FadeBlack
+	pop hl
+	call .flashingLoop
+	push hl
+	farcall SetPal_FadeWhite
+	pop hl
+	call .flashingLoop
+
+	pop bc
 	dec b
 	jr nz, BattleTransition_FlashScreen_
 	ret
 
+.flashingLoop
+	ld a, 2
+	ld [rSVBK], a
+	ld [W2_ForceBGPUpdate], a
+	xor a
+	ld [rSVBK], a
+	ld b, 5
+.loop
+	ld a, [hli]
+	ldh [rBGP], a
+	ld c, 2
+	call DelayFrames
+	dec b
+	jr nz, .loop
+
+	ld a, [hli]
+	ldh [rBGP], a
+	push hl
+	farcall SetPal_Overworld
+	pop hl
+	ret
+
 BattleTransition_FlashScreenPalettes:
+	; load fade to black palettes function
 	dc 3, 3, 2, 1
 	dc 3, 3, 3, 2
 	dc 3, 3, 3, 3
 	dc 3, 3, 3, 2
 	dc 3, 3, 2, 1
+	; load normal palettes function
 	dc 3, 2, 1, 0
+	; load fade to white palettes function
 	dc 2, 1, 0, 0
 	dc 1, 0, 0, 0
 	dc 0, 0, 0, 0
 	dc 1, 0, 0, 0
 	dc 2, 1, 0, 0
+	; load normal palettes function
 	dc 3, 2, 1, 0
-	db 1 ; end
 
 ; used for low level trainer dungeon battles
 BattleTransition_Shrink:
