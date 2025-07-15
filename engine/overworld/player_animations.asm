@@ -517,6 +517,7 @@ _HandleMidJump::
 	ld [wPlayerJumpingYScreenCoordsIndex], a
 	ld hl, wMovementFlags
 	res BIT_LEDGE_OR_FISHING, [hl]
+	res BIT_LEDGE_OR_FISHING -  1, [hl]
 	ld hl, wStatusFlags5
 	res BIT_SCRIPTED_MOVEMENT_STATE, [hl]
 	xor a
