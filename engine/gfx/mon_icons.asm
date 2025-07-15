@@ -289,14 +289,11 @@ SECTION "Party Mon Sprites Routines", ROMX
 ; load and place the party mon icon according to wMonPartySpriteSpecies
 LoadSinglePartyMonSprite:
 	; load into the start of VRAM
-	call DisableLCD
 	ld a, [wMonPartySpriteSpecies]
-	ld de, vSprites
+	ld hl, vSprites
 	call LoadPartyMonSprite
 
 	farcall LoadSinglePartySpritePalette
-
-	call EnableLCD
 
 	; place into the start of OAM
 	ld a, [hPartyMonIndex]
@@ -304,7 +301,7 @@ LoadSinglePartyMonSprite:
 	xor a
 	ld [hPartyMonIndex], a
 	
-	call PlaceSinglePartyMonSprite
+	call PlacePartyMonSprite
 
 	pop af
 	ld [hPartyMonIndex], a
@@ -312,124 +309,89 @@ LoadSinglePartyMonSprite:
 
 ; load the party mon icon for all mon in the party
 LoadPartyMonSprites:
-	call DisableLCD
-	ld de, vSprites
-	ld hl, wPartySpecies
+	ld hl, vSprites
+	ld de, wPartySpecies
 .loop
-	ld a, [hli]
+	ld a, [de]
+	inc de
 	cp -1
 	jr z, .done
-	push hl
+	push de
 	call LoadPartyMonSprite
-	pop hl
+	pop de
 	jr .loop
 .done
 
 	farcall LoadPartyMenuSpritePalettes
 
-	jp EnableLCD
+	ret
 
 ; copy the 8-tile icon for the mon in register a to de
 LoadPartyMonSprite:
-	push de
+	push hl
 
 	ld [wPokedexNum], a
 	predef IndexToPokedex
-
-	; hMultiplicand = pokedex number - 1
-	xor a
-	ld [hMultiplicand], a
-	ld [hMultiplicand + 1], a
 	ld a, [wPokedexNum]
 	dec a
-	ld [hMultiplicand + 2], a
 
-	; hMultiplier = icon size, in bytes
-	ld a, 8 tiles
-	ld [hMultiplier], a
-
-	call Multiply
-
-	; hl = icon offset
-	ld a, [hProduct + 2]
-	ld h, a
-	ld a, [hProduct + 3]
+	; multiply by 8 tiles (128), the icon size in bytes
 	ld l, a
+	ld h, 0
+	; times 8, amount of tiles
+	add hl, hl
+	add hl, hl
+	add hl, hl
+	; times 16, amount of bytes per tile
+	add hl, hl
+	add hl, hl
+	add hl, hl
+	add hl, hl
+
+	ld d, h
+	ld e, l
 
 	; if offset < $4000, use first icon bank
-	bit 6, h
-	set 6, h
-	ld a, BANK(PartyMonSprites)
+	bit 6, d
+	set 6, d
+	lb bc, BANK(PartyMonSprites), 8
 	jr z, .gotBank
 
 	; otherwise, use second icon bank
-	inc a
+	inc b
 
 .gotBank
+	pop hl
+	call CopyVideoData
 	ld bc, 8 tiles
-	pop de
-	jp FarCopyData
+	add hl, bc
+	ret
 
 ; copy 1 full entry (16 bytes) from PartyMonOAM into wShadowOAM according to hPartyMonIndex
 ; and backup wShadowOAM into wMonPartySpritesSavedOAM
-PlaceSinglePartyMonSprite:
-	push hl
-	push de
-	push bc
-
-	jr PlacePartyMonSpriteCommon
-
 PlacePartyMonSprite:
 	push hl
 	push de
 	push bc
 
-IF ALT_PARTY_MENU_COLOR
-	ld a, [hPartyMonIndex]
-	ld [wPartySpritePaletteSlot], a
-ELSE
-	farcall FindPartySpritePalette
-ENDC
-
-PlacePartyMonSpriteCommon:
 	; bc = hPartyMonIndex * 16
 	ld a, [hPartyMonIndex]
-	add a 
-	add a
-	ld c, a
-	add a
-	add c
-	ld e, a
-	ld d, 0
-	add c
+	swap a
 	ld c, a
 	ld b, 0
 
-	; de = source address
-	ld hl, PartyMonOAM
-	add hl, de
+	; de = destination address
+	ld hl, wShadowOAM
+	add hl, bc
 	ld d, h
 	ld e, l
 
-	; hl = destination address
-	ld hl, wShadowOAM
+	; hl = source address
+	ld hl, PartyMonOAM
 	add hl, bc
 
-	ld b, 4
-.bigLoop
-	ld c, 3
-.smallLoop
-; Copy bc bytes from hl to de.
-	ld a, [de]
-	inc de
-	ld [hli], a
-	dec c
-	jr nz, .smallLoop
-; Palette slot to use :
-	ld a, [wPartySpritePaletteSlot]
-	ld [hli], a
-	dec b
-	jr nz, .bigLoop
+	ld bc, 4 * 4
+	call CopyData
 
 	; make backup
 	ld hl, wShadowOAM
@@ -443,35 +405,35 @@ PlacePartyMonSpriteCommon:
 	ret
 
 PartyMonOAM:
-	db $10, $10, $00 ;, $00
-	db $10, $18, $01 ;, $00
-	db $18, $10, $04 ;, $00
-	db $18, $18, $05 ;, $00
+	db $10, $10, $00, $00
+	db $10, $18, $01, $00
+	db $18, $10, $04, $00
+	db $18, $18, $05, $00
 
-	db $20, $10, $08 ;, $00
-	db $20, $18, $09 ;, $00
-	db $28, $10, $0c ;, $00
-	db $28, $18, $0d ;, $00
+	db $20, $10, $08, $01
+	db $20, $18, $09, $01
+	db $28, $10, $0c, $01
+	db $28, $18, $0d, $01
 
-	db $30, $10, $10 ;, $00
-	db $30, $18, $11 ;, $00
-	db $38, $10, $14 ;, $00
-	db $38, $18, $15 ;, $00
+	db $30, $10, $10, $02
+	db $30, $18, $11, $02
+	db $38, $10, $14, $02
+	db $38, $18, $15, $02
 
-	db $40, $10, $18 ;, $00
-	db $40, $18, $19 ;, $00
-	db $48, $10, $1c ;, $00
-	db $48, $18, $1d ;, $00
+	db $40, $10, $18, $03
+	db $40, $18, $19, $03
+	db $48, $10, $1c, $03
+	db $48, $18, $1d, $03
 
-	db $50, $10, $20 ;, $00
-	db $50, $18, $21 ;, $00
-	db $58, $10, $24 ;, $00
-	db $58, $18, $25 ;, $00
+	db $50, $10, $20, $04
+	db $50, $18, $21, $04
+	db $58, $10, $24, $04
+	db $58, $18, $25, $04
 
-	db $60, $10, $28 ;, $00
-	db $60, $18, $29 ;, $00
-	db $68, $10, $2c ;, $00
-	db $68, $18, $2d ;, $00
+	db $60, $10, $28, $05
+	db $60, $18, $29, $05
+	db $68, $10, $2c, $05
+	db $68, $18, $2d, $05
 
 
 SECTION "Party Mon Sprites Gfx 1", ROMX
