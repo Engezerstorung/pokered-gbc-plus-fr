@@ -13,6 +13,9 @@ IF GEN_2_GRAPHICS
 HpBarAndStatusGraphics:: INCBIN "gfx/gs/gen2_hp_bar_and_status.2bpp"
 HpBarAndStatusGraphicsEnd::
 
+EXPBarGraphics:  INCBIN "gfx/gs/exp_bar.2bpp"
+EXPBarGraphicsEnd:
+
 BattleHudTiles1: INCBIN "gfx/gs/gen2_battle_arrow.1bpp"
 BattleHudTiles1End:
 BattleHudTiles2: INCBIN "gfx/gs/gen2_battle_arrow_lines.1bpp"

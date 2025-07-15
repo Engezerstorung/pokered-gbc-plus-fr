@@ -1904,8 +1904,8 @@ wPrevSpriteSetID:: db
 ;; bit 2 - unused
 ;; bit 3 - unused
 ;; bit 4 - unused
-;; bit 6 - unused
 ;; bit 5 - unused
+;; bit 6 - unused
 ;; bit 7 - unused
 wSpriteFlags:: db
 
