@@ -108,10 +108,6 @@ INCLUDE "engine/math/random.asm"
 
 INCLUDE "color/status_screen.asm"
 
-IF GEN_2_GRAPHICS
-EXPBarGraphics:  INCBIN "gfx/gs/exp_bar.2bpp"
-EXPBarGraphicsEnd:
-ENDC
 
 SECTION "Battle Engine 2", ROMX
 

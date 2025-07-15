@@ -278,32 +278,37 @@ SprPalSwap:
 	ret
 
 TilesetBgPalSwapList:
-	db CEMETERY,    CEMETERY_STAIRS,    4
-	db CEMETERY,    INDOOR_PURPLE,      6
-	db GATE,        GATE_STAIRS,        4
-	db GYM,         INDOOR_GREEN_BG,    2
-	db GYM,         INDOOR_FLOWER,      4
-	db INTERIOR,    OUTDOOR_GREEN,      2
-	db MART,        PC_POKEBALL_PAL,    7
-	db MUSEUM,      GATE_STAIRS,        4
-	db POKECENTER,  PC_POKEBALL_PAL,    7
-	db PLATEAU,     OUTDOOR_RED,        1
-	db UNDERGROUND, UNDERGROUND_STAIRS, 1
+	; Tileset, new palette , palette slot to replace (0-7)
+	db CEMETERY,     CEMETERY_STAIRS,    4
+	db CEMETERY,     INDOOR_PURPLE,      6
+	db GATE,         GATE_STAIRS,        4
+	db GYM,          INDOOR_GREEN_BG,    2
+	db GYM,          INDOOR_FLOWER,      4
+	db INTERIOR,     OUTDOOR_GREEN,      2
+	db LAB,          INDOOR_GREEN,       4
+	db LOBBY,        LOBBY_CHAIR,        2
+	db LOBBY,        LOBBY_1STFLOOR,     4
+	db MANSION,      MANSION_WALLS,      6
+	db MART,         PC_POKEBALL_PAL,    7
+	db MUSEUM,       GATE_STAIRS,        4
+	db POKECENTER,   PC_POKEBALL_PAL,    7
+	db PLATEAU,      OUTDOOR_RED,        1
+	db REDS_HOUSE_1, REDS_STAIRS,        4
+	db UNDERGROUND,  UNDERGROUND_STAIRS, 1
 	db -1
 
 MapBgPalSwapList:
-	; Map, new palette , palette slot to replace (0-7), palette type(0=BG, 1=Sprite)
+	; Map, new palette , palette slot to replace (0-7)
 	db BILLS_HOUSE,          BILLS_MACHINE_DOOR, 4
 	db CELADON_MANSION_ROOF, INDOOR_LIGHT_BLUE,  2
 	db CELADON_MANSION_ROOF, MANSION_SKY,        3
 	db CELADON_MANSION_ROOF, MANSION_WALLS_ROOF, 6
-	db MUSEUM_1F,            ALT_TEXTBOX_PAL,    7
-	db REDS_HOUSE_1F,        REDS_STAIRS,        4
-	db ROUTE_15_GATE_2F,     ARTICUNO_TEXTBOX,   7
+;	db MUSEUM_1F,            ALT_TEXTBOX_PAL,    7
+;	db ROUTE_15_GATE_2F,     ARTICUNO_TEXTBOX,   7
 	db -1
 
 MapSprPalSwapList:
-	; Map, new palette , palette slot to replace (0-7), palette type(0=BG, 1=Sprite)
+	; Map, new palette , palette slot to replace (0-7)
 	db BILLS_HOUSE,           SPRITE_PAL_BILLSMACHINE, 5
 	db CELADON_GYM,           SPRITE_PAL_ERIKA,        4
 	db CELADON_MANSION_1F,    SPRITE_PAL_YELLOWMON,    3 ; MEOWTH
