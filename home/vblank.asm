@@ -20,6 +20,13 @@ VBlank::
 	ldh [rWY], a
 .ok
 
+	ldh a, [rHDMA5]
+	cp $ff
+	jr z, .noHDMAToFinish
+	res 7, a
+	ldh [rHDMA5], a
+.noHDMAToFinish
+
 	call AutoBgMapTransfer
 	call VBlankCopyBgMap
 	call RedrawRowOrColumn
@@ -119,3 +126,21 @@ DEF NOT_VBLANKED EQU 1
 	and a
 	jr nz, .halt
 	ret
+
+STATInterrupt::
+	push af
+	ldh a, [rSTAT]
+	and %01000100
+	jr nz, LYC_LY
+
+HBlank:
+	pop af
+	reti
+
+LYC_LY:
+	xor %01000100
+	jr nz, HBlank
+	pop af
+	push hl
+	ld hl, _GbcPrepareVBlank
+	jp InterruptWrapper

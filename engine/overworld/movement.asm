@@ -102,11 +102,10 @@ UpdatePlayerSprite:
 	ld c, a
 	ld a, [wGrassTile]
 	cp c
-	ld a, 0
-	jr nz, .next2
-	ld a, OAM_BEHIND_BG
-.next2
-	ld [wSpritePlayerStateData2GrassPriority], a
+	ld hl, wSpritePlayerStateData2GrassPriority
+	res OAM_PRIORITY, [hl]
+	ret nz
+	set OAM_PRIORITY, [hl]
 	ret
 
 UnusedReadSpriteDataFunction:
@@ -134,14 +133,6 @@ UpdateNPCSprite:
 	ldh a, [hCurrentSpriteOffset]
 	ld l, a
 	inc l
-
-	ld d, h
-	inc d
-	add $c
-	ld e, a
-	ld a, [de]
-	ld [wAnimationStatus], a
-
 	ld a, [hl]        ; x#SPRITESTATEDATA1_MOVEMENTSTATUS
 	and a
 	jp z, InitializeSpriteStatus
@@ -166,11 +157,10 @@ UpdateNPCSprite:
 	ld a, [wWalkCounter]
 	and a
 	ret nz           ; don't do anything yet if player is currently moving
+	lb bc, 1, 3
+	add hl, bc
 	call InitializeSpriteScreenPosition
-	ld h, HIGH(wSpriteStateData2)
-	ldh a, [hCurrentSpriteOffset]
-	add $6
-	ld l, a
+	inc h
 	ld a, [hl]       ; x#SPRITESTATEDATA2_MOVEMENTBYTE1
 	inc a
 	jr z, .randomMovement  ; value STAY
@@ -318,52 +308,15 @@ TryWalking:
 
 ; update the walking animation parameters for a sprite that is currently walking
 UpdateSpriteInWalkingAnimation:
-	ldh a, [hCurrentSpriteOffset]
-	add $7
+	ld a, l
+	add 6
 	ld l, a
 
 	ld c, 4
-	ld a, [wSpriteFlags]
-	bit 5, a
-	jr z, .gotAnimationSpeed
-	ld a, [wAnimationStatus]
-	ld c, a
-	cp $80
-	jr c, .gotAnimationSpeed
+	call DoSpriteWalkingAnimation
 
-	inc l
-	ld a, [hld]
-	and a
-	ld c, 6
-	jr z, .gotAnimationSpeed
-	cp 2
-	jr z, .gotAnimationSpeed
-	ld c, 20
-
-.gotAnimationSpeed
-	ld a, [hl]                       ; x#SPRITESTATEDATA1_INTRAANIMFRAMECOUNTER
-	inc a
-	ld [hl], a                       ; [x#SPRITESTATEDATA1_INTRAANIMFRAMECOUNTER]++
-	cp c
-	jr c, .noNextAnimationFrame
-
-;	cp $4
-;	jr nz, .noNextAnimationFrame
-	xor a
-	ld [hl], a                       ; [x#SPRITESTATEDATA1_INTRAANIMFRAMECOUNTER] = 0
-	inc l
-	ld a, [hl]                       ; x#SPRITESTATEDATA1_ANIMFRAMECOUNTER
-	inc a
-	and $3
-	ld [hl], a                       ; advance to next animation frame every 4 ticks (16 ticks total for one step)
-.noNextAnimationFrame
-
-	ld a, [wSpriteFlags]
-	bit 5, a
-	ret nz
-
-	ldh a, [hCurrentSpriteOffset]
-	add $3
+	ld a, l
+	sub 4
 	ld l, a
 	ld a, [hli]                      ; x#SPRITESTATEDATA1_YSTEPVECTOR
 	ld b, a
@@ -419,23 +372,67 @@ UpdateSpriteInWalkingAnimation:
 	ld [hl], a                       ; [x#SPRITESTATEDATA1_XSTEPVECTOR] = 0
 	ret
 
+DoSpriteIdleAnimation:
+	cp $80
+	call nc, GetIdleAnimationFrameLenght
+	ld c, a
+
+DoSpriteWalkingAnimation:
+	ld a, [hl]                       ; x#SPRITESTATEDATA1_INTRAANIMFRAMECOUNTER
+	inc a
+	ld [hl], a                       ; [x#SPRITESTATEDATA1_INTRAANIMFRAMECOUNTER]++
+	cp c
+	ret c
+	xor a
+	ld [hli], a                       ; [x#SPRITESTATEDATA1_INTRAANIMFRAMECOUNTER] = 0
+	ld a, [hl]                       ; x#SPRITESTATEDATA1_ANIMFRAMECOUNTER
+	inc a
+	and $3
+	ld [hld], a                       ; advance to next animation frame every 4 ticks (16 ticks total for one step)
+	ret
+
+GetIdleAnimationFrameLenght:
+	push hl
+	sub $80
+	inc l
+	ld d, 0
+	ld e, [hl]
+	ld h, d
+	ld l, a
+	ld bc, IdleAnimationFrameLenghtList
+	add hl, hl
+	add hl, hl
+	add hl, bc
+	add hl, de
+	ld a, [hl]
+	pop hl
+	ret
+
+IdleAnimationFrameLenghtList:
+	; Lenght of each frames of the idle animation
+	db 6, 30, 6, 30 ; $80 SNORLAX 3x3
+
 ; update [x#SPRITESTATEDATA2_MOVEMENTDELAY] for sprites in the delayed state (x#SPRITESTATEDATA1_MOVEMENTSTATUS)
 UpdateSpriteMovementDelay:
-	ld a, [wAnimationStatus]
-	and a
-	jr z, .notAlwaysAnimating
-
-	ld hl, wSpriteFlags
-	set 5, [hl]
-	ld h, HIGH(wSpriteStateData1)
-
-	call UpdateSpriteInWalkingAnimation
-.notAlwaysAnimating
-
-	ld h, HIGH(wSpriteStateData2)
-	ldh a, [hCurrentSpriteOffset]
-	add $6
+	ld a, l
+	add 6
 	ld l, a
+
+	push hl
+	lb bc, 1, 5
+	add hl, bc
+	ld a, [hl]
+	pop hl
+
+	and a
+	push af
+
+	call nz, DoSpriteIdleAnimation
+
+.noIdleAnimation
+	inc h
+	dec l
+
 	ld a, [hl]              ; x#SPRITESTATEDATA2_MOVEMENTBYTE1
 	inc l
 	inc l
@@ -445,19 +442,18 @@ UpdateSpriteMovementDelay:
 	jr .moving
 .tickMoveCounter
 	dec [hl]                ; x#SPRITESTATEDATA2_MOVEMENTDELAY
-	jr nz, notYetMoving
+	jr nz, .notYetWalking
 .moving
 	dec h
 	ldh a, [hCurrentSpriteOffset]
 	inc a
 	ld l, a
 	ld [hl], $1             ; [x#SPRITESTATEDATA1_MOVEMENTSTATUS] = 1 (mark as ready to move)
-notYetMoving:
+.notYetWalking
 
-	ld hl, wSpriteFlags
-	bit 5, [hl]
-	res 5, [hl]
+	pop af
 	jp nz, UpdateSpriteImage
+notYetMoving:
 	
 	ld h, HIGH(wSpriteStateData1)
 	ldh a, [hCurrentSpriteOffset]
@@ -504,21 +500,12 @@ InitializeSpriteStatus:
 	inc l
 	ld [hl], $ff  ; [x#SPRITESTATEDATA1_IMAGEINDEX] = invisible/off screen
 	inc h ; HIGH(wSpriteStateData2)
-	ldh a, [hCurrentSpriteOffset]
-	add $2
-	ld l, a
 	ld a, $8
 	ld [hli], a   ; [x#SPRITESTATEDATA2_YDISPLACEMENT] = 8
-	ld [hl], a    ; [x#SPRITESTATEDATA2_XDISPLACEMENT] = 8
-	call InitializeSpriteScreenPosition ; could have done fallthrough here
-	ret
+	ld [hli], a    ; [x#SPRITESTATEDATA2_XDISPLACEMENT] = 8
 
 ; calculates the sprite's screen position from its map position and the player position
 InitializeSpriteScreenPosition:
-	ld h, HIGH(wSpriteStateData2)
-	ldh a, [hCurrentSpriteOffset]
-	add SPRITESTATEDATA2_MAPY
-	ld l, a
 	ld a, [wYCoord]
 	ld b, a
 	ld a, [hl]      ; x#SPRITESTATEDATA2_MAPY
@@ -636,11 +623,10 @@ CheckSpriteAvailability:
 	ld l, a
 	ld a, [wGrassTile]
 	cp c
-	ld a, 0
+	res OAM_PRIORITY, [hl] ; x#SPRITESTATEDATA2_GRASSPRIORITY
 	jr nz, .notInGrass
-	ld a, OAM_BEHIND_BG
+	set OAM_PRIORITY, [hl] ; x#SPRITESTATEDATA2_GRASSPRIORITY
 .notInGrass
-	ld [hl], a       ; x#SPRITESTATEDATA2_GRASSPRIORITY
 	and a
 .done
 	ret

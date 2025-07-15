@@ -1,25 +1,35 @@
 SpriteSpecialProperties::
-; This function look for sprites in SpecialOAMlist and load special proporties in wSpriteStateData2
-; it make use of the previously unused bytes $1, $A, $B and $C
-	ld a, $10
-.spriteLoop
-	ldh [hSpriteOffset2], a
+; This part of the function look for sprites in SpecialOAMlist and load special proporties in wSpriteStateData2
+; it make use of the previously unused bytes $1, $A and $B
+	ld e, $10
 
+.spriteLoop
 	ld d, HIGH(wSpriteStateData1) ; start by searching the PictureID of the current map object
-	ld e, a
 	ld a, [de] ; [x#SPRITESTATEDATA1_PICTUREID]
 	ld [wSavedSpritePictureID], a
+	inc e
+	inc d
 
 	ld hl, SpecialOAMlist ; loading list for identification and properties values
 	push de ; save d and e
 	ld de, 4 ; define the number of properties in list
 	call IsInArray ; check if Sprite is in list ; modify a/b/de
 	pop de
-	jr nc, .nextCheck
+	jr c, .foundMatch
 
-	inc hl
+	xor a
+	ld [de], a
+	ld a, $9
+	add e
+	ld e, a
+	xor a
+	ld [de], a
 	inc e
-	inc d
+	ld [de], a
+	jr .nextCheck
+
+.foundMatch
+	inc hl
 	ld a, [hli]
 	ld [de], a
 	ld a, $9
@@ -33,11 +43,9 @@ SpriteSpecialProperties::
 
 .nextCheck
 ; This part of the function look for sprites in AnimatedSpriteList and load an animation value in 
-; wSpriteStateData2 if found, it make use of the previously unused bytes $C of wSpriteStateData2.
-	ld d, HIGH(wSpriteStateData2)
-	ldh a, [hSpriteOffset2]
-	add $c
-	ld e, a
+; wSpriteStateData2 if found, it make use of the previously unused byte $C of wSpriteStateData2.
+	inc e
+
 	ld a, [wSavedSpritePictureID]
 	ld b, a
 
@@ -45,20 +53,23 @@ SpriteSpecialProperties::
 .loop
 	ld a, [hli]
 	cp -1
-	jr z, .nextsprite
-	cp b
-	jr z, .found
-	inc hl
-	jr .loop
+	jr z, .noMatch
 
-.found
-	ld a, [hl]
+	cp b
+	ld a, [hli]
+	jr nz, .loop
+	jr .found
+	
+.noMatch
+	xor a
+.found	
 	ld [de], a
 
 .nextsprite
-	ldh a, [hSpriteOffset2]
+	ld a, e
 	add $10
-	cp LOW($100)
+	and $f0
+	ld e, a
 	jp nz, .spriteLoop
 	ret
 
@@ -146,55 +157,63 @@ SpecialOAMlist:
 ;	db SPRITE_VOLTORB,					$00, 0, 0
 ;	db SPRITE_WIGGLYTUFF,				$00, 0, 0
 ; Still Sprites
-;	db SPRITE_POKE_BALL,				$10, 0, 0
-;	db SPRITE_FOSSIL,					$10, 0, 0
-;	db SPRITE_PAPER,					$10, 0, 0
-;	db SPRITE_POKEDEX,					$10, 0, 0
-;	db SPRITE_CLIPBOARD,				$10, 0, 0
-;	db SPRITE_UNUSED_OLD_AMBER,			$10, 0, 0
-;	db SPRITE_OLD_AMBER,				$10, 0, 0
-;	db SPRITE_UNUSED_GAMBLER_ASLEEP_1,	$10, 0, 0
-;	db SPRITE_UNUSED_GAMBLER_ASLEEP_2,	$10, 0, 0
-;	db SPRITE_GAMBLER_ASLEEP,			$10, 0, 0
+;	db SPRITE_POKE_BALL,				$1, 0, 0
+;	db SPRITE_FOSSIL,					$1, 0, 0
+;	db SPRITE_PAPER,					$1, 0, 0
+;	db SPRITE_POKEDEX,					$1, 0, 0
+;	db SPRITE_CLIPBOARD,				$1, 0, 0
+;	db SPRITE_UNUSED_OLD_AMBER,			$1, 0, 0
+;	db SPRITE_OLD_AMBER,				$1, 0, 0
+;	db SPRITE_UNUSED_GAMBLER_ASLEEP_1,	$1, 0, 0
+;	db SPRITE_UNUSED_GAMBLER_ASLEEP_2,	$1, 0, 0
+;	db SPRITE_GAMBLER_ASLEEP,			$1, 0, 0
 
-	db SPRITE_DOME_FOSSIL,              $10, 0, 0
+IF DEF(_DEBUG)	
+	db SPRITE_BLANK,                    $0, 16, 0
+ENDC
+	db SPRITE_DOME_FOSSIL,              $1, 0, 0
 ; Regular sprites with -1 X offset on down/up flipped walking frame 
-	db SPRITE_DODUO,                    $20, 0, 0
-	db SPRITE_FEAROW,                   $20, 0, 0
-	db SPRITE_JIGGLYPUFF,               $20, 0, 0
-	db SPRITE_MACHOKE,                  $20, 0, 0
-	db SPRITE_MACHOP,                   $20, 0, 0
-	db SPRITE_NIDORANF,                 $20, 0, 1
-	db SPRITE_NIDORANM,                 $20, 0, 0
-	db SPRITE_PIDGEY,                   $20, 0, 0
-	db SPRITE_PIKACHU,                  $20, 0, 0
-	db SPRITE_SEEL2,                    $20, 0, 0
-	db SPRITE_ZAPDOS,                   $20, 0, 0
-	db SPRITE_KABUTO,                   $20, 0, 0
+	db SPRITE_DODUO,                    $2, 0, 0
+	db SPRITE_FEAROW,                   $2, 0, 0
+	db SPRITE_JIGGLYPUFF,               $2, 0, 0
+	db SPRITE_MACHOKE,                  $2, 0, 0
+	db SPRITE_MACHOP,                   $2, 0, 0
+	db SPRITE_NIDORANF,                 $2, 0, 1
+	db SPRITE_NIDORANM,                 $2, 0, 0
+	db SPRITE_PIDGEY,                   $2, 0, 0
+	db SPRITE_PIKACHU,                  $2, 0, 0
+	db SPRITE_SEEL2,                    $2, 0, 0
+	db SPRITE_ZAPDOS,                   $2, 0, 0
+	db SPRITE_KABUTO,                   $2, 0, 0
 ; Still, Y offset
-	db SPRITE_BOULDER,                  $10, 3, 0
-	db SPRITE_SNORLAX,                  $10, 4, 0
+	db SPRITE_BOULDER,                  $1, 3, 0
+	db SPRITE_SNORLAX,                  $1, 4, 0
 ; Still, YX offset
-	db SPRITE_BENCH_GUY,                $10, 4, 4
+	db SPRITE_BENCH_GUY,                $1, 4, 4
 ; Bill's Machines
-	db SPRITE_BILLS_MACHINE,            $30, 0, 0
+	db SPRITE_BILLS_MACHINE,            $3, 0, 0
 ; 3x3 tiles Snorlax
-	db SPRITE_SNORLAXBIG,               $40, 0, 0
+	db SPRITE_SNORLAXBIG,               $4, 0, 0
 	db -1
+
+; Walking animation speed is 4, bigger value equal slower speed
+DEF IDDLE_FLY     EQU   6 ; slightly slower speed
+DEF IDDLE_SWIM    EQU  12 ; slower speed
+DEF IDDLE_SNORLAX EQU $80 ; snorlax breathing
 
 AnimatedSpriteList:
 ; \1 Sprite to animate, 
 ; \2 Ticks between animation frames, must be > 0.
 ; A value of 4 is the normal walking animation speed.
 ; Values > $80 are for special animation paterns.
-	db SPRITE_ARTICUNO,     6 ; slightly slower speed
-	db SPRITE_FEAROW,       6 ; slightly slower speed
-	db SPRITE_KABUTO,      12 ; slower speed
-	db SPRITE_LAPRAS,      12 ; slower speed
-	db SPRITE_MOLTRES,      6 ; slightly slower speed
-	db SPRITE_OMANYTE,     12 ; slower speed
-	db SPRITE_PIDGEOT,      6 ; slightly slower speed
-	db SPRITE_SNORLAXBIG, $80 ; snorlax breathing
-	db SPRITE_SWIMMER,     12 ; slower speed
-	db SPRITE_ZAPDOS,       6 ; slightly slower speed
+	db SPRITE_ARTICUNO,    IDDLE_FLY
+	db SPRITE_FEAROW,      IDDLE_FLY
+	db SPRITE_KABUTO,      IDDLE_SWIM
+	db SPRITE_LAPRAS,      IDDLE_SWIM
+	db SPRITE_MOLTRES,     IDDLE_FLY
+	db SPRITE_OMANYTE,     IDDLE_SWIM
+	db SPRITE_PIDGEOT,     IDDLE_FLY
+	db SPRITE_SNORLAXBIG,  IDDLE_SNORLAX
+	db SPRITE_SWIMMER,     IDDLE_SWIM
+	db SPRITE_ZAPDOS,      IDDLE_FLY
 	db -1

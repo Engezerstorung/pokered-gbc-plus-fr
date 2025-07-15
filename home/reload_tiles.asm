@@ -7,10 +7,6 @@ ReloadMapData::
 	call DisableLCD
 	call LoadTextBoxTilePatterns
 	call LoadCurrentMapView
-
-	ld hl, wSpriteFlags
-	set 7, [hl]
-
 	call LoadTilesetTilePatternData
 	call EnableLCD
 	pop af
