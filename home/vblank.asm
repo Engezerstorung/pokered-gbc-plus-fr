@@ -20,6 +20,10 @@ VBlank::
 	ldh [rWY], a
 .ok
 
+	ldh a, [hBlink]
+	xor 1
+	ldh [hBlink], a
+
 	ldh a, [rHDMA5]
 	cp $ff
 	jr z, .noHDMAToFinish
