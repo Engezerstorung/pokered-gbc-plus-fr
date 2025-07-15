@@ -75,7 +75,11 @@ SeelSprite::             INCBIN "gfx/sprites/seel.2bpp"
 
 SECTION "NPC Sprites 3", ROMX
 
+IF DEF(_DEBUG)
+BlankSprite::            INCBIN "gfx/sprites/agatha.2bpp"
+ELSE
 BlankSprite::            INCBIN "gfx/sprites/blanksprite.2bpp"
+ENDC
 DomeFossilSprite::       INCBIN "gfx/sprites/fossil_dome.2bpp"
 
 ; Gym Leaders

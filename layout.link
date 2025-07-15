@@ -9,8 +9,8 @@ ROM0
 	"rst10"
 	org $0018
 	"rst18"
-;	org $0020
-;	"rst20"
+	org $0020
+	"rst20"
 ;	org $0028
 ;	"rst28"
 ;	org $0030
@@ -222,7 +222,8 @@ ROMX $39
 	"Party Mon Sprites Gfx 2"
 	"Party Mon Sprites Routines"
 WRAM0
-	"Audio RAM"
+	"Stack"
+;	"Audio RAM"
 	org $c100
 	"Sprite State Data"
 	"OAM Buffer"
@@ -233,7 +234,8 @@ WRAM0
 	"Main Data"
 	"Current Box Data"
 	org $df00
-	"Stack"
+	"Audio RAM"
+;	"Stack"
 VRAM
 	"VRAM"
 SRAM $0

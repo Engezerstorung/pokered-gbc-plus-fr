@@ -59,6 +59,64 @@ FarCopyDataDouble::
 	ld [MBC1RomBank], a
 	ret
 
+CopyVideoDataHDMA::
+	ldh a, [hAutoBGTransferEnabled]
+	push af
+	xor a ; disable auto-transfer while copying
+	ldh [hAutoBGTransferEnabled], a
+
+	ldh a, [hLoadedROMBank]
+	ldh [hROMBankTemp], a
+	setrombank b
+
+	call PrepareHDMA
+
+	call DoHDMA
+
+	ldh a, [hROMBankTemp]
+	setrombank
+	pop af
+	ldh [hAutoBGTransferEnabled], a
+	ret
+
+PrepareHDMA::
+	dec c
+	set 7, c
+
+	ld a, d
+	ldh [rHDMA1], a
+	ld a, e
+	ldh [rHDMA2], a
+	ld a, h
+	ldh [rHDMA3], a
+	ld a, l
+	ldh [rHDMA4], a
+	ret
+
+DoHDMA::
+	ldh a, [rSTAT]
+	push af
+	ld a, %00001000
+	ldh [rSTAT], a
+
+.wait
+	ldh a, [rSTAT]
+	and %00000011
+	jr z, .wait
+
+	ld a, c
+	ldh [rHDMA5], a
+.continue
+	halt
+	ldh a, [rHDMA5]
+	inc a
+	jr nz, .continue
+
+	pop af
+	ldh [rSTAT], a
+
+	ret
+
 CopyVideoData::
 ; Wait for the next VBlank, then copy c 2bpp
 ; tiles from b:de to hl, 8 tiles at a time.
@@ -228,9 +286,19 @@ ClearScreen::
 	jp Delay3
 
 GoodCopyVideoData::
+	call CopyVideoDataToFarCopyData2
+	jp nz, CopyVideoData ; if LCD is on, transfer during V-blank
+	jp FarCopyData2 ; if LCD is off, transfer all at once
+
+GoodCopyVideoDataHDMA::
+	call CopyVideoDataToFarCopyData2
+	jp nz, CopyVideoDataHDMA
+	jp FarCopyData2 ; if LCD is off, transfer all at once
+
+CopyVideoDataToFarCopyData2:
 	ldh a, [rLCDC]
 	bit rLCDC_ENABLE, a ; is the LCD enabled?
-	jp nz, CopyVideoData ; if LCD is on, transfer during V-blank
+	ret nz
 	ld a, b
 	push de
 	ld d, h
@@ -244,4 +312,4 @@ GoodCopyVideoData::
 	ld b, h
 	ld c, l
 	pop hl
-	jp FarCopyData2 ; if LCD is off, transfer all at once
+	ret

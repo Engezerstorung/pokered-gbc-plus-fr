@@ -22,8 +22,9 @@ SECTION "rst18", ROM0[$0018]
 _Bankswitch::
 	jp Bankswitch
 
-; memory for rst vectors $20-$38 used by color hack
+	ds $20 - @, 0
 
+SECTION "rst20", ROM0[$0020]
 SetRomBank::
 	ldh [hLoadedROMBank], a
 	ld [MBC1RomBank], a
@@ -37,20 +38,26 @@ SECTION "vblank", ROM0[$0040]
 	ld hl, VBlank
 	jp InterruptWrapper
 
+	ds $48 - @, 0
+
 SECTION "lcd", ROM0[$0048] ; HAX: interrupt wasn't used in original game
-	push hl
-	ld hl, _GbcPrepareVBlank
-	jp InterruptWrapper
+	jp STATInterrupt
+
+	ds $50 - @, 0
 
 SECTION "timer", ROM0[$0050]
 	push hl
 	ld hl, Timer
 	jp InterruptWrapper
 
+	ds $58 - @, 0
+
 SECTION "serial", ROM0[$0058]
 	push hl
 	ld hl, Serial
 	jp InterruptWrapper
+
+	ds $60 - @, 0
 
 SECTION "joypad", ROM0[$0060]
 	reti
