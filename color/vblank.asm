@@ -94,34 +94,17 @@ RefreshPalettesPreVBlank:
 	jr .end
 .obpNotBlack
 
+	; Palettes react to r0BP1 according to set bits in W2_UseOBP1
+	ld a, [W2_UseOBP1]
+	ld c, a
 .doNextSprPal
 	ld e, 4
-
-	ld a, -7
-	add b
-	ld c, a
-
-	ld a, [W2_UseOBP1]
-	and a
-	jr z, .obp0
-
-	dec c
-	jr z, .alreadyZero
-.loop
-	rrca
-	dec c
-	jr nz, .loop
-.alreadyZero
-	bit 0, a
-	jr z, .obp0
-
-.obp1
-	ldh a, [rOBP1]
-	ld d, a
-	jr .doNextSprColor
-.obp0
+	rrc c ; set c flag if bit 0 is 1 and rotate to the right
 	ldh a, [rOBP0]
-	ld d, a
+	jr nc, .obp0
+	ldh a, [rOBP1]
+.obp0
+	ld d, a	
 
 .doNextSprColor
 	ld a, d
