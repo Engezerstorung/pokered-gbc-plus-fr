@@ -134,7 +134,7 @@ ENDC
 	call PlaySound
 	pop af
 	ldh [hLoadedROMBank], a
-	ld [MBC1RomBank], a
+	ld [rROMB], a
 	ld c, 4
 	call DelayFrames
 	ld de, RedSprite
@@ -162,7 +162,7 @@ ENDC
 	call PlaySound
 	pop af
 	ldh [hLoadedROMBank], a
-	ld [MBC1RomBank], a
+	ld [rROMB], a
 	ld c, 20
 	call DelayFrames
 	hlcoord 6, 5
