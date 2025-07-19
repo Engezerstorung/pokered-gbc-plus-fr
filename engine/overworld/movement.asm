@@ -103,9 +103,9 @@ UpdatePlayerSprite:
 	ld a, [wGrassTile]
 	cp c
 	ld hl, wSpritePlayerStateData2GrassPriority
-	res OAM_PRIORITY, [hl]
+	res B_OAM_PRIO, [hl]
 	ret nz
-	set OAM_PRIORITY, [hl]
+	set B_OAM_PRIO, [hl]
 	ret
 
 UnusedReadSpriteDataFunction:
@@ -623,9 +623,9 @@ CheckSpriteAvailability:
 	ld l, a
 	ld a, [wGrassTile]
 	cp c
-	res OAM_PRIORITY, [hl] ; x#SPRITESTATEDATA2_GRASSPRIORITY
+	res B_OAM_PRIO, [hl] ; x#SPRITESTATEDATA2_GRASSPRIORITY
 	jr nz, .notInGrass
-	set OAM_PRIORITY, [hl] ; x#SPRITESTATEDATA2_GRASSPRIORITY
+	set B_OAM_PRIO, [hl] ; x#SPRITESTATEDATA2_GRASSPRIORITY
 .notInGrass
 	and a
 .done

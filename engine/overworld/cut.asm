@@ -130,10 +130,10 @@ WriteCutOrBoulderDustAnimationOAMBlock:
 
 .OAMBlock:
 ; tile ID, attributes
-	db $fc, OAM_OBP1 | 7 ; Uses palette 7 (animation)
-	db $fd, OAM_OBP1 | 7
-	db $fe, OAM_OBP1 | 7
-	db $ff, OAM_OBP1 | 7
+	db $fc, OAM_PAL1 | 7 ; Uses palette 7 (animation)
+	db $fd, OAM_PAL1 | 7
+	db $fe, OAM_PAL1 | 7
+	db $ff, OAM_PAL1 | 7
 
 ;GetCutAnimationOffsets:
 GetCutOrBoulderDustAnimationOffsets:

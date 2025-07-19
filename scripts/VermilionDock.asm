@@ -14,7 +14,7 @@ VermilionDock_Script:
 	ld hl, wStatusFlags5
 	set BIT_SCRIPTED_MOVEMENT_STATE, [hl]
 	ld hl, wSimulatedJoypadStatesEnd
-	ld a, D_UP
+	ld a, PAD_UP
 	ld [hli], a
 	ld [hli], a
 	ld [hl], a
@@ -158,10 +158,10 @@ VermilionDock_EmitSmokePuff:
 
 VermilionDockOAMBlock:
 ; tile ID, attributes
-	db $fc, $07 ; use palette OBJ7
-	db $fd, $07
-	db $fe, $07
-	db $ff, $07
+	db $fc, 7 ; use palette OBJ7
+	db $fd, 7
+	db $fe, 7
+	db $ff, 7
 
 VermilionDock_SyncScrollWithLY:
 	ld h, d
