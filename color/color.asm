@@ -238,7 +238,7 @@ BlackFadePaletteSets::
 ; Set all palettes to black at beginning of battle
 SetPal_BattleBlack::
 	ld a, $02
-	ldh [rSVBK], a
+	ldh [rWBK], a
 
 	ld d, PAL_BLACK
 	ld e, 7
@@ -259,7 +259,7 @@ SetPal_BattleBlack::
 	ld [W2_ForceOBPUpdate], a
 
 	xor a
-	ldh [rSVBK], a
+	ldh [rWBK], a
 	ret
 
 
@@ -281,11 +281,11 @@ SetPal_BattleAfterBlack:
 	; Update palettes (AFTER frame delay, so the tilemap is updated after player/enemy
 	; scroll in)
 	ld a, 2
-	ldh [rSVBK], a
+	ldh [rWBK], a
 	ld a, 1
 	ld [W2_ForceBGPUpdate], a
 	ld [W2_ForceOBPUpdate], a
-	ldh [rSVBK], a
+	ldh [rWBK], a
 	ret
 
 ; Set proper palettes for pokemon/trainers. Called a lot during battle, like when the
@@ -295,11 +295,11 @@ SetPal_Battle:
 
 	; Update palettes (BEFORE frame delay, so lifebars get updated snappily)
 	ld a, 2
-	ldh [rSVBK], a
+	ldh [rWBK], a
 	ld a, 1
 	ld [W2_ForceBGPUpdate], a
 	ld [W2_ForceOBPUpdate], a
-	ldh [rSVBK], a
+	ldh [rWBK], a
 
 	; Wait 3 frames (if LCD is on) to allow tilemap updates to apply. Prevents garbage
 	; from appearing after closing pokemon menu.
@@ -318,11 +318,11 @@ SetPal_Battle_Common:
 
 	; If transformed, don't trust the "DetermineBackSpritePaletteID" function.
 	ld a, $02
-	ldh [rSVBK], a
+	ldh [rWBK], a
 	ld a, [W2_BattleMonPalette]
 	ld b, a
 	xor a
-	ldh [rSVBK], a
+	ldh [rWBK], a
 	jr .getEnemyMonPal
 
 .getBattleMonPal
@@ -336,7 +336,7 @@ SetPal_Battle_Common:
 	ld c, a
 
 	ld a, $02
-	ldh [rSVBK], a
+	ldh [rWBK], a
 
 	; Save the player mon's palette in case it transforms later
 	ld a, b
@@ -451,7 +451,7 @@ ENDC
 	ld [W2_StaticPaletteMapChanged], a
 
 	xor a
-	ldh [rSVBK], a
+	ldh [rWBK], a
 
 	ld a, SET_PAL_BATTLE
 	ld [wDefaultPaletteCommand], a
@@ -488,7 +488,7 @@ SetPal_TownMap:
 	farcall LoadOverworldSpritePalettes
 	
 	ld a, 2
-	ldh [rSVBK], a
+	ldh [rWBK], a
 
 	ld d, PAL_TOWNMAP
 	ld e, 0
@@ -512,7 +512,7 @@ SetPal_TownMap:
 
 	xor a
 	ld [W2_UseOBP1], a
-	ldh [rSVBK], a
+	ldh [rWBK], a
 	ret
 
 ; Status screen
@@ -526,7 +526,7 @@ SetPal_StatusScreen:
 	ld b, a
 
 	ld a, 2
-	ldh [rSVBK], a
+	ldh [rWBK], a
 
 	push bc
 
@@ -592,7 +592,7 @@ IF GEN_2_GRAPHICS
 ENDC
 
 	xor a
-	ldh [rSVBK], a
+	ldh [rWBK], a
 	ret
 
 ; hl: starting address
@@ -613,7 +613,7 @@ SetPal_Pokedex:
 	ld e, 0
 
 	ld a, 2
-	ldh [rSVBK], a
+	ldh [rWBK], a
 
 	farcall LoadSGBPalette
 
@@ -658,13 +658,13 @@ ENDC
 	ld [W2_TileBasedPalettes], a
 
 	;xor a
-	ldh [rSVBK], a
+	ldh [rWBK], a
 	ret
 
 ; Slots
 SetPal_Slots:
 	ld a, 2
-	ldh [rSVBK], a
+	ldh [rWBK], a
 
 	ld d, PAL_SLOTS1
 	ld e, 0
@@ -705,9 +705,9 @@ SetPal_Slots:
 	call FarCopyData
 
 	xor a
-	ld [W2_UseOBP1], a
-	ldh [rSVBK], a
-	; Wait 3 frames to allow tilemap updates to apply. Prevents garbage
+	ldh [rWBK], a
+
+	; Wait 3 frames to allow tilemap updates to apply.
 	; Prevents garbage from appearing when the slots machine open.
 	jp Delay3
 
@@ -719,7 +719,7 @@ SetPal_TitleScreen:
 	ld e, 0
 
 	ld a, 2
-	ldh [rSVBK], a
+	ldh [rWBK], a
 
 	farcall LoadSGBPalette
 
@@ -778,7 +778,7 @@ ENDC
 	ld [W2_ForceBGPUpdate], a ; Palettes must be redrawn
 
 	;ld a, 1
-	ldh [rSVBK], a
+	ldh [rWBK], a
 
 	; This fixes the text at the bottom being the wrong color for a second or so.
 	; It's a real hack, but the game's using two vram maps at once, and the color code
@@ -809,7 +809,7 @@ ENDC
 ; Called during the intro
 SetPal_NidorinoIntro:
 	ld a, 2
-	ldh [rSVBK], a
+	ldh [rWBK], a
 
 IF GEN_2_GRAPHICS
 	ld d, PAL_NIDORINO
@@ -828,13 +828,13 @@ ENDC
 	ld [W2_ForceBGPUpdate], a ; Palettes must be redrawn
 
 	xor a
-	ldh [rSVBK], a
+	ldh [rWBK], a
 	ret
 
 ; used mostly for menus and the Oak intro, pokedex screen
 SetPal_Generic:
 	ld a, 2
-	ldh [rSVBK], a
+	ldh [rWBK], a
 
 	ld d, PAL_REDBAR ; Red lifebar color (for pokeballs)
 	ld e, 0
@@ -858,7 +858,7 @@ SetPal_Generic:
 	ld [W2_ForceBGPUpdate], a
 
 	;xor a
-	ldh [rSVBK], a
+	ldh [rWBK], a
 	ret
 
 ; Loading a map. Called when first loading, and when transitioning between maps.
@@ -870,7 +870,7 @@ SetPal_Overworld::
 	ret nz
 
 	ld a, 2
-	ldh [rSVBK], a
+	ldh [rWBK], a
 	dec a ; ld a, 1
 	ld [W2_TileBasedPalettes], a
 
@@ -884,7 +884,7 @@ SetPal_Overworld::
 	CALL_INDIRECT LoadOverworldSpritePalettes
 
 	xor a
-	ldh [rSVBK], a
+	ldh [rWBK], a
 
 	CALL_INDIRECT LoadTilesetPalette
 
@@ -897,7 +897,7 @@ SetPal_Overworld::
 .doneDelay:
 
 	ld a, 2
-	ldh [rSVBK], a
+	ldh [rWBK], a
 
 	; Signal to refresh palettes
 	ld a, 1
@@ -905,7 +905,7 @@ SetPal_Overworld::
 	ld [W2_ForceOBPUpdate], a
 
 	xor a
-	ldh [rSVBK], a
+	ldh [rWBK], a
 
 	ld a, SET_PAL_OVERWORLD
 	ld [wDefaultPaletteCommand], a
@@ -914,7 +914,7 @@ SetPal_Overworld::
 ; Open pokemon menu
 SetPal_PartyMenu:
 	ld a, 2
-	ldh [rSVBK], a
+	ldh [rWBK], a
 
 ;	CALL_INDIRECT LoadOverworldSpritePalettes
 
@@ -956,7 +956,7 @@ SetPal_PartyMenu:
 	xor a
 	ld [W2_UseOBP1], a
 	ld [W2_TileBasedPalettes], a
-	ldh [rSVBK], a
+	ldh [rWBK], a
 	ret
 
 
@@ -984,7 +984,7 @@ SetPal_PokemonWholeScreen:
 .loadPalette
 	ld d, a
 	ld a, 2
-	ldh [rSVBK], a
+	ldh [rWBK], a
 
 	ld e, 0
 	farcall LoadSGBPalette
@@ -1029,14 +1029,14 @@ SetPal_PokemonWholeScreen:
 	ld [W2_StaticPaletteMapChanged], a
 
 	xor a
-	ldh [rSVBK], a
+	ldh [rWBK], a
 	ret
 
 
 ; Called as the game starts up
 SetPal_GameFreakIntro:
 	ld a, $02
-	ldh [rSVBK], a
+	ldh [rWBK], a
 
 	; Load "INTRO_GRAY" palette from map_palettes.asm
 	ld hl, MapPalettes + INTRO_GRAY * 4
@@ -1081,13 +1081,13 @@ SetPal_GameFreakIntro:
 	ld [W2_UseOBP1], a
 
 	xor a
-	ldh [rSVBK], a
+	ldh [rWBK], a
 	ret
 
 ; Trainer card
 SetPal_TrainerCard:
 	ld a, 2
-	ldh [rSVBK], a
+	ldh [rWBK], a
 
 	ld d, PAL_MEWMON
 	ld e, 0
@@ -1140,14 +1140,14 @@ ENDC
 
 	ld a, 1
 	ld [W2_ForceBGPUpdate], a ; Signal to update palettes
-	ldh [rSVBK], a
+	ldh [rWBK], a
 	ret
 
 
 ; Clear colors after titlescreen
 SetPal_OakIntro:
 	ld a, 2
-	ldh [rSVBK], a
+	ldh [rWBK], a
 
 	ld bc, 20 * 18
 	ld hl, W2_TilesetPaletteMap
@@ -1166,21 +1166,21 @@ SetPal_OakIntro:
 	ld [W2_StaticPaletteMapChanged], a
 
 	xor a
-	ldh [rSVBK], a
+	ldh [rWBK], a
 	ret
 
 ; Name entry
 ; Deals with sprites for the pokemon naming screen
 SetPal_NameEntry:
 	ld a, 2
-	ldh [rSVBK], a
+	ldh [rWBK], a
 
 ;	CALL_INDIRECT LoadOverworldSpritePalettes
 
 	CALL_INDIRECT ClearSpritePaletteMap
 
 	xor a
-	ldh [rSVBK], a
+	ldh [rWBK], a
 	ret
 
 
