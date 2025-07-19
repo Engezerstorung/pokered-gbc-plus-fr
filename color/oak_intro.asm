@@ -32,10 +32,10 @@ GotPalID:
 	ld d, a
 
 	ld a, 2
-	ldh [rSVBK], a
+	ldh [rWBK], a
 	CALL_INDIRECT LoadSGBPalette
 	xor a
-	ldh [rSVBK], a
+	ldh [rWBK], a
 	ret
 
 ; Load red sprite palette at the end of Oack Speech, before the player map sprite appear
