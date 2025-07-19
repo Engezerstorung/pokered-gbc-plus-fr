@@ -66,12 +66,11 @@ INCLUDE "macros/color.asm"
 INCLUDE "macros/colorplus.asm"
 
 INCLUDE "constants/charmap.asm"
-INCLUDE "constants/hardware_constants.asm"
+INCLUDE "constants/hardware.inc"
 INCLUDE "constants/oam_constants.asm"
 INCLUDE "constants/ram_constants.asm"
 INCLUDE "constants/misc_constants.asm"
 INCLUDE "constants/gfx_constants.asm"
-INCLUDE "constants/input_constants.asm"
 INCLUDE "constants/serial_constants.asm"
 INCLUDE "constants/script_constants.asm"
 INCLUDE "constants/type_constants.asm"
@@ -112,3 +111,10 @@ ENDC
 
 INCLUDE "color/wram.asm"
 INCLUDE "color/data/map_palette_constants.asm"
+
+IF DEF(_RED_VC)
+INCLUDE "vc/pokered.constants.asm"
+ENDC
+IF DEF(_BLUE_VC)
+INCLUDE "vc/pokeblue.constants.asm"
+ENDC
