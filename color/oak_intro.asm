@@ -44,8 +44,8 @@ OakIntro_ResetPlayerSpriteData:
 	farcall LoadMapPalette_Sprite
 	; Update palettes
 	ld a, 2
-	ldh [rSVBK], a
+	ldh [rWBK], a
 	ld a, 1
 	ld [W2_ForceOBPUpdate], a
-	ldh [rSVBK], a
+	ldh [rWBK], a
 	jp ResetPlayerSpriteData
