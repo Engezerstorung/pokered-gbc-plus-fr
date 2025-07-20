@@ -127,14 +127,14 @@ SpriteFacingAndAnimationTable:
 
 .MachineLOAM:
 	; y, x, attributes
-	db 12, 8, OAM_XFLIP 
+	db 12, 8, FACING_END
 .MachineROAM:
 	; y, x, attributes
-	db 12, 0, OAM_XFLIP | FACING_END 
+	db 12, 0, OAM_XFLIP | FACING_END
 .MachineMOAM:
 	; y, x, attributes
 	db 12, 0, $00
-	db 12, 8, OAM_XFLIP | FACING_END 
+	db 12, 8, OAM_XFLIP | FACING_END
 
 .SnorlaxSleepOAM:
 	; y, x, attributes
