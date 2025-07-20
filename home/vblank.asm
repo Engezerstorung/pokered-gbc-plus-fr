@@ -24,11 +24,11 @@ VBlank::
 	xor 1
 	ldh [hBlink], a
 
-	ldh a, [rHDMA5]
+	ldh a, [rVDMA_LEN]
 	cp $ff
 	jr z, .noHDMAToFinish
 	res 7, a
-	ldh [rHDMA5], a
+	ldh [rVDMA_LEN], a
 .noHDMAToFinish
 
 	call AutoBgMapTransfer

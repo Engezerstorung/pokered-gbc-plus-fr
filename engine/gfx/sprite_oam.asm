@@ -46,7 +46,7 @@ PrepareOAMData::
 	ld l, a
 
 	ld a, [hl] ; [x#SPRITESTATEDATA2_GRASSPRIORITY]
-	and OAM_BEHIND_BG | OAM_PALETTE | OAM_VBANK
+	and OAM_PRIO | OAM_BANK1 | OAM_PALETTE
 	ldh [hSpritePriority], a ; temp store sprite priority
 
 	ld d, 0
@@ -114,10 +114,10 @@ PrepareOAMData::
 
 	ldh a, [hSpritePriority]
 	ld b, a
-	and OAM_VBANK | OAM_PALETTE ; keep palette attribute bits
+	and OAM_BANK1 | OAM_PALETTE ; keep palette attribute bits
 	or [hl]
 	ld c, a
-	and OAM_VFLIP | OAM_HFLIP ; keep x/y flip attribute bits
+	and OAM_YFLIP | OAM_XFLIP ; keep x/y flip attribute bits
 	or b
 	and c
 	ld [de], a ; transfer attributes in wShadowOAM

@@ -12,7 +12,7 @@ LoadHPBarAndEXPBar::
 	jp GoodCopyVideoData
 ;GoodCopyVideoData:
 ;	ldh a, [rLCDC]
-;	bit rLCDC_ENABLE, a ; is the LCD enabled?
+;	bit B_LCDC_ENABLE, a ; is the LCD enabled?
 ;	jp nz, CopyVideoData ; if LCD is on, transfer during V-blank
 ;	ld a, b
 ;	push hl
