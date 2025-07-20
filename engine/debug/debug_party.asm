@@ -1,5 +1,8 @@
 SetDebugNewGameParty: ; unreferenced except in _DEBUG
 	ld de, DebugNewGameParty
+
+	ld hl, wPartyMon1Moves
+
 .loop
 	ld a, [de]
 	cp -1
@@ -10,7 +13,52 @@ SetDebugNewGameParty: ; unreferenced except in _DEBUG
 	ld [wCurEnemyLevel], a
 	inc de
 	call AddPartyMon
+
+	ld b, 2
+.bigLoadLoop
+	ld c, 4
+.smallLoadLoop
+	ld a, [de]
+	inc de
+	and a
+	jr z, .passLoad
+	ld [hl], a
+.passLoad
+	inc hl
+	dec c
+	jr nz, .smallLoadLoop
+
+	dec b
+	push bc
+	ld bc, wPartyMon2Moves - (wPartyMon1PP + 4)
+	jr z, .nextMon
+	ld bc, wPartyMon1PP - (wPartyMon1Moves + 4)
+.nextMon
+	add hl, bc
+	pop bc
+	jr nz, .bigLoadLoop
+
 	jr .loop
+
+
+;DebugNewGameParty: ; unreferenced except in _DEBUG
+;	; Exeggutor is the only debug party member shared with Red, Green, and Japanese Blue.
+;	; "Tsunekazu Ishihara: Exeggutor is my favorite. That's because I was
+;	; always using this character while I was debugging the program."
+;	; From https://web.archive.org/web/20000607152840/http://pocket.ign.com/news/14973.html
+;	db EXEGGUTOR, 90
+;IF DEF(_DEBUG)
+;	db MEW, 5
+;ELSE
+;	db MEW, 20
+;ENDC
+;	db JOLTEON, 56
+;	db DUGTRIO, 56
+;	db ARTICUNO, 57
+;IF DEF(_DEBUG)
+;	db PIKACHU, 5
+;ENDC
+;	db -1 ; end
 
 DebugNewGameParty: ; unreferenced except in _DEBUG
 	; Exeggutor is the only debug party member shared with Red, Green, and Japanese Blue.
@@ -19,17 +67,50 @@ DebugNewGameParty: ; unreferenced except in _DEBUG
 	; From https://web.archive.org/web/20000607152840/http://pocket.ign.com/news/14973.html
 	db EXEGGUTOR, 90
 IF DEF(_DEBUG)
+	db FLY, CUT, SURF, STRENGTH
+	db 15,  30,  15,   15
+ELSE
+	db 0, 0, 0, 0
+	db 0, 0, 0, 0
+ENDC
+
+IF DEF(_DEBUG)	
 	db MEW, 5
 ELSE
 	db MEW, 20
 ENDC
+	db 0, 0, 0, 0
+	db 0, 0, 0, 0
+
 	db JOLTEON, 56
+IF DEF(_DEBUG)
+	db 0, 0, 0, THUNDERBOLT
+	db 0, 0, 0, 15
+ELSE
+	db 0, 0, 0, 0
+	db 0, 0, 0, 0
+ENDC
+
 	db DUGTRIO, 56
+	db 0, 0, 0, 0
+	db 0, 0, 0, 0
+
 	db ARTICUNO, 57
 IF DEF(_DEBUG)
+	db FLY, 0, 0, 0
+	db 15, 0, 0, 0
+ELSE
+	db 0, 0, 0, 0
+	db 0, 0, 0, 0
+ENDC
+
+IF DEF(_DEBUG)
 	db PIKACHU, 5
+	db 0, 0, SURF, 0
+	db 0, 0, 15,   0
 ENDC
 	db -1 ; end
+
 
 PrepareNewGameDebug: ; dummy except in _DEBUG
 IF DEF(_DEBUG)
@@ -47,48 +128,48 @@ IF DEF(_DEBUG)
 
 	call SetDebugNewGameParty
 
-	; Exeggutor gets four HM moves.
-	ld hl, wPartyMon1Moves
-	ld a, FLY
-	ld [hli], a
-	ld a, CUT
-	ld [hli], a
-	ld a, SURF
-	ld [hli], a
-	ld a, STRENGTH
-	ld [hl], a
-	ld hl, wPartyMon1PP
-	ld a, 15
-	ld [hli], a
-	ld a, 30
-	ld [hli], a
-	ld a, 15
-	ld [hli], a
-	ld [hl], a
-
-	; Jolteon gets Thunderbolt.
-	ld hl, wPartyMon3Moves + 3
-	ld a, THUNDERBOLT
-	ld [hl], a
-	ld hl, wPartyMon3PP + 3
-	ld a, 15
-	ld [hl], a
-
-	; Articuno gets Fly.
-	ld hl, wPartyMon5Moves
-	ld a, FLY
-	ld [hl], a
-	ld hl, wPartyMon5PP
-	ld a, 15
-	ld [hl], a
-
-	; Pikachu gets Surf.
-	ld hl, wPartyMon6Moves + 2
-	ld a, SURF
-	ld [hl], a
-	ld hl, wPartyMon6PP + 2
-	ld a, 15
-	ld [hl], a
+;	; Exeggutor gets four HM moves.
+;	ld hl, wPartyMon1Moves
+;	ld a, FLY
+;	ld [hli], a
+;	ld a, CUT
+;	ld [hli], a
+;	ld a, SURF
+;	ld [hli], a
+;	ld a, STRENGTH
+;	ld [hl], a
+;	ld hl, wPartyMon1PP
+;	ld a, 15
+;	ld [hli], a
+;	ld a, 30
+;	ld [hli], a
+;	ld a, 15
+;	ld [hli], a
+;	ld [hl], a
+;
+;	; Jolteon gets Thunderbolt.
+;	ld hl, wPartyMon3Moves + 3
+;	ld a, THUNDERBOLT
+;	ld [hl], a
+;	ld hl, wPartyMon3PP + 3
+;	ld a, 15
+;	ld [hl], a
+;
+;	; Articuno gets Fly.
+;	ld hl, wPartyMon5Moves
+;	ld a, FLY
+;	ld [hl], a
+;	ld hl, wPartyMon5PP
+;	ld a, 15
+;	ld [hl], a
+;
+;	; Pikachu gets Surf.
+;	ld hl, wPartyMon6Moves + 2
+;	ld a, SURF
+;	ld [hl], a
+;	ld hl, wPartyMon6PP + 2
+;	ld a, 15
+;	ld [hl], a
 
 	; Get some debug items.
 	ld hl, wNumBagItems

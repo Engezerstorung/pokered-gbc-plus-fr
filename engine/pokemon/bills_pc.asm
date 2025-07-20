@@ -170,6 +170,9 @@ BillsPCMenu:
 	ld a, 1
 	ldh [hAutoBGTransferEnabled], a
 	call Delay3
+
+	farcall LoadTilesetPalette
+
 	call HandleMenuInput
 	bit B_PAD_B, a
 	jp nz, ExitBillsPC
@@ -318,6 +321,7 @@ BillsPCRelease:
 	jp BillsPCMenu
 
 BillsPCChangeBox:
+	farcall LoadPcTextPalette
 	farcall ChangeBox
 	jp BillsPCMenu
 

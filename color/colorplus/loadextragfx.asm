@@ -190,8 +190,8 @@ VramSwapList:
 ; 1/ map, 2/ Event to check for, 3/ X Coordinate, 4/ Y Coordinate, 5/ coordinates conditions (NOXY, AFTER/BEFORE_X/Y, AFTER/BEFORE_X_AFTER/BEFORE_Y),
 ; 6/ gfx to use, 7/ which gfx tile to start from, /8 amount of tiles to copy, /9 where in vram, /10 vram bank
 	db 14
-	map_vram_swap CELADON_MANSION_ROOF, NOEVENT, 0, 0, 0, NOXY, Mansion_GFX, $5A, 6, vTileset tile $10, 0
-	map_vram_swap CELADON_MANSION_ROOF, NOEVENT, 0, 0, 0, NOXY, Mansion_GFX, $36, 3, vTileset tile $16, 0
+;	map_vram_swap CELADON_MANSION_ROOF, NOEVENT, 0, 0, 0, NOXY, Mansion_GFX, $5A, 6, vTileset tile $10, 0
+;	map_vram_swap CELADON_MANSION_ROOF, NOEVENT, 0, 0, 0, NOXY, Mansion_GFX, $36, 3, vTileset tile $16, 0
 IF DEF(_DEBUG)
 ;	map_vram_swap ROUTE_18, NOEVENT, 0, 0, 0, NOXY, LaprasSprite, 0, 24, vNPCSprites tile $30, 0 ; used to test the function for sprites
 	map_vram_swap ROUTE_18, NOEVENT, 0, 47, 0, AFTER_X, LaprasSprite, 0, 24, vNPCSprites tile $30, 0 ; used to test the function for sprites

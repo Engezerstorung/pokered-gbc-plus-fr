@@ -1,10 +1,12 @@
 SECTION "Sprite Buffers", SRAM
 
 sSpriteBuffer0:: ds SPRITEBUFFERSIZE
+;	ds 8
 sSpriteBuffer1:: ds SPRITEBUFFERSIZE
 sSpriteBuffer2:: ds SPRITEBUFFERSIZE
 
 	ds $100
+;	ds $100 - 8
 
 sHallOfFame:: ds HOF_TEAM * HOF_TEAM_CAPACITY
 

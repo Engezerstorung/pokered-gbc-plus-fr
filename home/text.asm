@@ -1,6 +1,18 @@
 TextBoxBorder::
 ; Draw a c×b text box at hl.
+	push hl
+	push bc
 
+	call DrawBox
+
+	pop bc
+	pop de
+	ld a, b
+	farcall FarDrawTextPalBoxOnTileMapPalMap
+
+	ret
+
+DrawBox::
 	; top row
 	push hl
 	ld a, "┌"
@@ -104,6 +116,8 @@ PlaceNextChar::
 	dict "<TARGET>",  PlaceMoveTargetsName
 	dict "<USER>",    PlaceMoveUsersName
 
+;breakpoint
+;	res 7, a
 	ld [hli], a
 	call PrintLetterDelay
 

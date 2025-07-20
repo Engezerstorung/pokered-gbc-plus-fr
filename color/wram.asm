@@ -1,9 +1,11 @@
 DEF W2_BgPaletteData  EQU $d000
 DEF W2_SprPaletteData EQU $d040
 
-DEF W2_LastBGP  EQU $d080
+DEF W2_LastBGP0 EQU $d080
 DEF W2_LastOBP0 EQU $d081
 DEF W2_LastOBP1 EQU $d082
+DEF W2_LastBGP1 EQU $d083
+DEF W2_UseBGP1  EQU $d084
 
 ; If W2_TileBasedPalettes is set, each number corresponds to a tile. (takes $180 bytes)
 ; Otherwise this is a 20x18 map of palettes. (takes $168 bytes)
@@ -52,5 +54,15 @@ DEF W2_BattleMonPalette            EQU $d78c
 ; Used by "WindowTransferBgRowsAndColors" function. Analogous to H_VBCOPYBGNUMROWS.
 DEF W2_VBCOPYBGNUMROWS             EQU $d78d
 
+DEF W2_TileMapPalMap               EQU $d78e ; 360 bytes
+DEF W2_TileMapPalMapBackup1        EQU $d8f6 ; 360 bytes
+DEF W2_TileMapPalMapBackup2        EQU $da5e ; 360 bytes
+DEF W2_RedrawRowOrColumnSrcTiles   EQU $dbc6 ; 40 bytes
+DEF W2_VBlankCopyBGSource          EQU $dcef ; 2 bytes
+DEF W2_Buffer                      EQU $dcf1 ; 30 bytes ; Analogous to wBuffer, is used to store screen palettes for yes/no menus
+
 ; In bank 1, the stack starts at $dfff. So, that's also the stack here when bank 2 is
 ; loaded. Don't use anything too close to there.
+
+DEF W3_BGTileMap EQU $d000
+DEF W3_BGPalMap EQU $d000 + (TILEMAP_WIDTH * TILEMAP_HEIGHT)

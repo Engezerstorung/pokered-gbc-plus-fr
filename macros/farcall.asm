@@ -15,13 +15,15 @@ ENDM
 MACRO farjp
 	ld b, BANK(\1)
 	ld hl, \1
-	jp Bankswitch
+	rst _Bankswitch_jp
+;	jp Bankswitch
 ENDM
 
 MACRO jpfar
 	ld hl, \1
 	ld b, BANK(\1)
-	jp Bankswitch
+	rst _Bankswitch_jp
+;	jp Bankswitch
 ENDM
 
 MACRO setrombank

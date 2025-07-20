@@ -17,15 +17,21 @@ SlidePlayerAndEnemySilhouettesOnScreen:
 	call DisableLCD
 	call LoadFontTilePatterns
 	call LoadHudAndHpBarAndStatusTilePatterns
-	ld hl, vBGMap0
-	ld bc, TILEMAP_AREA
-.clearBackgroundLoop
-	ld a, " "
-	ld [hli], a
-	dec bc
-	ld a, b
-	or c
-	jr nz, .clearBackgroundLoop
+	ld h, HIGH(vBGMap0)
+	call ClearBgMap
+
+	ld h, HIGH(vBGMap0)
+	call ClearBgMapAttributes
+;	ld hl, vBGMap0
+;	ld bc, TILEMAP_WIDTH * TILEMAP_HEIGHT
+;.clearBackgroundLoop
+;	ld a, " "
+;	ld [hli], a
+;	dec bc
+;	ld a, b
+;	or c
+;	jr nz, .clearBackgroundLoop
+
 ; copy the work RAM tile map to VRAM
 	hlcoord 0, 0
 	ld de, vBGMap0
@@ -6161,6 +6167,20 @@ LoadEnemyMonData:
 	ld b, SPDSPCDV_TRAINER
 	jr z, .storeDVs
 ; random DVs for wild mon
+
+;;; SHINY DVS HERE ;;;;
+;	call BattleRandom
+;	and a
+;	jr nz, .notShiny
+;.shinyretry	
+;	call BattleRandom
+;	bit 5, a
+;	jr z, .shinyretry
+;	and $f0
+;	or $a
+;	ld b, $aa
+;.notShiny
+
 	call BattleRandom
 	ld b, a
 	call BattleRandom
@@ -7124,39 +7144,48 @@ PrintEXPBarAt1711:
 PrintEXPBar:
 	push de
 	call CalcEXPBarPixelLength
+	pop hl
 	ldh a, [hQuotient + 3] ; pixel length
 	ld [wEXPBarPixelLength], a
 	ld b, a
 	ld c, $08
-	ld d, $08
-	pop hl
+	ld d, 0
+	ld e, c
 .loop
 	ld a, b
-	sub c
+	sub e
 	jr nc, .skip
-	ld c, b
+	ld e, b
 	jr .loop
 .skip
 	ld b, a
-	ld a, $CC
-	add c
+	ld a, e
 .loop2
-	cp $D4
-	jr nz, .noFullExp
-	ld a, $6B
-.noFullExp
-	cp $CC
-	jr nz, .noEmptyExp
+	and a
 	ld a, $63
-.noEmptyExp
+	jr z, .gotTile
+	ld a, e
+	cp $8
+	ld a, $6B
+	jr z, .gotTile
+
+	push hl
+	push de
+	push bc
+	farcall LoadPartialBarTile
+	pop bc
+	pop de
+	pop hl
+	ld a, $64
+.gotTile
 	ld [hld], a
-	dec d
+	dec c
 	ret z
 	ld a, b
 	and a
 	jr nz, .loop
 	ld a, $63
-	jr .loop2
+	jr .gotTile
 
 CalcEXPBarPixelLength:
 	ld hl, wEXPBarKeepFullFlag

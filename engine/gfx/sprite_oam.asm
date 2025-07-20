@@ -1,7 +1,6 @@
 PrepareOAMData::
 ; Determine OAM data for currently visible
 ; sprites and write it to wShadowOAM.
-
 	ld a, [wUpdateSpritesEnabled]
 	dec a
 	jr z, .updateEnabled
@@ -12,6 +11,41 @@ PrepareOAMData::
 	jp HideSprites
 
 .updateEnabled
+; If too close to vblank only update the sprites screen position to prevent sprite tearing.
+	ldh a, [rLY]
+	cp 133
+	jr c, .fullUpdate
+
+	ld hl, wShadowOAM + 4 * 4
+	ld a, [rSCY]
+	ld c, a
+	ld a, [hSCY]
+	sub c
+	jr nz, .gotVector
+	inc hl
+	ld a, [rSCX]
+	ld c, a
+	ld a, [hSCX]
+	sub c
+	jr z, .fullUpdate
+.gotVector
+	ld c, a
+	ld de, 4
+	ld b, 36
+	ld a, [wMovementFlags]
+	bit BIT_LEDGE_OR_FISHING, a
+	jr z, .notLedge
+	ld b, 32
+.notLedge	
+	ld a, [hl]
+	sub c
+	ld [hl], a
+	add hl, de
+	dec b
+	jr nz, .notLedge
+	ret
+.fullUpdate
+
 	xor a
 	ldh [hOAMBufferOffset], a
 
@@ -92,9 +126,20 @@ PrepareOAMData::
 	ld d, HIGH(wShadowOAM)
 
 .tileLoop
+;	ld a, [hli]
+;	and a
+;	jr z, .noTransparency
+;	ldh a, [hBlink]
+;	and a
+;	ld a, 160
+;	jr nz, .blink
+
+;.noTransparency
 	ldh a, [hSpriteScreenY]   ; temp for sprite Y position
 	add [hl]                 ; add Y offset from table
+;.blink	
 	ld [de], a               ; write new sprite OAM Y position
+
 	inc hl
 	ldh a, [hSpriteScreenX]   ; temp for sprite X position
 	add [hl]                 ; add X offset from table

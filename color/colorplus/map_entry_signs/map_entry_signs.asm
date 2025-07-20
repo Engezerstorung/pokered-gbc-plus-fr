@@ -1,0 +1,514 @@
+INCLUDE "color/colorplus/map_entry_signs/map_signs_assets.asm"
+INCLUDE "color/colorplus/map_entry_signs/map_names_constants.asm"
+
+DEF MAP_SIGN_TILE_HEIGH EQU 4
+DEF MAP_SIGN_PX_POS EQU SCREEN_HEIGHT_PX - (MAP_SIGN_TILE_HEIGH * TILE_WIDTH)
+
+DEF MAP_SIGN_DELAY EQU 80
+
+; Prepare the sign name line if needed when entering a new map
+ShowMapEntrySign::
+	ld a, [wCurMap]
+	cp COLOSSEUM
+	ret z
+	cp TRADE_CENTER
+	ret z
+
+	ld c, a
+	ld b, 0
+
+	ld a, [wLastMapSignName]
+	ld d, a
+
+	ld hl, MapSignNameList
+	add hl, bc
+	ld a, [hl]
+	cp d
+	jr z, .resetWindowBeforeReturn
+
+	ld [wLastMapSignName], a
+	cp NO_SIGN
+	jr nz, .getMapSignName
+
+.resetWindowBeforeReturn
+	xor a
+	ldh [hWUp], a
+	ld a, SCREEN_HEIGHT_PX
+	ldh [hWY], a
+	ret
+
+.getMapSignName
+	ld l, a
+	ld h, b
+	add hl, hl
+	ld bc, MapNamePointers
+	add hl, bc
+	ld a, [hli]
+	ld e, a
+	ld d, [hl]
+
+	farcall GetNameAndLength	
+
+	ld hl, wMapEntrySignBuffer
+	ld a, "│"
+	ld [hli], a
+	ld a, " "
+REPT 18
+	ld [hli], a
+ENDR
+	ld [hl], "│"
+
+	srl e
+	jr nc, .wasEven
+	inc e
+.wasEven
+	ld a, SCREEN_WIDTH / 2
+	sub e
+	ld c, a
+	ld b, 0
+	ld hl, wMapEntrySignBuffer
+	add hl, bc
+	ld de, wNameBuffer
+
+	ld b, 18
+.placeNameLoop
+	ld a, [de]
+	cp "@"
+	jr z, .namePlaced
+	ld [hli], a
+	inc de
+	dec b
+	jr nz, .placeNameLoop
+.namePlaced
+
+;	ld de, wMapEntrySignBuffer
+;	ld hl, vBGMap1 + (32 * 2)
+;	lb bc, 1, 2
+;	call GoodCopyVideoDataHDMA
+
+	ld a, MAP_SIGN_DELAY
+	ldh [hWUp], a
+	ret
+
+_LoadMapSignAssets::
+	ld de, FontGraphicsGrey
+	ld hl, vFont
+	lb bc, BANK(FontGraphicsGrey), (FontGraphicsGreyEnd - FontGraphicsGrey) / $10
+	call GoodCopyVideoDataHDMA ; if LCD is off, transfer all at once. if not, transfer during V-blank
+
+IF GEN_2_GRAPHICS
+IF USE_CRYSTAL_MAP_SIGN == 0 
+	ld a, [wCurMapTileset]
+	cp FOREST
+	jr nz, .notForest
+ENDC
+	ld de, WoodEntrySignGraphics
+	ld hl, vChars2 tile $77
+	lb bc, BANK(WoodEntrySignGraphics), 9
+	call GoodCopyVideoDataHDMA ; if LCD is off, transfer all at once. if not, transfer during V-blank
+
+	ld a, 1
+	ldh [rVBK], a
+	ld de, WoodSignBoxAttrMap
+	ld hl, vBGMap1
+	lb bc, BANK(WoodSignBoxAttrMap), (32 / 16) * 4
+	call GoodCopyVideoDataHDMA ; if LCD is off, transfer all at once. if not, transfer during V-blank
+
+	xor a
+	ldh [rVBK], a
+	ld de, WoodSignBoxTileMap
+	ld hl, vBGMap1
+	lb bc, BANK(WoodSignBoxTileMap), (32 / 16) * 4
+	jp GoodCopyVideoDataHDMA ; if LCD is off, transfer all at once. if not, transfer during V-blank
+
+.notForest
+ENDC
+IF GEN_2_GRAPHICS == 0 || USE_CRYSTAL_MAP_SIGN == 0
+	ld de, BasicEntrySignGraphics
+	ld hl, vChars2 tile $79
+	lb bc, BANK(BasicEntrySignGraphics), 7
+	call GoodCopyVideoDataHDMA ; if LCD is off, transfer all at once. if not, transfer during V-blank
+
+	ld a, 1
+	ldh [rVBK], a
+	ld de, BasicSignBoxAttrMap
+	ld hl, vBGMap1
+	lb bc, BANK(BasicSignBoxAttrMap), (32 / 16) * 4
+	call GoodCopyVideoDataHDMA ; if LCD is off, transfer all at once. if not, transfer during V-blank
+
+	xor a
+	ldh [rVBK], a
+	ld de, BasicSignBoxTileMap
+	ld hl, vBGMap1
+	lb bc, BANK(BasicSignBoxTileMap), (32 / 16) * 4
+	jp GoodCopyVideoDataHDMA ; if LCD is off, transfer all at once. if not, transfer during V-blank
+ENDC
+
+
+; is called during VBlank
+HandleMapEntrySign::
+	ldh a, [hWUp]
+	cp MAP_SIGN_DELAY
+	jr nz, .nameAlreadyLoaded
+
+	ldh a, [rVDMA_LEN]
+	inc a
+	ret nz ; skip if HDMA in progress
+
+	ldh a, [rVBK]
+	push af
+	xor a
+	ldh [rVBK], a
+
+	ld a, HIGH(wMapEntrySignBuffer)
+	ldh [rVDMA_SRC_HIGH], a
+	ld a, LOW(wMapEntrySignBuffer)
+	ldh [rVDMA_SRC_LOW], a
+
+	ld a, HIGH(vBGMap1 + (32 * 2))
+	ldh [rVDMA_DEST_HIGH], a
+	ld a, LOW(vBGMap1 + (32 * 2))
+	ldh [rVDMA_DEST_LOW], a
+
+	ld a, (32 / 16) - 1 ; 2 - 1
+	ldh [rVDMA_LEN], a
+
+	pop af
+	ldh [rVBK], a
+
+	ldh a, [hWY]
+
+	ldh a, [hWUp]
+	dec a
+
+.nameAlreadyLoaded
+	cp MAP_SIGN_DELAY - 1
+	lb bc, -1, MAP_SIGN_PX_POS
+	jr z, .moveSign
+	cp 1
+	jr nz, .dec_hWUp
+	lb bc, 1, SCREEN_HEIGHT_PX
+
+.moveSign
+	ldh a, [hWY]
+	cp c
+	jr z, .dec_hWUp
+	add b
+	ldh [hWY], a
+	cp c
+	ret nz
+.dec_hWUp
+	ldh a, [hWUp]
+	dec a
+	ldh [hWUp], a
+
+	ret
+
+MapSignNameList:
+	table_width 1
+	db PALLET_TOWN_NAME
+	db VIRIDIAN_CITY_NAME
+	db PEWTER_CITY_NAME
+	db CERULEAN_CITY_NAME
+	db LAVANDER_TOWN_NAME
+	db VERMILION_CITY_NAME
+	db CELADON_CITY_NAME
+	db FUCHSIA_CITY_NAME
+	db CINNABAR_ISLAND_NAME
+	db INDIGO_PLATEAU_NAME
+	db SAFFRON_CITY_NAME
+	db -1 ; UNUSED_MAP_0B
+	db ROUTE_1_NAME
+	db ROUTE_2_NAME
+	db ROUTE_3_NAME
+	db ROUTE_4_NAME
+	db ROUTE_5_NAME
+	db ROUTE_6_NAME
+	db ROUTE_7_NAME
+	db ROUTE_8_NAME
+	db ROUTE_9_NAME
+	db ROUTE_10_NAME
+	db ROUTE_11_NAME
+	db ROUTE_12_NAME
+	db ROUTE_13_NAME
+	db ROUTE_14_NAME
+	db ROUTE_15_NAME
+	db ROUTE_16_NAME
+	db ROUTE_17_NAME
+	db ROUTE_18_NAME
+	db ROUTE_19_NAME
+	db ROUTE_20_NAME
+	db ROUTE_21_NAME
+	db ROUTE_22_NAME
+	db ROUTE_23_NAME
+	db ROUTE_24_NAME
+	db ROUTE_25_NAME
+	db PALLET_TOWN_NAME ; REDS_HOUSE_1F
+	db PALLET_TOWN_NAME ; REDS_HOUSE_2F
+	db PALLET_TOWN_NAME ; BLUES_HOUSE
+	db PALLET_TOWN_NAME ; OAKS_LAB
+	db VIRIDIAN_CITY_NAME ; VIRIDIAN_POKECENTER
+	db VIRIDIAN_CITY_NAME ; VIRIDIAN_MART
+	db VIRIDIAN_CITY_NAME ; VIRIDIAN_SCHOOL_HOUSE
+	db VIRIDIAN_CITY_NAME ; VIRIDIAN_NICKNAME_HOUSE
+	db VIRIDIAN_CITY_NAME ; VIRIDIAN_GYM
+	db DIGLETTS_CAVE_NAME ; DIGLETTS_CAVE_ROUTE_2
+	db -1 ; VIRIDIAN_FOREST_NORTH_GATE
+	db ROUTE_2_NAME ; ROUTE_2_TRADE_HOUSE
+	db -1 ; ROUTE_2_GATE
+	db -1 ; VIRIDIAN_FOREST_SOUTH_GATE
+	db VIRIDIAN_FOREST_NAME ; VIRIDIAN_FOREST
+	db PEWTER_CITY_NAME ; MUSEUM_1F
+	db PEWTER_CITY_NAME ; MUSEUM_2F
+	db PEWTER_CITY_NAME ; PEWTER_GYM
+	db PEWTER_CITY_NAME ; PEWTER_NIDORAN_HOUSE
+	db PEWTER_CITY_NAME ; PEWTER_MART
+	db PEWTER_CITY_NAME ; PEWTER_SPEECH_HOUSE
+	db PEWTER_CITY_NAME ; PEWTER_POKECENTER
+	db MT_MOON_NAME ; MT_MOON_1F
+	db MT_MOON_NAME ; MT_MOON_B1F
+	db MT_MOON_NAME ; MT_MOON_B2F
+	db CERULEAN_CITY_NAME ; CERULEAN_TRASHED_HOUSE
+	db CERULEAN_CITY_NAME ; CERULEAN_TRADE_HOUSE
+	db CERULEAN_CITY_NAME ; CERULEAN_POKECENTER
+	db CERULEAN_CITY_NAME ; CERULEAN_GYM
+	db CERULEAN_CITY_NAME ; BIKE_SHOP
+	db CERULEAN_CITY_NAME ; CERULEAN_MART
+	db ROUTE_4_NAME ; MT_MOON_POKECENTER
+	db -1 ; CERULEAN_TRASHED_HOUSE_COPY
+	db -1 ; ROUTE_5_GATE
+	db -1 ; UNDERGROUND_PATH_ROUTE_5
+	db ROUTE_5_NAME ; DAYCARE
+	db -1 ; ROUTE_6_GATE
+	db -1 ; UNDERGROUND_PATH_ROUTE_6
+	db -1 ; UNDERGROUND_PATH_ROUTE_6_COPY
+	db -1 ; ROUTE_7_GATE
+	db -1 ; UNDERGROUND_PATH_ROUTE_7
+	db -1 ; UNDERGROUND_PATH_ROUTE_7_COPY
+	db -1 ; ROUTE_8_GATE
+	db -1 ; UNDERGROUND_PATH_ROUTE_8
+	db ROUTE_10_NAME ; ROCK_TUNNEL_POKECENTER
+	db ROCK_TUNNEL_NAME ; ROCK_TUNNEL_1F
+	db POWER_PLANT_NAME ; POWER_PLANT
+	db -1 ; ROUTE_11_GATE_1F
+	db DIGLETTS_CAVE_NAME ; DIGLETTS_CAVE_ROUTE_11
+	db -1 ; ROUTE_11_GATE_2F
+	db -1 ; ROUTE_12_GATE_1F
+	db SEA_COTTAGE_NAME ; BILLS_HOUSE
+	db VERMILION_CITY_NAME ; VERMILION_POKECENTER
+	db VERMILION_CITY_NAME ; POKEMON_FAN_CLUB
+	db VERMILION_CITY_NAME ; VERMILION_MART
+	db VERMILION_CITY_NAME ; VERMILION_GYM
+	db VERMILION_CITY_NAME ; VERMILION_PIDGEY_HOUSE
+	db VERMILION_CITY_NAME ; VERMILION_DOCK
+	db SS_ANNE_NAME ; SS_ANNE_1F
+	db SS_ANNE_NAME ; SS_ANNE_2F
+	db SS_ANNE_NAME ; SS_ANNE_3F
+	db SS_ANNE_NAME ; SS_ANNE_B1F
+	db SS_ANNE_NAME ; SS_ANNE_BOW
+	db SS_ANNE_NAME ; SS_ANNE_KITCHEN
+	db SS_ANNE_NAME ; SS_ANNE_CAPTAINS_ROOM
+	db SS_ANNE_NAME ; SS_ANNE_1F_ROOMS
+	db SS_ANNE_NAME ; SS_ANNE_2F_ROOMS
+	db SS_ANNE_NAME ; SS_ANNE_B1F_ROOMS
+	db -1 ; UNUSED_MAP_69
+	db -1 ; UNUSED_MAP_6A
+	db -1 ; UNUSED_MAP_6B
+	db VICTORY_ROAD_NAME ; VICTORY_ROAD_1F
+	db -1 ; UNUSED_MAP_6D
+	db -1 ; UNUSED_MAP_6E
+	db -1 ; UNUSED_MAP_6F
+	db -1 ; UNUSED_MAP_70
+	db POKEMON_LEAGUE_NAME ; LANCES_ROOM
+	db -1 ; UNUSED_MAP_72
+	db -1 ; UNUSED_MAP_73
+	db -1 ; UNUSED_MAP_74
+	db -1 ; UNUSED_MAP_75
+	db POKEMON_LEAGUE_NAME ; HALL_OF_FAME
+	db UNDERGROUND_PATH_NAME ; UNDERGROUND_PATH_NORTH_SOUTH
+	db POKEMON_LEAGUE_NAME ; CHAMPIONS_ROOM
+	db UNDERGROUND_PATH_NAME ; UNDERGROUND_PATH_WEST_EAST
+	db CELADON_CITY_NAME ; CELADON_MART_1F
+	db CELADON_CITY_NAME ; CELADON_MART_2F
+	db CELADON_CITY_NAME ; CELADON_MART_3F
+	db CELADON_CITY_NAME ; CELADON_MART_4F
+	db CELADON_CITY_NAME ; CELADON_MART_ROOF
+	db CELADON_CITY_NAME ; CELADON_MART_ELEVATOR
+	db CELADON_CITY_NAME ; CELADON_MANSION_1F
+	db CELADON_CITY_NAME ; CELADON_MANSION_2F
+	db CELADON_CITY_NAME ; CELADON_MANSION_3F
+	db CELADON_CITY_NAME ; CELADON_MANSION_ROOF
+	db CELADON_CITY_NAME ; CELADON_MANSION_ROOF_HOUSE
+	db CELADON_CITY_NAME ; CELADON_POKECENTER
+	db CELADON_CITY_NAME ; CELADON_GYM
+	db CELADON_CITY_NAME ; GAME_CORNER
+	db CELADON_CITY_NAME ; CELADON_MART_5F
+	db CELADON_CITY_NAME ; GAME_CORNER_PRIZE_ROOM
+	db CELADON_CITY_NAME ; CELADON_DINER
+	db CELADON_CITY_NAME ; CELADON_CHIEF_HOUSE
+	db CELADON_CITY_NAME ; CELADON_HOTEL
+	db LAVANDER_TOWN_NAME ; LAVENDER_POKECENTER
+	db POKEMON_TOWER_NAME ; POKEMON_TOWER_1F
+	db POKEMON_TOWER_NAME ; POKEMON_TOWER_2F
+	db POKEMON_TOWER_NAME ; POKEMON_TOWER_3F
+	db POKEMON_TOWER_NAME ; POKEMON_TOWER_4F
+	db POKEMON_TOWER_NAME ; POKEMON_TOWER_5F
+	db POKEMON_TOWER_NAME ; POKEMON_TOWER_6F
+	db POKEMON_TOWER_NAME ; POKEMON_TOWER_7F
+	db LAVANDER_TOWN_NAME ; MR_FUJIS_HOUSE
+	db LAVANDER_TOWN_NAME ; LAVENDER_MART
+	db LAVANDER_TOWN_NAME ; LAVENDER_CUBONE_HOUSE
+	db FUCHSIA_CITY_NAME ; FUCHSIA_MART
+	db FUCHSIA_CITY_NAME ; FUCHSIA_BILLS_GRANDPAS_HOUSE
+	db FUCHSIA_CITY_NAME ; FUCHSIA_POKECENTER
+	db FUCHSIA_CITY_NAME ; WARDENS_HOUSE
+	db -1 ; SAFARI_ZONE_GATE
+	db FUCHSIA_CITY_NAME ; FUCHSIA_GYM
+	db FUCHSIA_CITY_NAME ; FUCHSIA_MEETING_ROOM
+	db SEAFOAM_ISLANDS_NAME ; SEAFOAM_ISLANDS_B1F
+	db SEAFOAM_ISLANDS_NAME ; SEAFOAM_ISLANDS_B2F
+	db SEAFOAM_ISLANDS_NAME ; SEAFOAM_ISLANDS_B3F
+	db SEAFOAM_ISLANDS_NAME ; SEAFOAM_ISLANDS_B4F
+	db VERMILION_CITY_NAME ; VERMILION_OLD_ROD_HOUSE
+	db FUCHSIA_CITY_NAME ; FUCHSIA_GOOD_ROD_HOUSE
+	db POKEMON_MANSION_NAME ; POKEMON_MANSION_1F
+	db CINNABAR_ISLAND_NAME ; CINNABAR_GYM
+	db CINNABAR_ISLAND_NAME ; CINNABAR_LAB
+	db CINNABAR_ISLAND_NAME ; CINNABAR_LAB_TRADE_ROOM
+	db CINNABAR_ISLAND_NAME ; CINNABAR_LAB_METRONOME_ROOM
+	db CINNABAR_ISLAND_NAME ; CINNABAR_LAB_FOSSIL_ROOM
+	db CINNABAR_ISLAND_NAME ; CINNABAR_POKECENTER
+	db CINNABAR_ISLAND_NAME ; CINNABAR_MART
+	db CINNABAR_ISLAND_NAME ; CINNABAR_MART_COPY
+	db INDIGO_PLATEAU_NAME ; INDIGO_PLATEAU_NAME_LOBBY
+	db SAFFRON_CITY_NAME ; COPYCATS_HOUSE_1F
+	db SAFFRON_CITY_NAME ; COPYCATS_HOUSE_2F
+	db SAFFRON_CITY_NAME ; FIGHTING_DOJO
+	db SAFFRON_CITY_NAME ; SAFFRON_GYM
+	db SAFFRON_CITY_NAME ; SAFFRON_PIDGEY_HOUSE
+	db SAFFRON_CITY_NAME ; SAFFRON_MART
+	db SILPH_CO_NAME
+	db SAFFRON_CITY_NAME ; SAFFRON_POKECENTER
+	db SAFFRON_CITY_NAME ; MR_PSYCHICS_HOUSE
+	db -1 ; ROUTE_15_GATE_1F
+	db -1 ; ROUTE_15_GATE_2F
+	db -1 ; ROUTE_16_GATE_1F
+	db -1 ; ROUTE_16_GATE_2F
+	db ROUTE_16_NAME ; ROUTE_16_FLY_HOUSE
+	db ROUTE_12_NAME ; ROUTE_12_SUPER_ROD_HOUSE
+	db -1 ; ROUTE_18_GATE_1F
+	db -1 ; ROUTE_18_GATE_2F
+	db SEAFOAM_ISLANDS_NAME ; SEAFOAM_ISLANDS_1F
+	db -1 ; ROUTE_22_GATE
+	db VICTORY_ROAD_NAME ; VICTORY_ROAD_2F
+	db -1 ; ROUTE_12_GATE_2F
+	db VERMILION_CITY_NAME ; VERMILION_TRADE_HOUSE
+	db DIGLETTS_CAVE_NAME ; SILPH_CO_1F
+	db VICTORY_ROAD_NAME ; VICTORY_ROAD_3F
+	db ROCKET_HIDEOUT_NAME ; ROCKET_HIDEOUT_B1F
+	db ROCKET_HIDEOUT_NAME ; ROCKET_HIDEOUT_B2F
+	db ROCKET_HIDEOUT_NAME ; ROCKET_HIDEOUT_B3F
+	db ROCKET_HIDEOUT_NAME ; ROCKET_HIDEOUT_B4F
+	db ROCKET_HIDEOUT_NAME ; ROCKET_HIDEOUT_ELEVATOR
+	db -1 ; UNUSED_MAP_CC
+	db -1 ; UNUSED_MAP_CD
+	db -1 ; UNUSED_MAP_CE
+	db SILPH_CO_NAME ; SILPH_CO_2F
+	db SILPH_CO_NAME ; SILPH_CO_3F
+	db SILPH_CO_NAME ; SILPH_CO_4F
+	db SILPH_CO_NAME ; SILPH_CO_5F
+	db SILPH_CO_NAME ; SILPH_CO_6F
+	db SILPH_CO_NAME ; SILPH_CO_7F
+	db SILPH_CO_NAME ; SILPH_CO_8F
+	db POKEMON_MANSION_NAME ; POKEMON_MANSION_2F
+	db POKEMON_MANSION_NAME ; POKEMON_MANSION_3F
+	db POKEMON_MANSION_NAME ; POKEMON_MANSION_B1F
+	db SAFARI_ZONE_NAME ; SAFARI_ZONE_EAST
+	db SAFARI_ZONE_NAME ; SAFARI_ZONE_NORTH
+	db SAFARI_ZONE_NAME ; SAFARI_ZONE_WEST
+	db SAFARI_ZONE_NAME ; SAFARI_ZONE_CENTER
+	db SAFARI_ZONE_NAME ; SAFARI_ZONE_CENTER_REST_HOUSE
+	db SAFARI_ZONE_NAME ; SAFARI_ZONE_SECRET_HOUSE
+	db SAFARI_ZONE_NAME ; SAFARI_ZONE_WEST_REST_HOUSE
+	db SAFARI_ZONE_NAME ; SAFARI_ZONE_EAST_REST_HOUSE
+	db SAFARI_ZONE_NAME ; SAFARI_ZONE_NORTH_REST_HOUSE
+	db CERULEAN_CAVE_NAME ; CERULEAN_CAVE_2F
+	db CERULEAN_CAVE_NAME ; CERULEAN_CAVE_B1F
+	db CERULEAN_CAVE_NAME ; CERULEAN_CAVE_1F
+	db LAVANDER_TOWN_NAME ; NAME_RATERS_HOUSE
+	db CERULEAN_CITY_NAME ; CERULEAN_BADGE_HOUSE
+	db -1 ; UNUSED_MAP_E7
+	db ROCK_TUNNEL_NAME ; ROCK_TUNNEL_B1F
+	db SILPH_CO_NAME ; SILPH_CO_9F
+	db SILPH_CO_NAME ; SILPH_CO_10F
+	db SILPH_CO_NAME ; SILPH_CO_11F
+	db SILPH_CO_NAME ; SILPH_CO_ELEVATOR
+	db -1 ; UNUSED_MAP_ED
+	db -1 ; UNUSED_MAP_EE
+	db -1 ; TRADE_CENTER
+	db -1 ; COLOSSEUM
+	db -1 ; UNUSED_MAP_F1
+	db -1 ; UNUSED_MAP_F2
+	db -1 ; UNUSED_MAP_F3
+	db -1 ; UNUSED_MAP_F4
+	db POKEMON_LEAGUE_NAME ; LORELEIS_ROOM
+	db POKEMON_LEAGUE_NAME ; BRUNOS_ROOM
+	db POKEMON_LEAGUE_NAME ; AGATHAS_ROOM
+	assert_table_length NUM_MAPS
+
+MapNamePointers:
+	table_width 2
+	dw PalletTownName
+	dw ViridianCityName
+	dw PewterCityName
+	dw CeruleanCityName
+	dw LavenderTownName
+	dw VermilionCityName
+	dw CeladonCityName
+	dw FuchsiaCityName
+	dw CinnabarIslandName
+	dw IndigoPlateauName
+	dw SaffronCityName
+	dw Route1Name
+	dw Route2Name
+	dw Route3Name
+	dw Route4Name
+	dw Route5Name
+	dw Route6Name
+	dw Route7Name
+	dw Route8Name
+	dw Route9Name
+	dw Route10Name
+	dw Route11Name
+	dw Route12Name
+	dw Route13Name
+	dw Route14Name
+	dw Route15Name
+	dw Route16Name
+	dw Route17Name
+	dw Route18Name
+	dw Route19Name
+	dw Route20Name
+	dw Route21Name
+	dw Route22Name
+	dw Route23Name
+	dw Route24Name
+	dw Route25Name
+	dw ViridianForestName
+	dw MountMoonName
+	dw RockTunnelName
+	dw SeaCottageName
+	dw SSAnneName
+	dw PokemonLeagueName 
+	dw UndergroundPathName
+	dw PokemonTowerName
+	dw SeafoamIslandsName
+	dw VictoryRoadName
+	dw DiglettsCaveName
+	dw RocketHQName
+	dw SilphCoName
+	dw PokemonMansionName
+	dw SafariZoneName
+	dw CeruleanCaveName
+	dw PowerPlantName
+	assert_table_length NUM_MAP_NAMES

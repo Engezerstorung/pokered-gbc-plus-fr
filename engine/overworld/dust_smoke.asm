@@ -64,7 +64,11 @@ MoveBoulderDustFunctionPointerTable:
 	boulder_dust_adjust -1, 1, AdjustOAMBlockXPos ; right
 
 LoadSmokeTileFourTimes::
-	ld hl, vChars1 tile $7c
+	ldh a, [rVBK]
+	push af
+	ld a, 1
+	ldh [rVBK], a
+	ld hl, vChars0 tile $7c
 	ld c, 4
 .loop
 	push bc
@@ -76,6 +80,8 @@ LoadSmokeTileFourTimes::
 	pop bc
 	dec c
 	jr nz, .loop
+	pop af
+	ldh [rVBK], a
 	ret
 
 LoadSmokeTile:

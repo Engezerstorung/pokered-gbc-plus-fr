@@ -60,6 +60,10 @@ FarCopyDataDouble::
 	ret
 
 CopyVideoDataHDMA::
+	ldh a, [rVDMA_LEN]
+	inc a
+	jr nz, CopyVideoDataHDMA ; wait for an already in progress HDMA to finish
+
 	ldh a, [hAutoBGTransferEnabled]
 	push af
 	xor a ; disable auto-transfer while copying
@@ -69,19 +73,18 @@ CopyVideoDataHDMA::
 	ldh [hROMBankTemp], a
 	setrombank b
 
-	call PrepareHDMA
+.wait
+	ldh a, [rLY]
+	cp 142
+	jr nc, .wait ; wait if potentially not enought time to start the HDMA
 
-	call DoHDMA
+	ldh a, [rSTAT]
+	push af
+	ld a, B_STAT_MODE_0 ; disable all LCD interrupt except hblank
+	ldh [rSTAT], a	
 
-	ldh a, [hROMBankTemp]
-	setrombank
-	pop af
-	ldh [hAutoBGTransferEnabled], a
-	ret
-
-PrepareHDMA::
 	dec c
-	set 7, c
+	set B_VDMA_LEN_MODE, c
 
 	ld a, d
 	ldh [rVDMA_SRC_HIGH], a
@@ -91,36 +94,33 @@ PrepareHDMA::
 	ldh [rVDMA_DEST_HIGH], a
 	ld a, l
 	ldh [rVDMA_DEST_LOW], a
-	ret
 
-DoHDMA::
+.hblankInProgress
 	ldh a, [rSTAT]
-	push af
-	ld a, %00001000
-	ldh [rSTAT], a
-
-.wait
-	ldh a, [rSTAT]
-	and %00000011
-	jr z, .wait
+	and STAT_MODE
+	jr z, .hblankInProgress ; if PPU Mode 0 (hblank) wait for it to finish
 
 	ld a, c
 	ldh [rVDMA_LEN], a
-.continue
+.halt
 	halt
 	ldh a, [rVDMA_LEN]
-	inc a
-	jr nz, .continue
+	inc a ; no DMA in progress = $FF
+	jr nz, .halt ; wait for HDMA to finish
 
 	pop af
 	ldh [rSTAT], a
 
+	ldh a, [hROMBankTemp]
+	setrombank
+	pop af
+	ldh [hAutoBGTransferEnabled], a
 	ret
 
 CopyVideoData::
 ; Wait for the next VBlank, then copy c 2bpp
-; tiles from b:de to hl, 8 tiles at a time.
-; This takes c/8 frames.
+; tiles from b:de to hl, 12 tiles at a time.
+; This takes c/12 frames.
 ; de = graphic to use
 ; hl = where in vram
 ; b = wich bank the graphic is in
@@ -128,8 +128,14 @@ CopyVideoData::
 ; see exemple : LoadPartyPokeballGfx
 	ldh a, [hAutoBGTransferEnabled]
 	push af
+
+	inc a
+	jr z, .dontDisable
+
 	xor a ; disable auto-transfer while copying
 	ldh [hAutoBGTransferEnabled], a
+
+.dontDisable
 
 	ldh a, [hLoadedROMBank]
 	ldh [hROMBankTemp], a
@@ -150,7 +156,7 @@ CopyVideoData::
 
 .loop
 	ld a, c
-	cp 8
+	cp 12 + 1
 	jr nc, .keepgoing
 
 .done
@@ -164,22 +170,29 @@ CopyVideoData::
 	ret
 
 .keepgoing
-	ld a, 8
+	ld a, 12
 	ldh [hVBlankCopySize], a
 	call DelayFrame
 	ld a, c
-	sub 8
+	sub 12
 	ld c, a
 	jr .loop
 
 CopyVideoDataDouble::
 ; Wait for the next VBlank, then copy c 1bpp
-; tiles from b:de to hl, 8 tiles at a time.
-; This takes c/8 frames.
+; tiles from b:de to hl, 12 tiles at a time.
+; This takes c/12 frames.
 	ldh a, [hAutoBGTransferEnabled]
 	push af
+
+	inc a
+	jr z, .dontDisable
+
 	xor a ; disable auto-transfer while copying
 	ldh [hAutoBGTransferEnabled], a
+
+.dontDisable
+
 	ldh a, [hLoadedROMBank]
 	ldh [hROMBankTemp], a
 
@@ -199,7 +212,7 @@ CopyVideoDataDouble::
 
 .loop
 	ld a, c
-	cp 8
+	cp 12 + 1
 	jr nc, .keepgoing
 
 .done
@@ -213,11 +226,11 @@ CopyVideoDataDouble::
 	ret
 
 .keepgoing
-	ld a, 8
+	ld a, 12
 	ldh [hVBlankCopyDoubleSize], a
 	call DelayFrame
 	ld a, c
-	sub 8
+	sub 12
 	ld c, a
 	jr .loop
 
@@ -243,6 +256,15 @@ CopyScreenTileBufferToVRAM::
 ; Copy wTileMap to the BG Map starting at b * $100.
 ; This is done in thirds of 6 rows, so it takes 3 frames.
 
+	ldh a, [hWUp]
+	and a
+	jr z, .wUPDone
+	xor a
+	ldh [hWUp], a
+	ld a, SCREEN_HEIGHT_PX
+	ldh [hWY], a
+.wUPDone
+
 	ld c, 6
 
 	hlbgcoord 0, 0, $0
@@ -259,6 +281,7 @@ CopyScreenTileBufferToVRAM::
 .setup
 	ld a, d
 	ldh [hVBlankCopyBGSource+1], a
+;	call GetRowColAddressBgMap
 	ld a, l
 	ldh [hVBlankCopyBGDest], a
 	ld a, h
@@ -268,21 +291,43 @@ CopyScreenTileBufferToVRAM::
 	ldh [hVBlankCopyBGNumRows], a
 	ld a, e
 	ldh [hVBlankCopyBGSource], a
+
+	ld hl, W2_TileMapPalMap - wTileMap
+	add hl, de
+
+	ld a, 2
+	ldh [rWBK], a
+	ld a, h
+	ld [W2_VBlankCopyBGSource+1], a
+	ld a, l
+	ld [W2_VBlankCopyBGSource], a
+	xor a
+	ldh [rWBK], a
+
 	jp DelayFrame
 
 ClearScreen::
 ; Clear wTileMap, then wait
 ; for the bg map to update.
-	ld bc, 20 * 18
-	inc b
+	ldh a, [rWBK]
+	ld b, a
+	ld a, 2
+	ldh [rWBK], a
+	push bc
+
 	hlcoord 0, 0
 	ld a, " "
-.loop
-	ld [hli], a
-	dec c
-	jr nz, .loop
-	dec b
-	jr nz, .loop
+	ld bc, SCREEN_WIDTH * SCREEN_HEIGHT
+	push bc
+	call FillMemory
+	pop bc
+	hlcoord 0, 0, W2_TileMapPalMap
+	ld a, 7
+	call FillMemory
+
+	pop af
+	ldh [rWBK], a
+
 	jp Delay3
 
 GoodCopyVideoData::

@@ -105,48 +105,48 @@ SpriteFacingAndAnimationTable:
 .Snorlax1:     db $0b, $00, $01, $00, $02, $03, $02, $08, $09, $08
 
 .NormalOAM:
-	; y, x, attributes
-	db 0, 0, $00 ; top left
-	db 0, 8, $00 ; top right
-	db 8, 0, UNDER_GRASS ; bottom left
-	db 8, 8, UNDER_GRASS | FACING_END ; bottom right
+	; transparency, y, x, attributes
+	db 0, 0, 0, $00 ; top left
+	db 0, 0, 8, $00 ; top right
+	db 0, 8, 0, UNDER_GRASS ; bottom left
+	db 0, 8, 8, UNDER_GRASS | FACING_END ; bottom right
 
 .FlippedOAM:
-	; y, x, attributes
-	db 0, 8, OAM_XFLIP ; top left
-	db 0, 0, OAM_XFLIP ; top right
-	db 8, 8, OAM_XFLIP | UNDER_GRASS ; bottom left
-	db 8, 0, OAM_XFLIP | UNDER_GRASS | FACING_END ; bottom right
+	; transparency, y, x, attributes
+	db 0, 0, 8, OAM_XFLIP ; top left
+	db 0, 0, 0, OAM_XFLIP ; top right
+	db 0, 8, 8, OAM_XFLIP | UNDER_GRASS ; bottom left
+	db 0, 8, 0, OAM_XFLIP | UNDER_GRASS | FACING_END ; bottom right
 
 .OddmonOAM:
-	; y, x, attributes
-	db 0,  7, OAM_XFLIP ; top left
-	db 0, -1, OAM_XFLIP ; top right
-	db 8,  7, OAM_XFLIP | UNDER_GRASS ; bottom left
-	db 8, -1, OAM_XFLIP | UNDER_GRASS | FACING_END ; bottom right
+	; transparency, y, x, attributes
+	db 0, 0,  7, OAM_XFLIP ; top left
+	db 0, 0, -1, OAM_XFLIP ; top right
+	db 0, 8,  7, OAM_XFLIP | UNDER_GRASS ; bottom left
+	db 0, 8, -1, OAM_XFLIP | UNDER_GRASS | FACING_END ; bottom right
 
 .MachineLOAM:
-	; y, x, attributes
-	db 12, 8, FACING_END
+	; transparency, y, x, attributes
+	db 0, 12, 8, FACING_END
 .MachineROAM:
-	; y, x, attributes
-	db 12, 0, OAM_XFLIP | FACING_END
+	; transparency, y, x, attributes
+	db 0, 12, 0, OAM_XFLIP | FACING_END
 .MachineMOAM:
 	; y, x, attributes
-	db 12, 0, $00
-	db 12, 8, OAM_XFLIP | FACING_END
+	db 0, 12, 0, $00
+	db 0, 12, 8, OAM_XFLIP | FACING_END
 
 .SnorlaxSleepOAM:
-	; y, x, attributes
-	db -10, 14, $00 ; sleep
+	; transparency, y, x, attributes
+	db 0, -10, 14, $00 ; sleep
 	; fallthrough
 .SnorlaxOAM:
-	db -3, -4, $00 ; top left
-	db -3,  4, $00 ; top center
-	db -3, 12, OAM_XFLIP ; top right
-	db  5, -4, $00 ; middle left
-	db  5,  4, $00 ; middle center
-	db  5, 12, OAM_XFLIP ; middle right
-	db 13, -4, $00 ; bottom left
-	db 13,  4, $00 ; bottom center
-	db 13, 12, OAM_XFLIP | FACING_END ; bottom right
+	db 0, -3, -4, $00 ; top left
+	db 0, -3,  4, $00 ; top center
+	db 0, -3, 12, OAM_XFLIP ; top right
+	db 0,  5, -4, $00 ; middle left
+	db 0,  5,  4, $00 ; middle center
+	db 0,  5, 12, OAM_XFLIP ; middle right
+	db 0, 13, -4, $00 ; bottom left
+	db 0, 13,  4, $00 ; bottom center
+	db 0, 13, 12, OAM_XFLIP | FACING_END ; bottom right

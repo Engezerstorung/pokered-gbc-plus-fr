@@ -639,3 +639,33 @@ TownMapSpriteBlinkingAnimation::
 .done
 	ld [wAnimCounter], a
 	jp DelayFrame
+
+GetNameAndLength::
+	; input 
+		; de : pointer of name, must end with a terminator @
+	; outputs
+		; wNameBuffer : name
+		; e: name lenght (excluding terminator)
+	ld hl, wNameBuffer
+	ld b, 20 / 5
+	ld a, "@"
+.blankingLoop
+	ld [hli], a
+	ld [hli], a
+	ld [hli], a
+	ld [hli], a
+	dec b
+	jr nz, .blankingLoop
+
+	ld hl, wNameBuffer
+	call PlaceString
+
+	ld hl, wNameBuffer
+	ld e, 0
+	ld d, "@"
+.countLoop
+	ld a, [hli]
+	cp d
+	ret z
+	inc e
+	jr .countLoop

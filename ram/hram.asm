@@ -405,7 +405,10 @@ hDelayFrameHookBank:: db
 ; Used for convenience in color hack (in the _ColorOverworldSprite function)
 hColorHackTmp:: db
 
-	ds 2
+;	ds 3
+	ds 1
+
+hWUp::db
 hBlink::db
 
 ENDSECTION

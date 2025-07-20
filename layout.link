@@ -11,12 +11,12 @@ ROM0
 	"rst18"
 	org $0020
 	"rst20"
-;	org $0028
-;	"rst28"
-;	org $0030
-;	"rst30"
-;	org $0038
-;	"rst38"
+	org $0028
+	"rst28"
+	org $0030
+	"rst30"
+	org $0038
+	"rst38"
 	org $0040
 	"vblank"
 	org $0048
@@ -35,9 +35,9 @@ ROM0
 	"Header"
 	org $150
 	"Home"
-	org $1665
+;	org $1665
 	"LoadMonFrontSprite"
-	org $1dd9
+;	org $1dd9
 	"JpPoint"
 ROMX $1
 	"bank1"
@@ -54,7 +54,7 @@ ROMX $3
 ROMX $4
 	"NPC Sprites 1"
 	"Font Graphics"
-	"Battle Engine 1"
+;	"Battle Engine 1"
 ROMX $5
 	"NPC Sprites 2"
 ;	"Battle Engine 2"
@@ -149,7 +149,7 @@ ROMX $1B
 	"Tilesets 3"
 ROMX $1C
 	"bank1C"
-	org $4a6e
+;	org $4a6e
 	"BattleTransition_BlackScreen"
 	org $5fb6
 	"InitPartyMenuBlkPacket"

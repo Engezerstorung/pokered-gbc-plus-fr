@@ -1,25 +1,31 @@
 SECTION "rst0", ROM0[$0000]
-_LoadMapVramAndColors:
-	ldh a, [hLoadedROMBank]
-	push af
-	ld a, BANK(LoadMapVramAndColors)
-	ld [rROMB], a
-	call LoadMapVramAndColors
-	pop af
-	ld [rROMB], a
+;_LoadMapVramAndColors:
+;	ldh a, [hLoadedROMBank]
+;	push af
+;	ld a, BANK(LoadMapVramAndColors)
+;	ld [rROMB], a
+;	call LoadMapVramAndColors
+;	pop af
+;	ld [rROMB], a
 	ret
 
-;SECTION "rst8", ROM0[$0008]
+	ds $8 - @, 0
 
-; HAX: rst10 is used for the vblank hook
+SECTION "rst8", ROM0[$0008]
+
+	ds $10 - @, 0
+
+; HAX: rst10 can be used for "Bankswitch"
 SECTION "rst10", ROM0[$0010]
-	ld b, BANK(GbcVBlankHook)
-	ld hl, GbcVBlankHook
+_Bankswitch::
 	jp Bankswitch
+
+	ds $18 - @, 0 ; unused
 
 ; HAX: rst18 can be used for "Bankswitch"
 SECTION "rst18", ROM0[$0018]
-_Bankswitch::
+_Bankswitch_jp::
+	add sp, 2
 	jp Bankswitch
 
 	ds $20 - @, 0
@@ -30,6 +36,22 @@ SetRomBank::
 	ld [rROMB], a
 	ret
 
+	ds $28 - @, 0
+
+SECTION "rst28", ROM0[$0028]
+	ret
+
+	ds $30 - @, 0 ; unused
+
+SECTION "rst30", ROM0[$0030]
+	ret
+
+	ds $38 - @, 0 ; unused
+
+SECTION "rst38", ROM0[$0038]
+	ret
+
+	ds $40 - @, 0 ; unused
 
 ; Game Boy hardware interrupts
 

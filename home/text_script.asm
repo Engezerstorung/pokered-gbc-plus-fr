@@ -127,6 +127,9 @@ CloseTextDisplay::
 	ldh [hLoadedROMBank], a
 	ld [rROMB], a
 	call InitMapSprites ; reload sprite tile pattern data (since it was partially overwritten by text tile patterns)
+
+	call LoadMapSignAssets
+
 	ld hl, wFontLoaded
 	res BIT_FONT_LOADED, [hl]
 	ld a, [wStatusFlags6]

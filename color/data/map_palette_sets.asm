@@ -1,5 +1,33 @@
 ; 8 bytes per tileset for 8 palettes, which are taken from MapPalettes.
+; See TilesetBgPalSwapList in color/loadpalettes.asm for tileset palettes that dont justify a full dedicated PalSet.
 MapPaletteSets:
+	table_width 2
+	dw .overworldPalSet   ; OVERWORLD
+	dw .redsHouse1PalSet  ; REDS_HOUSE_1
+	dw .martPalSet        ; MART
+	dw .forestPalSet      ; FOREST
+	dw .redsHouse2PalSet  ; REDS_HOUSE_2
+	dw .dojoPalSet        ; DOJO
+	dw .pokecenterPalSet  ; POKECENTER
+	dw .gymPalSet         ; GYM
+	dw .housePalSet       ; HOUSE
+	dw .forestGatePalSet  ; FOREST_GATE
+	dw .museumPalSet      ; MUSEUM
+	dw .undergroundPalSet ; UNDERGROUND
+	dw .gatePalSet        ; GATE
+	dw .shipPalSet        ; SHIP
+	dw .shipPortPalSet    ; SHIP_PORT
+	dw .cemeteryPalSet    ; CEMETERY
+	dw .interiorPalSet    ; INTERIOR
+	dw .cavernPalSet      ; CAVERN
+	dw .lobbyPalSet       ; LOBBY
+	dw .mansionPalSet     ; MANSION
+	dw .labPalSet         ; LAB
+	dw .clubPalSet        ; CLUB
+	dw .facilityPalSet    ; FACILITY
+	dw .plateauPalSet     ; PLATEAU
+	assert_table_length NUM_TILESETS
+
 .overworldPalSet:	
 .forestPalSet:
 .plateauPalSet:
@@ -10,6 +38,7 @@ MapPaletteSets:
 	db OUTDOOR_YELLOW
 	db OUTDOOR_BROWN
 	db FOREST_TREES
+;	db PC_POKEBALL_PAL
 	db CRYS_TEXTBOX
 
 .redsHouse1PalSet:	
@@ -32,6 +61,7 @@ MapPaletteSets:
 	db INDOOR_YELLOW
 	db INDOOR_BROWN
 	db INDOOR_LIGHT_BLUE
+;	db PC_POKEBALL_PAL
 	db CRYS_TEXTBOX
 
 .forestGatePalSet:
@@ -43,6 +73,7 @@ MapPaletteSets:
 	db INDOOR_YELLOW
 	db INDOOR_BROWN_BG
 	db INDOOR_LIGHT_BLUE
+;	db PC_POKEBALL_PAL
 	db CRYS_TEXTBOX
 
 .shipPalSet:
@@ -53,6 +84,7 @@ MapPaletteSets:
 	db SHIP_MUGS
 	db INDOOR_BROWN
 	db SHIP_TRASHCANS
+;	db PC_POKEBALL_PAL
 	db CRYS_TEXTBOX
 
 .shipPortPalSet:
@@ -63,6 +95,7 @@ MapPaletteSets:
 	db INDOOR_YELLOW
 	db SHIP_DOCK1
 	db SHIP_DOCK2
+;	db PC_POKEBALL_PAL
 	db CRYS_TEXTBOX
 
 .cavernPalSet:
@@ -73,6 +106,7 @@ MapPaletteSets:
 	db CAVE_ENTRANCE
 	db CAVE_BROWN
 	db CAVE_LIGHT_BLUE
+;	db PC_POKEBALL_PAL
 	db CRYS_TEXTBOX
 
 .lobbyPalSet:
@@ -85,32 +119,5 @@ MapPaletteSets:
 	db INDOOR_YELLOW
 	db INDOOR_BROWN
 	db INDOOR_LIGHT_BLUE
-	db PC_POKEBALL_PAL
-
-.pointers
-	table_width 1
-	db .overworldPalSet - MapPaletteSets   ; OVERWORLD
-	db .redsHouse1PalSet - MapPaletteSets  ; REDS_HOUSE_1
-	db .martPalSet - MapPaletteSets        ; MART
-	db .forestPalSet - MapPaletteSets      ; FOREST
-	db .redsHouse2PalSet - MapPaletteSets  ; REDS_HOUSE_2
-	db .dojoPalSet - MapPaletteSets        ; DOJO
-	db .pokecenterPalSet - MapPaletteSets  ; POKECENTER
-	db .gymPalSet - MapPaletteSets         ; GYM
-	db .housePalSet - MapPaletteSets       ; HOUSE
-	db .forestGatePalSet - MapPaletteSets  ; FOREST_GATE
-	db .museumPalSet - MapPaletteSets      ; MUSEUM
-	db .undergroundPalSet - MapPaletteSets ; UNDERGROUND
-	db .gatePalSet - MapPaletteSets        ; GATE
-	db .shipPalSet - MapPaletteSets        ; SHIP
-	db .shipPortPalSet - MapPaletteSets    ; SHIP_PORT
-	db .cemeteryPalSet - MapPaletteSets    ; CEMETERY
-	db .interiorPalSet - MapPaletteSets    ; INTERIOR
-	db .cavernPalSet - MapPaletteSets      ; CAVERN
-	db .lobbyPalSet - MapPaletteSets       ; LOBBY
-	db .mansionPalSet - MapPaletteSets     ; MANSION
-	db .labPalSet - MapPaletteSets         ; LAB
-	db .clubPalSet - MapPaletteSets        ; CLUB
-	db .facilityPalSet - MapPaletteSets    ; FACILITY
-	db .plateauPalSet - MapPaletteSets     ; PLATEAU
-	assert_table_length NUM_TILESETS
+;	db PC_POKEBALL_PAL
+	db CRYS_TEXTBOX

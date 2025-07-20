@@ -175,6 +175,10 @@ wShadowOAMBackupSprite{02d:n}:: sprite_oam_struct wShadowOAMBackupSprite{02d:n}
 ENDR
 wShadowOAMBackupEnd::
 
+;NEXTU
+;	ds 8
+;wMapEntrySignBuffer:: ds TILEMAP_WIDTH * 8
+
 NEXTU
 ; list of indexes to patch with SERIAL_NO_DATA_BYTE after transfer
 wSerialPartyMonsPatchList:: ds 200
@@ -248,7 +252,8 @@ wPlayerMonNumber:: db
 ; the address of the menu cursor's current location within wTileMap
 wMenuCursorLocation:: dw
 
-	ds 2
+;	ds 2
+wTilesetDataPtr:: dw
 
 ; how many times should HandleMenuInput poll the joypad state before it returns?
 wMenuJoypadPollCount:: db
@@ -922,6 +927,11 @@ wSerialOtherGameboyRandomNumberListBlock:: ds $11
 NEXTU
 ; second buffer for temporarily saving and restoring current screen's tiles (e.g. if menus are drawn on top)
 wTileMapBackup2:: ds SCREEN_AREA
+
+NEXTU
+	ds 15
+wMapEntrySignBuffer:: ds TILEMAP_WIDTH
+ASSERT wMapEntrySignBuffer & 1 == 0
 ENDU
 
 ; This union spans 30 bytes.
@@ -1792,7 +1802,8 @@ wYBlockCoord:: db
 wXBlockCoord:: db
 
 wLastMap:: db
-wUnusedLastMapWidth:: db
+;wUnusedLastMapWidth:: db
+wLastMapSignName:: db
 
 wCurMapHeader::
 wCurMapTileset:: db
@@ -1887,7 +1898,10 @@ wTilesetTalkingOverTiles:: ds 3
 
 wGrassTile:: db
 
-	ds 4
+wTilesetAttributesPtr:: dw
+	
+	ds 2
+;	ds 4
 
 wNumBoxItems:: db
 ; item, quantity
@@ -1924,7 +1938,7 @@ wPrevSpriteSetID:: db
 ;; bit 3 - unused
 ;; bit 4 - unused
 ;; bit 5 - unused
-;; bit 6 - unused
+;; bit 6 - set when a sprite is one coordinate under the screen, used when determinining visibility under text
 ;; bit 7 - unused
 wSpriteFlags:: db
 

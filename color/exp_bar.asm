@@ -18,19 +18,31 @@ AnimateEXPBar:
 	ld a, [wBattleMonLevel]
 	cp 100
 	ret z
+
+	ldh a, [hAutoBGTransferEnabled]
+	push af
+	ld a, $ff
+.breakpoint	
+	ldh [hAutoBGTransferEnabled], a
+
 	ld a, SFX_HEAL_HP
 	call PlaySoundWaitForCurrent
 	callfar CalcEXPBarPixelLength
 	ld hl, wEXPBarPixelLength
-	ld a, [hl]
-	ld b, a
+	ld e, [hl]
 	ldh a, [hQuotient + 3]
 	ld [hl], a
-	sub b
+	sub e
 	jr z, .done
 	ld b, a
 	ld c, $08
 	hlcoord 17, 11
+
+	ld a, e
+	and $7
+	ld e, a
+	ld d, 0
+
 .loop1
 	ld a, [hl]
 	cp $6B
@@ -40,21 +52,43 @@ AnimateEXPBar:
 	jr z, .done
 	jr .loop1
 .loop2
-	cp $63
-	jr nz, .notEmptyExp
-	ld a, $CC
-.notEmptyExp
-	inc a
-	cp $D4
+	ld a, 1
+	ldh [hAutoBGTransferPortion], a
+
+	inc e
+	ld a, e
+	cp 8
+	ld a, $64
 	jr nz, .notFullExp
 	ld a, $6B
+	ld e, d
 .notFullExp
 	ld [hl], a
+
+	jr z, .dontLoad
+
+;	jr nz, .loadPartial
+;	call DelayFrame
+;	jr .dontLoad
+;.loadPartial
+	push hl
+	push de
+	push bc
+	farcall LoadPartialBarTile
+	pop bc
+	pop de
+	pop hl
+.dontLoad
+
 	call DelayFrame
+
 	dec b
-	jr z, .done
-	jr .loop1
+	jr nz, .loop1
 .done
+
+	pop af
+	ldh [hAutoBGTransferEnabled], a
+
 	ld bc, $08
 	hlcoord 10, 11
 	ld de, wTileMapBackup + 10 + 11 * 20

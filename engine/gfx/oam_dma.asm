@@ -1,4 +1,7 @@
 WriteDMACodeToHRAM::
+
+	ret
+
 ; Since no other memory is available during OAM DMA,
 ; DMARoutine is copied to HRAM and executed there.
 	ld c, LOW(hDMARoutine)

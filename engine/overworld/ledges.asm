@@ -58,7 +58,11 @@ HandleLedges::
 INCLUDE "data/tilesets/ledge_tiles.asm"
 
 LoadHoppingShadowOAM:
-	ld hl, vChars1 tile $7f
+	ldh a, [rVBK]
+	push af
+	ld a, 1
+	ldh [rVBK], a
+	ld hl, vChars0 tile $7f
 	ld de, LedgeHoppingShadow
 	lb bc, BANK(LedgeHoppingShadow), (LedgeHoppingShadowEnd - LedgeHoppingShadow) / $8
 	call CopyVideoDataDouble
@@ -66,6 +70,8 @@ LoadHoppingShadowOAM:
 	lb bc, $54, $48 ; b, c = y, x coordinates of shadow
 	ld de, LedgeHoppingShadowOAMBlock
 	call WriteOAMBlock
+	pop af
+	ldh [rVBK], a
 	ret
 
 LedgeHoppingShadow:
@@ -74,7 +80,7 @@ LedgeHoppingShadowEnd:
 
 LedgeHoppingShadowOAMBlock:
 ; tile ID, attributes
-	db $ff, OAM_PAL1
-	db $ff, OAM_XFLIP
-	db $ff, OAM_YFLIP
-	db $ff, OAM_XFLIP | OAM_YFLIP
+	db $7f, OAM_BANK1
+	db $7f, OAM_XFLIP | OAM_BANK1
+	db $7f, OAM_YFLIP | OAM_BANK1
+	db $7f, OAM_YFLIP | OAM_XFLIP | OAM_BANK1

@@ -100,8 +100,10 @@ LoadAndUpdateSGBPalette:
 	call LoadSGBPalette
 	jr UpdatePalette
 
-ReloadDefaultTextPalette:
-	ld d, CRYS_TEXTBOX
+LoadPcTextPalette:
+	lb de, PC_POKEBALL_PAL, 7	
+	jr LoadAndUpdateMapPalette
+
 LoadAndUpdateMapTextPalette:
 	ld e, 7
 LoadAndUpdateMapPalette:
