@@ -79,10 +79,10 @@ LoadSpritePaletteData:
 	ret
 
 LoadSpecialOverworldSpritePalettes:
-	ldh a, [rSVBK]
+	ldh a, [rWBK]
 	ld b, a
 	xor a
-	ldh [rSVBK], a
+	ldh [rWBK], a
 	push bc
 
 ; Check Tileset to load proper boulder dust palette if outside location
@@ -104,7 +104,7 @@ LoadSpecialOverworldSpritePalettes:
 	call SprPalSwap
 
 	pop af
-	ldh [rSVBK], a
+	ldh [rWBK], a
 	ret
 
 ; Set the overworld sprites's colors when the sprites assets are loaded in vram
@@ -125,7 +125,7 @@ ColorOverworldSprite::
 	push hl
 	add hl, bc
 	ld a, [hl] ; [x#SPRITESTATEDATA2_GRASSPRIORITY]
-	and OAM_BEHIND_BG | OAM_VBANK ; erase palette bits but keep grass priority bit
+	and OAM_PRIO | OAM_BANK1 ; erase palette bits but keep grass priority bit
 	ld [hl], a
 
 	push hl
@@ -176,7 +176,7 @@ ColorPlayerSprite::
 .gotPlayerColor
 	ld d, a
 	ld a, [hl]
-	and OAM_BEHIND_BG | OAM_VBANK ; need to preserve in-grass flag
+	and OAM_PRIO | OAM_BANK1 ; need to preserve in-grass flag
 	or d
 	ld [hl], a
 	ret
@@ -203,10 +203,10 @@ LoadPartyMenuSpritePalettes::
 	jr .loop
 .done	
 	ld a, 2
-	ldh [rSVBK], a
+	ldh [rWBK], a
 	ld [W2_ForceOBPUpdate], a
 	xor a
-	ldh [rSVBK], a
+	ldh [rWBK], a
 	ret
 
 GetPartySpritePalette:

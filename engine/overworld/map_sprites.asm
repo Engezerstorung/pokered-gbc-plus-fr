@@ -216,7 +216,7 @@ LoadMapSpriteTilePatterns:
 
 CheckIfAlreadyInVramSlot:
 	ldh a, [rLCDC]
-	bit rLCDC_ENABLE, a ; is the LCD enabled?
+	bit B_LCDC_ENABLE, a ; is the LCD enabled?
 	jr z, .loadInVram
 
 	ld a, [wSpriteSetID]
@@ -359,9 +359,9 @@ LoadMapSpritesImageBaseOffset:
 
 	ld de, -7
 	add hl, de
-	res OAM_TILE_BANK, [hl]
+	res B_OAM_BANK1, [hl]
 	jr z, .vbank0
-	set OAM_TILE_BANK, [hl]
+	set B_OAM_BANK1, [hl]
 .vbank0
 
 	pop hl

@@ -224,9 +224,9 @@ Route8RoofCheck:
 .route8RoofChange
 	farcall LoadTownPalette
 	ld a, 2
-	ldh [rSVBK], a
+	ldh [rWBK], a
 	ld [W2_ForceBGPUpdate], a
 	xor a
-	ldh [rSVBK], a
+	ldh [rWBK], a
 .noRoute8RoofChange
 	jp CheckFightingMapTrainers

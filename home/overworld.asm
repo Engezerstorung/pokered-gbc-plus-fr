@@ -284,7 +284,7 @@ OverworldLoopLessDelay::
 	jr nz, .normalPlayerSpriteAdvancement
 	call DoBikeSpeedup
 	ld a, [hJoyHeld]
-	and B_BUTTON
+	and PAD_B
 	jr z, .notRunning
 	call DoBikeSpeedup
 	call DoBikeSpeedup
@@ -292,7 +292,7 @@ OverworldLoopLessDelay::
 .normalPlayerSpriteAdvancement
 	; Holding B makes you run and surf at 2x walking speed
 	ld a, [hJoyHeld]
-	and B_BUTTON
+	and PAD_B
 	jr z, .notRunning
 	call DoBikeSpeedup
 .notRunning
