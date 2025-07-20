@@ -358,10 +358,10 @@ BattleTransition_FlashScreen_:
 
 .flashingLoop
 	ld a, 2
-	ld [rSVBK], a
+	ld [rWBK], a
 	ld [W2_ForceBGPUpdate], a
 	xor a
-	ld [rSVBK], a
+	ld [rWBK], a
 	ld b, 5
 .loop
 	ld a, [hli]

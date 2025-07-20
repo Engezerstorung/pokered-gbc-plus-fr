@@ -168,7 +168,7 @@ LoadTilesetPalette:
 	ret
 
 ; Towns have different roof colors while using the same tileset
-LoadTownPalette:
+LoadTownPalette::
 	ldh a, [rWBK]
 	ld b, a
 	xor a

@@ -159,7 +159,7 @@ _LeaveMapAnim::
 	ld [hli], a ; wFlyAnimCounter
 	ld [hl], $c ; wFlyAnimBirdSpriteImageIndex (facing right)
 	ld hl, wSpritePlayerStateData2GrassPriority
-	res OAM_PRIORITY, [hl]
+	res B_OAM_PRIO, [hl]
 	ld de, FlyAnimationScreenCoords1
 	call DoFlyAnimation
 	ld c, 40

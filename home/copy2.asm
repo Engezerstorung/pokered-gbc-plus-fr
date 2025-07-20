@@ -84,13 +84,13 @@ PrepareHDMA::
 	set 7, c
 
 	ld a, d
-	ldh [rHDMA1], a
+	ldh [rVDMA_SRC_HIGH], a
 	ld a, e
-	ldh [rHDMA2], a
+	ldh [rVDMA_SRC_LOW], a
 	ld a, h
-	ldh [rHDMA3], a
+	ldh [rVDMA_DEST_HIGH], a
 	ld a, l
-	ldh [rHDMA4], a
+	ldh [rVDMA_DEST_LOW], a
 	ret
 
 DoHDMA::
@@ -105,10 +105,10 @@ DoHDMA::
 	jr z, .wait
 
 	ld a, c
-	ldh [rHDMA5], a
+	ldh [rVDMA_LEN], a
 .continue
 	halt
-	ldh a, [rHDMA5]
+	ldh a, [rVDMA_LEN]
 	inc a
 	jr nz, .continue
 
@@ -297,7 +297,7 @@ GoodCopyVideoDataHDMA::
 
 CopyVideoDataToFarCopyData2:
 	ldh a, [rLCDC]
-	bit rLCDC_ENABLE, a ; is the LCD enabled?
+	bit B_LCDC_ENABLE, a ; is the LCD enabled?
 	ret nz
 	ld a, b
 	push de
