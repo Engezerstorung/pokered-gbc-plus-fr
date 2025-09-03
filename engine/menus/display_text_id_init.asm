@@ -75,7 +75,7 @@ DisplayTextIDInit::
 	dec c
 	jr nz, .spriteStandStillLoop
 
-;	ld b, $9c ; window background address
+;	ld b, HIGH(vBGMap1)
 ;	call CopyScreenTileBufferToVRAM ; transfer background in WRAM to VRAM
 ;	call LoadPartialTextBoxTilePatterns
 
