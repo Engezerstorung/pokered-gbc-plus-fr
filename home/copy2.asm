@@ -231,19 +231,19 @@ ClearScreenArea::
 	ld a, " " ; blank tile
 
 ClearScreenAreaWithA::
-	ld de, 20 ; screen width
-.y
+	ld de, SCREEN_WIDTH ; screen width
+.loopRows
 	push hl
 	push bc
-.x
+.loopTiles
 	ld [hli], a
 	dec c
-	jr nz, .x
+	jr nz, .loopTiles
 	pop bc
 	pop hl
 	add hl, de
 	dec b
-	jr nz, .y
+	jr nz, .loopRows
 	ret
 
 CopyScreenTileBufferToVRAM::
@@ -259,7 +259,7 @@ CopyScreenTileBufferToVRAM::
 	ldh [hWY], a
 .wUPDone
 
-	ld c, 6
+	ld c, SCREEN_HEIGHT / 3
 
 	hlbgcoord 0, 0, $0
 	decoord 0, 6 * 0
@@ -332,7 +332,7 @@ ClearnScreenWithPalD_NoDelay::
 
 	hlcoord 0, 0
 	ld a, " "
-	ld bc, SCREEN_WIDTH * SCREEN_HEIGHT
+	ld bc, SCREEN_AREA
 	push bc
 	call FillMemory
 	pop bc
