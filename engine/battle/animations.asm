@@ -1623,7 +1623,7 @@ _AnimationSquishMonPic:
 	call AnimCopyRowRight
 	inc hl
 .next
-	ld [hl], " "
+	ld [hl], ' '
 	pop hl
 	ld de, SCREEN_WIDTH
 	add hl, de
@@ -1858,7 +1858,7 @@ _AnimationSlideMonOff:
 ; plus one instead.
 	cp $61
 	ret c
-	ld a, " "
+	ld a, ' '
 	ret
 
 .EnemyNextTile
@@ -1868,7 +1868,7 @@ _AnimationSlideMonOff:
 ; the lower right tile is in the first column to slide off the screen.
 	cp $30
 	ret c
-	ld a, " "
+	ld a, ' '
 	ret
 
 AnimationSlideMonHalfOff:

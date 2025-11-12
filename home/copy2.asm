@@ -228,10 +228,10 @@ CopyVideoDataDouble::
 
 ClearScreenArea::
 ; Clear tilemap area cxb at hl.
-	ld a, " " ; blank tile
+	ld a, ' '
 
 ClearScreenAreaWithA::
-	ld de, SCREEN_WIDTH ; screen width
+	ld de, SCREEN_WIDTH
 .loopRows
 	push hl
 	push bc
@@ -331,7 +331,7 @@ ClearnScreenWithPalD_NoDelay::
 	push de ; save palette value
 
 	hlcoord 0, 0
-	ld a, " "
+	ld a, ' '
 	ld bc, SCREEN_AREA
 	push bc
 	call FillMemory

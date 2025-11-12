@@ -1,4 +1,4 @@
-MACRO RGB
+MACRO? RGB
 	REPT _NARG / 3
 
 		DEF wWhite = $1F
@@ -123,7 +123,7 @@ DEF color    EQUS "+ PAL_COLORS *"
 DEF tiles EQUS "* TILE_SIZE"
 DEF tile  EQUS "+ TILE_SIZE *"
 
-MACRO dbsprite
+MACRO? dbsprite
 ; x tile, y tile, x pixel, y pixel, vtile offset, attributes
 	db (\2 * TILE_WIDTH) % $100 + \4, (\1 * TILE_WIDTH) % $100 + \3, \5, \6
 ENDM
