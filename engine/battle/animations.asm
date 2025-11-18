@@ -941,7 +941,7 @@ BallMoveDistances2:
 DoGrowlSpecialEffects:
 	ld hl, wShadowOAM
 	ld de, wShadowOAMSprite04
-	ld bc, $10
+	ld bc, OBJ_SIZE * 4
 	call CopyData ; copy the musical note graphic
 	ld a, [wSubAnimCounter]
 	dec a
@@ -1321,7 +1321,7 @@ AdjustOAMBlockXPos:
 	ld h, d
 
 AdjustOAMBlockXPos2:
-	ld de, 4
+	ld de, OBJ_SIZE
 .loop
 	ld a, [wCoordAdjustmentAmount]
 	ld b, a
@@ -1331,7 +1331,7 @@ AdjustOAMBlockXPos2:
 	jr c, .skipPuttingEntryOffScreen
 ; put off-screen if X >= 168
 	dec hl
-	ld a, 160
+	ld a, SCREEN_HEIGHT_PX + OAM_Y_OFS
 	ld [hli], a
 .skipPuttingEntryOffScreen
 	ld [hl], a
@@ -1345,7 +1345,7 @@ AdjustOAMBlockYPos:
 	ld h, d
 
 AdjustOAMBlockYPos2:
-	ld de, 4
+	ld de, OBJ_SIZE
 .loop
 	ld a, [wCoordAdjustmentAmount]
 	ld b, a
@@ -1690,7 +1690,7 @@ _AnimationShootBallsUpward:
 	dec a
 	ld [wNumShootingBalls], a
 .next
-	ld de, 4
+	ld de, OBJ_SIZE
 	add hl, de ; next OAM entry
 	dec b
 	jr nz, .innerLoop
@@ -1743,10 +1743,10 @@ AnimationMinimizeMon:
 	ld hl, wTempPic
 	push hl
 	xor a
-	ld bc, 7 * 7 * $10
+	ld bc, (7 * 7) tiles
 	call FillMemory
 	pop hl
-	ld de, 7 * 3 * $10 + 4 * $10 + 4
+	ld de, (7 * 3 + 4) tiles + TILE_SIZE / 4
 	add hl, de
 	ld de, MinimizedMonSprite
 	ld c, MinimizedMonSpriteEnd - MinimizedMonSprite
@@ -1991,7 +1991,7 @@ AnimationSubstitute:
 	jp AnimationShowMonPic
 
 CopyMonsterSpriteData:
-	ld bc, 1 tiles
+	ld bc, TILE_SIZE
 	ld a, BANK(MonsterSprite)
 	jp FarCopyData2
 
@@ -2401,7 +2401,7 @@ FallingObjects_UpdateOAMEntry:
 	inc a
 	cp 112
 	jr c, .next
-	ld a, 160 ; if Y >= 112, put it off-screen
+	ld a, SCREEN_HEIGHT_PX + OAM_Y_OFS ; if Y >= 112, put it off-screen
 .next
 	ld [hli], a ; Y
 	ld a, [wFallingObjectMovementByte]

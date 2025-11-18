@@ -332,7 +332,7 @@ Trade_AnimateBallEnteringLinkCable:
 	ld [wLinkCableAnimBulgeToggle], a
 	add $7e
 	ld hl, wShadowOAMSprite00TileID
-	ld de, 4
+	ld de, OBJ_SIZE
 	ld c, e
 .cycleLinkCableBulgeTile
 	ld [hl], a
@@ -623,7 +623,7 @@ Trade_AnimCircledMon:
 	ldh [rOBP1], a
 	
 	ld hl, wShadowOAMSprite00TileID
-	ld de, $4
+	ld de, OBJ_SIZE
 	ld c, $4
 .mon_loop
 	ld a, [hl]
