@@ -64,7 +64,7 @@ LoadHoppingShadowOAM:
 	ldh [rVBK], a
 	ld hl, vChars0 tile $7f
 	ld de, LedgeHoppingShadow
-	lb bc, BANK(LedgeHoppingShadow), (LedgeHoppingShadowEnd - LedgeHoppingShadow) / $8
+	lb bc, BANK(LedgeHoppingShadow), (LedgeHoppingShadowEnd - LedgeHoppingShadow) / TILE_1BPP_SIZE
 	call CopyVideoDataDouble
 	ld a, $9
 	lb bc, $54, $48 ; b, c = y, x coordinates of shadow

@@ -75,7 +75,7 @@ LoadSmokeTileFourTimes::
 	push hl
 	call LoadSmokeTile
 	pop hl
-	ld bc, 1 tiles
+	ld bc, TILE_SIZE
 	add hl, bc
 	pop bc
 	dec c
@@ -86,7 +86,7 @@ LoadSmokeTileFourTimes::
 
 LoadSmokeTile:
 	ld de, SSAnneSmokePuffTile
-	lb bc, BANK(SSAnneSmokePuffTile), (SSAnneSmokePuffTileEnd - SSAnneSmokePuffTile) / $10
+	lb bc, BANK(SSAnneSmokePuffTile), (SSAnneSmokePuffTileEnd - SSAnneSmokePuffTile) / TILE_SIZE
 	jp CopyVideoData
 
 SSAnneSmokePuffTile:

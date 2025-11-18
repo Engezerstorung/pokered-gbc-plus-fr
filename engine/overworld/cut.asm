@@ -108,13 +108,13 @@ _InitCutAnimOAM: ; hooked in color/color.asm
 ;	call WriteCutAnimationOAMBlock
 	call WriteCutOrBoulderDustAnimationOAMBlock
 	ld hl, wShadowOAMSprite36Attributes
-	ld de, 4
-	ld a, $37 ; Overwrite attributes (use palette 7, animation)
+	ld de, OBJ_SIZE
+	ld a, OAM_XFLIP | OAM_PAL1 | 7 ; Overwrite attributes (use palette 7, animation)
 	ld c, e
 .loop
 	ld [hl], a
 	add hl, de
-	xor $60
+	xor OAM_YFLIP | OAM_XFLIP
 	dec c
 	jr nz, .loop
 	ret

@@ -119,8 +119,8 @@ SlidePlayerAndEnemySilhouettesOnScreen:
 SlidePlayerHeadLeft:
 	push bc
 	ld hl, wShadowOAMSprite00XCoord
-	ld c, $15 ; number of OAM entries
-	ld de, $4 ; size of OAM entry
+	ld c, 7 * 3 ; number of OAM entries
+	ld de, OBJ_SIZE
 .loop
 	dec [hl] ; decrement X
 	dec [hl] ; decrement X
@@ -6698,11 +6698,11 @@ LoadHudTilePatterns:
 .lcdEnabled
 	ld de, BattleHudTiles1
 	ld hl, vChars2 tile $6d
-	lb bc, BANK(BattleHudTiles1), (BattleHudTiles1End - BattleHudTiles1) / $8
+	lb bc, BANK(BattleHudTiles1), (BattleHudTiles1End - BattleHudTiles1) / TILE_1BPP_SIZE
 	call CopyVideoDataDouble
 	ld de, BattleHudTiles2
 	ld hl, vChars2 tile $73
-	lb bc, BANK(BattleHudTiles2), (BattleHudTiles3End - BattleHudTiles2) / $8
+	lb bc, BANK(BattleHudTiles2), (BattleHudTiles3End - BattleHudTiles2) / TILE_1BPP_SIZE
 	jp CopyVideoDataDouble
 
 PrintEmptyString:
@@ -7087,7 +7087,7 @@ LoadMonBackPic:
 	ld b, 7
 	ld c, 8
 	call ClearScreenArea
-	ld hl,  wMonHBackSprite - wMonHeader
+	ld hl, wMonHBackSprite - wMonHeader
 	call UncompressMonSprite
 	predef_id ScaleSpriteByTwo
 
@@ -7107,7 +7107,7 @@ LoadMonBackPic:
 
 	ld hl, vSprites
 	ld de, vBackPic
-	ld c, (2 * SPRITEBUFFERSIZE) / 16 ; count of 16-byte chunks to be copied
+	ld c, (2 * SPRITEBUFFERSIZE) / TILE_SIZE ; count of 16-byte chunks to be copied
 	ldh a, [hLoadedROMBank]
 	ld b, a
 	jp CopyVideoData
