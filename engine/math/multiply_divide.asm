@@ -206,7 +206,7 @@ _CalcStat::
 	srl c
 	pop hl
 	push bc
-	ld bc, wPartyMon1DVs - (wPartyMon1HPExp - 1) ; also wEnemyMonDVs - wEnemyMonHP
+	ld bc, MON_DVS - (MON_HP_EXP - 1)
 	add hl, bc
 	pop bc
 	ld a, c
