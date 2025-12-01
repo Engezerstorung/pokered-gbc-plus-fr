@@ -1,3 +1,10 @@
+; Far calls to another bank
+
+; There is no difference between `farcall` and `callfar`, except the arbitrary
+; order in which they set `a` and `hl` before calling `FarCall`.
+; We use the more natural name "farcall" for the more common order.
+; The same goes for `farjp` and `jpfar`.
+
 MACRO farcall
 ;	IF \1 < $8000
 ;		rst _Bankswitch_sf
