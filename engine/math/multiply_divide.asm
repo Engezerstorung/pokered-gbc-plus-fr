@@ -218,7 +218,7 @@ _CalcStat::
 	jr z, .getSpeedIV
 	cp $5
 	jr z, .getSpecialIV
-.getHpIV
+; get HP IV
 	push bc
 	ld a, [hl]  ; Atk IV
 	swap a
