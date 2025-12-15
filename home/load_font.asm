@@ -2,7 +2,7 @@ LoadFontTilePatterns::
 	ldh a, [rLCDC]
 	bit B_LCDC_ENABLE, a
 	jr nz, .on
-.off
+; off
 	ld hl, FontGraphics
 	ld de, vFont
 	ld bc, FontGraphicsEnd - FontGraphics
@@ -16,7 +16,7 @@ LoadFontTilePatterns::
 
 LoadTextBoxTilePatterns::
 ;	ldh a, [rLCDC]
-;	bit rLCDC_ENABLE, a
+;	bit B_LCDC_ENABLE, a
 ;	jr nz, .on
 ;.off
 ;	ld hl, TextBoxGraphics
@@ -48,7 +48,7 @@ ELSE
 	ldh a, [rLCDC]
 	bit B_LCDC_ENABLE, a
 	jr nz, .on
-.off
+; off
 	ld hl, HpBarAndStatusGraphics
 	ld de, vChars2 tile $62
 	ld bc, HpBarAndStatusGraphicsEnd - HpBarAndStatusGraphics
