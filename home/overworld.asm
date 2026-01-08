@@ -1992,7 +1992,7 @@ ASSERT BANK(RedBikeSprite) == BANK(RedSprite)
 
 ; function to load data from the map header
 LoadMapHeader::
-	farcall MarkTownVisitedAndLoadMissableObjects
+	farcall MarkTownVisitedAndLoadToggleableObjects
 	ld a, [wCurMapTileset]
 	ld [wUnusedCurMapTilesetCopy], a
 	ld a, [wCurMap]
