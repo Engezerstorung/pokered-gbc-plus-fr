@@ -642,8 +642,8 @@ StartMenu_SaveReset::
 	ld a, [wStatusFlags4]
 	bit BIT_LINK_CONNECTED, a ; is the player using the link feature?
 	jp nz, SoftReset
-	predef SaveSAV ; save the game
-	call LoadScreenTilesFromBuffer2 ; restore saved screen
+	predef SaveMenu
+	call LoadScreenTilesFromBuffer2
 	jp HoldTextDisplayOpen
 
 StartMenu_Option::

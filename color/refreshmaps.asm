@@ -96,7 +96,7 @@ RefreshWindow::
 ; sp now points to map data in wram, hl points to vram destination.
 .doTransfer
 	ldh [hAutoBGTransferPortion], a ; store next portion
-	ld b, 6
+	ld b, SCREEN_HEIGHT / 3
 
 .drawRow:
 ; unrolled loop and using pop for speed
