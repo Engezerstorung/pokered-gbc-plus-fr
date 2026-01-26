@@ -490,9 +490,9 @@ StatusScreen_PrintPP:
 	ret
 
 StatusScreen_PrintAP:
-	ld a, "A"
+	ld a, 'A'
 	ld [hli],a
-	ld a, "P"
+	ld a, 'P'
 	ldd [hl], a
 	add hl, de
 	dec c
