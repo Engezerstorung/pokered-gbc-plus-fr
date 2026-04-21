@@ -17,15 +17,21 @@ SlidePlayerAndEnemySilhouettesOnScreen:
 	call DisableLCD
 	call LoadFontTilePatterns
 	call LoadHudAndHpBarAndStatusTilePatterns
-	ld hl, vBGMap0
-	ld bc, TILEMAP_AREA
-.clearBackgroundLoop
-	ld a, " "
-	ld [hli], a
-	dec bc
-	ld a, b
-	or c
-	jr nz, .clearBackgroundLoop
+	ld h, HIGH(vBGMap0)
+	call ClearBgMap
+
+	ld h, HIGH(vBGMap0)
+	call ClearBgMapAttributes
+;	ld hl, vBGMap0
+;	ld bc, TILEMAP_WIDTH * TILEMAP_HEIGHT
+;.clearBackgroundLoop
+;	ld a, " "
+;	ld [hli], a
+;	dec bc
+;	ld a, b
+;	or c
+;	jr nz, .clearBackgroundLoop
+
 ; copy the work RAM tile map to VRAM
 	hlcoord 0, 0
 	ld de, vBGMap0

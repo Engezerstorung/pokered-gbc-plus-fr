@@ -39,3 +39,11 @@ Bankswitch::
 	ret
 JumpToAddress::
 	jp hl
+
+JumpToAddress_DE::
+	push de
+	ret 
+
+JumpToAddress_BC::
+	push bc
+	ret 

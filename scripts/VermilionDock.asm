@@ -56,6 +56,16 @@ VermilionDockSSAnneLeavesScript:
 	ld bc, SCREEN_WIDTH * 6
 	ld a, $14 ; water tile
 	call FillMemory
+
+	ld a, 2
+	ldh [rWBK], a
+	hlcoord 0, 10, W2_TileMapPalMap
+	ld bc, SCREEN_WIDTH * 6
+	ld a, PAL_BG_WATER | OAM_BANK1
+	call FillMemory
+	xor a
+	ldh [rWBK], a
+
 	ld a, 1
 	ldh [hAutoBGTransferEnabled], a
 	call Delay3
@@ -158,10 +168,10 @@ VermilionDock_EmitSmokePuff:
 
 VermilionDockOAMBlock:
 ; tile ID, attributes
-	db $fc, 7 ; use palette OBJ7
-	db $fd, 7
-	db $fe, 7
-	db $ff, 7
+	db $7c, OAM_BANK1 | 7 ; use palette OBJ7
+	db $7d, OAM_BANK1 | 7
+	db $7e, OAM_BANK1 | 7
+	db $7f, OAM_BANK1 | 7
 
 VermilionDock_SyncScrollWithLY:
 	ld h, d

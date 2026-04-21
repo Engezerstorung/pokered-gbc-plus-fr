@@ -344,7 +344,24 @@ DisplayTwoOptionMenu:
 ; The bottom and right edges of the menu may remain after the function returns.
 
 TwoOptionMenu_SaveScreenTiles:
+	ld a, [rWBK]
+	push af
+	ld a, 2
+	ldh [rWBK], a
+
 	ld de, wBuffer
+
+	call .doCopy
+	ld de, (W2_TileMapPalMap - wTileMap) - (SCREEN_WIDTH * 5)
+	add hl, de
+	ld de, W2_Buffer
+	call .doCopy
+
+	pop af
+	ldh [rWBK], a
+	ret
+
+.doCopy
 	lb bc, 5, 6
 .loop
 	ld a, [hli]
@@ -362,7 +379,24 @@ TwoOptionMenu_SaveScreenTiles:
 	ret
 
 TwoOptionMenu_RestoreScreenTiles:
+	ld a, [rWBK]
+	push af
+	ld a, 2
+	ldh [rWBK], a
+
 	ld de, wBuffer
+
+	call .doCopy
+	ld de, (W2_TileMapPalMap - wTileMap) - (SCREEN_WIDTH * 5)
+	add hl, de
+	ld de, W2_Buffer
+	call .doCopy
+
+	pop af
+	ldh [rWBK], a
+	jp UpdateSprites
+
+.doCopy
 	lb bc, 5, 6
 .loop
 	ld a, [de]
@@ -377,7 +411,6 @@ TwoOptionMenu_RestoreScreenTiles:
 	ld c, 6
 	dec b
 	jr nz, .loop
-	call UpdateSprites
 	ret
 
 INCLUDE "data/yes_no_menu_strings.asm"

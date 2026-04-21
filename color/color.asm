@@ -705,15 +705,15 @@ SetPal_Slots:
 	call FarCopyData
 
 	xor a
+	ld [W2_UseOBP1], a
 	ldh [rWBK], a
-
-	; Wait 3 frames to allow tilemap updates to apply.
+	; Wait 3 frames to allow tilemap updates to apply. Prevents garbage
 	; Prevents garbage from appearing when the slots machine open.
 	jp Delay3
 
 ; Titlescreen with cycling pokemon
 SetPal_TitleScreen:
-	ld a, [wWhichTrade] ; Get the pokemon on the screen
+	ld a, [wTitleMonSpecies] ; Get the pokemon on the screen
 	call DeterminePaletteID
 	ld d, a
 	ld e, 0
@@ -774,10 +774,9 @@ ENDC
 	xor a
 	ld [W2_TileBasedPalettes], a
 
-	ld a, 1
+	inc a
 	ld [W2_ForceBGPUpdate], a ; Palettes must be redrawn
 
-	;ld a, 1
 	ldh [rWBK], a
 
 	; This fixes the text at the bottom being the wrong color for a second or so.
@@ -871,7 +870,6 @@ SetPal_Overworld::
 
 	ld a, 2
 	ldh [rWBK], a
-	dec a ; ld a, 1
 	ld [W2_TileBasedPalettes], a
 
 	; Clear sprite palette map, except for exclamation marks above people's heads
@@ -896,16 +894,16 @@ SetPal_Overworld::
 	call DelayFrames
 .doneDelay:
 
-	ld a, 2
-	ldh [rWBK], a
-
-	; Signal to refresh palettes
-	ld a, 1
-	ld [W2_ForceBGPUpdate], a
-	ld [W2_ForceOBPUpdate], a
-
-	xor a
-	ldh [rWBK], a
+;	ld a, 2
+;	ldh [rWBK], a
+;
+;	; Signal to refresh palettes
+;	ld a, 1
+;	ld [W2_ForceBGPUpdate], a
+;	ld [W2_ForceOBPUpdate], a
+;
+;	xor a
+;	ldh [rWBK], a
 
 	ld a, SET_PAL_OVERWORLD
 	ld [wDefaultPaletteCommand], a
@@ -1089,6 +1087,9 @@ SetPal_TrainerCard:
 	ld a, 2
 	ldh [rWBK], a
 
+	ld a, 1
+	ld [W2_TileBasedPalettes], a
+
 	ld d, PAL_MEWMON
 	ld e, 0
 	farcall LoadSGBPalette
@@ -1221,3 +1222,6 @@ ENDC
 ; Copy of sound engine used by dmg-mode to play jingle
 SECTION "bank31", ROMX
 INCBIN "color/data/bank31.bin", $0000, $c8000 - $c4000
+
+SECTION "TileMapping", ROMX
+INCLUDE "color/colorplus/tilemapping.asm"

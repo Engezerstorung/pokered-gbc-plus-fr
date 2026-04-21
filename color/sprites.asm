@@ -61,6 +61,9 @@ LoadSpritePaletteData:
 	ld b, a
 	ld a, 2
 	ldh [rWBK], a
+	dec a
+	ld [W2_ForceOBPUpdate], a
+
 	push bc
 
 	ld de, W2_SprPaletteData

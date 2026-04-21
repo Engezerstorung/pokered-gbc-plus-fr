@@ -80,14 +80,20 @@ _InitCutAnimOAM: ; hooked in color/color.asm
 	cp $52
 	jr z, .grass
 ; tree
+	ldh a, [rVBK]
+	push af
+	ld a, 1
+	ldh [rVBK], a
 	ld de, Overworld_GFX tile $2d ; cuttable tree sprite top row
-	ld hl, vChars1 tile $7c
+	ld hl, vChars0 tile $7c
 	lb bc, BANK(Overworld_GFX), 2
 	call CopyVideoData
 	ld de, Overworld_GFX tile $3d ; cuttable tree sprite bottom row
-	ld hl, vChars1 tile $7e
+	ld hl, vChars0 tile $7e
 	lb bc, BANK(Overworld_GFX), 2
 	call CopyVideoData
+	pop af
+	ldh [rVBK], a
 ;	jr WriteCutAnimationOAMBlock
 	jr WriteCutOrBoulderDustAnimationOAMBlock
 .grass
@@ -130,10 +136,10 @@ WriteCutOrBoulderDustAnimationOAMBlock:
 
 .OAMBlock:
 ; tile ID, attributes
-	db $fc, OAM_PAL1 | 7 ; Uses palette 7 (animation)
-	db $fd, OAM_PAL1 | 7
-	db $fe, OAM_PAL1 | 7
-	db $ff, OAM_PAL1 | 7
+	db $7c, OAM_BANK1 | 7 ; Uses palette 7 (animation)
+	db $7d, OAM_BANK1 | 7
+	db $7e, OAM_BANK1 | 7
+	db $7f, OAM_BANK1 | 7
 
 ;GetCutAnimationOffsets:
 GetCutOrBoulderDustAnimationOffsets:

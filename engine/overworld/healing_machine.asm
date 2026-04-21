@@ -1,10 +1,16 @@
 ; This function does the flashing pokeballs when healing pokemon
 ; HAXed to look better in color
 _AnimateHealingMachine:
+	ldh a, [rVBK]
+	push af
+	ld a, 1
+	ldh [rVBK], a
 	ld de, PokeCenterFlashingMonitorAndHealBall
-	ld hl, vChars0 tile $fe ; originally $7c
+	ld hl, vChars0 tile $7e ; originally $7c
 	lb bc, BANK(PokeCenterFlashingMonitorAndHealBall), 2 ; originally 3 ; should be 2
 	call CopyVideoData
+	pop af
+	ldh [rVBK], a
 	ld hl, wUpdateSpritesEnabled
 	ld a, [hl]
 	push af
@@ -12,10 +18,10 @@ _AnimateHealingMachine:
 	push hl
 	ldh a, [rOBP1]
 	push af
-	ld a, $e0
-	;ldh [rOBP1], a
-	nop
-	nop
+;	ld a, $e0
+;	ldh [rOBP1], a
+;	nop
+;	nop
 	ld hl, wShadowOAMSprite33
 	ld de, PokeCenterOAMData
 	call CopyHealingMachineOAM
@@ -73,14 +79,14 @@ PokeCenterFlashingMonitorAndHealBall:
 ; HAXed to use palette 7
 PokeCenterOAMData:
 	; heal machine monitor
-	dbsprite  6,  4,  4,  4, $fe, OAM_PAL1 | 7
+	dbsprite  6,  4,  4,  4, $7e, OAM_BANK1 | 7
 	; poke balls 1-6
-	dbsprite  6,  5,  0,  3, $ff, OAM_PAL1 | 7
-	dbsprite  7,  5,  0,  3, $ff, OAM_PAL1 | OAM_XFLIP | 7
-	dbsprite  6,  6,  0,  0, $ff, OAM_PAL1 | 7
-	dbsprite  7,  6,  0,  0, $ff, OAM_PAL1 | OAM_XFLIP | 7
-	dbsprite  6,  6,  0,  5, $ff, OAM_PAL1 | 7
-	dbsprite  7,  6,  0,  5, $ff, OAM_PAL1 | OAM_XFLIP | 7
+	dbsprite  6,  5,  0,  3, $7f, OAM_BANK1 | 7
+	dbsprite  7,  5,  0,  3, $7f, OAM_XFLIP | OAM_BANK1 | 7
+	dbsprite  6,  6,  0,  0, $7f, OAM_BANK1 | 7
+	dbsprite  7,  6,  0,  0, $7f, OAM_XFLIP | OAM_BANK1 | 7
+	dbsprite  6,  6,  0,  5, $7f, OAM_BANK1 | 7
+	dbsprite  7,  6,  0,  5, $7f, OAM_XFLIP | OAM_BANK1 | 7
 
 ; d = value to xor with palette
 FlashSprite8Times:

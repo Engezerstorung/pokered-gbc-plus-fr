@@ -20,9 +20,28 @@ GetRowColAddressBgMap::
 ; INPUT: h - high byte of background tile map address in VRAM
 ClearBgMap::
 	ld a, " "
+	; fallthrough
+
+FillBgMap::
 	ld bc, TILEMAP_AREA
 	ld l, c
 	jp FillMemory
+
+; clears a VRAM background map attributes with text palette (BGP7)
+; INPUT: h - high byte of background tile map address in VRAM
+ClearBgMapAttributes::
+	ld b, 7
+	; fallthrough
+
+FillBgMapAttributes::
+	di
+	ld a, 1
+	ldh [rVBK], a
+	ld a, b
+	call FillBgMap
+	xor a
+	ldh [rVBK], a
+	reti
 
 ; This function redraws a BG row of height 2 or a BG column of width 2.
 ; One of its main uses is redrawing the row or column that will be exposed upon
@@ -32,19 +51,12 @@ ClearBgMap::
 ; when necessary. It is also used in trade animation and elevator code.
 ; This function has been HAXed to call other functions, which will also refresh palettes.
 RedrawRowOrColumn::
-	ldh a, [hRedrawRowOrColumnMode]
-	and a
-	ret z
-	ld b, a
-	xor a
-	ldh [hRedrawRowOrColumnMode], a
-	dec b
-	jr nz, .redrawRow
-	CALL_INDIRECT DrawMapColumn
-	ret
-.redrawRow
-	CALL_INDIRECT DrawMapRow
-	ret
+;	ldh a, [hRedrawRowOrColumnMode]
+;	and a
+;	ret z
+	ld a, BANK(_RedrawRowOrColumn)
+	ld [rROMB], a
+	jp _RedrawRowOrColumn
 
 ; This function automatically transfers tile number data from the tile map at
 ; wTileMap to VRAM during V-blank. Note that it only transfers one third of the
@@ -54,12 +66,12 @@ RedrawRowOrColumn::
 ; the above function, RedrawRowOrColumn, is used when walking to
 ; improve efficiency.
 AutoBgMapTransfer:: ; HAXED function
+;	ldh a, [hAutoBGTransferEnabled]
+;	and a
+;	ret z
 	ld a, BANK(RefreshWindow)
 	ld [rROMB], a
-	call RefreshWindow
-	ldh a, [hLoadedROMBank]
-	ld [rROMB], a
-	ret
+	jp RefreshWindow
 
 ; HAX: Squeeze this little function in here
 _GbcPrepareVBlank:
@@ -77,37 +89,30 @@ _GbcPrepareVBlank:
 ; Prevent data shifting
 SECTION "JpPoint", ROM0
 
-; HAX: This function is reimplemented elsewhere.
-; Note: this doesn't update "hLoadedROMBank", but no interrupts will occur at this time,
-; so it's fine.
-TransferBgRows::
-	ld a, BANK(WindowTransferBgRowsAndColors)
-	ld [rROMB], a
-	jp WindowTransferBgRowsAndColors
-
 ; Copies [hVBlankCopyBGNumRows] rows from hVBlankCopyBGSource to hVBlankCopyBGDest.
 ; If hVBlankCopyBGSource is XX00, the transfer is disabled.
 VBlankCopyBgMap::
-	ldh a, [hVBlankCopyBGSource] ; doubles as enabling byte
-	and a
-	ret z
-	ld hl, sp + 0
-	ld a, h
-	ldh [hSPTemp], a
-	ld a, l
-	ldh [hSPTemp + 1], a ; save stack pointer
+;	ldh a, [hVBlankCopyBGSource] ; doubles as enabling byte
+;	and a
+;	ret z
+
+	ld [hSPTemp], sp ; save stack pointer
+
 	ld sp, hVBlankCopyBGSource
 	pop hl
+	pop de ; hVBlankCopyBGDest
 	ld sp, hl
-	ldh a, [hVBlankCopyBGDest]
-	ld l, a
-	ldh a, [hVBlankCopyBGDest + 1]
-	ld h, a
+	ld h, d
+	ld l, e
+
 	ldh a, [hVBlankCopyBGNumRows]
 	ld b, a
 	xor a
 	ldh [hVBlankCopyBGSource], a ; disable transfer so it doesn't continue next V-blank
-	jr TransferBgRows
+
+	ld a, BANK(WindowTransferBgRowsAndColors)
+	ld [rROMB], a
+	jp WindowTransferBgRowsAndColors
 
 
 VBlankCopyDouble::
@@ -118,22 +123,20 @@ VBlankCopyDouble::
 ; The process is straightforward:
 ; copy each byte twice.
 
-	ldh a, [hVBlankCopyDoubleSize]
-	and a
-	ret z
+;	ldh a, [hVBlankCopyDoubleSize]
+;	and a
+;	ret z
 
 	ld [hSPTemp], sp
 
 	ld sp, hVBlankCopyDoubleSource
 	pop hl
+	pop de ; hVBlankCopyDoubleDest
 	ld sp, hl
+	ld h, d
+	ld l, e
 
-	ldh a, [hVBlankCopyDoubleDest]
-	ld l, a
-	ldh a, [hVBlankCopyDoubleDest + 1]
-	ld h, a
-
-	ldh a, [hVBlankCopyDoubleSize]
+;	ldh a, [hVBlankCopyDoubleSize]
 	ld b, a
 	xor a ; transferred
 	ldh [hVBlankCopyDoubleSize], a
@@ -152,9 +155,8 @@ ENDR
 	jr nz, .loop
 
 	ld [hVBlankCopyDoubleSource], sp
-
-	ld sp, hVBlankCopyDoubleDest + 2
-	push hl
+	ld sp, hl
+	ld [hVBlankCopyDoubleDest], sp
 
 	ld sp, hSPTemp
 	pop hl
@@ -170,23 +172,20 @@ VBlankCopy::
 ; Source and destination addresses are updated,
 ; so transfer can continue in subsequent calls.
 
-	ldh a, [hVBlankCopySize]
-	and a
-	ret z
-
+;	ldh a, [hVBlankCopySize]
+;	and a
+;	ret z
 
 	ld [hSPTemp], sp
 
 	ld sp, hVBlankCopySource
 	pop hl
+	pop de ; hVBlankCopyDest
 	ld sp, hl
+	ld h, d
+	ld l, e
 
-	ldh a, [hVBlankCopyDest]
-	ld l, a
-	ldh a, [hVBlankCopyDest + 1]
-	ld h, a
-
-	ldh a, [hVBlankCopySize]
+;	ldh a, [hVBlankCopySize]
 	ld b, a
 	xor a ; transferred
 	ldh [hVBlankCopySize], a
@@ -208,9 +207,8 @@ ENDR
 	jr nz, .loop
 
 	ld [hVBlankCopySource], sp
-
-	ld sp, hVBlankCopyDest + 2
-	push hl
+	ld sp, hl
+	ld [hVBlankCopyDest], sp
 
 	ld sp, hSPTemp
 	pop hl
