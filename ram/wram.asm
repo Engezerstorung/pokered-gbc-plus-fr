@@ -922,6 +922,12 @@ wSerialOtherGameboyRandomNumberListBlock:: ds $11
 NEXTU
 ; second buffer for temporarily saving and restoring current screen's tiles (e.g. if menus are drawn on top)
 wTileMapBackup2:: ds SCREEN_AREA
+
+NEXTU
+	ds 15
+wMapEntrySignBuffer:: ds TILEMAP_WIDTH
+ASSERT wMapEntrySignBuffer & $F == 0, "wMapEntrySignBuffer alignement need to be $xxx0."
+
 ENDU
 
 ; This union spans 30 bytes.
@@ -1786,7 +1792,8 @@ wYBlockCoord:: db
 wXBlockCoord:: db
 
 wLastMap:: db
-wUnusedLastMapWidth:: db
+;wUnusedLastMapWidth:: db
+wLastMapSignName:: db
 
 wCurMapHeader::
 wCurMapTileset:: db

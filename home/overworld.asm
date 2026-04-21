@@ -38,6 +38,8 @@ EnterMap::
 	xor a
 	ld [wJoyIgnore], a
 
+	farcall ShowMapEntrySign
+
 OverworldLoop::
 	call DelayFrame
 OverworldLoopLessDelay::
@@ -504,7 +506,7 @@ WarpFound2::
 	ld a, [wCurMap]
 	ld [wLastMap], a
 	ld a, [wCurMapWidth]
-	ld [wUnusedLastMapWidth], a
+;	ld [wUnusedLastMapWidth], a
 	ldh a, [hWarpDestinationMap]
 	ld [wCurMap], a
 	cp ROCK_TUNNEL_1F
@@ -696,6 +698,9 @@ CheckMapConnections::
 ; x#SPRITESTATEDATA2_IMAGEBASEOFFSET without loading any tile patterns.
 	farcall InitMapSprites
 	call LoadTileBlockMap
+
+	farcall ShowMapEntrySign
+
 	jp OverworldLoopLessDelay
 
 .didNotEnterConnectedMap
@@ -2295,6 +2300,8 @@ LoadMapData::
 	farcall InitMapSprites ; load tile pattern data for sprites
 	call LoadTileBlockMap
 	call LoadTilesetTilePatternData
+
+	call LoadMapSignAssets
 
 	ld b, SET_PAL_OVERWORLD
 	call RunPaletteCommand ; HAX: this function call was moved to be above _LoadMapVramAndColors

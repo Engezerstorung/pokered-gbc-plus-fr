@@ -30,6 +30,11 @@ DisplayTextIDInit::
 .drawTextBoxBorder
 	call TextBoxBorder
 .skipDrawingTextBoxBorder
+
+	ld b, $9c ; window background address
+	call CopyScreenTileBufferToVRAM ; transfer background in WRAM to VRAM
+	call LoadPartialTextBoxTilePatterns
+
 	ld hl, wFontLoaded
 	set BIT_FONT_LOADED, [hl]
 	ld hl, wMiscFlags
@@ -69,8 +74,11 @@ DisplayTextIDInit::
 	add hl, de
 	dec c
 	jr nz, .spriteStandStillLoop
-	ld b, $9c ; window background address
-	call CopyScreenTileBufferToVRAM ; transfer background in WRAM to VRAM
+
+;	ld b, $9c ; window background address
+;	call CopyScreenTileBufferToVRAM ; transfer background in WRAM to VRAM
+;	call LoadPartialTextBoxTilePatterns
+
 	xor a
 	ldh [hWY], a ; put the window on the screen
 	call LoadFontTilePatterns

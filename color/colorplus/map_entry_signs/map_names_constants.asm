@@ -1,0 +1,60 @@
+; Constants for map names
+; used in MapSignNameList 
+; (see color/colorplus/map_entry_signs/map_entry_signs.asm)
+	const_def
+	const PALLET_TOWN_NAME
+	const VIRIDIAN_CITY_NAME
+	const PEWTER_CITY_NAME
+	const CERULEAN_CITY_NAME
+	const LAVANDER_TOWN_NAME
+	const VERMILION_CITY_NAME
+	const CELADON_CITY_NAME
+	const FUCHSIA_CITY_NAME
+	const CINNABAR_ISLAND_NAME
+	const INDIGO_PLATEAU_NAME
+	const SAFFRON_CITY_NAME
+	const ROUTE_1_NAME
+	const ROUTE_2_NAME
+	const ROUTE_3_NAME
+	const ROUTE_4_NAME
+	const ROUTE_5_NAME
+	const ROUTE_6_NAME
+	const ROUTE_7_NAME
+	const ROUTE_8_NAME
+	const ROUTE_9_NAME
+	const ROUTE_10_NAME
+	const ROUTE_11_NAME
+	const ROUTE_12_NAME
+	const ROUTE_13_NAME
+	const ROUTE_14_NAME
+	const ROUTE_15_NAME
+	const ROUTE_16_NAME
+	const ROUTE_17_NAME
+	const ROUTE_18_NAME
+	const ROUTE_19_NAME
+	const ROUTE_20_NAME
+	const ROUTE_21_NAME
+	const ROUTE_22_NAME
+	const ROUTE_23_NAME
+	const ROUTE_24_NAME
+	const ROUTE_25_NAME
+	const VIRIDIAN_FOREST_NAME
+	const MT_MOON_NAME
+	const ROCK_TUNNEL_NAME
+	const SEA_COTTAGE_NAME
+	const SS_ANNE_NAME
+	const POKEMON_LEAGUE_NAME
+	const UNDERGROUND_PATH_NAME
+	const POKEMON_TOWER_NAME
+	const SEAFOAM_ISLANDS_NAME
+	const VICTORY_ROAD_NAME
+	const DIGLETTS_CAVE_NAME
+	const ROCKET_HIDEOUT_NAME
+	const SILPH_CO_NAME
+	const POKEMON_MANSION_NAME
+	const SAFARI_ZONE_NAME
+	const CERULEAN_CAVE_NAME
+	const POWER_PLANT_NAME
+DEF NUM_MAP_NAMES EQU const_value
+
+DEF NO_SIGN EQU -1

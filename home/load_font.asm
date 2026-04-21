@@ -15,20 +15,29 @@ LoadFontTilePatterns::
 	jp CopyVideoDataDouble ; if LCD is on, transfer during V-blank
 
 LoadTextBoxTilePatterns::
-	ldh a, [rLCDC]
-	bit B_LCDC_ENABLE, a
-	jr nz, .on
-.off
-	ld hl, TextBoxGraphics
-	ld de, vChars2 tile $60
-	ld bc, TextBoxGraphicsEnd - TextBoxGraphics
-	ld a, BANK(TextBoxGraphics)
-	jp FarCopyData2 ; if LCD is off, transfer all at once
-.on
+;	ldh a, [rLCDC]
+;	bit rLCDC_ENABLE, a
+;	jr nz, .on
+;.off
+;	ld hl, TextBoxGraphics
+;	ld de, vChars2 tile $60
+;	ld bc, TextBoxGraphicsEnd - TextBoxGraphics
+;	ld a, BANK(TextBoxGraphics)
+;	jp FarCopyData2 ; if LCD is off, transfer all at once
+;.on
 	ld de, TextBoxGraphics
 	ld hl, vChars2 tile $60
 	lb bc, BANK(TextBoxGraphics), (TextBoxGraphicsEnd - TextBoxGraphics) / $10
-	jp CopyVideoData ; if LCD is on, transfer during V-blank
+	jp GoodCopyVideoData ; if LCD is off, transfer all at once. if not, transfer during V-blank
+
+LoadPartialTextBoxTilePatterns::
+	ld de, TextBoxGraphics tile 23
+	ld hl, vChars2 tile $77
+	lb bc, BANK(TextBoxGraphics), 9
+	jp GoodCopyVideoData ; if LCD is off, transfer all at once. if not, transfer during V-blank
+
+LoadMapSignAssets::
+	farjp _LoadMapSignAssets
 
 LoadHpBarAndStatusTilePatterns::
 IF GEN_2_GRAPHICS
