@@ -36,4 +36,4 @@ PrintBookshelfText::
 	ldh [hInteractedWithBookshelf], a
 	farjp PrintCardKeyText
 
-INCLUDE "data/tilesets/bookshelf_tile_ids.asm"
+INCLUDE "data/tilesets/tiles/bookshelf_tile_ids.asm"

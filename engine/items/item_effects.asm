@@ -1527,7 +1527,7 @@ ItemUseEscapeRope:
 .notUsable
 	jp ItemUseNotTime
 
-INCLUDE "data/tilesets/escape_rope_tilesets.asm"
+INCLUDE "data/tilesets/tiles/escape_rope_tilesets.asm"
 
 ItemUseRepel:
 	ld b, 100
@@ -2838,7 +2838,7 @@ IsNextTileShoreOrWater:
 	and a
 	ret
 
-INCLUDE "data/tilesets/water_tilesets.asm"
+INCLUDE "data/tilesets/tiles/water_tilesets.asm"
 
 ReadSuperRodData:
 ; return e = 2 if no fish on this map
