@@ -1,10 +1,6 @@
 ; Macros for color hack
-
-; rst $18 = bankswitch
 MACRO CALL_INDIRECT
-	ld b, BANK(\1)
-	ld hl, \1
-	rst $18
+	farcall \1
 ENDM
 
 MACRO tilepal

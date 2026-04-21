@@ -1,13 +1,3 @@
-MACRO safefarcall
-    push hl
-    push bc
-	ld b, BANK(\1)
-	ld hl, \1
-	rst _Bankswitch
-    pop bc
-    pop hl
-ENDM
-
 MACRO map_vram_swap
 	db \1
 
