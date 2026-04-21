@@ -376,7 +376,7 @@ IsPlayerStandingOnWarpPadOrHole::
 	ld [wStandingOnWarpPadOrHole], a
 	ret
 
-INCLUDE "data/tilesets/warp_pad_hole_tile_ids.asm"
+INCLUDE "data/tilesets/tiles/warp_pad_hole_tile_ids.asm"
 
 FishingAnim:
 	ld c, 10

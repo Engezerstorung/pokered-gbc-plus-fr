@@ -175,7 +175,7 @@ IsWarpTileInFrontOfPlayer::
 	pop hl
 	ret
 
-INCLUDE "data/tilesets/warp_carpet_tile_ids.asm"
+INCLUDE "data/tilesets/tiles/warp_carpet_tile_ids.asm"
 
 IsSSAnneBowWarpTileInFrontOfPlayer:
 	ld a, [wTileInFrontOfPlayer]
@@ -214,7 +214,7 @@ IsPlayerStandingOnDoorTileOrWarpTile::
 	pop hl
 	ret
 
-INCLUDE "data/tilesets/warp_tile_ids.asm"
+INCLUDE "data/tilesets/tiles/warp_tile_ids.asm"
 
 PrintSafariZoneSteps::
 	ld a, [wCurMap]

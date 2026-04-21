@@ -49,7 +49,7 @@ LoadSpinnerArrowTiles::
 	jr nz, .loop
 	ret
 
-INCLUDE "data/tilesets/spinner_tiles.asm"
+INCLUDE "data/tilesets/tiles/spinner_tiles.asm"
 
 SpinnerPlayerFacingDirections:
 ; This isn't the order of the facing directions.  Rather, it's a list of

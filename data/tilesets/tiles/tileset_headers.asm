@@ -3,11 +3,13 @@ MACRO tileset
 	dw \1_Block, \1_GFX, \1_Coll
 	db \2, \3, \4 ; counter tiles
 	db \5         ; grass tile
+	dw \1_Attr
 	db \6         ; animations (TILEANIM_* value)
 ENDM
 
 Tilesets:
-	table_width 12
+	table_width 14
+;	table_width 12
 	; name, 3 counter tiles, grass tile, animations
 	tileset Overworld,    -1, -1, -1, $52, TILEANIM_WATER_FLOWER
 	tileset RedsHouse1,   -1, -1, -1,  -1, TILEANIM_NONE

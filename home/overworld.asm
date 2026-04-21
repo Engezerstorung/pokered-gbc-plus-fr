@@ -865,7 +865,7 @@ IsBikeRidingAllowed::
 	ld de, 1
 	jp IsInArray
 
-INCLUDE "data/tilesets/bike_riding_tilesets.asm"
+INCLUDE "data/tilesets/tiles/bike_riding_tilesets.asm"
 
 ; load the tile pattern data of the current tileset into VRAM
 LoadTilesetTilePatternData::
@@ -1346,7 +1346,7 @@ CheckForTilePairCollisions::
 	and a
 	ret
 
-INCLUDE "data/tilesets/pair_collision_tile_ids.asm"
+INCLUDE "data/tilesets/tiles/pair_collision_tile_ids.asm"
 
 ; this builds a tile map from the tile block map based on the current X/Y coordinates of the player's character
 LoadCurrentMapView::

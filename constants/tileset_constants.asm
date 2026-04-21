@@ -1,5 +1,5 @@
 ; tileset ids
-; Tilesets indexes (see data/tilesets/tileset_headers.asm)
+; Tilesets indexes (see data/tilesets/tiles/tileset_headers.asm)
 	const_def
 	const OVERWORLD    ; 0
 	const REDS_HOUSE_1 ; 1

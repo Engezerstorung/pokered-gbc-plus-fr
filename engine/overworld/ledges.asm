@@ -55,7 +55,7 @@ HandleLedges::
 	call PlaySound
 	ret
 
-INCLUDE "data/tilesets/ledge_tiles.asm"
+INCLUDE "data/tilesets/tiles/ledge_tiles.asm"
 
 LoadHoppingShadowOAM:
 	ld hl, vChars1 tile $7f
