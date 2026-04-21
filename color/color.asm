@@ -1156,6 +1156,9 @@ SetPal_OakIntro:
 	ld a, 2
 	ldh [rWBK], a
 
+	lb de, SPRITE_PAL_RED, 0
+	farcall LoadMapPalette_Sprite
+
 	ld bc, 20 * 18
 	ld hl, W2_TilesetPaletteMap
 	ld d, 0
@@ -1166,6 +1169,9 @@ SetPal_OakIntro:
 	ld a, b
 	or c
 	jr nz, .palLoop
+
+	ld a, 1
+	ld [W2_ForceOBPUpdate], a
 
 	xor a
 	ld [W2_TileBasedPalettes], a
