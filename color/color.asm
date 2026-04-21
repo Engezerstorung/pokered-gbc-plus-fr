@@ -512,6 +512,7 @@ SetPal_TownMap:
 
 	xor a
 	ld [W2_UseOBP1], a
+	ld [W2_UseBGP1], a
 	ldh [rWBK], a
 	ret
 
@@ -706,6 +707,7 @@ SetPal_Slots:
 
 	xor a
 	ld [W2_UseOBP1], a
+	ld [W2_UseBGP1], a
 	ldh [rWBK], a
 	; Wait 3 frames to allow tilemap updates to apply. Prevents garbage
 	; Prevents garbage from appearing when the slots machine open.
@@ -878,6 +880,9 @@ SetPal_Overworld::
 	; Pokecenter uses OBP1 when healing pokemons; also cut animation
 	ld a, %10000000
 	ld [W2_UseOBP1], a
+	ld [W2_UseBGP1], a
+	ld a, %11100100 ; 3210
+	ldh [rBGP1], a
 
 	CALL_INDIRECT LoadOverworldSpritePalettes
 
@@ -953,6 +958,7 @@ SetPal_PartyMenu:
 	ld [W2_StaticPaletteMapChanged], a
 	xor a
 	ld [W2_UseOBP1], a
+	ld [W2_UseBGP1], a
 	ld [W2_TileBasedPalettes], a
 	ldh [rWBK], a
 	ret

@@ -1062,4 +1062,9 @@ def rOCPD equ rOBPD
 
 def rSVBK equ rWBK
 
+; (colors-plus custom) BGP color mapping #0 [r/w]
+def rBGP0 equ rBGP
+; (colors-plus custom) BGP color mapping #1 [r/w]
+def rBGP1 equ $FF74
+
 endc ; HARDWARE_INC
