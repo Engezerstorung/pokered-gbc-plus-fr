@@ -208,6 +208,7 @@ TilesetBgPalSwapList:
 	; Tileset, new palette , palette slot to replace (0-7)
 	db CEMETERY,     CEMETERY_STAIRS,    4
 	db CEMETERY,     INDOOR_PURPLE,      6
+	db FOREST,       WOOD_TEXTBOX,       7
 	db GATE,         GATE_STAIRS,        4
 	db GYM,          INDOOR_GREEN_BG,    2
 	db GYM,          INDOOR_FLOWER,      4

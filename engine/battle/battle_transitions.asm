@@ -3,6 +3,7 @@ BattleTransition:
 	ldh [hAutoBGTransferEnabled], a
 	call Delay3
 	xor a
+	ldh [hWUp], a
 	ldh [hWY], a
 	dec a
 	ld [wUpdateSpritesEnabled], a

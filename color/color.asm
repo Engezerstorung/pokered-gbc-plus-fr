@@ -1231,3 +1231,6 @@ INCBIN "color/data/bank31.bin", $0000, $c8000 - $c4000
 
 SECTION "TileMapping", ROMX
 INCLUDE "color/colorplus/tilemapping.asm"
+
+SECTION "MapEntrySign", ROMX, ALIGN[4]
+INCLUDE "color/colorplus/map_entry_signs/map_entry_signs.asm"

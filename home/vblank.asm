@@ -27,6 +27,18 @@ VBlank::
 	ld a, [wDisableVBlankWYUpdate]
 	and a
 	jr nz, .ok
+
+	ldh a, [hWUp]
+	and a
+	jr z, .noMapSignToHandle
+
+	ld a, BANK(HandleMapEntrySign)
+	ld [rROMB], a
+	call HandleMapEntrySign
+	ldh a, [hLoadedROMBank]
+	ld [rROMB], a
+.noMapSignToHandle
+
 	ldh a, [hWY]
 	ldh [rWY], a
 .ok

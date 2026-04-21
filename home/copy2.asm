@@ -250,6 +250,15 @@ CopyScreenTileBufferToVRAM::
 ; Copy wTileMap to the BG Map starting at b * $100.
 ; This is done in thirds of 6 rows, so it takes 3 frames.
 
+	ldh a, [hWUp]
+	and a
+	jr z, .wUPDone
+	xor a
+	ldh [hWUp], a
+	ld a, SCREEN_HEIGHT_PX
+	ldh [hWY], a
+.wUPDone
+
 	ld c, 6
 
 	hlbgcoord 0, 0, $0

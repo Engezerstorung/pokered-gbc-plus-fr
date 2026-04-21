@@ -24,6 +24,8 @@ LoadSAV:
 	ld a, $1 ; bad checksum
 .goodsum
 	ld [wSaveFileStatus], a
+	ld a, -1
+	ld [wLastMapSignName], a
 	ret
 
 FileDataDestroyedText:

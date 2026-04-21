@@ -31,9 +31,13 @@ DisplayMonFrontSpriteInBox:
 	call Delay3
 
 	farcall LoadAndUpdateSGBTextPalette
+	ld hl, wFontLoaded
+	set 0, [hl]
 
-	xor a
-	ldh [hWY], a
+	call LoadPartialTextBoxTilePatterns
+
+;	xor a
+;	ldh [hWY], a
 	call SaveScreenTilesToBuffer1
 	ld a, MON_SPRITE_POPUP
 	ld [wTextBoxID], a
@@ -48,12 +52,20 @@ DisplayMonFrontSpriteInBox:
 	ldh [hStartTileID], a
 	hlcoord 10, 11
 	predef AnimateSendingOutMon
+
+	xor a
+	ldh [hWY], a
+
 	call WaitForTextScrollButtonPress
 	call LoadScreenTilesFromBuffer1
 	call Delay3
 	ld a, $90
 	ldh [hWY], a
 
-	farcall ReloadDefaultTextPalette
+	ld hl, wFontLoaded
+	res 0, [hl]
+	farcall LoadTilesetPalette
+	call DelayFrame
+	call LoadMapSignAssets
 
 	ret
