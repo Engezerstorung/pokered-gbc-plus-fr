@@ -217,9 +217,7 @@ TilesetBgPalSwapList:
 	db LOBBY,        LOBBY_CHAIR,        2
 	db LOBBY,        LOBBY_1STFLOOR,     4
 	db MANSION,      MANSION_WALLS,      6
-	db MART,         PC_POKEBALL_PAL,    7
 	db MUSEUM,       GATE_STAIRS,        4
-	db POKECENTER,   PC_POKEBALL_PAL,    7
 	db PLATEAU,      OUTDOOR_RED,        1
 	db REDS_HOUSE_1, REDS_STAIRS,        4
 	db UNDERGROUND,  UNDERGROUND_STAIRS, 1
