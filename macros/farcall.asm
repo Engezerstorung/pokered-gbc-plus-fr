@@ -1,27 +1,50 @@
 MACRO farcall
-	ld b, BANK(\1)
-	ld hl, \1
-	rst _Bankswitch
-;	call Bankswitch
+;	IF \1 < $8000
+;		rst _Bankswitch_sf
+		call Bankswitch_sf
+		dwb \1, BANK(\1)
+;	ELSE
+;		ld b, BANK(\1)
+;		ld hl, \1
+;		rst _Bankswitch
+;		call Bankswitch
+;	ENDC
 ENDM
 
 MACRO callfar
-	ld hl, \1
-	ld b, BANK(\1)
-	rst _Bankswitch
-;	call Bankswitch
+;	IF \1 < $8000
+		farcall \#
+;	ELSE
+;		ld hl, \1
+;		ld b, BANK(\1)
+;		rst _Bankswitch
+;		call Bankswitch
+;	ENDC
 ENDM
 
 MACRO farjp
-	ld b, BANK(\1)
-	ld hl, \1
-	jp Bankswitch
+;	rst _Bankswitch_sf
+;	IF \1 < $8000
+;		rst _Bankswitch_sf
+		call Bankswitch_sf
+		dwb \1 | $8000, BANK(\1)
+;	ELSE
+;		ld b, BANK(\1)
+;		ld hl, \1
+;		rst _Bankswitch_jp
+;		jp Bankswitch
+;	ENDC
 ENDM
 
 MACRO jpfar
-	ld hl, \1
-	ld b, BANK(\1)
-	jp Bankswitch
+;	IF \1 < $8000
+		farjp \#
+;	ELSE
+;		ld hl, \1
+;		ld b, BANK(\1)
+;		rst _Bankswitch_jp
+;		jp Bankswitch
+;	ENDC
 ENDM
 
 MACRO setrombank

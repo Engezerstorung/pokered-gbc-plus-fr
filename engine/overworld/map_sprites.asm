@@ -464,7 +464,11 @@ GetSplitMapSpriteSetID:
 
 SpriteSwap:
 	ld [wSavedSpritePictureID], a
-	safefarcall _SpriteSwap
+	push hl
+	push bc
+	farcall _SpriteSwap
+	pop bc
+	pop hl
 	ret
 
 INCLUDE "data/maps/sprite_sets.asm"

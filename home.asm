@@ -136,7 +136,7 @@ INCLUDE "home/predef_text.asm"
 InterruptWrapper:
 	push af
 	push bc
-	push de
+;	push de
 	ldh a, [rWBK]
 	ld b, a
 
@@ -149,22 +149,28 @@ InterruptWrapper:
 	jr z, .notInDelayFrame
 	; Change rom bank
 	dec a
-	call SetRomBank
+;	call SetRomBank
+	setrombank
 .notInDelayFrame
 
 	xor a
 	ldh [rWBK], a
-	ld de, .ret
-	push de
-	jp hl
-.ret
+
+;	ld de, .ret
+;	push de
+;	jp hl
+;.ret
+	call JumpToAddress
+
 	ld a, b
 	ldh [rWBK], a
-	ld a, c
-	call SetRomBank
-	pop de
+;	ld a, c
+;	call SetRomBank
+	setrombank c
+;	pop de
 	pop bc
 	pop af
+
 	pop hl
 	reti
 
