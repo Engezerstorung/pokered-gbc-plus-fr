@@ -1,7 +1,4 @@
 InitMapSprites::
-	call _InitMapSprites
-	jpfar VramSwap
-
 ; Loads tile patterns for map's sprites.
 ; For outside maps, it loads one of several fixed sets of sprites.
 ; For inside maps, it loads each sprite picture ID used in the map header.
@@ -12,28 +9,38 @@ InitMapSprites::
 ; wSpriteStateData2 sprite slot, respectively, within loops. The X is the loop index.
 ; If there is an inner loop, Y is the inner loop index, i.e. y#SPRITESTATEDATA1_* and
 ; y#SPRITESTATEDATA2_* denote fields of the sprite slots iterated over in the inner loop.
-_InitMapSprites::
-	call InitOutsideMapSprites
-	ret c ; return if the map is an outside map (already handled by above call)
-; if the map is an inside map (i.e. mapID >= FIRST_INDOOR_MAP)
+
+	ld a, [wCurMap]
+	cp FIRST_INDOOR_MAP ; is the map a city or a route?
+;	and a
+	call c, InitOutsideMapSprites
+	call nc, InitInsideMapSprites
+
+	jpfar VramSwap
+
+InitInsideMapSprites::
+;	ld a, [wCurMap]
+;	cp FIRST_INDOOR_MAP ; is the map a city or a route?
+;	jp c, InitOutsideMapSprites
+;	ret c ; return if the map is an outside map (already handled by above call)
+;; if the map is an inside map (i.e. mapID >= FIRST_INDOOR_MAP)
 	call LoadSpriteSetFromMapHeader
 
 	call LoadMapSpritesImageBaseOffset
 	farcall SpriteSpecialProperties
 	farcall ColorOverworldSprite
 
-	call LoadMapSpriteTilePatterns
-	ret
+	jp LoadMapSpriteTilePatterns
 
 ; Loads sprite set for outside maps (cities and routes) and sets VRAM slots.
 ; sets carry if the map is a city or route, unsets carry if not
 InitOutsideMapSprites:
-	ld a, [wCurMap]
-	cp FIRST_INDOOR_MAP ; is the map a city or a route?
-	ret nc ; if not, return
+;	ld a, [wCurMap]
+;	cp FIRST_INDOOR_MAP ; is the map a city or a route?
+;	ret nc ; if not, return
 	call GetSplitMapSpriteSetID
 ; if so, choose the appropriate one
-	ld b, a ; b = spriteSetID
+	ld l, a ; l = spriteSetID
 	ld a, [wFontLoaded]
 	bit BIT_FONT_LOADED, a ; reloading upper half of tile patterns after displaying text?
 	ld a, [wSpriteSetID]
@@ -44,7 +51,7 @@ InitOutsideMapSprites:
 
 	pop af
 
-	cp b ; has the sprite set ID changed?
+	cp l ; has the sprite set ID changed?
 
 	push af
 
@@ -53,10 +60,10 @@ InitOutsideMapSprites:
 
  	ld [wPrevSpriteSetID], a
 
-	ld a, b
+	ld a, l
 	ld [wSpriteSetID], a
 
-	call GetSpriteSetAdress
+	call GetSpriteSetAddress
 
 	ld de, wSpriteSet
 	ld b, wSpriteSetID - wSpriteSet
@@ -79,23 +86,23 @@ InitOutsideMapSprites:
 	farcall ColorOverworldSprite
 
 	pop af
-	call nz, LoadMapSpriteTilePatterns
+;	call nz, LoadMapSpriteTilePatterns
+	jp nz, LoadMapSpriteTilePatterns
 
 	scf
 	ret
 
-GetSpriteSetAdress:
-	dec a
-	ld l, a
+GetSpriteSetAddress:
+	; multiply spriteset ID in `l` by 11 and add SpriteSets base address to get the SpriteSet address
+	dec l ; spriteset IDs start at 1
 	ld h, 0
 	ld c, l
 	ld b, h
 	add hl, hl
-	add hl, hl
-	add hl, hl
-	add hl, bc
-	add hl, bc
-	add hl, bc
+	add hl, hl ; * 4
+	add hl, bc ; * 5
+	add hl, hl ; * 10
+	add hl, bc ; * 11
 	ld bc, SpriteSets
 	add hl, bc
 	ret
@@ -134,15 +141,14 @@ LoadSpriteSetFromMapHeader:
 ; loop through the space reserved for four tile picture IDs
 	ld de, wSpriteSet + 9
 	ld b, 2
-	call CheckIfPictureIDAlreadyLoaded
 	jr .continue
 
 .isNotFourTileSprite
 ; loop through the space reserved for regular picture IDs
 	ld de, wSpriteSet
 	ld b, 9
-	call CheckIfPictureIDAlreadyLoaded
 .continue
+	call CheckIfPictureIDAlreadyLoaded
 	ld de, wSprite02StateData1 - wSprite01StateData1
 	add hl, de
 	pop af
@@ -212,25 +218,26 @@ LoadMapSpriteTilePatterns:
 	jr nz, .loop
 	xor a
 	ldh [rVBK], a
+	scf
 	ret
 
 CheckIfAlreadyInVramSlot:
 	ldh a, [rLCDC]
 	bit B_LCDC_ENABLE, a ; is the LCD enabled?
-	jr z, .loadInVram
+	jr z, .loadInVram ; z on cp imply nc, which mean load in vram
 
 	ld a, [wSpriteSetID]
-	ld b, a
+	ld l, a
 	ld a, [wPrevSpriteSetID]
-	cp b
-	jr z, .loadInVram ; 0 if sprite set is identical
+	cp l
+	ret z ; z on cp imply nc, which mean load in vram
 
 	ld d, 0
-	call GetSpriteSetAdress
+	call GetSpriteSetAddress
 	add hl, de
 	push hl
-	ld a, [wSpriteSetID]
-	call GetSpriteSetAdress
+	ld a, l
+	call GetSpriteSetAddress
 	add hl, de
 	pop bc
 
@@ -304,20 +311,19 @@ ReadSpriteSheetData:
 	add hl, hl
 	ld de, SpriteSheetPointerTable
 	add hl, de
-	ld e, [hl]
-	inc hl
-	ld d, [hl]
-	inc hl
-	ld c, [hl]
-	inc hl
-	ld b, [hl]
-	inc hl
 
+	ld a, [hli]
+	ld e, a
+	ld a, [hli]
+	ld d, a
 	ldh a, [hVRAMSlot]
 	cp 9
+	ld a, [hli]
 	jr nc, .done
-	sla c
+	add a
 .done
+	ld c, a
+	ld b, [hl]
 
 	scf
 	ret

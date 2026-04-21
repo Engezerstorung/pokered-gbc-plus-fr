@@ -1,6 +1,6 @@
 SECTION "bank1", ROMX
 
-INCLUDE "data/sprites/facings.asm"
+;INCLUDE "data/sprites/facings.asm"
 INCLUDE "engine/events/black_out.asm"
 ;INCLUDE "data/pokemon/mew.asm"
 INCLUDE "engine/battle/safari_zone.asm"
@@ -9,7 +9,7 @@ INCLUDE "engine/pokemon/load_mon_data.asm"
 INCLUDE "data/items/prices.asm"
 INCLUDE "data/items/names.asm"
 INCLUDE "data/text/unused_names.asm"
-INCLUDE "engine/gfx/sprite_oam.asm"
+;INCLUDE "engine/gfx/sprite_oam.asm"
 INCLUDE "engine/gfx/oam_dma.asm"
 INCLUDE "engine/link/print_waiting_text.asm"
 INCLUDE "engine/overworld/sprite_collisions.asm"
@@ -46,6 +46,9 @@ IF GEN_2_GRAPHICS
 INCLUDE "color/load_hp_and_exp_bar.asm"
 ENDC
 
+SECTION "bank1bis", ROMX
+INCLUDE "data/sprites/facings.asm"
+INCLUDE "engine/gfx/sprite_oam.asm"
 
 SECTION "bank3", ROMX
 

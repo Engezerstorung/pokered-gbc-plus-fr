@@ -12,6 +12,44 @@ PrepareOAMData::
 	jp HideSprites
 
 .updateEnabled
+
+;	jr .fullUpdate
+
+; If too close to vblank only update the sprites screen position to prevent sprite tearing.
+	ldh a, [rLY]
+	cp 133
+	jr c, .fullUpdate
+
+	ld hl, wShadowOAM + 4 * 4
+	ld a, [rSCY]
+	ld c, a
+	ld a, [hSCY]
+	sub c
+	jr nz, .gotVector
+	inc hl
+	ld a, [rSCX]
+	ld c, a
+	ld a, [hSCX]
+	sub c
+	jr z, .fullUpdate
+.gotVector
+	ld c, a
+	ld de, 4
+	ld b, 36
+	ld a, [wMovementFlags]
+	bit BIT_LEDGE_OR_FISHING, a
+	jr z, .notLedge
+	ld b, 32
+.notLedge	
+	ld a, [hl]
+	sub c
+	ld [hl], a
+	add hl, de
+	dec b
+	jr nz, .notLedge
+	ret
+.fullUpdate
+
 	xor a
 	ldh [hOAMBufferOffset], a
 
@@ -32,21 +70,28 @@ PrepareOAMData::
 	cp $ff ; off-screen (don't draw)
 	jp z, .nextSprite
 
+	and $f ; low nybble determines the current frame of the sprite
+	ld c, a
+	ld a, [hld] ; [x#SPRITESTATEDATA1_IMAGEINDEX]
+	inc h
 	swap a ; high nybble determines sprite used ($0 is always player sprite, $1 to $b are some npcs)
 	and $f
 	ld e, a
-	ld a, [hld] ; [x#SPRITESTATEDATA1_IMAGEINDEX]
-	and $f ; low nybble determines the current frame of the sprite
+
+	cp $a ; is it a still sprite like an item ball or boulder?
+	ld a, [hl] ; [x#SPRITESTATEDATA2_$1] custom animation table used by the sprite if any, $0 if using default table
+	ld b, a
+	jr c, .gotAnimationTableOffset
+	and a
+	jr nz, .gotAnimationTableOffset
 	ld c, a
-	inc h
-	ld b, [hl] ; [x#SPRITESTATEDATA2_$1] custom animation table used by the sprite if any, $0 if using default table
+.gotAnimationTableOffset
 
 	ld a, l
 	add 6
 	ld l, a
 
 	ld a, [hl] ; [x#SPRITESTATEDATA2_GRASSPRIORITY]
-	and OAM_PRIO | OAM_BANK1 | OAM_PALETTE
 	ldh [hSpritePriority], a ; temp store sprite priority
 
 	ld d, 0
@@ -59,22 +104,12 @@ PrepareOAMData::
 	ld h, d
 	ld b, d
 
-	ld a, e
-.checkifstillsprite
-	cp $a ; is it a still sprite like an item ball or boulder?
-	jr c, .usefacing
-	ld a, l
-	and a
-	jr nz, .usefacing
-	inc l ; if the animation table is the default $0 for a still sprite, change it to table $1
-.usefacing
 	; Find line to use in SpriteFacingAndAnimationTable (data/sprites/facings.asm)
 	add hl, hl
 	add hl, hl
 	add hl, hl
 	add hl, hl ; animation table value * 16 to find the start of the table used (each table have 16 lines)
 	add hl, bc ; add sprite current frame value to find the line used in the table
-
 	add hl, hl
 	add hl, hl ; line value * 4 to get line byte offset in the tables list, each line have 4 bytes
 	ld bc, SpriteFacingAndAnimationTable
@@ -113,13 +148,14 @@ PrepareOAMData::
 	inc e
 
 	ldh a, [hSpritePriority]
+	xor [hl]
+	and ~(OAM_YFLIP | OAM_XFLIP)
+	xor [hl]
 	ld b, a
-	and OAM_BANK1 | OAM_PALETTE ; keep palette attribute bits
-	or [hl]
-	ld c, a
-	and OAM_YFLIP | OAM_XFLIP ; keep x/y flip attribute bits
-	or b
-	and c
+	xor [hl]
+	and ~OAM_PRIO 
+	xor [hl]
+	and b
 	ld [de], a ; transfer attributes in wShadowOAM
 	inc e
 	pop bc
@@ -169,22 +205,21 @@ IF SHADOW_TRANSPARENCY
 
 ; Hide the jumping down ledge shadow every other frame for transparency effect
 	ldh a, [hBlink]
-	and a
+	add a
 	ld b, 2
+	jr z, .invisibleShadow
 	ld a, $54
-	jr z, .visibleShadow
-	ld a, 160
-.visibleShadow
+.invisibleShadow
 	ld c, 2
-.visibleShadowLoop
+.invisibleShadowLoop
 	ld [hl], a
 	add hl, de
 	dec c
-	jr nz, .visibleShadowLoop
+	jr nz, .invisibleShadowLoop
 	dec b
 	ret z
 	add 8
-	jr .visibleShadow
+	jr .invisibleShadow
 ELSE
 	ret
 ENDC
