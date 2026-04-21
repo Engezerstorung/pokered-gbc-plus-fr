@@ -1881,7 +1881,10 @@ wTilesetTalkingOverTiles:: ds 3
 
 wGrassTile:: db
 
-	ds 4
+wTilesetAttributesPtr:: dw
+	
+	ds 2
+;	ds 4
 
 wNumBoxItems:: db
 ; item, quantity
@@ -1918,7 +1921,7 @@ wPrevSpriteSetID:: db
 ;; bit 3 - unused
 ;; bit 4 - unused
 ;; bit 5 - unused
-;; bit 6 - unused
+;; bit 6 - set when a sprite is one coordinate under the screen, used when determinining visibility under text
 ;; bit 7 - unused
 wSpriteFlags:: db
 

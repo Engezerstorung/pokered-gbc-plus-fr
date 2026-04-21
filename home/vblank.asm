@@ -8,6 +8,17 @@ VBlank::
 	ldh a, [hLoadedROMBank]
 	ld [wVBlankSavedROMBank], a
 
+	ldh a, [rVDMA_LEN]
+	inc a
+	jr z, .noHDMAInProgress
+	dec a
+	res 7, a
+	; the double instruction here is not a mistake
+	ldh [rVDMA_LEN], a ; this first write with bit 7 unset terminate the HDMA in progress
+	ldh [rVDMA_LEN], a ; this second write finish the transfer as a GDMA
+	jp .doneHDMA
+.noHDMAInProgress
+
 	ldh a, [hSCX]
 	ldh [rSCX], a
 	ldh a, [hSCY]
@@ -20,42 +31,53 @@ VBlank::
 	ldh [rWY], a
 .ok
 
-	ldh a, [hBlink]
-	xor 1
-	ldh [hBlink], a
+	ldh a, [hAutoBGTransferEnabled]
+	and a
+	call nz, AutoBgMapTransfer
+	ldh a, [hVBlankCopyBGSource] ; doubles as enabling byte
+	and a
+	call nz, VBlankCopyBgMap
+	ldh a, [hRedrawRowOrColumnMode]
+	and a
+	call nz, RedrawRowOrColumn
+	ldh a, [hVBlankCopySize]
+	and a
+	call nz, VBlankCopy
+	ldh a, [hVBlankCopyDoubleSize]
+	and a
+	call nz, VBlankCopyDouble
+;	call UpdateMovingBgTiles
+;	call hDMARoutine
 
-	ldh a, [rVDMA_LEN]
-	cp $ff
-	jr z, .noHDMAToFinish
-	res 7, a
-	ldh [rVDMA_LEN], a
-.noHDMAToFinish
+	ld a, HIGH(wShadowOAM)
+	ldh [rDMA], a
+	; wait for DMA to finish
+	ld a, $28
+.wait
+	dec a
+	jr nz, .wait
 
-	call AutoBgMapTransfer
-	call VBlankCopyBgMap
-	call RedrawRowOrColumn
-	call VBlankCopy
-	call VBlankCopyDouble
-	;call UpdateMovingBgTiles
-	call hDMARoutine
-	rst $10 ; HAX: VBlank hook (loads palettes)
-	nop
-	nop
-	; HAX: don't update sprites here. They're updated elsewhere to prevent wobbliness.
-	;ld a, BANK(PrepareOAMData)
-	nop
-	nop
-	;ldh [hLoadedROMBank], a
-	nop
-	nop
-	;ld [rROMB], a
-	nop
-	nop
-	nop
-	;call PrepareOAMData
-	nop
-	nop
-	nop
+.doneHDMA
+	setrombank BANK(GbcVBlankHook)
+	call GbcVBlankHook
+
+;	nop
+;	nop
+;	; HAX: don't update sprites here. They're updated elsewhere to prevent wobbliness.
+;	;ld a, BANK(PrepareOAMData)
+;	nop
+;	nop
+;	;ldh [hLoadedROMBank], a
+;	nop
+;	nop
+;	;ld [rROMB], a
+;	nop
+;	nop
+;	nop
+;	;call PrepareOAMData
+;	nop
+;	nop
+;	nop
 
 	; VBlank-sensitive operations end.
 
@@ -68,6 +90,10 @@ VBlank::
 	ldh [hVBlankOccurred], a
 
 .skipZeroing
+	ldh a, [hBlink]
+	xor 80
+	ldh [hBlink], a
+
 	ldh a, [hFrameCounter]
 	and a
 	jr z, .skipDec
@@ -121,7 +147,7 @@ DelayFrame::
 DEF NOT_VBLANKED EQU 1
 
 	call DelayFrameHook ; HAX
-	nop
+;	nop
 	;ld a, NOT_VBLANKED
 	;ldh [hVBlankOccurred], a
 .halt
@@ -134,16 +160,16 @@ DEF NOT_VBLANKED EQU 1
 STATInterrupt::
 	push af
 	ldh a, [rSTAT]
-	and %01000100
-	jr nz, LYC_LY
+	and STAT_LYC | STAT_LYCF ; keep only both LYC and LYCF bits
+	jr nz, .LYC_LY
 
-HBlank:
+.hBlank
 	pop af
 	reti
 
-LYC_LY:
-	xor %01000100
-	jr nz, HBlank
+.LYC_LY
+	xor STAT_LYC | STAT_LYCF ; result will be 0 if both bit were set
+	jr nz, .hBlank
 	pop af
 	push hl
 	ld hl, _GbcPrepareVBlank

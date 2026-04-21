@@ -8,9 +8,15 @@ EmotionBubble:
 	ld e, [hl]
 	inc hl
 	ld d, [hl]
-	ld hl, vChars1 tile $78
+	ldh a, [rVBK]
+	push af
+	ld a, 1
+	ldh [rVBK], a
+	ld hl, vChars0 tile $78
 	lb bc, BANK(EmotionBubbles), 4
 	call CopyVideoData
+	pop af
+	ldh [rVBK], a
 	ld a, [wUpdateSpritesEnabled]
 	push af
 	ld a, $ff
@@ -69,10 +75,10 @@ EmotionBubblesPointerTable:
 
 EmotionBubblesOAMBlock:
 ; tile ID, attributes
-	db $f8, 7 ; Uses palette 7 (animation)
-	db $f9, 7
-	db $fa, 7
-	db $fb, 7
+	db $78, OAM_BANK1 | 7 ; Uses palette 7 (animation)
+	db $79, OAM_BANK1 | 7
+	db $7a, OAM_BANK1 | 7
+	db $7b, OAM_BANK1 | 7
 
 EmotionBubbles:
 ShockEmote:    INCBIN "gfx/emotes/shock.2bpp"

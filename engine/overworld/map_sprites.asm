@@ -254,10 +254,7 @@ LoadTilePattern:
 	call GetSpriteVRAMAddress
 
 	ldh [rVBK], a
-	call GoodCopyVideoDataHDMA
-;	xor a
-;	ldh [rVBK], a
-	ret
+	jp CopyVideoDataVDMA
 
 GetSpriteVRAMAddress:
 	push bc

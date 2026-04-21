@@ -15,7 +15,7 @@ EraseSSAnneWithColor::
 
 	ld hl, wVermilionDockTileMapBuffer
 	ld bc, (5 * TILEMAP_WIDTH) + SCREEN_WIDTH
-	ld a, PAL_BG_WATER
+	ld a, PAL_BG_WATER | BG_BANK1
 	call FillMemory
 
 	; Note: setting the vram bank to 1 is a bit dangerous, since it'll be left at

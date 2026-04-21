@@ -59,29 +59,16 @@ FarCopyDataDouble::
 	ld [rROMB], a
 	ret
 
-CopyVideoDataHDMA::
-	ldh a, [hAutoBGTransferEnabled]
-	push af
-	xor a ; disable auto-transfer while copying
-	ldh [hAutoBGTransferEnabled], a
+CopyVideoDataVDMA::
+; Copy c tiles from b:de to hl from a .2bpp assets aligned on a $XXX0 address
 
 	ldh a, [hLoadedROMBank]
 	ldh [hROMBankTemp], a
 	setrombank b
 
-	call PrepareHDMA
-
-	call DoHDMA
-
-	ldh a, [hROMBankTemp]
-	setrombank
-	pop af
-	ldh [hAutoBGTransferEnabled], a
-	ret
-
-PrepareHDMA::
 	dec c
-	set 7, c
+
+	di 
 
 	ld a, d
 	ldh [rVDMA_SRC_HIGH], a
@@ -91,30 +78,48 @@ PrepareHDMA::
 	ldh [rVDMA_DEST_HIGH], a
 	ld a, l
 	ldh [rVDMA_DEST_LOW], a
-	ret
 
-DoHDMA::
-	ldh a, [rSTAT]
-	push af
-	ld a, %00001000
-	ldh [rSTAT], a
+	ldh a, [rLCDC]
+	bit B_LCDC_ENABLE, a ; is the LCD enabled?
+	jr nz, .doHDMA ; do HDMA if LCD enabled
 
-.wait
-	ldh a, [rSTAT]
-	and %00000011
-	jr z, .wait
-
+; do GDMA
 	ld a, c
 	ldh [rVDMA_LEN], a
-.continue
-	halt
-	ldh a, [rVDMA_LEN]
-	inc a
-	jr nz, .continue
+	ei
+	jr .done
 
+.doHDMA
+	ldh a, [rSTAT]
+	push af
+	ld a, STAT_MODE_0 ; disable all STAT interrupt except hblank
+	ldh [rSTAT], a
+
+	set B_VDMA_LEN_MODE, c ; set HDMA mode
+	push hl
+	ld hl, rVDMA_LEN
+
+.hblankInProgress
+	ldh a, [rSTAT]
+	and STAT_MODE
+	jr z, .hblankInProgress ; if PPU Mode 0 (hblank) wait for it to finish
+
+	ld [hl], c
+
+	ei
+.halt
+	halt
+	ld a, [hl]
+	inc a ; no DMA in progress = $FF
+	jr nz, .halt ; wait for HDMA to finish
+
+	pop hl
 	pop af
 	ldh [rSTAT], a
 
+.done
+	ldh a, [hROMBankTemp]
+	setrombank
 	ret
 
 CopyVideoData::
@@ -224,6 +229,8 @@ CopyVideoDataDouble::
 ClearScreenArea::
 ; Clear tilemap area cxb at hl.
 	ld a, " " ; blank tile
+
+ClearScreenAreaWithA::
 	ld de, 20 ; screen width
 .y
 	push hl
@@ -259,6 +266,7 @@ CopyScreenTileBufferToVRAM::
 .setup
 	ld a, d
 	ldh [hVBlankCopyBGSource+1], a
+;	call GetRowColAddressBgMap
 	ld a, l
 	ldh [hVBlankCopyBGDest], a
 	ld a, h
@@ -268,31 +276,70 @@ CopyScreenTileBufferToVRAM::
 	ldh [hVBlankCopyBGNumRows], a
 	ld a, e
 	ldh [hVBlankCopyBGSource], a
+
+	ld hl, W2_TileMapPalMap - wTileMap
+	add hl, de
+
+	ld a, 2
+	ldh [rWBK], a
+	ld a, h
+	ld [W2_VBlankCopyBGSource+1], a
+	ld a, l
+	ld [W2_VBlankCopyBGSource], a
+	xor a
+	ldh [rWBK], a
+
 	jp DelayFrame
 
 ClearScreen::
+	call ClearScreen_NoDelay
+	jp Delay3
+
+ClearScreenPal0::
+	ld d, 0
+	call ClearScreen_NoDelay
+	jp Delay3
+
+ClearScreenPalD::
+	call ClearnScreenWithPalD_NoDelay
+	jp Delay3
+
+ClearScreenPal0_NoDelay::
+	ld d, 0
+	jr ClearnScreenWithPalD_NoDelay
+
+ClearScreen_NoDelay::
+	ld d, 7
+	; fallthrough
+
+ClearnScreenWithPalD_NoDelay::
 ; Clear wTileMap, then wait
 ; for the bg map to update.
-	ld bc, 20 * 18
-	inc b
+	ldh a, [rWBK]
+	push af
+	ld a, 2
+	ldh [rWBK], a
+	push de ; save palette value
+
 	hlcoord 0, 0
 	ld a, " "
-.loop
-	ld [hli], a
-	dec c
-	jr nz, .loop
-	dec b
-	jr nz, .loop
-	jp Delay3
+	ld bc, SCREEN_WIDTH * SCREEN_HEIGHT
+	push bc
+	call FillMemory
+	pop bc
+
+	pop af ; retrieve palette value in a
+	hlcoord 0, 0, W2_TileMapPalMap
+	call FillMemory
+
+	pop af
+	ldh [rWBK], a
+
+	ret
 
 GoodCopyVideoData::
 	call CopyVideoDataToFarCopyData2
 	jp nz, CopyVideoData ; if LCD is on, transfer during V-blank
-	jp FarCopyData2 ; if LCD is off, transfer all at once
-
-GoodCopyVideoDataHDMA::
-	call CopyVideoDataToFarCopyData2
-	jp nz, CopyVideoDataHDMA
 	jp FarCopyData2 ; if LCD is off, transfer all at once
 
 CopyVideoDataToFarCopyData2:
