@@ -108,22 +108,22 @@ SpriteFacingAndAnimationTable:
 	; y, x, attributes
 	db 0, 0, $00 ; top left
 	db 0, 8, $00 ; top right
-	db 8, 0, UNDER_GRASS ; bottom left
-	db 8, 8, UNDER_GRASS | FACING_END ; bottom right
+	db 8, 0, OAM_PRIO ; bottom left
+	db 8, 8, OAM_PRIO | FACING_END ; bottom right
 
 .FlippedOAM:
 	; y, x, attributes
 	db 0, 8, OAM_XFLIP ; top left
 	db 0, 0, OAM_XFLIP ; top right
-	db 8, 8, OAM_XFLIP | UNDER_GRASS ; bottom left
-	db 8, 0, OAM_XFLIP | UNDER_GRASS | FACING_END ; bottom right
+	db 8, 8, OAM_PRIO | OAM_XFLIP ; bottom left
+	db 8, 0, OAM_PRIO | OAM_XFLIP | FACING_END ; bottom right
 
 .OddmonOAM:
 	; y, x, attributes
 	db 0,  7, OAM_XFLIP ; top left
 	db 0, -1, OAM_XFLIP ; top right
-	db 8,  7, OAM_XFLIP | UNDER_GRASS ; bottom left
-	db 8, -1, OAM_XFLIP | UNDER_GRASS | FACING_END ; bottom right
+	db 8,  7, OAM_PRIO | OAM_XFLIP ; bottom left
+	db 8, -1, OAM_PRIO | OAM_XFLIP | FACING_END ; bottom right
 
 .MachineLOAM:
 	; y, x, attributes

@@ -15,12 +15,12 @@ DEF ATK_PAL_PURPLE  EQU 7
 DEF SPR_PAL_ORANGE  EQU 0
 DEF SPR_PAL_BLUE    EQU 1
 DEF SPR_PAL_GREEN   EQU 2
-DEF SPR_PAL_BROWN   EQU 3
+DEF SPR_PAL_BROWN   EQU	3
 DEF SPR_PAL_EXTRA1  EQU 4
 DEF SPR_PAL_EXTRA2  EQU 5
 DEF SPR_PAL_EXTRA3  EQU 6
 DEF SPR_PAL_ANIM    EQU 7
-DEF SPR_PAL_RANDOM  EQU 8
+DEF SPR_PAL_RANDOM  EQU $FF
 
 DEF PARTY_PAL_RED    EQU 0
 DEF PARTY_PAL_BLUE   EQU 1
@@ -127,9 +127,6 @@ ColorOverworldSprite::
 
 	push hl
 	add hl, bc
-	ld a, [hl] ; [x#SPRITESTATEDATA2_GRASSPRIORITY]
-	and OAM_PRIO | OAM_BANK1 ; erase palette bits but keep grass priority bit
-	ld [hl], a
 
 	push hl
 	ld hl, SpritePaletteAssignments
@@ -148,12 +145,18 @@ ColorOverworldSprite::
 	jr z, .norandomColor
 
 	; This is a (somewhat) random but consistent color
-	ld a, l
+	ld a, [wCurMap]
 	swap a
-	and OAM_PALETTE - 4 ; palette will be one of the first four slot
+	add l
+;	ld a, l
+	swap a
+	and %11 ; palette will be slot 0-3
 
 .norandomColor
-	or [hl] ; merge palette slot bits with grass priority bit in [x#SPRITESTATEDATA2_GRASSPRIORITY]
+	; the next three lines replace the palette bits of [hl] with the ones in a
+	xor [hl]
+	and OAM_PALETTE
+	xor [hl]
 	ld [hl], a
 	pop hl
 
@@ -177,10 +180,10 @@ ColorPlayerSprite::
 	jr z, .gotPlayerColor
 	xor a ; if neither surf nor bird then need palette 0
 .gotPlayerColor
-	ld d, a
-	ld a, [hl]
-	and OAM_PRIO | OAM_BANK1 ; need to preserve in-grass flag
-	or d
+	; the next three lines replace the palette bits of [hl] with the ones in a
+	xor [hl]
+	and OAM_PALETTE
+	xor [hl]
 	ld [hl], a
 	ret
 
@@ -432,7 +435,7 @@ SpritePaletteAssignments: ; Characters on the overworld
 	; 0x04: SPRITE_BUG_CATCHER
 	db SPR_PAL_RANDOM
 
-	; 0x05: SPRITE_SLOWBRO
+	; 0x05: SPRITE_MONSTER
 	db SPR_PAL_ORANGE
 
 	; 0x06: SPRITE_LASS
