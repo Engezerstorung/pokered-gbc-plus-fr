@@ -1,9 +1,11 @@
 DEF W2_BgPaletteData  EQU $d000
 DEF W2_SprPaletteData EQU $d040
 
-DEF W2_LastBGP  EQU $d080
+DEF W2_LastBGP0 EQU $d080
 DEF W2_LastOBP0 EQU $d081
 DEF W2_LastOBP1 EQU $d082
+DEF W2_LastBGP1 EQU $d083
+DEF W2_UseBGP1  EQU $d084
 
 ; If W2_TileBasedPalettes is set, each number corresponds to a tile. (takes $180 bytes)
 ; Otherwise this is a 20x18 map of palettes. (takes $168 bytes)

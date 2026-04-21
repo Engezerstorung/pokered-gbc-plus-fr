@@ -17,6 +17,8 @@ Trade_LoadCablePalettes:
 	ld a, 1
 	ld [W2_ForceBGPUpdate], a
 	xor a
+	ld [W2_UseBGP1], a
+
 	ldh [rWBK], a
 	ret
 

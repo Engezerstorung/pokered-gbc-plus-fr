@@ -16,10 +16,14 @@ RefreshPalettesPreVBlank:
 	ld a, [W2_ForceBGPUpdate]
 	or a
 	jr nz, .updatebgp
-
-	ldh a, [rBGP]
+	ldh a, [rBGP0]
 	ld b, a
-	ld a, [W2_LastBGP]
+	ld a, [W2_LastBGP0]
+	cp b
+	jr nz, .updatebgp
+	ldh a, [rBGP1]
+	ld b, a
+	ld a, [W2_LastBGP1]
 	cp b
 	jr z, .checkSprPalettes
 
@@ -30,7 +34,7 @@ RefreshPalettesPreVBlank:
 	ld b, $00
 	ld hl, W2_BgPaletteDataBuffer
 
-	ldh a, [rBGP]
+	ldh a, [rBGP0]
 	and a
 	jr nz, .bgpNotWhite
 	call SetWhiteColor
@@ -42,10 +46,16 @@ RefreshPalettesPreVBlank:
 	jr .checkSprPalettes
 .bgpNotBlack
 
-.doNextBgPal:
+	; Palettes react to rBGP1 according to set bits in W2_UseBGP1
+	ld a, [W2_UseBGP1]
+	ld c, a
+.doNextBgPal
 	ld e, 4
-
-	ldh a, [rBGP]
+	rrc c ; set c flag if bit 0 is 1 and rotate to the right
+	ldh a, [rBGP0]
+	jr nc, .bgp0
+	ldh a, [rBGP1]
+.bgp0
 	ld d, a
 
 .doNextBgColor:
@@ -119,8 +129,10 @@ RefreshPalettesPreVBlank:
 	jr z, .doNextSprPal
 
 .end
-	ldh a, [rBGP]
-	ld [W2_LastBGP], a
+	ldh a, [rBGP0]
+	ld [W2_LastBGP0], a
+	ldh a, [rBGP1]
+	ld [W2_LastBGP1], a
 	ldh a, [rOBP0]
 	ld [W2_LastOBP0], a
 	ldh a, [rOBP1]
