@@ -1440,7 +1440,7 @@ LoadCurrentMapView::
 .copyToVisibleAreaBuffer
 
 	push hl
-	ld c, 0
+;	ld c, 0
 	decoord 0, 0 ; base address for the tiles that are directly transferred to VRAM during V-blank
 	call MakeTileMapOrPalMap
 
@@ -1448,7 +1448,7 @@ LoadCurrentMapView::
 	call LoadScreenBlocksTileData
 
 	pop hl
-	ld c, BG_BANK1
+;	ld c, BG_BANK1
 	decoord 0, 0, W2_TileMapPalMap ; base address for the tiles attributes that are directly transferred to VRAM during V-blank
 	call MakeTileMapOrPalMap
 

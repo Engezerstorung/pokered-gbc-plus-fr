@@ -37,10 +37,10 @@ FOR _ROW, 1, 1+ SCREEN_HEIGHT
 REPT SCREEN_WIDTH / 2
 	pop de
 	ld a, e
-	or c
+;	or c
 	ld [hli], a
 	ld a, d
-	or c
+;	or c
 	ld [hli], a
 ENDR
 IF _ROW < SCREEN_HEIGHT
@@ -580,16 +580,16 @@ FOR _MAP, 1, 1+ 2
 	FOR _ROW, 1, 1+ 18
 		pop de
 		ld a, e
-		IF _MAP > 1
-			or BG_BANK1
-		ENDC
+	;	IF _MAP > 1
+	;		or BG_BANK1
+	;	ENDC
 		ld [hli], a
 		ld [bc], a
 		inc bc
 		ld a, d
-		IF _MAP > 1
-			or BG_BANK1
-		ENDC
+	;	IF _MAP > 1
+	;		or BG_BANK1
+	;	ENDC
 		ld [hli], a
 		ld [bc], a
 		IF _ROW < 18
@@ -690,16 +690,16 @@ FOR _MAP, 1, 1+ 2
 		FOR _TILE_DUO, 1, 1+ 20 / 2
 			pop de
 			ld a, e
-			IF _MAP > 1
-				or BG_BANK1
-			ENDC
+		;	IF _MAP > 1
+		;		or BG_BANK1
+		;	ENDC
 			ld [hli], a
 			ld [bc], a
 			inc bc
 			ld a, d
-			IF _MAP > 1
-				or BG_BANK1
-			ENDC
+		;	IF _MAP > 1
+		;		or BG_BANK1
+		;	ENDC
 			ld [hli], a
 			ld [bc], a
 			IF _ROW < 2 || _TILE_DUO < 20 / 2
