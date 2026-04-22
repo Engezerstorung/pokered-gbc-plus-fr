@@ -7,7 +7,8 @@ tools := \
 	gfx \
 	make_patch \
 	pkmncompress \
-	scan_includes
+	scan_includes \
+	binor
 
 all: $(tools)
 	@:

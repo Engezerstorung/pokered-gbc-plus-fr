@@ -29,3 +29,13 @@
 *.sn*
 *.sa*
 *.sg1
+
+
+## Other customs
+
+# compiled attributes files
+*.binor
+
+# others
+*.cht
+*.py

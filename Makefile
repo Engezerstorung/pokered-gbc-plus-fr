@@ -189,3 +189,9 @@ gfx/trade/game_boy.2bpp: tools/gfx += --remove-duplicates
 
 %.pic: %.2bpp
 	tools/pkmncompress $< $@
+
+
+### Custom tool by Sylvie to correct the bank attribute of *_attributes.bin files
+
+%.binor: %
+	tools/binor $< $@
