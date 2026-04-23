@@ -288,7 +288,7 @@ PrintStatsBox:
 	add hl, de
 	ret
 
-StatsText:
+.StatsText:
 	db   "FOR"
 	next "DEF"
 	next "VIT"
