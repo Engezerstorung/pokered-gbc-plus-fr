@@ -55,13 +55,13 @@ GetMonGender::
 	jr c, .male
 
 .female
-	ld a, "♀" ; FEMALE
+	ld a, '♀' ; FEMALE
 	jr .done
 .male
-	ld a, "♂" ; MALE
+	ld a, '♂' ; MALE
 	jr .done
 .genderless
-	ld a, " " ; GENDERLESS
+	ld a, ' ' ; GENDERLESS
 .done
 	ld [wPokedexNum], a
 	ret
