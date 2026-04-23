@@ -10,10 +10,10 @@ ENDM
 BasicSignBoxTileMap::
 	; \1 destination width, \2 text box width, 
 	; \3 left tile, \4 middle repetition tile ; \5 right tile
-	textboxline TILEMAP_WIDTH, SCREEN_WIDTH, "┌", "─", "┐"
-	textboxline TILEMAP_WIDTH, SCREEN_WIDTH, "│", " ", "│"
-	textboxline TILEMAP_WIDTH, SCREEN_WIDTH, "│", " ", "│"
-	textboxline TILEMAP_WIDTH, SCREEN_WIDTH, "└", "─", "┘"
+	textboxline TILEMAP_WIDTH, SCREEN_WIDTH, '┌', '─', '┐'
+	textboxline TILEMAP_WIDTH, SCREEN_WIDTH, '│', ' ', '│'
+	textboxline TILEMAP_WIDTH, SCREEN_WIDTH, '│', ' ', '│'
+	textboxline TILEMAP_WIDTH, SCREEN_WIDTH, '└', '─', '┘'
 BasicSignBoxAttrMap::
 	ds 128, 7 | $80
 

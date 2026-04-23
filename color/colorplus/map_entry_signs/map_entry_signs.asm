@@ -48,13 +48,13 @@ ShowMapEntrySign::
 	farcall GetNameAndLength	
 
 	ld hl, wMapEntrySignBuffer
-	ld a, "│"
+	ld a, '│'
 	ld [hli], a
-	ld a, " "
+	ld a, ' '
 REPT 18
 	ld [hli], a
 ENDR
-	ld [hl], "│"
+	ld [hl], '│'
 
 	ld a, SCREEN_WIDTH / 2
 	srl e
@@ -69,7 +69,7 @@ ENDR
 	ld b, 18
 .placeNameLoop
 	ld a, [de]
-	cp "@"
+	cp '@'
 	jr z, .namePlaced
 	ld [hli], a
 	inc de

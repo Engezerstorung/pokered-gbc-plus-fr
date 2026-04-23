@@ -648,7 +648,7 @@ GetNameAndLength::
 		; e: name lenght (excluding terminator)
 	ld hl, wNameBuffer
 	ld b, 20 / 4
-	ld a, "@"
+	ld a, '@'
 .blankingLoop
 	ld [hli], a
 	ld [hli], a
@@ -662,7 +662,7 @@ GetNameAndLength::
 
 	ld hl, wNameBuffer
 	ld e, 0
-	ld d, "@"
+	ld d, '@'
 .countLoop
 	ld a, [hli]
 	cp d
