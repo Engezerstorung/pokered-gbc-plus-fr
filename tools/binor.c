@@ -1,5 +1,6 @@
+// credits to Sylvie
 #define PROGRAM_NAME "binor"
-#define USAGE_OPTS "[-h|--help] [-x|--or value] in.bin out.bin.binor"
+#define USAGE_OPTS "[-h|--help] [-x|--or value] in.bin out.atr"
 
 #include "common.h"
 
