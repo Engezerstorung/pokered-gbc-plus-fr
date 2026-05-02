@@ -8,7 +8,8 @@ tools := \
 	make_patch \
 	pkmncompress \
 	scan_includes \
-	binor
+	binor \
+	idfix
 
 all: $(tools)
 	@:

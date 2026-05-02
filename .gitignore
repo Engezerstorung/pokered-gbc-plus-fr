@@ -31,10 +31,11 @@
 *.sg1
 
 
-## Other customs
+## Custom
 
-# compiled attributes files
-*.binor
+# compiled blockset related files
+*.bst
+*.atr
 
 # others
 *.cht

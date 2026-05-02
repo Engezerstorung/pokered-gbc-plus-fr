@@ -211,10 +211,13 @@ gfx/trade/game_boy.2bpp: tools/gfx += --remove-duplicates
 %.pal: ;
 %.bin: ;
 %.blk: ;
-%.bst: ;
+#%.bst: ;
 %.rle: ;
 
 ### Custom tool by Sylvie to correct the bank attribute of *_attributes.bin files
-
-%.binor: %
+%.atr: %.bin
 	tools/binor $< $@
+
+### Custom tool by Narishma-gb to correct the tile IDs of *_metatiles.bin files
+%_metatiles.bst: %_metatiles.bin %_attributes.bin
+	tools/idfix $^ $@
