@@ -72,11 +72,11 @@ VramSwap::
 ; Input : PICTUREID in [wSavedSpritePictureID]
 _SpriteSwap:
 	push de
-	ld a, [wCurMapTileset]
-	and a
-	ld hl, SpriteSetSpriteSwapList
-	ld a, [wSpriteSetID]
-	jr z, .useSpriteSet ; if Overworld tileset then the map use a SpriteSet
+;	ld a, [wCurMapTileset]
+;	and a
+;	ld hl, SpriteSetSpriteSwapList
+;	ld a, [wSpriteSetID]
+;	jr z, .useSpriteSet ; if Overworld tileset then the map use a SpriteSet
 	ld hl, MapSpriteSwapList
 	ld a, [wCurMap]
 .useSpriteSet
@@ -117,6 +117,8 @@ _SpriteSwap:
 	inc hl
 
 	ld a, [hl]
+	ld hl, wSpriteFlags
+	set 1, [hl]
 	jr .preReturn
 
 .checkNextLine
@@ -207,14 +209,14 @@ IF DEF(_DEBUG)
 	map_sprite_swap CELADON_CHIEF_HOUSE, SPRITE_ROCKET, EVENT_GOT_DOME_FOSSIL, TRUE, 0, 0, NOXY, SPRITE_OMANYTE
 	map_sprite_swap FUCHSIA_MART, SPRITE_CLERK, EVENT_GOT_DOME_FOSSIL, TRUE, 0, 0, NOXY, SPRITE_OMANYTE
 ENDC
-;	map_sprite_swap FUCHSIA_CITY, SPRITE_BLANK,   EVENT_GOT_DOME_FOSSIL,  TRUE,  0, 0, NOXY, SPRITE_OMANYTE
-;	map_sprite_swap FUCHSIA_CITY, SPRITE_BLANK,   EVENT_GOT_HELIX_FOSSIL, TRUE,  0, 0, NOXY, SPRITE_KABUTO
-;IF DEF(_DEBUG)	
+	map_sprite_swap FUCHSIA_CITY, SPRITE_BLANK,   EVENT_GOT_DOME_FOSSIL,  TRUE,  0, 0, NOXY, SPRITE_OMANYTE
+	map_sprite_swap FUCHSIA_CITY, SPRITE_BLANK,   EVENT_GOT_HELIX_FOSSIL, TRUE,  0, 0, NOXY, SPRITE_KABUTO
+IF DEF(_DEBUG)	
 ;	map_sprite_swap FUCHSIA_CITY, SPRITE_KABUTO,  EVENT_GOT_DOME_FOSSIL,  TRUE,  0, 0, NONE, SPRITE_OMANYTE
-;	map_sprite_swap FUCHSIA_CITY, SPRITE_KABUTO,  EVENT_GOT_HELIX_FOSSIL, FALSE, 0, 0, NONE, SPRITE_BLANK
-;	map_sprite_swap FUCHSIA_CITY, SPRITE_OMANYTE, EVENT_GOT_HELIX_FOSSIL, TRUE,  0, 0, NONE, SPRITE_KABUTO
+	map_sprite_swap FUCHSIA_CITY, SPRITE_KABUTO,  EVENT_GOT_HELIX_FOSSIL, FALSE, 0, 0, NONE, SPRITE_BLANK
+	map_sprite_swap FUCHSIA_CITY, SPRITE_OMANYTE, EVENT_GOT_HELIX_FOSSIL, TRUE,  0, 0, NONE, SPRITE_KABUTO
 ;	map_sprite_swap FUCHSIA_CITY, SPRITE_OMANYTE, EVENT_GOT_DOME_FOSSIL,  FALSE, 0, 0, NONE, SPRITE_BLANK
-;ENDC
+ENDC
 ;	map_sprite_swap ROUTE_15, SPRITE_BLANK, EVENT_GOT_DOME_FOSSIL,  TRUE, 9, 0, BEFORE_X, SPRITE_OMANYTE
 ;	map_sprite_swap ROUTE_15, SPRITE_BLANK, EVENT_GOT_HELIX_FOSSIL, TRUE, 9, 0, BEFORE_X, SPRITE_KABUTO
 	db -1

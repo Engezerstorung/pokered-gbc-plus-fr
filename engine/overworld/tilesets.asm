@@ -3,6 +3,20 @@ LoadTilesetHeader:
 	push hl
 	ld d, 0
 	ld a, [wCurMapTileset]
+;	add a
+;	add a
+;	ld b, a
+;	add a
+;	add b ; a = tileset * 12
+;	jr nc, .noCarry
+;	inc d
+;.noCarry
+;	ld e, a
+;	ld hl, Tilesets
+;	add hl, de
+;	ld de, wTilesetBank
+;	ld c, 11
+
 	ld e, a
 	ld h, d
 	ld l, e
@@ -41,6 +55,24 @@ LoadTilesetHeader:
 	ldh a, [hPreviousTileset]
 	cp b
 	jr z, .done
+
+;	and a
+;	jr z, .isOW
+;	cp PLATEAU
+;	jr nz, .dungeon
+;.isOW
+;	ld a, b
+;	and a
+;	jr z, .done
+;	cp PLATEAU
+;	jr z, .done
+
+	cp FIRST_INDOOR_TILESET
+	jr nc, .dungeon
+	ld a, b
+	cp FIRST_INDOOR_TILESET
+	jr c, .done
+
 .dungeon
 	ld a, [wDestinationWarpID]
 	cp $ff

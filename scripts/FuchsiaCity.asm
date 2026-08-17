@@ -1,4 +1,15 @@
 FuchsiaCity_Script:
+	ld a, %0000_0001
+	ld [wSpriteStateData2 + $f | FUCHSIACITY_LAPRAS << 4], a
+	ld a, [rWBK]
+	ld b, a
+	ld a, 3
+	ld [rWBK], a
+	ld a, 7
+	ld [w3FloorReflectionDistance + FUCHSIACITY_LAPRAS], a
+	ld a, b
+	ld [rWBK], a
+
 	jp EnableAutoTextBoxDrawing
 
 FuchsiaCity_TextPointers:

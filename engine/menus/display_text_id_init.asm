@@ -58,19 +58,41 @@ DisplayTextIDInit::
 	add hl, de
 	dec c
 	jr nz, .spriteFacingDirectionCopyLoop
+
 ; loop to force all the sprites in the middle of animation to stand still
 ; (so that they don't like they're frozen mid-step during the dialogue)
-	ld hl, wSpritePlayerStateData1ImageIndex
-	ld de, SPRITESTATEDATA1_LENGTH
-	ASSERT NUM_SPRITESTATEDATA_STRUCTS == SPRITESTATEDATA1_LENGTH
-	ld c, e
-.spriteStandStillLoop
+; exclude idly animated ones
+ 	ld hl, wSpritePlayerStateData1ImageIndex
+	ld a, [wWalkBikeSurfState]
+	cp 2 ; is player surfing?
+	jr z, .passPlayer ; if yes, player is idly animated
 	ld a, [hl]
 	cp $ff ; is the sprite visible?
-	jr z, .nextSprite
+	jr z, .passPlayer
+	and $fc
+	ld [hl], a
+.passPlayer
+
+	ld hl, wSprite01StateData2Animation
+	ld c, NUM_SPRITESTATEDATA_STRUCTS - 1
+.spriteStandStillLoop
+	ld a, [hl]
+	and a ; is the sprite idly animated?
+	jr nz, .nextSprite ; dont reset animation frame if idly animated
+; if it is not idly animated
+	push hl
+	dec h
+	ld a, l
+	sub SPRITESTATEDATA2_ANIMATION - SPRITESTATEDATA1_IMAGEINDEX
+	ld l, a
+	ld a, [hl]
+	cp $ff ; is the sprite visible?
+	jr z, .spriteNotVisible
 ; if it is visible
 	and $fc
 	ld [hl], a
+.spriteNotVisible
+	pop hl
 .nextSprite
 	add hl, de
 	dec c

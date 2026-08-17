@@ -63,6 +63,59 @@ DEF SET_PAL_DEFAULT EQU $ff
 	const PAL_CAVE      ; $23
 	const PAL_GAMEFREAK ; $24
 IF GEN_2_GRAPHICS
+	const PAL_YOUNGSTER     ; $BC
+	const PAL_BUGCATCHER    ; $BD
+	const PAL_LASS          ; $BE
+	const PAL_SAILOR        ; $BF
+	const PAL_JR_TRAINER_M  ; $C0
+	const PAL_JR_TRAINER_F  ; $C1
+	const PAL_POKEMANIAC    ; $C2
+	const PAL_SUPERNERD     ; $C3
+	const PAL_HIKER         ; $C4
+	const PAL_BIKER         ; $C5
+	const PAL_BURGLAR       ; $C6
+	const PAL_ENGINEER      ; $C7
+	const PAL_JUGGLER       ; $C8
+	const PAL_FISHERMAN     ; $C9
+	const PAL_SWIMMER       ; $CA
+	const PAL_CUEBALL       ; $CB
+	const PAL_GAMBLER       ; $CC
+	const PAL_BEAUTY        ; $CD
+	const PAL_PSYCHIC       ; $CE
+	const PAL_ROCKER        ; $CF
+	const PAL_JUGGLER2      ; $D0
+	const PAL_TAMER         ; $D1
+	const PAL_BIRDKEEPER    ; $D2
+	const PAL_BLACKBELT     ; $D3
+	const PAL_GARY1         ; $D4
+	const PAL_OAK           ; $D5
+	const PAL_CHIEF         ; $D6
+	const PAL_SCIENTIST     ; $D7
+	const PAL_GIOVANNI      ; $D8
+	const PAL_ROCKET        ; $D9
+	const PAL_COOLTRAINER_M ; $DA
+	const PAL_COOLTRAINER_F ; $DB
+	const PAL_BRUNO         ; $DC
+	const PAL_BROCK         ; $DD
+	const PAL_MISTY         ; $DE
+	const PAL_LT_SURGE      ; $DF
+	const PAL_ERIKA         ; $E0
+	const PAL_KOGA          ; $E1
+	const PAL_BLAINE        ; $E2
+	const PAL_SABRINA       ; $E3
+	const PAL_GENTLEMAN     ; $E4
+	const PAL_GARY2         ; $E5
+	const PAL_GARY3         ; $E6
+	const PAL_LORELEI       ; $E7
+	const PAL_CHANNELER     ; $E8
+	const PAL_AGATHA        ; $E9
+	const PAL_LANCE         ; $EA
+	const PAL_HERO          ; $EB
+ENDC
+DEF NUM_SGB_PALS EQU const_value
+
+IF GEN_2_GRAPHICS
+	const_def
 	const PAL_BULBASAUR  ; $25
 	const PAL_IVYSAUR    ; $26
 	const PAL_VENUSAUR   ; $27
@@ -214,53 +267,5 @@ IF GEN_2_GRAPHICS
 	const PAL_DRAGONITE  ; $B9
 	const PAL_MEWTWO     ; $BA
 	const PAL_MEW        ; $BB
-	const PAL_YOUNGSTER     ; $BC
-	const PAL_BUGCATCHER    ; $BD
-	const PAL_LASS          ; $BE
-	const PAL_SAILOR        ; $BF
-	const PAL_JR_TRAINER_M  ; $C0
-	const PAL_JR_TRAINER_F  ; $C1
-	const PAL_POKEMANIAC    ; $C2
-	const PAL_SUPERNERD     ; $C3
-	const PAL_HIKER         ; $C4
-	const PAL_BIKER         ; $C5
-	const PAL_BURGLAR       ; $C6
-	const PAL_ENGINEER      ; $C7
-	const PAL_JUGGLER       ; $C8
-	const PAL_FISHERMAN     ; $C9
-	const PAL_SWIMMER       ; $CA
-	const PAL_CUEBALL       ; $CB
-	const PAL_GAMBLER       ; $CC
-	const PAL_BEAUTY        ; $CD
-	const PAL_PSYCHIC       ; $CE
-	const PAL_ROCKER        ; $CF
-	const PAL_JUGGLER2      ; $D0
-	const PAL_TAMER         ; $D1
-	const PAL_BIRDKEEPER    ; $D2
-	const PAL_BLACKBELT     ; $D3
-	const PAL_GARY1         ; $D4
-	const PAL_OAK           ; $D5
-	const PAL_CHIEF         ; $D6
-	const PAL_SCIENTIST     ; $D7
-	const PAL_GIOVANNI      ; $D8
-	const PAL_ROCKET        ; $D9
-	const PAL_COOLTRAINER_M ; $DA
-	const PAL_COOLTRAINER_F ; $DB
-	const PAL_BRUNO         ; $DC
-	const PAL_BROCK         ; $DD
-	const PAL_MISTY         ; $DE
-	const PAL_LT_SURGE      ; $DF
-	const PAL_ERIKA         ; $E0
-	const PAL_KOGA          ; $E1
-	const PAL_BLAINE        ; $E2
-	const PAL_SABRINA       ; $E3
-	const PAL_GENTLEMAN     ; $E4
-	const PAL_GARY2         ; $E5
-	const PAL_GARY3         ; $E6
-	const PAL_LORELEI       ; $E7
-	const PAL_CHANNELER     ; $E8
-	const PAL_AGATHA        ; $E9
-	const PAL_LANCE         ; $EA
-	const PAL_HERO          ; $EB
+DEF NUM_POKEMON_PALS EQU const_value
 ENDC
-DEF NUM_SGB_PALS EQU const_value

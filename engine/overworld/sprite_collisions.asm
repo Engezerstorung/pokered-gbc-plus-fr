@@ -1,4 +1,8 @@
 _UpdateSprites::
+;	ld a, [wSpriteFlags]
+;	res 1, a
+;	ld [wSpriteFlags], a
+
 	ld h, HIGH(wSpriteStateData1)
 	inc h
 	ld a, SPRITESTATEDATA2_IMAGEBASEOFFSET
@@ -22,7 +26,14 @@ _UpdateSprites::
 	add $10             ; move to next sprite
 	cp SPRITESTATEDATA2_IMAGEBASEOFFSET ; test for overflow (back at beginning)
 	jr nz, .spriteLoop
-	ret
+;	ret
+
+	ld a, [wSpriteFlags]
+	bit 1, a
+	ret z
+;	farjp ReloadMapSpritePalettes
+	farjp LoadMapSpritePalettes
+
 .updateCurrentSprite
 	cp $1
 	jp nz, UpdateNonPlayerSprite

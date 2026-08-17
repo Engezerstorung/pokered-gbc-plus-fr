@@ -378,7 +378,17 @@ hSavedMapTextPtr:: dw
 	ds 1
 ENDU
 
-	ds 4
+;	ds 4
+	ds 1
+
+rBGP1::
+hBGP1:: db
+
+rBGP2::
+hBGP2:: db
+
+rBGPText::
+hBGPText:: db
 
 hWhoseTurn:: db ; 0 on player's turn, 1 on enemy's turn
 
@@ -406,8 +416,8 @@ hDelayFrameHookBank:: db
 hColorHackTmp:: db
 
 ;	ds 3
-	ds 1
-
+;	ds 1
+hPassedOamTiles:: db
 hWUp::db
 hBlink::db
 

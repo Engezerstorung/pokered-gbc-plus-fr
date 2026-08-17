@@ -2,6 +2,7 @@
 ; Tilesets indexes (see data/tilesets/tiles/tileset_headers.asm)
 	const_def
 	const OVERWORLD    ; 0
+	DEF FIRST_INDOOR_TILESET EQU const_value
 	const REDS_HOUSE_1 ; 1
 	const MART         ; 2
 	const FOREST       ; 3

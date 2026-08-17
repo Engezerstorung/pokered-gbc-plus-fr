@@ -18,9 +18,6 @@ LoadTilesetPalette:
 	ld a, $02
 	ldh [rWBK], a
 
-	dec a
-	ld [W2_ForceBGPUpdate], a
-
 	push de ; push previous wram bank
 	push bc ; push wCurMap and wCurMapTileset
 
@@ -81,15 +78,19 @@ LoadTilesetPalette:
 	ld hl, MapBgPalSwapList ; loading list for identification and properties values
 	call BgPalSwap
 
+	ld a, c
+	and a ; Check whether tileset 0 is loaded
+	jr z, .getTownRoof
+	cp PLATEAU ; tileset 0 isn't the only outside tileset
+.getTownRoof
+	call z, LoadTownPalette
+
+	inc a
+	ld [W2_ForceBGPUpdate], a
+
 	; Retrieve former wram bank
 	pop af
 	ldh [rWBK], a ; Restore previous wram bank
-
-	ld a, c
-	and a ; Check whether tileset 0 is loaded
-	call z, LoadTownPalette
-	cp PLATEAU ; tileset 0 isn't the only outside tileset
-	call z, LoadTownPalette
 
 	pop hl
 	pop de
@@ -218,6 +219,7 @@ TilesetBgPalSwapList:
 	db LOBBY,        LOBBY_1STFLOOR,     4
 	db MANSION,      MANSION_WALLS,      6
 	db MUSEUM,       GATE_STAIRS,        4
+	db OVERWORLD,    OUTDOOR_BLUE_NOBG,  3
 	db PLATEAU,      OUTDOOR_RED,        1
 	db REDS_HOUSE_1, REDS_STAIRS,        4
 	db UNDERGROUND,  UNDERGROUND_STAIRS, 1

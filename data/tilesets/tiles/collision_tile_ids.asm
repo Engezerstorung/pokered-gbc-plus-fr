@@ -10,6 +10,7 @@ Underground_Coll::
 
 Overworld_Coll::
 ;	db $11
+	db $5E, $5F
 	coll_tiles $00, $10, $1b, $20, $21, $23, $2c, $2d, $2e, $30, $31, $33, $39, $3c, $3e, $52, $54, $58, $5b
 
 RedsHouse1_Coll::
@@ -69,4 +70,5 @@ Facility_Coll::
 	coll_tiles $01, $10, $11, $13, $1b, $20, $21, $22, $30, $31, $32, $42, $43, $48, $52, $55, $58, $5e
 
 Plateau_Coll::
+	db $39
 	coll_tiles $1b, $23, $2c, $2d, $3b, $45

@@ -30,7 +30,7 @@ DisplayMonFrontSpriteInBox:
 	ldh [hAutoBGTransferEnabled], a
 	call Delay3
 
-	farcall LoadAndUpdateSGBTextPalette
+	farcall LoadAndUpdatePokemonTextPalette
 	ld hl, wFontLoaded
 	set 0, [hl]
 

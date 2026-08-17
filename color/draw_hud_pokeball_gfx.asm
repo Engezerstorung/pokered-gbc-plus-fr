@@ -6,10 +6,14 @@
 ; Note: this uses overworld palette 0, but palette 2 of the attack palettes would also be
 ; suitable.
 LoadPartyPokeballGfx:
-	CALL_INDIRECT LoadOverworldSpritePalettes
+;	CALL_INDIRECT LoadOverworldSpritePalettes
+	ld d, SPRITE_PAL2_RED
+	ld e, 0
+	farcall LoadOutdoorMapSpritePalette_Sprite
 
 	ld a, 2
 	ldh [rWBK], a
+	ld [W2_ForceOBPUpdate], a
 
 	; Set the palette the pokeball sprite uses
 	ld hl, W2_SpritePaletteMap + $31

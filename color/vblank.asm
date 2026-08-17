@@ -16,6 +16,17 @@ RefreshPalettesPreVBlank:
 	ld a, [W2_ForceBGPUpdate]
 	or a
 	jr nz, .updatebgp
+
+	ld a, [W2_TileBasedPalettes]
+	cp 2
+	jr nz, .passTextPalette
+	ldh a, [rBGPText]
+	ld b, a
+	ld a, [W2_LastBGPText]
+	cp b
+	jr nz, .updatebgp
+.passTextPalette
+
 	ldh a, [rBGP0]
 	ld b, a
 	ld a, [W2_LastBGP0]
@@ -25,13 +36,17 @@ RefreshPalettesPreVBlank:
 	ld b, a
 	ld a, [W2_LastBGP1]
 	cp b
+	jr nz, .updatebgp
+	ldh a, [rBGP2]
+	ld b, a
+	ld a, [W2_LastBGP2]
+	cp b
 	jr z, .checkSprPalettes
 
 .updatebgp:
 	ld a, 1
 	ld [W2_BgPaletteDataModified], a
 
-	ld b, $00
 	ld hl, W2_BgPaletteDataBuffer
 
 	ldh a, [rBGP0]
@@ -46,18 +61,112 @@ RefreshPalettesPreVBlank:
 	jr .checkSprPalettes
 .bgpNotBlack
 
-	; Palettes react to rBGP1 according to set bits in W2_UseBGP1
+;	push hl
+;	ld hl, W2_BGPMap
+;	ld a, [W2_UseBGP1]
+;	ld c, a
+;
+;	ld a, [rBGP0]
+;	ld e, a
+;	ld a, [rBGP1]
+;	ld d, a
+;
+;	ld b, 8
+;.bgp1FillLoop
+;	rrc c
+;	ld a, e
+;	jr nc, .fillWithBgp0
+;	ld a, d
+;.fillWithBgp0
+;	ld [hli], a
+;	dec b
+;	jr nz, .bgp1FillLoop
+;
+;	ld a, [W2_UseBGP2]
+;	and a
+;	jr z, .doneBgp2Fill
+;	ld c, a
+;	ld a, [rBGP2]
+;
+;	dec l
+;
+;	ld b, 8
+;	jr .bgp2FillLoop
+;.dontFillWithBgp2
+;	dec l
+;	dec b
+;	jr z, .doneBgp2Fill
+;.bgp2FillLoop
+;	rlc c
+;	jr nc, .dontFillWithBgp2
+;	ld [hld], a
+;	dec b
+;	jr nz, .bgp2FillLoop
+;.doneBgp2Fill
+;
+;	pop hl
+;
+;.doNextBgPal
+;	ld e, b
+;	ld d, HIGH(W2_BGPMap)
+;	ld a, [de]
+;
+;	ld d, a
+;	ld e, 4
+;
+;.doNextBgColor:
+;	ld a, d
+;	call SetColor
+;	srl d
+;	srl d
+;
+;	dec e
+;	jr nz, .doNextBgColor
+;
+;	inc b
+;	bit 3, b ; a >= 8?
+;	jr nz, .checkSprPalettes
+;	ld a, b
+;	cp 7 ; check if text palette slot
+;	jr nz, .doNextBgPal
+;	ld a, [W2_TileBasedPalettes]
+;	cp 2 ; check if in the overworld
+;	jr nz, .doNextBgPal
+;	ldh a, [rBGPText]
+;	ld d, a
+;	ld e, 4
+;;	lb de, %11100100, 4
+;	jr .doNextBgColor ; overworld text palette always 3,2,1,0
+
+	xor a
+	ld [W2_PalSlotTemp], a
+
+	; Palettes react to rBGP1 and rBGP2 according to set bits in W2_UseBGP1 and W2_UseBGP2
 	ld a, [W2_UseBGP1]
+	ld b, a
+	ld a, [W2_UseBGP2]
 	ld c, a
 .doNextBgPal
-	ld e, 4
-	rrc c ; set c flag if bit 0 is 1 and rotate to the right
 	ldh a, [rBGP0]
-	jr nc, .bgp0
-	ldh a, [rBGP1]
-.bgp0
-	ld d, a
 
+	rrc b ; set c flag if bit 0 is 1 and rotate to the right
+	jr nc, .checkBgp2
+	rrc c ; if rotating b set carry we need to rotate c too to keep them in sync
+	ldh a, [rBGP1]
+	jr .gotBgp
+.checkBgp2
+	rrc c
+	jr nc, .gotBgp
+	ldh a, [rBGP2]
+.gotBgp
+
+	ld d, a
+	ld e, 4
+
+.loadTextPalette
+	push bc
+	ld a, [W2_PalSlotTemp]
+	ld b, a
 .doNextBgColor:
 	ld a, d
 	call SetColor
@@ -66,9 +175,24 @@ RefreshPalettesPreVBlank:
 
 	dec e
 	jr nz, .doNextBgColor
-	inc b
-	bit 3, b ; b >= 8?
-	jr z, .doNextBgPal
+
+	ld a, b
+	pop bc
+	inc a
+	ld [W2_PalSlotTemp], a
+	bit 3, a ; a >= 8?
+	jr nz, .checkSprPalettes
+
+	cp 7 ; check if text palette slot
+	jr nz, .doNextBgPal
+	ld a, [W2_TileBasedPalettes]
+	cp 2 ; check if in the overworld
+	jr nz, .doNextBgPal
+	ldh a, [rBGPText]
+	ld d, a
+	ld e, 4
+;	lb de, %11100100, 4
+	jr .loadTextPalette ; overworld text palette is always 3,2,1,0
 
 .checkSprPalettes
 	ld a, [W2_ForceOBPUpdate]
@@ -133,10 +257,16 @@ RefreshPalettesPreVBlank:
 	ld [W2_LastBGP0], a
 	ldh a, [rBGP1]
 	ld [W2_LastBGP1], a
+	ldh a, [rBGP2]
+	ld [W2_LastBGP2], a
 	ldh a, [rOBP0]
 	ld [W2_LastOBP0], a
 	ldh a, [rOBP1]
 	ld [W2_LastOBP1], a
+
+	ldh a, [rBGPText]
+	ld [W2_LastBGPText], a
+
 	xor a
 	ld [W2_ForceBGPUpdate], a
 	ld [W2_ForceOBPUpdate], a

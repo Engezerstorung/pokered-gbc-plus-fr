@@ -23,6 +23,7 @@ DrawHPBarWithColor:
 	ld hl, wPartyMenuHPBarColors
 	ld b, 0
 	ld a, [wLastMenuItem]
+;	ld a, [wWhichPartyMenuHPBar]
 	ld c, a
 	add hl, bc
 

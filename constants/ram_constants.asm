@@ -82,7 +82,11 @@ DEF NUM_BADGES EQU const_value
 ; wStatusFlags3
 	const_def
 	const BIT_INIT_TRADE_CENTER_FACING ; 0
-	const_skip 2                       ; 1-2 ; unused
+;	const_skip 2                       ; 1-2 ; unused
+
+	const_skip                         ; 1 ; unused
+	const BIT_EMOTION_BUBBLE           ;2
+
 	const BIT_WARP_FROM_CUR_SCRIPT     ; 3
 	const BIT_ON_DUNGEON_WARP          ; 4
 	const BIT_NO_NPC_FACE_PLAYER       ; 5
@@ -141,8 +145,14 @@ DEF NUM_BADGES EQU const_value
 	const BIT_STANDING_ON_DOOR ; 0
 	const BIT_EXITING_DOOR     ; 1
 	const BIT_STANDING_ON_WARP ; 2
-	const_skip 3               ; 3-5 ; unused
-	const BIT_LEDGE_OR_FISHING ; 6
+;	const_skip 3               ; 3-5 ; unused
+
+	const_skip                 ; 3 ; unused
+	const BIT_CUTTING          ; 4
+	const BIT_LEDGE            ; 5
+	const BIT_FISHING          ; 6
+
+;	const BIT_LEDGE_OR_FISHING ; 6
 	const BIT_SPINNING         ; 7
 
 ; hFindPathFlags

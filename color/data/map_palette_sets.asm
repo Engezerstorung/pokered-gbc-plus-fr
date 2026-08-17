@@ -28,7 +28,7 @@ MapPaletteSets:
 	dw .plateauPalSet     ; PLATEAU
 	assert_table_length NUM_TILESETS
 
-.overworldPalSet:	
+.overworldPalSet:
 .forestPalSet:
 .plateauPalSet:
 	db OUTDOOR_GRAY
@@ -40,7 +40,7 @@ MapPaletteSets:
 	db FOREST_TREES
 	db CRYS_TEXTBOX
 
-.redsHouse1PalSet:	
+.redsHouse1PalSet:
 .martPalSet:
 .redsHouse2PalSet:
 .dojoPalSet:
@@ -48,10 +48,10 @@ MapPaletteSets:
 .gymPalSet:
 .housePalSet:
 .museumPalSet:
-.undergroundPalSet:	
+.undergroundPalSet:
 .gatePalSet:
-.cemeteryPalSet:	
-.interiorPalSet:	
+.cemeteryPalSet:
+.interiorPalSet:
 .clubPalSet:
 	db INDOOR_GRAY
 	db INDOOR_RED

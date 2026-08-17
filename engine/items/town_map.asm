@@ -140,7 +140,8 @@ MonsNestText:
 LoadTownMap_Fly::
 	call ClearSprites
 	call LoadTownMap
-	call LoadPlayerSpriteGraphics
+;	call LoadPlayerSpriteGraphics
+	call LoadPlayerSpriteGraphicsWithoutPalettes
 	call LoadFontTilePatterns
 	ld de, BirdSprite
 	ld hl, vSprites tile BIRD_BASE_TILE
@@ -391,9 +392,14 @@ DisplayWildLocations:
 	cp $19 ; Cerulean Cave's coordinates
 	jr z, .nextEntry ; skip Cerulean Cave
 	call TownMapCoordsToOAMCoords
+	ld a, b
+	ld [hli], a
+	ld a, c
+	ld [hli], a
 	ld a, $4 ; nest icon tile no.
 	ld [hli], a
-	xor a
+;	xor a
+	ld a, 2 ; next icon palette slot
 	ld [hli], a
 .nextEntry
 	inc de
@@ -432,14 +438,14 @@ TownMapCoordsToOAMCoords:
 	srl a
 	add 24
 	ld b, a
-	ld [hli], a
+;	ld [hli], a
 	pop af
 	and $f
 	swap a
 	srl a
 	add 24
 	ld c, a
-	ld [hli], a
+;	ld [hli], a
 	ret
 
 WritePlayerOrBirdSpriteOAM:
@@ -479,12 +485,13 @@ WriteAsymmetricMonPartySpriteOAM:
 	ld [wOAMBaseTile], a
 
 	cp 5 ; check if bird
-	ld a, 3
-	jr nc, .foundPalette
-	ld a, [wWalkBikeSurfState]
-	cp 2 ; check if surfing
+;	ld a, 3
 	ld a, 1
-	jr z, .foundPalette
+	jr nc, .foundPalette
+;	ld a, [wWalkBikeSurfState]
+;	cp 2 ; check if surfing
+;	ld a, 1
+;	jr z, .foundPalette
 	xor a
 .foundPalette
 

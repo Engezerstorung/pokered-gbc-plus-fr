@@ -45,7 +45,7 @@ VermilionDockSSAnneLeavesScript:
 	ld c, BANK(Music_Surfing)
 	ld a, MUSIC_SURFING
 	call PlayMusic
-	farcall LoadSmokeTileFourTimes
+	farcall LoadSmokeTiles
 	xor a
 	ld [wSpritePlayerStateData1ImageIndex], a
 	ld c, 120
@@ -168,9 +168,9 @@ VermilionDock_EmitSmokePuff:
 
 VermilionDockOAMBlock:
 ; tile ID, attributes
-	db $7c, OAM_BANK1 | 7 ; use palette OBJ7
-	db $7d, OAM_BANK1 | 7
-	db $7e, OAM_BANK1 | 7
+	db $7f, OAM_BANK1 | 7 ; use palette OBJ7
+	db $7f, OAM_BANK1 | 7
+	db $7f, OAM_BANK1 | 7
 	db $7f, OAM_BANK1 | 7
 
 VermilionDock_SyncScrollWithLY:

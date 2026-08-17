@@ -276,151 +276,76 @@ _RedrawRowOrColumn::
 	ld a, l
 	and %11100000 ; mask the BGMAP Y position bits of L and save them in b
 	ld b, a
-	set 5, b ; add TILEMAP_WIDTH to the first row address (which bit 5 is always 0 in vanilla behavior)
 	ld c, %00011111 ; mask for the BGMAP X position bits of L
 
-; Draw tiles
-REPT SCREEN_WIDTH / 2 - 1
-	pop de
-	ld a, e
-	ld [hli], a
-	ld [hl], d
-; the following 2 lines wrap us from the right edge to the left edge if necessary in the first row
-	inc l
-	res 5, l
+FOR _N, 1, 1+ 4
+	; Draw tiles
+	FOR _COL, 1, 1+ SCREEN_WIDTH / 2
+		pop de
+		ld a, e
+		ld [hli], a
+		ld [hl], d
+		IF _COL < SCREEN_WIDTH / 2
+		; the following 5 lines wrap us from the right edge to the left edge if necessary in the second row
+			inc l
+			ld a, l
+			and c
+			or b
+			ld l, a
+		ENDC
+	ENDR
+	IF _N & 1
+		; to the destination next line
+		ldh a, [hRedrawRowOrColumnDest]
+		add TILEMAP_WIDTH
+		ld l, a
+		and %11100000
+		ld b, a
+	ELIF _N < 3
+		ld a, 1
+		ldh [rVBK], a
+	; go back to the starting destination
+		ldh a, [hRedrawRowOrColumnDest]
+		ld l, a
+		and %11100000
+		ld b, a
+		ld sp, W2_RedrawRowOrColumnSrcTiles
+	ENDC
 ENDR
-	pop de
-	ld a, e
-	ld [hli], a
-	ld [hl], d
-
-; to the destination next line
-	ldh a, [hRedrawRowOrColumnDest]
-	add TILEMAP_WIDTH
-	ld l, a
-
-REPT SCREEN_WIDTH / 2 - 1
-	pop de
-	ld a, e
-	ld [hli], a
-	ld [hl], d
-; the following 5 lines wrap us from the right edge to the left edge if necessary in the second row
-	inc l
-	ld a, l
-	and c
-	or b
-	ld l, a
-ENDR
-	pop de
-	ld a, e
-	ld [hli], a
-	ld [hl], d
-
-	ld a, 1
-	ldh [rVBK], a
-
-; go back to the starting destination
-	ldh a, [hRedrawRowOrColumnDest]
-	ld l, a
-	ld sp, W2_RedrawRowOrColumnSrcTiles
-
-; Draw tiles attributes
-REPT SCREEN_WIDTH / 2 - 1
-	pop de
-	ld a, e
-	ld [hli], a
-	ld [hl], d
-; the following 2 lines wrap us from the right edge to the left edge if necessary in the first row
-	inc l
-	res 5, l
-ENDR
-	pop de
-	ld a, e
-	ld [hli], a
-	ld [hl], d
-
-; to the destination next line
-	ldh a, [hRedrawRowOrColumnDest]
-	add TILEMAP_WIDTH
-	ld l, a
-
-REPT SCREEN_WIDTH / 2 - 1
-	pop de
-	ld a, e
-	ld [hli], a
-	ld [hl], d
-; the following 5 lines wrap us from the right edge to the left edge if necessary in the second row
-	inc l
-	ld a, l
-	and c
-	or b
-	ld l, a
-ENDR
-	pop de
-	ld a, e
-	ld [hli], a
-	ld [hl], d
 
 	jp .done
 
 .redrawColumn
 	ld bc, TILEMAP_WIDTH - 1
-; Draw tiles
-REPT SCREEN_HEIGHT / 2 - 1
-	pop de
-	ld a, e
-	ld [hli], a
-	ld [hl], d
-	add hl, bc
-	pop de
-	ld a, e
-	ld [hli], a
-	ld [hl], d
-	add hl, bc
-; the following line wrap us from bottom to top if necessary
-	res 2, h ; this only work for vBGMap0
+
+FOR _N, 1, 1+ 2
+	FOR _COL, 1, 1+ SCREEN_HEIGHT
+		pop de
+		ld a, e
+		ld [hli], a
+		ld [hl], d
+		IF _COL < SCREEN_HEIGHT
+			add hl, bc
+		ENDC
+		IF !(_COL & 1) && _COL < SCREEN_HEIGHT
+		; the following 5 lines wrap us from bottom to top if necessary
+		;	res 2, h ; this only work for vBGMap0
+			ldh a, [hRedrawRowOrColumnDest + 1]
+			xor h
+			and ~$3
+			xor h
+			ld h, a
+		ENDC
+	ENDR
+	IF _N < 2
+		ld a, 1
+		ldh [rVBK], a
+
+		ld sp, hRedrawRowOrColumnDest
+		pop hl
+		ld sp, W2_RedrawRowOrColumnSrcTiles
+	ENDC
 ENDR
-	pop de
-	ld a, e
-	ld [hli], a
-	ld [hl], d
-	add hl, bc
-	pop de
-	ld a, e
-	ld [hli], a
-	ld [hl], d
-
-	ld a, 1
-	ldh [rVBK], a
-
-	ld sp, hRedrawRowOrColumnDest
-	pop hl
-	ld sp, W2_RedrawRowOrColumnSrcTiles
-
-; Draw tiles attributes
-REPT SCREEN_HEIGHT / 2 - 1
-	pop de
-	ld a, e
-	ld [hli], a
-	ld [hl], d
-	add hl, bc
-	pop de
-	ld a, e
-	ld [hli], a
-	ld [hl], d
-	add hl, bc
-; the following line wrap us from bottom to top if necessary
-	res 2, h ; this only work for vBGMap0
-ENDR
-	pop de
-	ld a, e
-	ld [hli], a
-	ld [hl], d
-	add hl, bc
-	pop de
-	ld a, e
-	ld [hli], a
-	ld [hl], d
 
  .done
 	ld sp, hSPTemp

@@ -160,6 +160,10 @@ _LeaveMapAnim::
 	ld [hl], $c ; wFlyAnimBirdSpriteImageIndex (facing right)
 	ld hl, wSpritePlayerStateData2GrassPriority
 	res B_OAM_PRIO, [hl]
+
+	xor a
+	ld [wSpritePlayerStateData2 + $f], a
+
 	ld de, FlyAnimationScreenCoords1
 	call DoFlyAnimation
 	ld c, 40
@@ -254,7 +258,9 @@ DoFlyAnimation:
 	ret
 
 LoadBirdSpriteGraphics:
-	farcall ColorPlayerSprite
+;	farcall ColorPlayerSprite
+	farcall LoadMapSpritePalettes
+
 	ld de, BirdSprite
 	ld hl, vNPCSprites
 	lb bc, BANK(BirdSprite), 24
@@ -381,8 +387,8 @@ INCLUDE "data/tilesets/tiles/warp_pad_hole_tile_ids.asm"
 FishingAnim:
 	ld c, 10
 	call DelayFrames
-	ld hl, wMovementFlags
-	set BIT_LEDGE_OR_FISHING, [hl]
+;	ld hl, wMovementFlags
+;	set BIT_FISHING, [hl]
 	ld de, RedSprite
 	ld hl, vNPCSprites tile $00
 	lb bc, BANK(RedSprite), 12
@@ -391,6 +397,10 @@ FishingAnim:
 	ld hl, RedFishingTiles
 	call LoadAnimSpriteGfx
 	ld a, [wSpritePlayerStateData1ImageIndex]
+
+	ld hl, wMovementFlags
+	set BIT_FISHING, [hl] ; moved down as to not prevent sprite reflections of being updated correctly
+
 	ld c, a
 	ld b, $0
 	ld hl, FishingRodOAM
@@ -449,7 +459,7 @@ FishingAnim:
 .done
 	call PrintText
 	ld hl, wMovementFlags
-	res BIT_LEDGE_OR_FISHING, [hl]
+	res BIT_FISHING, [hl]
 	call LoadFontTilePatterns
 	ret
 
@@ -516,8 +526,7 @@ _HandleMidJump::
 	ldh [hJoyReleased], a
 	ld [wPlayerJumpingYScreenCoordsIndex], a
 	ld hl, wMovementFlags
-	res BIT_LEDGE_OR_FISHING, [hl]
-	res BIT_LEDGE_OR_FISHING -  1, [hl]
+	res BIT_LEDGE, [hl]
 	ld hl, wStatusFlags5
 	res BIT_SCRIPTED_MOVEMENT_STATE, [hl]
 	xor a

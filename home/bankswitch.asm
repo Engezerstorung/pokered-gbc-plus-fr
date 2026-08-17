@@ -17,12 +17,12 @@ BankswitchBack::
 	ret
 
 Bankswitch::
-	dec sp
+	dec sp ; make room to save current rom bank
 	call DoBankswitch
 	jr Bankswitch_return
 
 DoBankswitch::
-	push hl
+	push hl ; push destination address
 	push af
 
 	ld hl, sp + 6
@@ -33,10 +33,10 @@ DoBankswitch::
 	ld [rROMB], a
 
 	pop af
-	ret
+	ret ; jump to destination address
 
 Deref_Farcall::
-	push hl ; push dwb target fucntion address
+	push hl ; push dwb target function address
 
 	push af
 	inc hl
@@ -57,7 +57,9 @@ Deref_Farcall::
 ;	push hl		0
 
 Bankswitch_sf::
-	dec sp
+; self-contained bankswitch, use this when not in the home bank
+; to use exclusively with macro farcall/callfar or farjp/jpfar
+	dec sp ; make room to save current rom bank
 	call DoBankswitch_sf
 	; fallthrough
 
@@ -74,8 +76,6 @@ Bankswitch_return:
 	ret
 
 DoBankswitch_sf::
-; self-contained bankswitch, use this when not in the home bank
-; to use exclusively with macro farcall/callfar or farjp/jpfar
 	push af ; make room for jump address
 
 	push af
@@ -101,7 +101,7 @@ DoBankswitch_sf::
 	ldh [hLoadedROMBank], a
 	ld [rROMB], a ; change bank
 
-	jr nc, .notFarJP ; replace macro return address if farjp
+	jr nc, .notFarJP ; replace bankswitch return address if farjp
 	ld hl, JustRet
 .notFarJP
 

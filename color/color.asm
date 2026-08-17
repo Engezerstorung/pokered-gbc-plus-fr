@@ -1,33 +1,6 @@
 ; Extending bank 1C, same bank as engine/palettes.asm (for "SetPal" functions)
 SECTION "bank1C_extension", ROMX
 
-; Load Palettes for cut animation and pokecenter healing machine when needed
-InitCutAnimOAM:
-	ld hl, wCurrentMapScriptFlags
-	set 0, [hl] ; prevent SetPal_Overworld before cut is done
-	ld a, [wCurMapTileset]
-	ld d, SPRITE_PAL_OUTDOORTREE
-	and a ; check if OVERWORLD tileset
-	jr z, .paletteSelected
-	CP FOREST
-	jr z, .paletteSelected
-	CP PLATEAU
-	jr z, .paletteSelected
-	ld d, SPRITE_PAL_CAVETREE
-	cp CAVERN
-	jr z, .paletteSelected
-	ld d, SPRITE_PAL_INDOORTREE
-.paletteSelected
-	farcall LoadAndUpdateAnimationPalette
-	jpfar _InitCutAnimOAM
-
-AnimateHealingMachine:
-	ld d, SPRITE_PAL_HEALINGMACHINE
-	farcall LoadAndUpdateAnimationPalette
-	farcall _AnimateHealingMachine
-	jp SetPal_Overworld
-
-
 ; Change palettes to alternate palettes for special case white fades ; see home/fade.asm
 ; LoadMapPalette use : d = palette to load (see constants/palette_constants.), e = palette index
 SetPal_FadeWhite::
@@ -56,12 +29,16 @@ SetPal_FadeWhite::
 
 WhiteFadePaletteSets::
 .overworld   ; OVERWORLD
+	db OUTDOOR_FLOWER_FADE, 1
+	db OUTDOOR_GRASS_NOBG, 2
+	db - 1
+
 .forest      ; FOREST
 	db OUTDOOR_FLOWER_FADE, 1
 	; fallthrough
 .plateau     ; PLATEAU
-	db OUTDOOR_GRASS_FADE, 2
-	db OUTDOOR_BLUE_FADE, 3
+	db OUTDOOR_GRASS_NOBG, 2
+	db OUTDOOR_BLUE_NOBG, 3
 	db -1
 
 .gym         ; GYM
@@ -112,6 +89,7 @@ WhiteFadePaletteSets::
 	db INDOOR_BLUE, 3
 	db INDOOR_BLUE, 6
 	; fallthrough
+
 .mart        ; MART
 .redsHouse2  ; REDS_HOUSE_2
 .dojo        ; DOJO
@@ -259,6 +237,11 @@ SetPal_BattleBlack::
 	ld [W2_ForceOBPUpdate], a
 
 	xor a
+	ld [W2_UseBGP1], a
+	ld [W2_UseBGP2], a
+
+	ld [W2_TileBasedPalettes], a
+
 	ldh [rWBK], a
 	ret
 
@@ -320,39 +303,73 @@ SetPal_Battle_Common:
 	ld a, $02
 	ldh [rWBK], a
 	ld a, [W2_BattleMonPalette]
-	ld b, a
+	ld d, a
 	xor a
 	ldh [rWBK], a
-	jr .getEnemyMonPal
+IF GEN_2_GRAPHICS
+	ld a, 1
+	ld [wPokedexNum], a ; set wPokedexNum to a non zero value so LoadBattlePalette can load a pokemon palette
+ENDC
+	jr .gotBattleMonPal
 
 .getBattleMonPal
 	ld a, [wBattleMonSpecies]        ; player Pokemon ID
 	call DetermineBackSpritePaletteID
-	ld b, a
+	ld d, a
+	; Save the player mon's palette in case it transforms later
+	ld a, $02
+	ldh [rWBK], a
+	ld a, d
+	ld [W2_BattleMonPalette], a
+	xor a
+	ldh [rWBK], a
+
+.gotBattleMonPal
+	; Player palette
+	ld e, 0
+IF GEN_2_GRAPHICS
+	ld a, [wBattleMonDVs]
+	bit 5, a
+	jr z, .notShiny
+	and $f
+	cp $a
+	jr nz, .notShiny
+	ld a, [wBattleMonDVs + 1]
+	cp $aa
+	jr nz, .notShiny
+	farcall LoadShinyBattlePalette
+	jr .loadedBattleMonPal
+.notShiny
+	farcall LoadBattlePalette
+.loadedBattleMonPal
+ELSE
+	farcall LoadSGBPalette
+ENDC
 
 .getEnemyMonPal
 	ld a, [wEnemyMonSpecies2]         ; enemy Pokemon ID (without transform effect?)
 	call DeterminePaletteID
-	ld c, a
-
-	ld a, $02
-	ldh [rWBK], a
-
-	; Save the player mon's palette in case it transforms later
-	ld a, b
-	ld [W2_BattleMonPalette], a
-
-	; Player palette
-	push bc
-	ld d, b
-	ld e, 0
-	farcall LoadSGBPalette
-
 	; Enemy palette
-	pop bc
-	ld d, c
+	ld d, a
 	ld e, 1
+IF GEN_2_GRAPHICS
+	ld a, [wEnemyMonDVs]
+	bit 5, a
+	jr z, .notShiny2
+	and $f
+	cp $a
+	jr nz, .notShiny2
+	ld a, [wEnemyMonDVs + 1]
+	cp $aa
+	jr nz, .notShiny2
+	farcall LoadShinyBattlePalette
+	jr .loadedEnemyMonPal
+.notShiny2
+	farcall LoadBattlePalette
+.loadedEnemyMonPal
+ELSE
 	farcall LoadSGBPalette
+ENDC
 
 	; Player lifebar
 	ld a, [wPlayerHPBarColor]
@@ -384,59 +401,44 @@ ENDC
 
 	; Now set the tilemap
 
+	ld a, $02
+	ldh [rWBK], a
+
+	; Player pokemon
+	ld hl, W2_TilesetPaletteMap + 5 * 20
+	ld a, 0
+	ld b, 7
+	ld c, 10
+	call FillBox
+
+	; Enemy pokemon
+	ld hl, W2_TilesetPaletteMap + 10
+	ld a, 1
+	ld b, 7
+	ld c, 10
+	call FillBox
+
 	; Top half; enemy lifebar
 	ld hl, W2_TilesetPaletteMap
 	ld a, 3
-	ld b, 4
+	ld b, 5
 	ld c, 11
 	call FillBox
 
-;IF GEN_2_GRAPHICS
-;	; Bottom half; player lifebar
-;	ld hl, W2_TilesetPaletteMap + 7 * 20 + 9
-;	ld a, 2
-;	ld b, 4
-;	ld c, 11
-;	call FillBox
-
-;	; Player exp bar
-;	ld hl, W2_TilesetPaletteMap + 9 + 11 * 20
-;	ld a, 4
-;	ld b, 1
-;	ld c, 11
-;	call FillBox
-;ENDC
-
-;IF !GEN_2_GRAPHICS
 	; Bottom half; player lifebar
 	ld hl, W2_TilesetPaletteMap + 7 * 20 + 9
 	ld a, 2
 	ld b, 5
 	ld c, 11
 	call FillBox
-;ENDC
 
 IF GEN_2_GRAPHICS
 	; Player exp bar
 	ld hl, W2_TilesetPaletteMap + 10 + 11 * 20
-	ld a, 4
+	ld a, 4 ;| BG_XFLIP
 	ld b, 8
 	call FillLine
 ENDC
-
-	; Player pokemon
-	ld hl, W2_TilesetPaletteMap + 4 * 20
-	ld a, 0
-	ld b, 8
-	ld c, 9
-	call FillBox
-
-	; Enemy pokemon
-	ld hl, W2_TilesetPaletteMap + 11
-	ld a, 1
-	ld b, 7
-	ld c, 9
-	call FillBox
 
 	; text box
 	ld hl, W2_TilesetPaletteMap + 12 * 20
@@ -485,20 +487,23 @@ FillBox:
 ; Load town map
 SetPal_TownMap:
 
-	farcall LoadOverworldSpritePalettes
+;	farcall LoadOverworldSpritePalettes
+
+	farcall LoadTownMapPallettes
 	
 	ld a, 2
 	ldh [rWBK], a
 
-	ld d, PAL_TOWNMAP
-	ld e, 0
-	farcall LoadSGBPalette
+;	ld d, PAL_TOWNMAP
+;	ld e, 0
+;	farcall LoadSGBPalette
+;
+;	ld d, PAL_TOWNMAP2
+;	ld e, 1
+;	farcall LoadSGBPalette
 
-	ld d, PAL_TOWNMAP2
-	ld e, 1
-	farcall LoadSGBPalette
-
-	ld a, 1
+;	ld a, 1
+	dec a
 	ld [W2_TileBasedPalettes], a
 
 	ld hl, W2_TilesetPaletteMap
@@ -513,6 +518,7 @@ SetPal_TownMap:
 	xor a
 	ld [W2_UseOBP1], a
 	ld [W2_UseBGP1], a
+	ld [W2_UseBGP2], a
 	ldh [rWBK], a
 	ret
 
@@ -545,11 +551,26 @@ IF GEN_2_GRAPHICS
 ENDC
 
 	; Load pokemon palette
-	pop af
-	ld d, a
+	pop de
 	ld e, 0
+IF GEN_2_GRAPHICS
+	ld a, [wLoadedMonDVs]
+	bit 5, a
+	jr z, .notShiny
+	and $f
+	cp $a
+	jr nz, .notShiny
+	ld a, [wLoadedMonDVs + 1]
+	cp $aa
+	jr nz, .notShiny
+	farcall LoadShinyPokemonPalette
+	jr .loadedonPal
+.notShiny
+	farcall LoadPokemonPalette
+.loadedonPal
+ELSE
 	farcall LoadSGBPalette
-
+ENDC
 
 	; Set palette map
 	xor a
@@ -615,8 +636,11 @@ SetPal_Pokedex:
 
 	ld a, 2
 	ldh [rWBK], a
-
+IF GEN_2_GRAPHICS
+	farcall LoadPokemonPalette
+ELSE
 	farcall LoadSGBPalette
+ENDC
 
 IF DEF(_BLUE)
 	ld d, PAL_BLUEMON
@@ -657,6 +681,8 @@ ENDC
 	ld [W2_StaticPaletteMapChanged], a
 	xor a
 	ld [W2_TileBasedPalettes], a
+	ld [W2_UseBGP1], a
+	ld [W2_UseBGP2], a
 
 	;xor a
 	ldh [rWBK], a
@@ -708,6 +734,7 @@ SetPal_Slots:
 	xor a
 	ld [W2_UseOBP1], a
 	ld [W2_UseBGP1], a
+	ld [W2_UseBGP2], a
 	ldh [rWBK], a
 	; Wait 3 frames to allow tilemap updates to apply. Prevents garbage
 	; Prevents garbage from appearing when the slots machine open.
@@ -723,7 +750,11 @@ SetPal_TitleScreen:
 	ld a, 2
 	ldh [rWBK], a
 
+IF GEN_2_GRAPHICS
+	farcall LoadPokemonPalette
+ELSE
 	farcall LoadSGBPalette
+ENDC
 
 	ld d, PAL_LOGO2 ; Title logo
 	ld e, 1
@@ -781,26 +812,26 @@ ENDC
 
 	ldh [rWBK], a
 
-	; This fixes the text at the bottom being the wrong color for a second or so.
-	; It's a real hack, but the game's using two vram maps at once, and the color code
-	; will only update one of them.
-	; I'm not sure why this didn't used to be a problem...
-	di
-	ld a, 1
-	ldh [rVBK], a
-.vblankWait
-	ldh a, [rLY]
-	cp $90
-	jr nz, .vblankWait
-
-	ld hl, $9c00 + 9 * 32
-	ld bc, 20
-	ld a, 3
-	call FillMemory
-
-	xor a
-	ldh [rVBK], a
-	ei
+;	; This fixes the text at the bottom being the wrong color for a second or so.
+;	; It's a real hack, but the game's using two vram maps at once, and the color code
+;	; will only update one of them.
+;	; I'm not sure why this didn't used to be a problem...
+;	di
+;	ld a, 1
+;	ldh [rVBK], a
+;.vblankWait
+;	ldh a, [rLY]
+;	cp $90
+;	jr nz, .vblankWait
+;
+;	ld hl, $9c00 + 9 * 32
+;	ld bc, 20
+;	ld a, 3
+;	call FillMemory
+;
+;	xor a
+;	ldh [rVBK], a
+;	ei
 
 	; Execute custom command 0e after titlescreen to clear colors.
 	ld a, SET_PAL_OAK_INTRO
@@ -812,13 +843,14 @@ SetPal_NidorinoIntro:
 	ld a, 2
 	ldh [rWBK], a
 
+	ld e, 0
 IF GEN_2_GRAPHICS
 	ld d, PAL_NIDORINO
+	farcall LoadPokemonPalette_Sprite
 ELSE
 	ld d, PAL_PURPLEMON
-ENDC
-	ld e, 0
 	farcall LoadSGBPalette_Sprite
+ENDC
 
 	ld d, PAL_PURPLEMON
 	ld e, 0
@@ -870,49 +902,123 @@ SetPal_Overworld::
 	res 0, [hl]
 	ret nz
 
+;	ld a, [wCurMapTileset]
+;	ld l, a
+;	ld h, 0
+;	ld bc, .tilesetUseBGPValues
+;	add hl, hl
+;	add hl, bc
+
 	ld a, 2
 	ldh [rWBK], a
 	ld [W2_TileBasedPalettes], a
 
+;	ld a, [hli]
+;	ld [W2_UseBGP1], a
+;	ld a, [hl]
+;	ld [W2_UseBGP2], a
+;	; Pokecenter uses OBP1 when healing pokemons; also cut animation
+;	ld a, %10000000
+;	ld [W2_UseOBP1], a
+
 	; Clear sprite palette map, except for exclamation marks above people's heads
 	CALL_INDIRECT ClearSpritePaletteMap
-
-	; Pokecenter uses OBP1 when healing pokemons; also cut animation
-	ld a, %10000000
-	ld [W2_UseOBP1], a
-	ld [W2_UseBGP1], a
-	ld a, %11100100 ; 3210
-	ldh [rBGP1], a
-
-	CALL_INDIRECT LoadOverworldSpritePalettes
 
 	xor a
 	ldh [rWBK], a
 
+;	CALL_INDIRECT LoadOverworldSpritePalettes
+
 	CALL_INDIRECT LoadTilesetPalette
 
+	CALL_INDIRECT LoadDefaultAnimationPalette
+
+;	; Wait 2 frames before updating palettes (if LCD is on)
+;	ldh a, [rLCDC]
+;	and LCDC_ON
+;	jr z, .doneDelay
+;	ld c, 2
+;	call DelayFrames
+;.doneDelay:
+
+
+	ld a, [wCurMapTileset]
+	ld l, a
+	ld h, 0
+	ld bc, .tilesetUseBGPValues
+	add hl, hl
+	add hl, bc
+
+
+	ld a, 2
+	ldh [rWBK], a
+
+	; Signal to refresh palettes
+	ld a, 1
+	ld [W2_ForceBGPUpdate], a
+	ld [W2_ForceOBPUpdate], a
+
+
+	ld a, [hli]
+	ld [W2_UseBGP1], a
+	ld a, [hl]
+	ld [W2_UseBGP2], a
+	; Pokecenter uses OBP1 when healing pokemons; also cut animation
+	ld a, %10000000
+	ld [W2_UseOBP1], a
+
+	ld a, %11100100
+	ldh [hBGPText], a
+
+	ld a, [wFontLoaded]
+	bit 0, a
+	jr z, .doneDelay
 	; Wait 2 frames before updating palettes (if LCD is on)
 	ldh a, [rLCDC]
 	and LCDC_ON
+	jr z, .doneDelay
+	ld a, [wFontLoaded]
+	bit 0, a
 	jr z, .doneDelay
 	ld c, 2
 	call DelayFrames
 .doneDelay:
 
-;	ld a, 2
-;	ldh [rWBK], a
-;
-;	; Signal to refresh palettes
-;	ld a, 1
-;	ld [W2_ForceBGPUpdate], a
-;	ld [W2_ForceOBPUpdate], a
-;
-;	xor a
-;	ldh [rWBK], a
+	xor a
+	ldh [rWBK], a
 
 	ld a, SET_PAL_OVERWORLD
 	ld [wDefaultPaletteCommand], a
 	ret
+
+.tilesetUseBGPValues
+	table_width 2
+	;  W2_UseBGP1 W2_UseBGP2
+	db %00000000, %00001000 ; OVERWORLD
+	db 0, 0 ; REDS_HOUSE_1
+	db 0, 0 ; MART
+	db 0, 0 ; FOREST
+	db 0, 0 ; REDS_HOUSE_2
+	db 0, 0 ; DOJO
+	db 0, 0 ; POKECENTER
+	db 0, 0 ; GYM
+	db 0, 0 ; HOUSE
+	db 0, 0 ; FOREST_GATE
+	db 0, 0 ; MUSEUM
+	db 0, 0 ; UNDERGROUND
+	db %01000000, %00000000 ; GATE
+	db 0, 0 ; SHIP
+	db 0, 0 ; SHIP_PORT
+	db 0, 0 ; CEMETERY
+	db 0, 0 ; INTERIOR
+	db 0, 0 ; CAVERN
+	db 0, 0 ; LOBBY
+	db 0, 0 ; MANSION
+	db 0, 0 ; LAB
+	db 0, 0 ; CLUB
+	db 0, 0 ; FACILITY
+	db 0, 0 ; PLATEAU
+	assert_table_length NUM_TILESETS
 
 ; Open pokemon menu
 SetPal_PartyMenu:
@@ -959,6 +1065,7 @@ SetPal_PartyMenu:
 	xor a
 	ld [W2_UseOBP1], a
 	ld [W2_UseBGP1], a
+	ld [W2_UseBGP2], a
 	ld [W2_TileBasedPalettes], a
 	ldh [rWBK], a
 	ret
@@ -985,14 +1092,19 @@ SetPal_PokemonWholeScreen:
 	; Use the "BackSprite" version for the player sprite in the hall of fame.
 	call DetermineBackSpritePaletteID
 
+IF GEN_2_GRAPHICS
+	ld d, a
+	ld e, 0
+	farcall LoadBattlePalette
+	jr .loadedPalette
+ENDC
+
 .loadPalette
 	ld d, a
-	ld a, 2
-	ldh [rWBK], a
-
 	ld e, 0
 	farcall LoadSGBPalette
 
+.loadedPalette
 	ld d, PAL_MEWMON
 	ld e, 1
 	push de
@@ -1021,7 +1133,12 @@ SetPal_PokemonWholeScreen:
 	jr nz, .loop_sprites
 	pop de
 
+	ld a, 2
+	ldh [rWBK], a
+
 	xor a
+	ld [W2_UseBGP1], a
+	ld [W2_UseBGP2], a
 	ld [W2_TileBasedPalettes], a
 	ld hl, W2_TilesetPaletteMap
 	ld bc, 20 * 18
@@ -1093,8 +1210,11 @@ SetPal_TrainerCard:
 	ld a, 2
 	ldh [rWBK], a
 
-	ld a, 1
+	dec a
 	ld [W2_TileBasedPalettes], a
+	dec a
+	ld [W2_UseBGP1], a
+	ld [W2_UseBGP2], a
 
 	ld d, PAL_MEWMON
 	ld e, 0
@@ -1156,8 +1276,9 @@ SetPal_OakIntro:
 	ld a, 2
 	ldh [rWBK], a
 
-	lb de, SPRITE_PAL_RED, 0
-	farcall LoadMapPalette_Sprite
+;	lb de, SPRITE_PAL_RED, 0
+;	farcall LoadMapPalette_Sprite
+	farcall LoadPlayerOverworldPalette
 
 	ld bc, 20 * 18
 	ld hl, W2_TilesetPaletteMap
@@ -1170,15 +1291,12 @@ SetPal_OakIntro:
 	or c
 	jr nz, .palLoop
 
-	ld a, 1
+	ld a, 3
+	ld [W2_StaticPaletteMapChanged], a
 	ld [W2_ForceOBPUpdate], a
 
 	xor a
 	ld [W2_TileBasedPalettes], a
-	ld a, 3
-	ld [W2_StaticPaletteMapChanged], a
-
-	xor a
 	ldh [rWBK], a
 	ret
 
@@ -1230,6 +1348,7 @@ INCLUDE "color/colorplus/spritespecialproperties.asm"
 IF GEN_2_GRAPHICS
 	INCLUDE "color/colorplus/mon_gender.asm"
 ENDC
+INCLUDE "color/colorplus/dynamicspritepalettes.asm"
 
 ; Copy of sound engine used by dmg-mode to play jingle
 SECTION "bank31", ROMX

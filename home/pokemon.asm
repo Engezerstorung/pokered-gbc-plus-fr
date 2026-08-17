@@ -7,6 +7,21 @@ DrawHPBar::
 	push de
 	push bc
 
+	ld a, [wHPBarType]
+	ld b, a
+	cp 2
+	jr c, .gotPortion
+;	ld a, [wLastMenuItem]
+	ld a, [wWhichPartyMenuHPBar]
+	ld b, a
+	inc a
+	rrca
+	rrca
+	and $f
+.gotPortion
+	inc b
+	ldh [hAutoBGTransferPortion], a
+
 	; Left
 	ld a, $71 ; "HP:"
 	ld [hli], a
@@ -52,14 +67,20 @@ DrawHPBar::
 	ld [hli], a
 	ld a, e
 	and a
-	jr z, .done
-	jr .fill
+	jr nz, .fill
+	and a
+	jr .done
 
 .partial
 	; Fill remaining pixels at the end if necessary.
-	ld a, $63 ; empty
-	add e
+	ld d, b
+	ld a, b
+	add $64
 	ld [hl], a
+
+	farcall LoadPartialBarTile
+;	scf
+
 .done
 	pop bc
 	pop de

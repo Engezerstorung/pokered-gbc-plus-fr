@@ -24,6 +24,10 @@ GBPalNormal::
 ;	ld a, %11010000
 	ld a, %11100100	; HAX
 	ldh [rOBP0], a
+	ld a, %11100001 ; 3201
+	ldh [rBGP1], a
+	ld a, %11010010 ; 3102
+	ldh [rBGP2], a
 	ret
 
 GBPalWhiteOut::
@@ -32,6 +36,8 @@ GBPalWhiteOut::
 	ldh [rBGP], a
 	ldh [rOBP0], a
 	ldh [rOBP1], a
+	ldh [rBGP1], a
+	ldh [rBGP2], a
 	ret
 
 RunDefaultPaletteCommand::

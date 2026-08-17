@@ -221,9 +221,13 @@ UpdateMovingBgTiles::
 ; Animate water and flower
 ; tiles in the overworld.
 
-	ldh a, [hTileAnimations]
-	and a
-	ret z
+;	ldh a, [hTileAnimations]
+;	and a
+;	ret z
+;
+;	ldh a, [rVDMA_LEN]
+;	inc a
+;	ret nz
 
 	ldh a, [hMovingBGTilesCounter1]
 	inc a
@@ -235,30 +239,64 @@ UpdateMovingBgTiles::
 
 ; water
 
-	ld hl, vTileset tile $14
-	ld c, TILE_SIZE
+	ldh a, [rVBK]
+	push af
+	ld a, 1
+	ldh [rVBK], a
 
 	ld a, [wMovingBGTilesCounter2]
 	inc a
 	and 7
 	ld [wMovingBGTilesCounter2], a
 
-	and 4
-	jr nz, .left
-.right
-	ld a, [hl]
-	rrca
-	ld [hli], a
-	dec c
-	jr nz, .right
-	jr .done
-.left
-	ld a, [hl]
-	rlca
-	ld [hli], a
-	dec c
-	jr nz, .left
-.done
+	cp 5
+	jr c, .toTheRight
+	cpl
+	and 3
+	inc a
+.toTheRight
+	swap a
+	ld l, a
+	ld a, [wCurMapTileset]
+	and a
+	jr z, .overworldWater
+	ld a, 5 tiles
+.overworldWater
+	add l
+	add LOW(WaterTiles)
+	ldh [rVDMA_SRC_LOW], a
+	ld a, HIGH(WaterTiles)
+	adc 0
+	ldh [rVDMA_SRC_HIGH], a
+	ld a, HIGH(vTileset tile $14)
+	ldh [rVDMA_DEST_HIGH], a
+	ld a, LOW(vTileset tile $14)
+	ldh [rVDMA_DEST_LOW], a
+	xor a
+	ldh [rVDMA_LEN], a
+
+;	ld hl, vTileset tile $14
+;	ld c, $10
+;	and 4
+;	jr nz, .left
+;.right
+;	ld a, [hl]
+;	rrca
+;	ld [hli], a
+;	dec c
+;	jr nz, .right
+;	jr .done
+;.left
+;	ld a, [hl]
+;	rlca
+;	ld [hli], a
+;	dec c
+;	jr nz, .left
+;.done
+
+	pop af
+	ldh [rVBK], a
+
 	ldh a, [hTileAnimations]
 	rrca
 	ret nc
@@ -268,28 +306,112 @@ UpdateMovingBgTiles::
 	ret
 
 .flower
+	ldh a, [rVBK]
+	push af
+	ld a, 1
+	ldh [rVBK], a
+
 	xor a
+	ld b, a
 	ldh [hMovingBGTilesCounter1], a
 
 	ld a, [wMovingBGTilesCounter2]
 	and 3
-	cp 2
-	ld hl, FlowerTile1
-	jr c, .copy
-	ld hl, FlowerTile2
-	jr z, .copy
-	ld hl, FlowerTile3
-.copy
-	ld de, vTileset tile $03
-	ld c, TILE_SIZE
-.loop
-	ld a, [hli]
-	ld [de], a
-	inc de
-	dec c
-	jr nz, .loop
+
+;	cp 2
+;	ld hl, FlowerTile1
+;	jr c, .copy
+;	ld hl, FlowerTile2
+;	jr z, .copy
+;	ld hl, FlowerTile3
+;.copy
+;	ld de, vTileset tile $03
+;	ld c, $10
+;.loop
+;	ld a, [hli]
+;	ld [de], a
+;	inc de
+;	dec c
+;	jr nz, .loop
+
+	jr z, .noDec
+	dec a
+.noDec
+	swap a
+	add LOW(FlowerTile1)
+	ldh [rVDMA_SRC_LOW], a
+
+	ld a, HIGH(FlowerTile1)
+	adc b
+	ldh [rVDMA_SRC_HIGH], a
+	ld a, HIGH(vTileset tile $03)
+	ldh [rVDMA_DEST_HIGH], a
+	ld a, LOW(vTileset tile $03)
+	ldh [rVDMA_DEST_LOW], a
+	xor a
+	ldh [rVDMA_LEN], a
+
+	pop af
+	ldh [rVBK], a
 	ret
 
+PUSHS
+SECTION "Flower Tiles", ROM0, ALIGN[4]
 FlowerTile1: INCBIN "gfx/tilesets/flower/flower1.2bpp"
 FlowerTile2: INCBIN "gfx/tilesets/flower/flower2.2bpp"
 FlowerTile3: INCBIN "gfx/tilesets/flower/flower3.2bpp"
+WaterTiles:  INCBIN "gfx/tilesets/water/water.2bpp"
+POPS
+
+;;;;;Waterfall;;;;;
+;	ld hl, (vTileset tile $14) + 15
+;	ld d, h
+;	ld e, l
+;	ld a, [hld]
+;	ld [wBuffer+1], a
+;	ld a, [hld]
+;	ld [wBuffer], a
+;
+;	REPT 7*2 - 1
+;	ld a, [hld]
+;	ld [de], a
+;	dec de
+;	ENDR
+;	ld a, [hli]
+;	ld [de], a
+;
+;	ld a, [wBuffer+1]
+;	ld [hld], a
+;	ld a, [wBuffer]
+;	ld [hl], a
+;;;;;;;;;;;;;;;;;;;;;;;
+;	ld [hSPTemp], sp
+;	ld sp, vTileset tile $14
+;	ld hl, (vTileset tile $14) + 2
+;
+;	pop bc
+;	pop de
+;	ld a, c
+;	ld [hli], a
+;	ld a, b
+;	ld [hli], a
+;REPT 3
+;	pop bc
+;	ld a, e
+;	ld [hli], a
+;	ld a, d
+;	ld [hli], a
+;	pop de
+;	ld a, c
+;	ld [hli], a
+;	ld a, b
+;	ld [hli], a
+;ENDR
+;	ld hl, vTileset tile $14
+;	ld a, e
+;	ld [hli], a
+;	ld [hl], d
+;
+;	ld sp, hSPTemp
+;	pop hl
+;	ld sp, hl

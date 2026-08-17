@@ -37,7 +37,7 @@ ROM0
 	"Home"
 ;	org $1665
 	"LoadMonFrontSprite"
-	org $1dd9
+;	org $1dd9
 	"JpPoint"
 ROMX $1
 	"bank1"
@@ -54,7 +54,7 @@ ROMX $3
 ROMX $4
 	"NPC Sprites 1"
 	"Font Graphics"
-	"Battle Engine 1"
+;	"Battle Engine 1"
 ROMX $5
 	"NPC Sprites 2"
 ;	"Battle Engine 2"
@@ -149,7 +149,7 @@ ROMX $1B
 	"Tilesets 3"
 ROMX $1C
 	"bank1C"
-	org $4a6e
+;	org $4a6e
 	"BattleTransition_BlackScreen"
 	org $5fb6
 	"InitPartyMenuBlkPacket"

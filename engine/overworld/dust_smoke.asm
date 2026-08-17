@@ -7,21 +7,37 @@ AnimateBoulderDust:
 	ld [wUpdateSpritesEnabled], a
 	ld a, %11100100
 	ldh [rOBP1], a
-	call LoadSmokeTileFourTimes
+	call LoadSmokeTiles
 ;	farcall WriteBoulderDustAnimationOAMBlock
-	farcall WriteCutOrBoulderDustAnimationOAMBlock
+	farcall WriteCutGrassOrBoulderDustAnimationOAMBlock
 	ld c, 8 ; number of steps in animation
 .loop
 	push bc
 	call GetMoveBoulderDustFunctionPointer
-	ld bc, .returnAddress
-	push bc
+;	ld bc, .returnAddress
+;	push bc
 	ld c, 4
-	jp hl
-.returnAddress
-	ldh a, [rOBP1]
-	xor %00100100 ; originally %01100100
-	ldh [rOBP1], a
+;	jp hl
+;.returnAddress
+
+	call JumpToAddress
+
+;	ldh a, [rOBP1]
+;	xor %00100100 ; originally %01100100
+;	ldh [rOBP1], a
+
+	ld hl, wShadowOAM + $90 + 2
+	ld bc, 4
+	ld a, [hl]
+	xor 1
+	ld [hl], a
+	add hl, bc
+	ld [hl], a
+	add hl, bc
+	ld [hl], a
+	add hl, bc
+	ld [hl], a
+
 	call Delay3
 	pop bc
 	dec c
@@ -63,32 +79,40 @@ MoveBoulderDustFunctionPointerTable:
 	boulder_dust_adjust  1, 1, AdjustOAMBlockXPos ; left
 	boulder_dust_adjust -1, 1, AdjustOAMBlockXPos ; right
 
-LoadSmokeTileFourTimes::
+LoadSmokeTiles::
 	ldh a, [rVBK]
 	push af
 	ld a, 1
 	ldh [rVBK], a
-	ld hl, vChars0 tile $7c
-	ld c, 4
-.loop
-	push bc
-	push hl
-	call LoadSmokeTile
-	pop hl
-	ld bc, TILE_SIZE
-	add hl, bc
-	pop bc
-	dec c
-	jr nz, .loop
+	ld hl, vChars0 tile $7e
+	ld de, SSAnneSmokePuffTile
+	lb bc, BANK(SSAnneSmokePuffTile), (SSAnneSmokePuffTileEnd - SSAnneSmokePuffTile) / TILE_SIZE
+	call CopyVideoDataVDMA
 	pop af
 	ldh [rVBK], a
 	ret
+;	ld hl, vChars0 tile $7c
+;	ld c, 4
+;.loop
+;	push bc
+;	push hl
+;	call LoadSmokeTile
+;	pop hl
+;	ld bc, TILE_SIZE
+;	add hl, bc
+;	pop bc
+;	dec c
+;	jr nz, .loop
+;	ret
+;
+;LoadSmokeTile:
+;	ld de, SSAnneSmokePuffTile
+;	lb bc, BANK(SSAnneSmokePuffTile), (SSAnneSmokePuffTileEnd - SSAnneSmokePuffTile) / TILE_SIZE
+;	jp CopyVideoData
 
-LoadSmokeTile:
-	ld de, SSAnneSmokePuffTile
-	lb bc, BANK(SSAnneSmokePuffTile), (SSAnneSmokePuffTileEnd - SSAnneSmokePuffTile) / TILE_SIZE
-	jp CopyVideoData
-
+PUSHS
+SECTION "Smoke Tile", ROMX, ALIGN[4]
 SSAnneSmokePuffTile:
 	INCBIN "gfx/overworld/smoke.2bpp"
 SSAnneSmokePuffTileEnd:
+POPS

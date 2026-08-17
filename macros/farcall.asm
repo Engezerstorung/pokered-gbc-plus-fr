@@ -9,7 +9,9 @@ MACRO farcall
 ;	IF \1 < $8000
 ;		rst _Bankswitch_sf
 		call Bankswitch_sf
+	.farData\@
 		dwb \1, BANK(\1)
+	.farDataEnd\@
 ;	ELSE
 ;		ld b, BANK(\1)
 ;		ld hl, \1
@@ -34,7 +36,9 @@ MACRO farjp
 ;	IF \1 < $8000
 ;		rst _Bankswitch_sf
 		call Bankswitch_sf
+	.farData\@	
 		dwb \1 | $8000, BANK(\1)
+	.farDataEnd\@
 ;	ELSE
 ;		ld b, BANK(\1)
 ;		ld hl, \1

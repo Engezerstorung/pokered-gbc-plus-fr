@@ -29,14 +29,14 @@ DisplayListMenuID::
 	ld a, LIST_MENU_BOX
 	ld [wTextBoxID], a
 	call DisplayTextBoxID ; draw the menu text box
-	call UpdateSprites ; disable sprites behind the text box
+;	call UpdateSprites ; disable sprites behind the text box
 ; the code up to .skipMovingSprites appears to be useless
 	hlcoord 4, 2 ; coordinates of upper left corner of menu text box
 	lb de, 9, 14 ; height and width of menu text box
 	ld a, [wListMenuID]
 	and a ; PCPOKEMONLISTMENU?
 	jr nz, .skipMovingSprites
-	call UpdateSprites
+;	call UpdateSprites
 .skipMovingSprites
 	ld a, 1 ; max menu item ID is 1 if the list has less than 2 entries
 	ld [wMenuWatchMovingOutOfBounds], a
@@ -54,6 +54,8 @@ DisplayListMenuID::
 	ld [wMenuWatchedKeys], a
 	ld c, 10
 	call DelayFrames
+
+	call UpdateSprites
 
 DisplayListMenuIDLoop::
 	xor a

@@ -77,10 +77,10 @@ ENDR
 	jr nz, .placeNameLoop
 .namePlaced
 
-;	ld de, wMapEntrySignBuffer
-;	ld hl, vBGMap1 + (32 * 2)
-;	lb bc, 1, 2
-;	call CopyVideoDataVDMA
+	ld de, wMapEntrySignBuffer
+	ld hl, vBGMap1 + (32 * 2)
+	lb bc, 1, 2
+	call CopyVideoDataVDMA
 
 	ld a, MAP_SIGN_DELAY
 	ldh [hWUp], a
@@ -90,7 +90,8 @@ _LoadMapSignAssets::
 	ld de, FontGraphicsGrey
 	ld hl, vFont
 	lb bc, BANK(FontGraphicsGrey), (FontGraphicsGreyEnd - FontGraphicsGrey) / $10
-	call CopyVideoDataVDMA ; if LCD is off, transfer all at once. if not, transfer during V-blank
+	call CopyVideoDataVDMA
+;	call GoodCopyVideoData ; if LCD is off, transfer all at once. if not, transfer during V-blank
 
 IF GEN_2_GRAPHICS
 IF USE_CRYSTAL_MAP_SIGN == 0 
@@ -101,21 +102,24 @@ ENDC
 	ld de, WoodEntrySignGraphics
 	ld hl, vChars2 tile $77
 	lb bc, BANK(WoodEntrySignGraphics), 9
-	call CopyVideoDataVDMA ; if LCD is off, transfer all at once. if not, transfer during V-blank
+	call CopyVideoDataVDMA
+;	call GoodCopyVideoData ; if LCD is off, transfer all at once. if not, transfer during V-blank
 
 	ld a, 1
 	ldh [rVBK], a
 	ld de, WoodSignBoxAttrMap
 	ld hl, vBGMap1
 	lb bc, BANK(WoodSignBoxAttrMap), (32 / 16) * 4
-	call CopyVideoDataVDMA ; if LCD is off, transfer all at once. if not, transfer during V-blank
+	call CopyVideoDataVDMA
+;	call GoodCopyVideoData ; if LCD is off, transfer all at once. if not, transfer during V-blank
 
 	xor a
 	ldh [rVBK], a
 	ld de, WoodSignBoxTileMap
 	ld hl, vBGMap1
 	lb bc, BANK(WoodSignBoxTileMap), (32 / 16) * 4
-	jp CopyVideoDataVDMA ; if LCD is off, transfer all at once. if not, transfer during V-blank
+	jp CopyVideoDataVDMA
+;	jp GoodCopyVideoData ; if LCD is off, transfer all at once. if not, transfer during V-blank
 
 .notForest
 ENDC
@@ -123,21 +127,24 @@ IF GEN_2_GRAPHICS == 0 || USE_CRYSTAL_MAP_SIGN == 0
 	ld de, BasicEntrySignGraphics
 	ld hl, vChars2 tile $79
 	lb bc, BANK(BasicEntrySignGraphics), 7
-	call CopyVideoDataVDMA ; if LCD is off, transfer all at once. if not, transfer during V-blank
+	call CopyVideoDataVDMA
+;	call GoodCopyVideoData ; if LCD is off, transfer all at once. if not, transfer during V-blank
 
 	ld a, 1
 	ldh [rVBK], a
 	ld de, BasicSignBoxAttrMap
 	ld hl, vBGMap1
 	lb bc, BANK(BasicSignBoxAttrMap), (32 / 16) * 4
-	call CopyVideoDataVDMA ; if LCD is off, transfer all at once. if not, transfer during V-blank
+	call CopyVideoDataVDMA
+;	call GoodCopyVideoData ; if LCD is off, transfer all at once. if not, transfer during V-blank
 
 	xor a
 	ldh [rVBK], a
 	ld de, BasicSignBoxTileMap
 	ld hl, vBGMap1
 	lb bc, BANK(BasicSignBoxTileMap), (32 / 16) * 4
-	jp CopyVideoDataVDMA ; if LCD is off, transfer all at once. if not, transfer during V-blank
+	jp CopyVideoDataVDMA
+;	jp GoodCopyVideoData ; if LCD is off, transfer all at once. if not, transfer during V-blank
 ENDC
 
 
@@ -147,30 +154,30 @@ HandleMapEntrySign::
 	cp MAP_SIGN_DELAY
 	jr nz, .nameAlreadyLoaded
 
-	ldh a, [rVDMA_LEN]
-	inc a
-	ret nz ; skip if HDMA in progress
-
-	ldh a, [rVBK]
-	push af
-	xor a
-	ldh [rVBK], a
-
-	ld a, HIGH(wMapEntrySignBuffer)
-	ldh [rVDMA_SRC_HIGH], a
-	ld a, LOW(wMapEntrySignBuffer)
-	ldh [rVDMA_SRC_LOW], a
-
-	ld a, HIGH(vBGMap1 + (32 * 2))
-	ldh [rVDMA_DEST_HIGH], a
-	ld a, LOW(vBGMap1 + (32 * 2))
-	ldh [rVDMA_DEST_LOW], a
-
-	ld a, (32 / 16) - 1 ; 2 - 1
-	ldh [rVDMA_LEN], a
-
-	pop af
-	ldh [rVBK], a
+;	ldh a, [rVDMA_LEN]
+;	inc a
+;	ret nz ; skip if HDMA in progress
+;
+;	ldh a, [rVBK]
+;	push af
+;	xor a
+;	ldh [rVBK], a
+;
+;	ld a, HIGH(wMapEntrySignBuffer)
+;	ldh [rVDMA_SRC_HIGH], a
+;	ld a, LOW(wMapEntrySignBuffer)
+;	ldh [rVDMA_SRC_LOW], a
+;
+;	ld a, HIGH(vBGMap1 + (32 * 2))
+;	ldh [rVDMA_DEST_HIGH], a
+;	ld a, LOW(vBGMap1 + (32 * 2))
+;	ldh [rVDMA_DEST_LOW], a
+;
+;	ld a, (32 / 16) - 1 ; 2 - 1
+;	ldh [rVDMA_LEN], a
+;
+;	pop af
+;	ldh [rVBK], a
 
 	ldh a, [hWUp]
 	dec a

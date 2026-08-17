@@ -1,4 +1,4 @@
-SECTION "Tilesets 1", ROMX
+SECTION "Tilesets 1", ROMX, ALIGN[4]
 
 Overworld_GFX::     INCBIN "gfx/tilesets/overworld.2bpp"
 ;Overworld_GFX::
@@ -22,7 +22,7 @@ Mansion_GFX::       INCBIN "gfx/tilesets/mansion.2bpp"
 Mansion_Block::     INCBIN "data/tilesets/mansion_metatiles.bst"
 Mansion_Attr::      INCBIN "data/tilesets/mansion_attributes.atr"
 
-SECTION "Tilesets 1bis", ROMX
+SECTION "Tilesets 1bis", ROMX, ALIGN[4]
 
 ShipPort_GFX::      INCBIN "gfx/tilesets/ship_port.2bpp"
 ShipPort_Block::    INCBIN "data/tilesets/ship_port_metatiles.bst"
@@ -37,7 +37,7 @@ Plateau_Block::     INCBIN "data/tilesets/plateau_metatiles.bst"
 Plateau_Attr::      INCBIN "data/tilesets/plateau_attributes.atr"
 
 
-SECTION "Tilesets 2", ROMX
+SECTION "Tilesets 2", ROMX, ALIGN[4]
 
 Dojo_GFX::
 Gym_GFX::           INCBIN "gfx/tilesets/gym.2bpp"
@@ -64,7 +64,7 @@ ForestGate_Attr::
 Gate_Attr::         INCBIN "data/tilesets/gate_attributes.atr"
 
 
-SECTION "Tilesets 2bis", ROMX
+SECTION "Tilesets 2bis", ROMX, ALIGN[4]
 
 Forest_GFX::        INCBIN "gfx/tilesets/forest.2bpp"
 Forest_Block::      INCBIN "data/tilesets/forest_metatiles.bst"
@@ -75,7 +75,7 @@ Facility_Block::    INCBIN "data/tilesets/facility_metatiles.bst"
 Facility_Attr::     INCBIN "data/tilesets/facility_attributes.atr"
 
 
-SECTION "Tilesets 3", ROMX
+SECTION "Tilesets 3", ROMX, ALIGN[4]
 
 Cemetery_GFX::      INCBIN "gfx/tilesets/cemetery.2bpp"
 Cemetery_Block::    INCBIN "data/tilesets/cemetery_metatiles.bst"
@@ -89,7 +89,7 @@ Lobby_GFX::         INCBIN "gfx/tilesets/lobby.2bpp"
 Lobby_Block::       INCBIN "data/tilesets/lobby_metatiles.bst"
 Lobby_Attr::        INCBIN "data/tilesets/lobby_attributes.atr"
 
-SECTION "Tilesets 3bis", ROMX
+SECTION "Tilesets 3bis", ROMX, ALIGN[4]
 
 Ship_GFX::          INCBIN "gfx/tilesets/ship.2bpp"
 Ship_Block::        INCBIN "data/tilesets/ship_metatiles.bst"
@@ -108,7 +108,7 @@ Underground_Block:: INCBIN "data/tilesets/underground_metatiles.bst"
 Underground_Attr::  INCBIN "data/tilesets/underground_attributes.atr"
 
 
-SECTION "Tilesets 4", ROMX
+SECTION "Tilesets 4", ROMX, ALIGN[4]
 Museum_GFX::        INCBIN "gfx/tilesets/museum.2bpp"
 Museum_Block::      INCBIN "data/tilesets/museum_metatiles.bst"
 Museum_Attr::       INCBIN "data/tilesets/museum_attributes.atr"

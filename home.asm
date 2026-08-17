@@ -199,9 +199,21 @@ DelayFrameHook:
 	inc a
 	ldh [hDelayFrameHookBank], a
 
+;	farcall GbcPrepareVBlank
+
+;	ld hl, wSpriteFlags
+;	bit 2, [hl]
+;	res 2, [hl]
+;	jr nz, .passPrepareOAMData
+
 	; Calling "PrepareOAMData" here instead of at vblank to prevent sprite wobbliness
 	CALL_INDIRECT PrepareOAMData
 	jr z, .spritesDrawn
+
+;.passPrepareOAMData
+;	ld a, [wUpdateSpritesEnabled]
+;	dec a
+;	jr z, .spritesDrawn
 
 	CALL_INDIRECT ColorNonOverworldSprites
 .spritesDrawn

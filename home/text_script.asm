@@ -135,6 +135,7 @@ CloseTextDisplay::
 ;	ld a, [wStatusFlags6]
 ;	bit BIT_FLY_WARP, a
 ;	call z, LoadPlayerSpriteGraphics
+
 	call LoadCurrentMapView
 
 	pop af
@@ -144,14 +145,22 @@ CloseTextDisplay::
 
 	call UpdateSprites
 	farcall InitMapSprites
-	ld hl, wFontLoaded
-	res BIT_FONT_LOADED, [hl]
+;	ld hl, wFontLoaded
+;	res BIT_FONT_LOADED, [hl]
 	ld a, [wStatusFlags6]
 	bit BIT_FLY_WARP, a
 	ld a, $90
 	ldh [hWY], a ; move the window off the screen
 	call z, LoadPlayerSpriteGraphics
-	jp LoadMapSignAssets
+
+;	ld hl, wFontLoaded
+;	res BIT_FONT_LOADED, [hl]
+;	jp LoadMapSignAssets
+
+	call LoadMapSignAssets
+	ld hl, wFontLoaded
+	res BIT_FONT_LOADED, [hl]
+	ret
 
 DisplayPokemartDialogue::
 	push hl

@@ -26,6 +26,14 @@ UpdatePlayerSprite:
 	jr nz, .lowerLeftTileIsMapTile
 
 .disableSprite
+	ld a, [wSpritePlayerStateData1ImageIndex]
+	inc a
+	ret z
+
+	ld a, [wSpriteFlags]
+	set 1, a
+	ld [wSpriteFlags], a
+
 	ld a, $ff
 	ld [wSpritePlayerStateData1ImageIndex], a
 	ret
@@ -54,25 +62,21 @@ UpdatePlayerSprite:
 	jr .next
 .checkIfRight
 	bit PLAYER_DIR_BIT_RIGHT, a
-	jr z, .checkForIdleAnimation
+	jr z, .notMoving
 	ld a, SPRITE_FACING_RIGHT
 	jr .next
-
-.checkForIdleAnimation
+.notMoving
+; zero the animation counters if not surfing
 	ld a, [wWalkBikeSurfState]
 	cp 2
 	ld b, 12
-	jr z, .idleAnimation
-
-.notMoving
-; zero the animation counters
+	jr z, .moving
 	xor a
 	ld [wSpritePlayerStateData1IntraAnimFrameCounter], a
 	ld [wSpritePlayerStateData1AnimFrameCounter], a
 	jr .calcImageIndex
 .next
 	ld [wSpritePlayerStateData1FacingDirection], a
-.idleAnimation
 	ld a, [wFontLoaded]
 	bit BIT_FONT_LOADED, a
 	jr nz, .notMoving
@@ -96,25 +100,298 @@ UpdatePlayerSprite:
 	and $3
 	ld [hl], a
 .calcImageIndex
+
+	ld a, [wSpritePlayerStateData1ImageIndex]
+	inc a
+	jr nz, .dontSetBit
+	ld a, [wSpriteFlags]
+	set 1, a
+	ld [wSpriteFlags], a
+.dontSetBit
+
 	ld a, [wSpritePlayerStateData1AnimFrameCounter]
 	ld b, a
 	ld a, [wSpritePlayerStateData1FacingDirection]
 	add b
 	ld [wSpritePlayerStateData1ImageIndex], a
 .skipSpriteAnim
+
+; Set bits related to the generation of the player reflections on reflective surfaces
+	ld d, 0
+	ld b, d
+
+	ld a, [wCurMapTileset]
+	ld c, a
+	ld hl, .tilesetsReflectionPointers
+	add hl, bc
+	add hl, bc
+	ld a, [hli]
+	ld h, [hl]
+	ld l, a
+
+	ld a, [hli]
+	and a
+	jp z, .noReflections
+
+	ldh a, [hTilePlayerStandingOn]
+	ld c, a
+	lda_coord 8, 11 ; bottom-left tile south of player
+	ld b, a
+
+;	lda_coord 8, 10 ; top-left tile south of player
+;	ld e, a
+
+	push hl
+
+.floorReflectionLoop
+	ld a, [hli]
+	and a
+	jr z, .noFloorReflection
+.checkFloorTile
+	cp c
+	jr z, .haveFloorReflection
+	cp b
+	jr nz, .floorReflectionLoop
+
+;	cp e
+;	jr z, .haveFloorReflection
+
+	set 1, d
+.haveFloorReflection
+	inc d ; set 0, d
+.passfloorReflection
+	ld a, [hli]
+	and a
+	jr nz, .passfloorReflection
+.noFloorReflection
+
+	bit 1, d
+	res 1, d
+	jr z, .passShoreTile
+	lda_coord 8, 10 ; shore tile south of player
+	ld b, a
+.checkShoreTile
+	ld a, [hli]
+	and a
+	jr z, .noShoreTile
+	cp b
+	jr nz, .checkShoreTile
+	set 1, d
+.passShoreTile
+	ld a, [hli]
+	and a
+	jr nz, .passShoreTile
+.noShoreTile
+
+	ld a, [wPlayerMovingDirection]
+	ld e, a
+	ld a, [wWalkCounter]
+	cp 3
+	lda_coord 8, 7 ; tile north of player
+	jr c, .NotMovingAway
+	bit PLAYER_DIR_BIT_DOWN, e
+	jr z, .NotMovingAway
+	lda_coord 8, 5 ; tile 1 coord further north of player
+.NotMovingAway
+	ld b, a
+
+	set 6, d
+	ld e, 2
+.wallMirrorReflectionLoop
+	ld a, [hli]
+	and a
+	jr z, .noWallMirrorReflectionsOfThisType
+	cp b
+	jr nz, .wallMirrorReflectionLoop
+	pop hl
+	jr .haveWallMirrorReflection
+.noWallMirrorReflectionsOfThisType
+	res 6, d
+	dec e
+	jr nz, .wallMirrorReflectionLoop
+	pop hl
+
+	bit 0, d
+	jr nz, .noReflections
+
+	ld e, 2
+.floorMirrorReflectionLoop
+	ld a, [hli]
+	and a
+	jr z, .noFloorMirrorReflectionOfThisType
+	cp b
+	jr z, .haveFloorMirrorReflection
+	jr .floorMirrorReflectionLoop
+.noFloorMirrorReflectionOfThisType
+	dec e
+	jr nz, .floorMirrorReflectionLoop
+	jr .noReflections
+
+.haveFloorMirrorReflection
+	set 5, d
+.haveWallMirrorReflection
+	set 4, d
+
+.noReflections
+	ld a, d
+	ld [wSpritePlayerStateData2 + $F], a
+
+	and a
+	jr z, .noReflectionDistances
+
+	ld a, [wWalkBikeSurfState]
+	ld b, a
+	ld a, [wPlayerMovingDirection]
+	ld e, a
+
+	ld a, 3
+	ldh [rWBK], a
+
+	bit 0, d
+	jr z, .noFloorReflectionDistance
+
+	bit 1, d
+	ld a, 14 ; distance if shore tile
+	jr nz, .gotFlootRelfectionDistance
+
+	ld a, b ; wWalkBikeSurfState
+	cp 2
+	ld a, -3 ; distance if swimming
+	jr z, .gotFlootRelfectionDistance
+
+	ld a, 7 ; default distance
+
+.gotFlootRelfectionDistance
+	ld [w3FloorReflectionDistance], a
+
+.noFloorReflectionDistance
+
+	bit 4, d
+	jr z, .doneMirrorReflectionDistance
+
+	bit 5, d
+
+	ld a, -9 ; default floor mirror reflection distance
+	jr nz, .gotMirrorReflectionDistance
+	ld a, -13 ; default wall mirror reflection distance	
+	ld [w3MirrorReflectionDistance], a
+
+	ld a, e ; wPlayerMovingDirection
+	and %1100
+	jr z, .doneMirrorReflectionDistance
+	ld c, a
+	ld a, [wWalkCounter]
+	and a
+	jr z, .doneMirrorReflectionDistance
+	bit PLAYER_DIR_BIT_UP, c
+	ld b, 10
+	jr nz, .gotYShiftOffset
+	cpl
+	add 1+ 7
+	ld b, 20
+.gotYShiftOffset
+	ld c, a
+	add a
+	add c
+	add b
+	cpl
+	inc a
+.gotMirrorReflectionDistance
+	ld [w3MirrorReflectionDistance], a
+.doneMirrorReflectionDistance
+	xor a
+	ldh [rWBK], a
+.noReflectionDistances
+
 ; If the player is standing on a grass tile, make the player's sprite have
 ; lower priority than the background so that it's partially obscured by the
 ; grass. Only the lower half of the sprite is permitted to have the priority
 ; bit set by later logic.
+	ld hl, wSpritePlayerStateData2GrassPriority
 	ldh a, [hTilePlayerStandingOn]
 	ld c, a
 	ld a, [wGrassTile]
 	cp c
-	ld hl, wSpritePlayerStateData2GrassPriority
 	res B_OAM_PRIO, [hl]
 	ret nz
 	set B_OAM_PRIO, [hl]
 	ret
+
+MACRO reflective_tiles
+	db \#
+	db 0
+ENDM
+
+; first byte is enabling reflections on the tilesed : 0 = no, 1 = yes
+; if enabled, a tileset entry need to be filed with 4 categories
+; use a 0 for an empty category
+; 1 : reflective floor tiles
+; 2 : shore tiles for floor tiles
+; 3 : highly reflective wall tiles (no transparency)
+; 4 : reflective wall tiles
+.overworld   ; OVERWORLD
+	db 1
+	reflective_tiles $14, $32, $5F ; reflective floor tiles
+	reflective_tiles $33           ; shore tiles for floor tiles
+	reflective_tiles $80, $81      ; highly reflective wall tiles (no transparency) 
+	reflective_tiles $85           ; reflective wall tiles
+.gate        ; GATE
+	db 1
+	db 0
+	db 0
+	db 0
+	reflective_tiles $3A, $3D ; reflective wall tiles
+.redsHouse1  ; REDS_HOUSE_1
+.mart        ; MART
+.forest      ; FOREST
+.redsHouse2  ; REDS_HOUSE_2
+.dojo        ; DOJO
+.pokecenter  ; POKECENTER
+.gym         ; GYM
+.house       ; HOUSE
+.forestGate  ; FOREST_GATE
+.museum      ; MUSEUM
+.underground ; UNDERGROUND
+.ship        ; SHIP
+.shipPort    ; SHIP_PORT
+.cemetery    ; CEMETERY
+.interior    ; INTERIOR
+.cavern      ; CAVERN
+.lobby       ; LOBBY
+.mansion     ; MANSION
+.lab         ; LAB
+.club        ; CLUB
+.facility    ; FACILITY
+.plateau     ; PLATEAU
+	db 0
+
+.tilesetsReflectionPointers
+	table_width 2
+	dw .overworld  ; OVERWORLD
+	dw .redsHouse1 ; REDS_HOUSE_1
+	dw .mart       ; MART
+	dw .forest     ; FOREST
+	dw .redsHouse2 ; REDS_HOUSE_2
+	dw .dojo       ; DOJO
+	dw .pokecenter ; POKECENTER
+	dw .gym        ; GYM
+	dw .house      ; HOUSE
+	dw .forestGate ; FOREST_GATE
+	dw .museum     ; MUSEUM
+	dw .underground; UNDERGROUND
+	dw .gate       ; GATE
+	dw .ship       ; SHIP
+	dw .shipPort   ; SHIP_PORT
+	dw .cemetery   ; CEMETERY
+	dw .interior   ; INTERIOR
+	dw .cavern     ; CAVERN
+	dw .lobby      ; LOBBY
+	dw .mansion    ; MANSION
+	dw .lab        ; LAB
+	dw .club       ; CLUB
+	dw .facility   ; FACILITY
+	dw .plateau    ; PLATEAU
+	assert_table_length NUM_TILESETS
 
 UnusedReadSpriteDataFunction:
 	push bc
@@ -321,7 +598,7 @@ UpdateSpriteInWalkingAnimation:
 	ld l, a
 
 	ld c, 4
-	call DoSpriteWalkingAnimation
+	call UpdateSpriteAnimation
 
 	ld a, l
 	sub 4
@@ -380,12 +657,7 @@ UpdateSpriteInWalkingAnimation:
 	ld [hl], a                       ; [x#SPRITESTATEDATA1_XSTEPVECTOR] = 0
 	ret
 
-DoSpriteIdleAnimation:
-	cp $80
-	call nc, GetIdleAnimationFrameLenght
-	ld c, a
-
-DoSpriteWalkingAnimation:
+UpdateSpriteAnimation:
 	ld a, [hl]                       ; x#SPRITESTATEDATA1_INTRAANIMFRAMECOUNTER
 	inc a
 	ld [hl], a                       ; [x#SPRITESTATEDATA1_INTRAANIMFRAMECOUNTER]++
@@ -399,7 +671,9 @@ DoSpriteWalkingAnimation:
 	ld [hld], a                       ; advance to next animation frame every 4 ticks (16 ticks total for one step)
 	ret
 
-GetIdleAnimationFrameLenght:
+UpdateSpriteIdleAnimation:
+	cp $80
+	jr c, .regularFrameLenght
 	push hl
 	sub $80
 	inc l
@@ -414,7 +688,10 @@ GetIdleAnimationFrameLenght:
 	add hl, de
 	ld a, [hl]
 	pop hl
-	ret
+.regularFrameLenght
+	ld c, a
+	call UpdateSpriteAnimation
+	jp UpdateSpriteImage
 
 IdleAnimationFrameLenghtList:
 	; Lenght of each frames of the idle animation
@@ -422,25 +699,8 @@ IdleAnimationFrameLenghtList:
 
 ; update [x#SPRITESTATEDATA2_MOVEMENTDELAY] for sprites in the delayed state (x#SPRITESTATEDATA1_MOVEMENTSTATUS)
 UpdateSpriteMovementDelay:
-	ld a, l
-	add 6
-	ld l, a
-
-	push hl
 	lb bc, 1, 5
 	add hl, bc
-	ld a, [hl]
-	pop hl
-
-	and a
-	push af
-
-	call nz, DoSpriteIdleAnimation
-
-.noIdleAnimation
-	inc h
-	dec l
-
 	ld a, [hl]              ; x#SPRITESTATEDATA2_MOVEMENTBYTE1
 	inc l
 	inc l
@@ -450,23 +710,25 @@ UpdateSpriteMovementDelay:
 	jr .moving
 .tickMoveCounter
 	dec [hl]                ; x#SPRITESTATEDATA2_MOVEMENTDELAY
-	jr nz, .notYetWalking
+	jr nz, NotYetMoving
 .moving
 	dec h
 	ldh a, [hCurrentSpriteOffset]
 	inc a
 	ld l, a
 	ld [hl], $1             ; [x#SPRITESTATEDATA1_MOVEMENTSTATUS] = 1 (mark as ready to move)
-.notYetWalking
-
-	pop af
-	jp nz, UpdateSpriteImage
+	; fallthrough
 NotYetMoving:
-	
-	ld h, HIGH(wSpriteStateData1)
+	ld h, HIGH(wSpriteStateData2)
 	ldh a, [hCurrentSpriteOffset]
-	add SPRITESTATEDATA1_ANIMFRAMECOUNTER
+	add SPRITESTATEDATA2_ANIMATION
 	ld l, a
+	ld a, [hl] ; x#SPRITESTATEDATA2_ANIMATION : Custom - animation status
+	ld bc, -$100 - (SPRITESTATEDATA2_ANIMATION - SPRITESTATEDATA1_INTRAANIMFRAMECOUNTER)
+	add hl, bc
+	and a
+	jp nz, UpdateSpriteIdleAnimation ; update animation frame if the npc is an idle animated one
+	inc l
 	ld [hl], $0             ; [x#SPRITESTATEDATA1_ANIMFRAMECOUNTER] = 0 (walk animation frame)
 	jp UpdateSpriteImage
 
@@ -480,27 +742,27 @@ MakeNPCFacePlayer:
 	jr nz, NotYetMoving
 	res BIT_FACE_PLAYER, [hl]
 	ld a, [wPlayerDirection]
-	bit PLAYER_DIR_BIT_UP, a
-	jr z, .notFacingDown
-	ld c, SPRITE_FACING_DOWN
-	jr .facingDirectionDetermined
-.notFacingDown
-	bit PLAYER_DIR_BIT_DOWN, a
-	jr z, .notFacingUp
-	ld c, SPRITE_FACING_UP
-	jr .facingDirectionDetermined
-.notFacingUp
-	bit PLAYER_DIR_BIT_LEFT, a
-	jr z, .notFacingRight
-	ld c, SPRITE_FACING_RIGHT
-	jr .facingDirectionDetermined
-.notFacingRight
-	ld c, SPRITE_FACING_LEFT
-.facingDirectionDetermined
+	ld c, a
+
 	ldh a, [hCurrentSpriteOffset]
 	add $9
 	ld l, a
-	ld [hl], c              ; [x#SPRITESTATEDATA1_FACINGDIRECTION]: set facing direction
+
+	xor a
+	bit PLAYER_DIR_BIT_UP, c
+	jr nz, .facingDirectionDetermined
+	inc a
+	bit PLAYER_DIR_BIT_DOWN, c
+	jr nz, .facingDirectionDetermined
+	inc a
+	bit PLAYER_DIR_BIT_RIGHT, c
+	jr nz, .facingDirectionDetermined
+	inc a
+.facingDirectionDetermined
+	add a
+	add a ; value 0 to 3 time 4 = facing direction
+	ld [hl], a         ; [x#SPRITESTATEDATA1_FACINGDIRECTION]: set facing direction
+
 	jr NotYetMoving
 
 InitializeSpriteStatus:
@@ -584,6 +846,7 @@ CheckSpriteAvailability:
 .dontLimitY
 	inc b
 	dec c
+	dec c
 .limitY
 	inc d
 
@@ -592,8 +855,8 @@ CheckSpriteAvailability:
 	ld l, a
 	ld a, [hl]      ; x#SPRITESTATEDATA2_MOVEMENTBYTE1
 
-	ld hl, wSpriteFlags
-	res 6, [hl]
+;	ld hl, wSpriteFlags
+;	res 6, [hl]
 
 	cp WALK
 	jr c, .skipXVisibilityTest ; movement byte 1 < WALK (i.e. the sprite's movement is scripted)
@@ -604,10 +867,16 @@ CheckSpriteAvailability:
 	jr nc, .spriteInvisible ; above screen region
 	add SCREEN_HEIGHT / 2 - 1
 	cp c
-	jr nz, .noFlag6
-	set 6, [hl]
-.noFlag6
+;	add SCREEN_WIDTH / 2 + 1
+;	cp b
 	jr c, .spriteInvisible  ; below screen region
+
+;	dec a
+;	cp c ; check if just under screen
+;	jr nz, .noFlag6
+;	set 6, [hl]
+;.noFlag6
+
 .skipYVisibilityTest
 	ld a, [wXCoord]
 	cp d
@@ -620,21 +889,34 @@ CheckSpriteAvailability:
 .skipXVisibilityTest
 ; make the sprite invisible if a text box is in front of it
 ; do so by checking if a tile in front of the sprite is using the text palette
-	call GetTileSpriteStandsOn
-	ld c, [hl] ; get bottom left tile for grass detection
 
 	ld a, [wFontLoaded]
 	bit 0, a ; check if text is loaded, skip visibility check if not
 	jr z, .skipVisibilityCheck
-	ld a, [wSpriteFlags]
-	bit 6, a ; test the flag signifying that the sprite is just under the screen
+
+	call GetTileSpriteStandsOn
+;	ld c, [hl] ; get bottom left tile for grass detection
+
+;	ld a, [wFontLoaded]
+;	bit 0, a ; check if text is loaded, skip visibility check if not
+;	jr z, .skipVisibilityCheck
+
+;	ld a, [wSpriteFlags]
+;	bit 6, a ; test the flag signifying that the sprite is just under the screen
 
 	ld a, 2
 	ldh [rWBK], a
-	ld d, 7 ; used both as a mask for palette bits and as value for text palette
 	ld bc, W2_TileMapPalMap - wTileMap
 	add hl, bc
-	jr nz, .onlyCheckTop ; if wSpriteFlags bit 6 is set, pass the check of the bottom tiles
+
+	ld a, d
+	cp 144
+
+	ld d, 7 ; used both as a mask for palette bits and as value for text palette
+
+	jr nc, .onlyCheckTop ; if object just under screen, pass the check of the bottom tiles
+
+;	jr nz, .onlyCheckTop ; if wSpriteFlags bit 6 is set, pass the check of the bottom tiles
 
 	ld a, [hli]
 	and d
@@ -662,24 +944,42 @@ CheckSpriteAvailability:
 	ldh a, [hCurrentSpriteOffset]
 	add SPRITESTATEDATA1_IMAGEINDEX
 	ld l, a
-	ld [hl], $ff       ; x#SPRITESTATEDATA1_IMAGEINDEX
+
 	scf
-	jr .done
+	ld a, [hl]
+	inc a
+	ret z
+
+	ld a, [wSpriteFlags]
+	set 1, a
+	ld [wSpriteFlags], a
+
+	ld [hl], $ff       ; x#SPRITESTATEDATA1_IMAGEINDEX
+;	scf
+	ret
 .spriteVisible
 	xor a
 	ldh [rWBK], a
-	ld bc, - ((W2_TileMapPalMap - wTileMap) - SCREEN_WIDTH) ; go back to the bottom left tile
-	add hl, bc
-	ld c, [hl] ; get bottom left tile for grass detection
+;	ld bc, - ((W2_TileMapPalMap - wTileMap) - SCREEN_WIDTH) ; go back to the bottom left tile
+;	add hl, bc
+;	ld c, [hl] ; get bottom left tile for grass detection
 .skipVisibilityCheck
-	ld a, [wWalkCounter]
-	and a
-	jr nz, .done           ; if player is currently walking, we're done
+;	ld a, [wWalkCounter]
+;	and a
+;	call z, UpdateSpriteImage
+
 	call UpdateSpriteImage
-	inc h
-	ld a, l
-	add 5
+
+	ld a, [wGrassTile]
+	inc a
+	ld c, a
+	call nz, GetAccurateMapTileSpriteStandsOn ; dont call if wGrassTile = $ff
+
+	ld h, HIGH(wSpriteStateData2)
+	ldh a, [hCurrentSpriteOffset]
+	add SPRITESTATEDATA2_GRASSPRIORITY
 	ld l, a
+
 	ld a, [wGrassTile]
 	cp c
 	res B_OAM_PRIO, [hl] ; x#SPRITESTATEDATA2_GRASSPRIORITY
@@ -687,7 +987,6 @@ CheckSpriteAvailability:
 	set B_OAM_PRIO, [hl] ; x#SPRITESTATEDATA2_GRASSPRIORITY
 .notInGrass
 	and a
-.done
 	ret
 
 UpdateSpriteImage:
@@ -700,12 +999,20 @@ UpdateSpriteImage:
 	ld a, [hl]         ; x#SPRITESTATEDATA1_FACINGDIRECTION
 	add b
 	ld b, a
-	ldh a, [hTilePlayerStandingOn]
-	add b
-	ld b, a
+;	ldh a, [hTilePlayerStandingOn]
+;	add b
+;	ld b, a
 	ldh a, [hCurrentSpriteOffset]
 	add $2
 	ld l, a
+
+	inc [hl]
+	jr nz, .dontSetBit
+	ld a, [wSpriteFlags]
+	set 1, a
+	ld [wSpriteFlags], a
+.dontSetBit
+
 	ld [hl], b         ; x#SPRITESTATEDATA1_IMAGEINDEX
 	ret
 
@@ -848,39 +1155,62 @@ GetTileSpriteStandsOn:
 ;	ld c, -4 ; value to add to a just-under-screen sprite so the head is considered under the text (Y position is always off 4 pixels to the top)
 ;	set 6, [hl] ; set the flag signifying that the sprite is just under the screen
 
-	ld c, 4 ; value to add to an on-screen sprite to align to 2*2 tile blocks (Y position is always off 4 pixels to the top)
-	ld a, [wSpriteFlags]
-	bit 6, a ; test the flag signifying that the sprite is just under the screen
-	jr z, .notjustunderscreen ; jr if not just under screen
-	ld c, -4 ; value to add to a just-under-screen sprite so the head is considered under the text (Y position is always off 4 pixels to the top)
-.notjustunderscreen
+;	ld c, 4 ; value to add to an on-screen sprite to align to 2*2 tile blocks (Y position is always off 4 pixels to the top)
+;	ld a, [wSpriteFlags]
+;	bit 6, a ; test the flag signifying that the sprite is just under the screen
+;	jr z, .notjustunderscreen ; jr if not just under screen
+;	ld c, -4 ; value to add to a just-under-screen sprite so the head is considered under the text (Y position is always off 4 pixels to the top)
+;.notjustunderscreen
 	ld h, HIGH(wSpriteStateData1)
 	ldh a, [hCurrentSpriteOffset]
 	add SPRITESTATEDATA1_YPIXELS
 	ld l, a
+	
+	ld a, [wFontLoaded]
+	ld b, a
+
 	ld a, [hli]     ; x#SPRITESTATEDATA1_YPIXELS
 	; Add 'c' from the sprite Y position (in pixels), -4 if just under the screen, 4 if not 
 	; If it is just under the screen then it offset the Y coordinate used to determine if under the menu or not
-	add c
+;	add c
+;	and $f8         ; in case object is currently moving
+
+	add $4          ; align to 2*2 tile blocks (Y position is always off 4 pixels to the top)
 	and $f8         ; in case object is currently moving
-	srl a           ; screen Y tile * 4
-	ld c, a
-	ld b, $0
+	ld d, a
+	bit 0, b
+	jr z, .notJustUnderScreen
+	cp 144
+	jr c, .notJustUnderScreen
+	sub 8           ; if just under screen, shift it one coordinate up to be properly hidden by text box on the bottom
+.notJustUnderScreen
+
+;	srl a           ; screen Y tile * 4
+	ld c, a         ; screen Y tile * 8
+;	ld b, $0
 	inc l
 	ld a, [hl]      ; x#SPRITESTATEDATA1_XPIXELS
-	srl a
-	srl a
-	srl a            ; screen X tile
+;	srl a
+;	srl a
+;	srl a            ; screen X tile
+	and $f8
+	rrca
+	rrca
+	rrca             ; screen X tile
 	add SCREEN_WIDTH ; screen X tile + 20
-	ld d, $0
-	ld e, a
+;	ld d, $0
+;	ld e, a
+	ld b, $0
 	hlcoord 0, 0
 	add hl, bc
 	add hl, bc
+;	add hl, bc
+;	add hl, bc
+	rrc c           ; screen Y tile * 4
 	add hl, bc
-	add hl, bc
-	add hl, bc
-	add hl, de     ; wTileMap + 20*(screen Y tile + 1) + screen X tile
+;	add hl, de     ; wTileMap + 20*(screen Y tile + 1) + screen X tile
+	ld c, a
+	add hl, bc     ; wTileMap + 20*(screen Y tile + 1) + screen X tile
 	ret
 
 ; loads [de+a] into a
@@ -1020,11 +1350,19 @@ AnimScriptedNPCMovement:
 	ldh a, [hCurrentSpriteOffset]
 	add SPRITESTATEDATA1_IMAGEINDEX
 	ld l, a
+
+	inc [hl]
+	jr nz, .dontSetBit
+	ld a, [wSpriteFlags]
+	set 1, a
+	ld [wSpriteFlags], a
+.dontSetBit
+
 	ldh a, [hSpriteVRAMSlotAndFacing]
 	ld b, a
 	ldh a, [hSpriteAnimFrameCounter]
 	add b
-	ld [hl], a
+	ld [hl], a ; x#SPRITESTATEDATA1_IMAGEINDEX
 	ret
 
 AdvanceScriptedNPCAnimFrameCounter:
@@ -1045,3 +1383,162 @@ AdvanceScriptedNPCAnimFrameCounter:
 	ld [hl], a
 	ldh [hSpriteAnimFrameCounter], a
 	ret
+
+AnimateNpcDuringText::
+; called during vblank if text is loaded while in the overworld 
+; to update the animation of idly animating sprites
+	ld a, [wSpritePlayerStateData1ImageIndex]
+	inc a
+	jr z, .dontAnimatePlayer
+	ld a, [wMovementFlags]
+	bit BIT_SPINNING, a
+	jr nz, .dontAnimatePlayer
+	ld a, [wWalkBikeSurfState]
+	cp 2
+	jr nz, .dontAnimatePlayer
+	ld hl, wSpriteStateData1 + 7
+	ld a, [hl]
+	inc a
+	ld [hl], a
+	cp 12
+	jr c, .calcImageIndex
+	xor a
+	ld [hl], a
+	inc hl
+	ld a, [hl]
+	inc a
+	and $3
+	ld [hl], a
+.calcImageIndex
+	ld a, [wSpritePlayerStateData1AnimFrameCounter]
+	ld b, a
+	ld a, [wSpritePlayerStateData1FacingDirection]
+	add b
+	ld [wSpritePlayerStateData1ImageIndex], a
+.dontAnimatePlayer
+
+	ld h, HIGH(wSpriteStateData1)
+	ld a, LOW(wSprite01StateData1)
+.nextSprite
+	ldh [hCurrentSpriteOffset], a
+	ld l, a
+	ld a, [hli] ; x#SPRITESTATEDATA1_PICTUREID
+	and a
+	jr z, .checkNextSprite
+	ld a, [hli] ; x#SPRITESTATEDATA1_MOVEMENTSTATUS
+	and a
+	jr z, .checkNextSprite
+	ld a, [hl] ; x#SPRITESTATEDATA1_IMAGEINDEX
+	inc a
+	jr z, .checkNextSprite
+	ld a, SPRITESTATEDATA1_INTRAANIMFRAMECOUNTER - SPRITESTATEDATA1_IMAGEINDEX
+	add l
+	ld l, a ; x#SPRITESTATEDATA1_INTRAANIMFRAMECOUNTER
+
+	push hl
+	lb bc, 1, SPRITESTATEDATA2_IMAGEBASEOFFSET - SPRITESTATEDATA1_INTRAANIMFRAMECOUNTER
+	add hl, bc
+	ld a, [hld] ; x#SPRITESTATEDATA2_IMAGEBASEOFFSET
+	dec a
+	swap a
+	ldh [hTilePlayerStandingOn], a ; $10 * sprite#
+	dec l
+	ld a, [hl] ; x#SPRITESTATEDATA2_ANIMATION : Custom - animation status
+	pop hl
+
+	and a
+	jr z, .checkNextSprite
+	call UpdateSpriteIdleAnimation
+	call UpdateSpriteImage
+.checkNextSprite
+	ldh a, [hCurrentSpriteOffset]
+	add SPRITESTATEDATA1_LENGTH
+	jr nz, .nextSprite
+
+	ret
+
+GetAccurateMapTileSpriteStandsOn::
+	; Find the map tile the sprite is standing on by directly looking into the map blocks data.
+	; Allow to get grass priority for sprites that are loaded on the
+	; screen border for which no appropriate wTileMap data exist.
+	; return tile ID in `c`
+	ld h, HIGH(wSpriteStateData2)
+	ldh a, [hCurrentSpriteOffset]
+	add SPRITESTATEDATA2_MAPY
+	ld l, a
+
+	lb de, 0, 4
+	ld a, [hli] ; x#SPRITESTATEDATA2_MAPY
+	sub e ; remove +4 npc Y coordinate offset
+	ld b, a
+	ld a, [hl] ; x#SPRITESTATEDATA2_MAPX 
+	sub e ; remove +4 npc X coordinate offset
+	ld c, a
+
+	ld a, %0100_0000
+	srl b ; divide map Y coordinate by 2 to get map block coordinate
+	rla ; load Y carry, will result in +8 if carry in final value
+	rlca ; rotate original bit 6 in bit 0, will result in +4 in final value
+    srl c ; divide map X coordinate by 2 to get map block coordinate
+	rla ; load X carry, will result in +2 if carry in final value
+	rlca ; double a to get final block data tile offset
+	ld e, a ; block data tile offset
+	push de ; save block data tile offset
+
+	ld a, [wCurMapWidth]
+	add 6 ; map is padded with 3 blocks on each side for adjacent maps
+	ld l, a
+	ld h, d
+	push hl ; save map data width x1 for later use
+
+	add hl, hl
+	add hl, hl ; multiply map data width by 4 to reduce amount of loops
+	ld e, l
+	ld d, h ; pass it in de
+
+	ld hl, wOverworldMap + 3 ; starting address of map data with padding offset for X starting position
+
+; Begin adding the Y offset, this is done by adding (Y * wCurMapWidth + 6) to wOverworldMap
+	ld a, b ; Y map block coordinate
+	ld b, 4 ; 4 lines will be loaded on each big loop, value used to check there is >= 4 lines to load and to adjust remaining amount
+	add 3 ; take padding lines at the top of the map data into consideration
+
+.add4Loop
+	cp b
+	jr c, .lastLoops ; quit loop if less than 4 lines to add
+	add hl, de ; add 4 lines at once
+	sub b ; sub 4 lines to the amount left to add
+	jr nz, .add4Loop
+
+.lastLoops
+	pop de ; retrieve x1 line value saved earlier
+	jr z, .doneAdding ; stop if no more line to add
+
+.addLoop ; this loop add single lines
+	add hl, de
+	dec a
+	jr nz, .addLoop
+
+.doneAdding
+	ld e, c ; X map block coordinate
+	add hl, de ; add X offset
+
+	pop de ; retrieve block data tile offset
+
+	ld l, [hl]
+	ld h, d ; get block ID in hl to multiply it
+
+	add hl, hl
+	add hl, hl
+	add hl, hl
+	add hl, hl ; block ID * 16
+	add hl, de ; adding block data tile offset
+
+	ld a, [wTilesetBlocksPtr]
+	add l
+	ld l, a
+	ld a, [wTilesetBlocksPtr + 1]
+	adc h
+	ld h, a ; added tileset blocks data base address to the tile data offset
+
+	jp GetTileIDFromBlock ; go in Home to retrieve tile ID

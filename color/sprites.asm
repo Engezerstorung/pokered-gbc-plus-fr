@@ -33,11 +33,34 @@ DEF PARTY_PAL_GREY   EQU 7
 DEF PARTY_PAL_SGB    EQU $FF
 
 LoadOverworldSpritePalettes:
-	ldh a, [rWBK]
-	ld b, a
-	xor a
-	ldh [rWBK], a
-	push bc
+	jp LoadDefaultAnimationPalette
+;	call LoadMapSpritePalettes
+;	; fallthrough
+
+;LoadDefaultAnimationPalette:
+;	ld a, [wCurMapTileset]
+;
+;	ld d, SPRITE_PAL2_OUTDOORDUST
+;	and a
+;	jr z, .gotAnimationPalette
+;	cp FOREST
+;	jr z, .gotAnimationPalette
+;	cp PLATEAU
+;	jr z, .gotAnimationPalette
+;
+;	inc d ; SPRITE_PAL2_CAVEDUST
+;	cp CAVERN
+;	jr z, .gotAnimationPalette
+;
+;	inc d ; SPRITE_PAL2_INDOORDUST
+;.gotAnimationPalette
+;	jp LoadAnimationPalette
+
+;	ldh a, [rWBK]
+;	ld b, a
+;	xor a
+;	ldh [rWBK], a
+;	push bc
 	; Does the map we're on use dark/night palettes?
 	; Load the matching Object Pals if so
 	ld a, [wCurMapTileset]
@@ -47,11 +70,19 @@ LoadOverworldSpritePalettes:
 	; If not, load the normal Object Pals
 	ld hl, MapSpritePalettes
 .gotPaletteList
-	pop bc
-	ld a, b
-	ldh [rWBK], a
 	call LoadSpritePaletteData
-	jr LoadSpecialOverworldSpritePalettes
+;	call LoadSpecialOverworldSpritePalettes
+
+	call LoadMapSpritePalettes
+	jp LoadDefaultAnimationPalette
+
+;	ld a, 2
+;	ldh [rWBK], a
+;	ld [W2_ForceOBPUpdate], a
+;	pop bc
+;	ld a, b
+;	ldh [rWBK], a
+;	ret
 
 LoadAttackSpritePalettes:
 	ld hl, AttackSpritePalettes
@@ -61,9 +92,6 @@ LoadSpritePaletteData:
 	ld b, a
 	ld a, 2
 	ldh [rWBK], a
-	dec a
-	ld [W2_ForceOBPUpdate], a
-
 	push bc
 
 	ld de, W2_SprPaletteData
@@ -74,8 +102,6 @@ LoadSpritePaletteData:
 	inc de
 	dec b
 	jr nz, .sprCopyLoop
-	ld a, 1
-	ld [W2_ForceOBPUpdate], a
 
 	pop af
 	ldh [rWBK], a
@@ -101,14 +127,34 @@ LoadSpecialOverworldSpritePalettes:
 	call LoadMapPalette_Sprite
 .notOutside
 
-; Check map to load sprite specific palettes (list in color/loadpalettes.asm)	
-	ld a, [wCurMap]
-	ld hl, MapSprPalSwapList; loading list for identification and properties values
-	call SprPalSwap
+;; Check map to load sprite specific palettes (list in color/loadpalettes.asm)	
+;	ld a, [wCurMap]
+;	ld hl, MapSprPalSwapList; loading list for identification and properties values
+;	call SprPalSwap
 
 	pop af
 	ldh [rWBK], a
 	ret
+
+LoadTownMapPallettes::
+	ld d, PAL_TOWNMAP
+	ld e, 0
+	call LoadSGBPalette
+
+	ld d, PAL_TOWNMAP2
+	ld e, 1
+	call LoadSGBPalette
+
+	call LoadPlayerOverworldPalette
+
+	ld d, SPRITE_PAL2_BROWN
+	ld e, 1
+	call LoadOutdoorMapSpritePalette_Sprite
+
+	ld d, SPRITE_PAL2_RED
+	ld e, 2
+	jp LoadOutdoorMapSpritePalette_Sprite
+
 
 ; Set the overworld sprites's colors when the sprites assets are loaded in vram
 ; Load the palette data in the sprite's byte $7 of its wSpriteStateData2 struct
@@ -233,7 +279,11 @@ GetPartySpritePalette:
 	jp c, LoadMapPalette_Sprite
 	farcall DetermineDexPaletteID
 	ld d, a
+IF GEN_2_GRAPHICS
+	jp LoadPokemonPalette_Sprite
+ELSE
 	jp LoadSGBPalette_Sprite
+ENDC
 
 
 ; This is called whenever [wUpdateSpritesEnabled] != 1 (overworld sprites not enabled?).

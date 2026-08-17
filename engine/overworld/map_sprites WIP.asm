@@ -10,104 +10,13 @@ InitMapSprites::
 ; If there is an inner loop, Y is the inner loop index, i.e. y#SPRITESTATEDATA1_* and
 ; y#SPRITESTATEDATA2_* denote fields of the sprite slots iterated over in the inner loop.
 
-;	ld a, [wCurMap]
-;	cp FIRST_INDOOR_MAP ; is the map a city or a route?
-;	call c, InitOutsideMapSprites
-;	call nc, InitInsideMapSprites
-	call InitInsideMapSprites
-
-	jpfar VramSwap
-
-InitInsideMapSprites::
-;	ld a, [wCurMap]
-;	cp FIRST_INDOOR_MAP ; is the map a city or a route?
-;	jp c, InitOutsideMapSprites
-;	ret c ; return if the map is an outside map (already handled by above call)
-;; if the map is an inside map (i.e. mapID >= FIRST_INDOOR_MAP)
 	call LoadSpriteSetFromMapHeader
 
 	call LoadMapSpritesImageBaseOffset
 	farcall SpriteSpecialProperties
-;	farcall ColorOverworldSprite2
 	farcall ColorOverworldNpcSprites
 
 	jp LoadMapSpriteTilePatterns
-
-; Loads sprite set for outside maps (cities and routes) and sets VRAM slots.
-; sets carry if the map is a city or route, unsets carry if not
-InitOutsideMapSprites:
-;	ld a, [wCurMap]
-;	cp FIRST_INDOOR_MAP ; is the map a city or a route?
-;	ret nc ; if not, return
-	call GetSplitMapSpriteSetID
-; if so, choose the appropriate one
-	ld l, a ; l = spriteSetID
-	ld a, [wFontLoaded]
-	bit BIT_FONT_LOADED, a ; reloading upper half of tile patterns after displaying text?
-	ld a, [wSpriteSetID]
-
-	push af
-
-	jr nz, .loadSpriteSet ; if so, forcibly reload the sprite set
-
-	pop af
-
-	cp l ; has the sprite set ID changed?
-
-	push af
-
-	jr z, .skipLoadingSpriteSet ; if not, don't load it again
-.loadSpriteSet
-
- 	ld [wPrevSpriteSetID], a
-
-	ld a, l
-	ld [wSpriteSetID], a
-
-	call GetSpriteSetAddress
-
-	ld de, wSpriteSet
-	ld b, wSpriteSetID - wSpriteSet
-.copyLoop
-; Copy b bytes from hl to de.
-	ld a, [hli]
-
-	call SpriteSwap
-
-	ld [de], a
-	inc de
-	dec b
-	jr nz, .copyLoop
-
-;	call LoadMapSpriteTilePatterns
-
-.skipLoadingSpriteSet
-	call LoadMapSpritesImageBaseOffset
-	farcall SpriteSpecialProperties
-;	farcall ColorOverworldSprite2
-	farcall ColorOverworldNpcSprites
-
-	pop af
-;	call nz, LoadMapSpriteTilePatterns
-	jp nz, LoadMapSpriteTilePatterns
-
-	scf
-	ret
-
-GetSpriteSetAddress:
-	; multiply spriteset ID in `l` by 11 and add SpriteSets base address to get the SpriteSet address
-	dec l ; spriteset IDs start at 1
-	ld h, 0
-	ld c, l
-	ld b, h
-	add hl, hl
-	add hl, hl ; * 4
-	add hl, bc ; * 5
-	add hl, hl ; * 10
-	add hl, bc ; * 11
-	ld bc, SpriteSets
-	add hl, bc
-	ret
 
 LoadSpriteSetFromMapHeader:
 ; This loop stores the correct VRAM tile pattern slots according the sprite
@@ -121,34 +30,45 @@ LoadSpriteSetFromMapHeader:
 	ld bc, wSpriteSetID - wSpriteSet
 	xor a
 	call FillMemory
+;	ld a, SPRITE_PIKACHU ; load Pikachu separately
+;	ld [wSpriteSet], a
 	ld hl, wSprite01StateData1
+	ld a, 15
 .storeVRAMSlotsLoop
-	ld a, [hl] ; [x#SPRITESTATEDATA1_PICTUREID] (zero if sprite slot is not used)
+	push af
+	ld a, [hli] ; [x#SPRITESTATEDATA1_PICTUREID] (zero if sprite slot is not used)
 	and a ; is the sprite slot used?
-	jr z, .nextSprite ; if the sprite slot is not used
+	jr z, .noSpriteToLoad ; if the sprite slot is not used
 
-	call SpriteSwap
+	ld b, a
+	inc l
+	ld a, [hl]
+	inc a
+	jr z, .noSpriteToLoad ; if the sprite slot is not used
+	ld a, b
+
+;	call SpriteSwap
 
 	ld c, a
 
-; loop through the space reserved for regular picture IDs
 	ld de, wSpriteSet
 	ld b, 9
 
 	cp FIRST_STILL_SPRITE   ; is this a four tile sprite?
-	jr c, .isNotFourTileSprite
+	jr c, .continue
 
-; loop through the space reserved for four tile picture IDs
 	ld de, wSpriteSet + 9
 	ld b, 2
 
-.isNotFourTileSprite
+.continue
 	call CheckIfPictureIDAlreadyLoaded
-
-.nextSprite
+.noSpriteToLoad
 	ld a, l
-	add wSprite02StateData1 - wSprite01StateData1
+	and $F0
+	add SPRITESTATEDATA1_LENGTH
 	ld l, a
+	pop af
+	dec a
 	jr nz, .storeVRAMSlotsLoop
 	ret
 
@@ -165,7 +85,7 @@ CheckIfPictureIDAlreadyLoaded:
 	cp c  ; is the tile pattern already loaded?
 	ret z ; don't redundantly load
 	dec b ; have we reached the end of the sprite set?
-	ret z ; if so, we're done here
+	jr z, .spriteNotAlreadyLoaded ; if so, we're done here
 	inc de
 	jr .loop
 
@@ -173,19 +93,14 @@ CheckIfPictureIDAlreadyLoaded:
 	ld a, c	
 	ld [de], a
 	ret
+.spriteNotAlreadyLoaded
+	scf
+	ret
 
 LoadMapSpriteTilePatterns:
 	xor a
 .loop
 	ldh [hVRAMSlot], a
-;	ld e, a
-;
-;	ld a, [wCurMap]
-;	cp FIRST_INDOOR_MAP ; is the map a city or a route?
-;	call c, CheckIfAlreadyInVramSlot
-;	ld a, e
-;
-;	call nc, LoadTilePattern
 
 	call LoadTilePattern
 
@@ -199,41 +114,7 @@ LoadMapSpriteTilePatterns:
 	scf
 	ret
 
-CheckIfAlreadyInVramSlot:
-	ldh a, [rLCDC]
-	bit B_LCDC_ENABLE, a ; is the LCD enabled?
-	jr z, .loadInVram ; z on cp imply nc, which mean load in vram
-
-	ld a, [wSpriteSetID]
-	ld l, a
-	ld a, [wPrevSpriteSetID]
-	cp l
-	ret z ; z on cp imply nc, which mean load in vram
-
-	ld d, 0
-	call GetSpriteSetAddress
-	add hl, de
-	push hl
-	ld a, l
-	call GetSpriteSetAddress
-	add hl, de
-	pop bc
-
-	ld a, [bc]
-	cp [hl]
-	jr nz, .loadInVram
-
-	scf
-	ret
-
-.loadInVram
-	and a
-	ret	
-
 LoadTilePattern:
-;	ld a, [wFontLoaded]
-;	bit BIT_FONT_LOADED, a ; reloading tile patterns after displaying text?
-;	ret nz ; if not so, skip loading data
 	call ReadSpriteSheetData
 	ret nc
 	call GetSpriteVRAMAddress
@@ -309,16 +190,21 @@ ReadSpriteSheetData:
 LoadMapSpritesImageBaseOffset:
 	ld a, $1
 	ld [wSpritePlayerStateData2ImageBaseOffset], a ; vram slot for player
-;	ld a, $2
-;	ld [wSpritePikachuStateData2ImageBaseOffset], a ; vram slot for Pikachu
 
 	ld hl, wSprite01StateData1
 .loop
-	ld a, [hl] ; [x#SPRITESTATEDATA1_PICTUREID]
+	ld a, [hli] ; [x#SPRITESTATEDATA1_PICTUREID]
 	and a ; is the sprite unused?
 	jr z, .spriteUnused
 
-	call SpriteSwap
+	ld b, a
+	inc l
+	ld a, [hl]
+	inc a
+	jr z, .spriteUnused
+	ld a, b
+
+;	call SpriteSwap
 	ld [hl], a
 
 	call GetSpriteImageBaseOffset
@@ -348,6 +234,7 @@ LoadMapSpritesImageBaseOffset:
 	pop hl
 .spriteUnused
 	ld a, l
+	and $F0
 	add SPRITESTATEDATA1_LENGTH
 	ld l, a
 	jr nz, .loop
@@ -374,76 +261,6 @@ GetSpriteImageBaseOffset:
 .done
 	pop bc
 	pop de
-	ret
-
-GetSplitMapSpriteSetID:
-	ld e, a
-	ld d, 0
-	ld hl, MapSpriteSets
-	add hl, de
-	ld a, [hl] ; a = spriteSetID
-	cp FIRST_SPLIT_SET - 1 ; does the map have 2 sprite sets?
-	ret c
-; Chooses the correct sprite set ID depending on the player's position within
-; the map for maps with two sprite sets.
-	cp SPLITSET_ROUTE_20
-	jr z, .route20
-	ld hl, SplitMapSpriteSets
-	and $0f
-	dec a
-	add a
-	add a
-	add l
-	ld l, a
-	jr nc, .noCarry
-	inc h
-.noCarry
-	ld a, [hli] ; whether the map is split EAST_WEST or NORTH_SOUTH
-	cp EAST_WEST
-	ld a, [hli] ; position of dividing line
-	ld b, a
-	jr z, .eastWestDivide
-.northSouthDivide
-	ld a, [wYCoord]
-	jr .compareCoord
-.eastWestDivide
-	ld a, [wXCoord]
-.compareCoord
-	cp b
-	jr c, .loadSpriteSetID
-; if in the east side or south side
-	inc hl
-.loadSpriteSetID
-	ld a, [hl]
-	ret
-; Uses sprite set SPRITESET_PALLET_VIRIDIAN for west side and SPRITESET_ROUTE_18_19 for east side.
-; Route 20 is a special case because the two map sections have a more complex
-; shape instead of the map simply being split horizontally or vertically.
-.route20
-	ld hl, wXCoord
-	; Use SPRITESET_PALLET_VIRIDIAN if X < 43
-	ld a, [hl]
-	cp 43
-	ld a, SPRITESET_PALLET_VIRIDIAN
-	ret c
-	; Use SPRITESET_ROUTE_18_19 if X >= 62.
-	ld a, [hl]
-	cp 62
-	ld a, SPRITESET_ROUTE_18_19
-	ret nc
-	; If 55 <= X < 62, split Y at 8; else 43 <= X < 55, so split Y at 13
-	ld a, [hl]
-	cp 55
-	ld b, 8
-	jr nc, .next
-	ld b, 13
-.next
-	; Use SPRITESET_ROUTE_18_19 if Y < split; else use SPRITESET_PALLET_VIRIDIAN
-	ld a, [wYCoord]
-	cp b
-	ld a, SPRITESET_ROUTE_18_19
-	ret c
-	ld a, SPRITESET_PALLET_VIRIDIAN
 	ret
 
 SpriteSwap:

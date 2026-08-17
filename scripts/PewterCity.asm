@@ -53,15 +53,13 @@ PewterCitySuperNerd1ShowsPlayerMuseumScript:
 	ld a, SPRITE_FACING_UP
 	ldh [hSpriteFacingDirection], a
 	call SetSpriteFacingDirectionAndDelay
-	ld a, ($3 << 4) | SPRITE_FACING_UP
-	ldh [hSpriteImageIndex], a
-	call SetSpriteImageIndexAfterSettingFacingDirection
+;	ld a, ($3 << 4) | SPRITE_FACING_UP
+;	ldh [hSpriteImageIndex], a
+;	call SetSpriteImageIndexAfterSettingFacingDirection
 	call PlayDefaultMusic
-	ld hl, wMiscFlags
-	set BIT_NO_SPRITE_UPDATES, [hl]
-	ld a, TEXT_PEWTERCITY_SUPER_NERD1_ITS_RIGHT_HERE
-	ldh [hTextID], a
-	call DisplayTextID
+;	ld hl, wMiscFlags
+;	set BIT_NO_SPRITE_UPDATES, [hl]
+
 	ld a, $3c
 	ldh [hSpriteScreenYCoord], a
 	ld a, $30
@@ -73,6 +71,23 @@ PewterCitySuperNerd1ShowsPlayerMuseumScript:
 	ld a, PEWTERCITY_SUPER_NERD1
 	ld [wSpriteIndex], a
 	call SetSpritePosition1
+
+	ld a, TEXT_PEWTERCITY_SUPER_NERD1_ITS_RIGHT_HERE
+	ldh [hTextID], a
+	call DisplayTextID
+
+;	ld a, $3c
+;	ldh [hSpriteScreenYCoord], a
+;	ld a, $30
+;	ldh [hSpriteScreenXCoord], a
+;	ld a, 12
+;	ldh [hSpriteMapYCoord], a
+;	ld a, 17
+;	ldh [hSpriteMapXCoord], a
+;	ld a, PEWTERCITY_SUPER_NERD1
+;	ld [wSpriteIndex], a
+;	call SetSpritePosition1
+
 	ld a, PEWTERCITY_SUPER_NERD1
 	ldh [hSpriteIndex], a
 	ld de, MovementData_PewterMuseumGuyExit
@@ -82,6 +97,8 @@ PewterCitySuperNerd1ShowsPlayerMuseumScript:
 	ret
 
 MovementData_PewterMuseumGuyExit:
+	db NPC_MOVEMENT_DOWN
+	db NPC_MOVEMENT_DOWN
 	db NPC_MOVEMENT_DOWN
 	db NPC_MOVEMENT_DOWN
 	db NPC_MOVEMENT_DOWN
@@ -121,15 +138,13 @@ PewterCityYoungsterShowsPlayerGymScript:
 	ld a, SPRITE_FACING_LEFT
 	ldh [hSpriteFacingDirection], a
 	call SetSpriteFacingDirectionAndDelay
-	ld a, ($1 << 4) | SPRITE_FACING_LEFT
-	ldh [hSpriteImageIndex], a
-	call SetSpriteImageIndexAfterSettingFacingDirection
+;	ld a, ($1 << 4) | SPRITE_FACING_LEFT
+;	ldh [hSpriteImageIndex], a
+;	call SetSpriteImageIndexAfterSettingFacingDirection
 	call PlayDefaultMusic
-	ld hl, wMiscFlags
-	set BIT_NO_SPRITE_UPDATES, [hl]
-	ld a, TEXT_PEWTERCITY_YOUNGSTER_GO_TAKE_ON_BROCK
-	ldh [hTextID], a
-	call DisplayTextID
+;	ld hl, wMiscFlags
+;	set BIT_NO_SPRITE_UPDATES, [hl]
+
 	ld a, $3c
 	ldh [hSpriteScreenYCoord], a
 	ld a, $50 ; Corrected BUG: should load $50, using $40 causes sprite misalignment
@@ -141,6 +156,23 @@ PewterCityYoungsterShowsPlayerGymScript:
 	ld a, PEWTERCITY_YOUNGSTER
 	ld [wSpriteIndex], a
 	call SetSpritePosition1
+
+	ld a, TEXT_PEWTERCITY_YOUNGSTER_GO_TAKE_ON_BROCK
+	ldh [hTextID], a
+	call DisplayTextID
+
+;	ld a, $3c
+;	ldh [hSpriteScreenYCoord], a
+;	ld a, $50 ; Corrected BUG: should load $50, using $40 causes sprite misalignment
+;	ldh [hSpriteScreenXCoord], a
+;	ld a, 22
+;	ldh [hSpriteMapYCoord], a
+;	ld a, 16
+;	ldh [hSpriteMapXCoord], a
+;	ld a, PEWTERCITY_YOUNGSTER
+;	ld [wSpriteIndex], a
+;	call SetSpritePosition1
+
 	ld a, PEWTERCITY_YOUNGSTER
 	ldh [hSpriteIndex], a
 	ld de, MovementData_PewterGymGuyExit

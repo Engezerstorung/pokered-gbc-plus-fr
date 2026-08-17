@@ -111,7 +111,7 @@ ENDR
 wSpriteStateData2::
 ; struct fields:
 ; - 0: walk animation counter (counting from $10 backwards when moving)
-; - 1: Custom 'SpriteFacingAndAnimationTable' offset for special sprites (see data/sprites/facings.asm)
+; - 1: Custom - 'SpriteFacingAndAnimationTable' offset for special sprites (see data/sprites/facings.asm)
 ; - 2: Y displacement (initialized at 8, supposed to keep moving sprites from moving too far, but bugged)
 ; - 3: X displacement (initialized at 8, supposed to keep moving sprites from moving too far, but bugged)
 ; - 4: Y position (in 2x2 tile grid steps, topmost 2x2 tile has value 4)
@@ -120,12 +120,12 @@ wSpriteStateData2::
 ; - 7: (?) (set to $80 when in grass, else $0; may be used to draw grass above the sprite)
 ; - 8: delay until next movement (counted downwards, movement status is set to ready if reached 0)
 ; - 9: original facing direction (backed up by DisplayTextIDInit, restored by CloseTextDisplay)
-; - A: Custom Y pixel offset for special sprites (see data/sprites/facings.asm)
-; - B: Custom X pixel offset for special sprites (see data/sprites/facings.asm)
+; - A: Custom - Y pixel offset for special sprites (see data/sprites/facings.asm)
+; - B: Custom - X pixel offset for special sprites (see data/sprites/facings.asm)
 ; - C: Custom - animation status (when always animating, ticks between frames, values > $80 are for special animation paterns )
-; - D: picture ID
+; - D: Custom - palette ID
 ; - E: sprite image base offset (in video ram, player always has value 1, used to compute sprite image index)
-; - F
+; - F: Custom - reflection byte
 wSpritePlayerStateData2::  spritestatedata2 wSpritePlayerStateData2 ; player is struct 0
 ; wSprite01StateData2 - wSprite15StateData2
 FOR n, 1, NUM_SPRITESTATEDATA_STRUCTS
@@ -342,7 +342,10 @@ wNPCMovementScriptPointerTableNum:: db
 ; ROM bank of current NPC movement script
 wNPCMovementScriptBank:: db
 
-	ds 2
+;	ds 2
+	ds 1
+
+wEndOfOAMCleaner:: db
 
 ; This union spans 180 bytes.
 UNION
@@ -1219,7 +1222,8 @@ wTrainerClass:: db
 
 wTrainerPicPointer:: dw
 
-	ds 1
+;	ds 1
+wTrainerPicBank:: db
 
 UNION
 wTempMoveNameBuffer:: ds MOVE_NAME_LENGTH
@@ -1935,8 +1939,8 @@ wGenderFlags:: db
 
 wPrevSpriteSetID:: db
 
-;; bit 0 - unused
-;; bit 1 - unused
+;; bit 0 - set if DelayFrame called in the Overworld loop
+;; bit 1 - set if an Overworld sprite visibility changed
 ;; bit 2 - unused
 ;; bit 3 - unused
 ;; bit 4 - unused
@@ -2076,7 +2080,10 @@ wRoute18Gate1FCurScript:: db
 	ds 78
 wGameProgressFlagsEnd::
 
-	ds 56
+;	ds 56
+	ds 48
+
+wSpritePaletteSet:: ds 8
 
 wObtainedHiddenItemsFlags:: flag_array MAX_HIDDEN_ITEMS
 

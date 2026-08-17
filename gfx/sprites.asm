@@ -1,4 +1,4 @@
-SECTION "NPC Sprites 1", ROMX
+SECTION "NPC Sprites 1", ROMX, ALIGN[4]
 
 ScientistSprite::        INCBIN "gfx/sprites/scientist.2bpp"
 RockerSprite::           INCBIN "gfx/sprites/rocker.2bpp"
@@ -30,7 +30,7 @@ OldAmberSprite::         INCBIN "gfx/sprites/old_amber.2bpp"
 GamblerAsleepSprite::    INCBIN "gfx/sprites/gambler_asleep.2bpp"
 
 
-SECTION "NPC Sprites 2", ROMX
+SECTION "NPC Sprites 2", ROMX, ALIGN[4]
 
 RedBikeSprite::          INCBIN "gfx/sprites/red_bike.2bpp"
 RedSprite::              INCBIN "gfx/sprites/red.2bpp"
@@ -73,7 +73,7 @@ BrunoSprite::            INCBIN "gfx/sprites/bruno.2bpp"
 LoreleiSprite::          INCBIN "gfx/sprites/lorelei.2bpp"
 SeelSprite::             INCBIN "gfx/sprites/seel.2bpp"
 
-SECTION "NPC Sprites 3", ROMX
+SECTION "NPC Sprites 3", ROMX, ALIGN[4]
 
 IF DEF(_DEBUG)
 BlankSprite::            INCBIN "gfx/sprites/agatha.2bpp"

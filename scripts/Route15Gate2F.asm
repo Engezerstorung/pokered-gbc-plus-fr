@@ -1,4 +1,15 @@
 Route15Gate2F_Script:
+	ld a, %0001_0000
+	ld [wSpriteStateData2 + $f | ROUTE15GATE2F_OAKS_AIDE << 4], a
+	ld a, [rWBK]
+	ld b, a
+	ld a, 3
+	ld [rWBK], a
+	ld a, -13
+	ld [w3MirrorReflectionDistance + ROUTE15GATE2F_OAKS_AIDE], a
+	ld a, b
+	ld [rWBK], a
+
 	jp DisableAutoTextBoxDrawing
 
 Route15Gate2F_TextPointers:

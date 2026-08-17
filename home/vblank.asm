@@ -16,7 +16,7 @@ VBlank::
 	; the double instruction here is not a mistake
 	ldh [rVDMA_LEN], a ; this first write with bit 7 unset terminate the HDMA in progress
 	ldh [rVDMA_LEN], a ; this second write finish the transfer as a GDMA
-	jp .doneHDMA
+;	jp .doneHDMA
 .noHDMAInProgress
 
 	ldh a, [hSCX]
@@ -59,8 +59,13 @@ VBlank::
 	and a
 	call nz, VBlankCopyDouble
 ;	call UpdateMovingBgTiles
-;	call hDMARoutine
 
+
+	ldh a, [hDelayFrameHookBank]
+	and a
+	jr nz, .passDMA
+
+;	call hDMARoutine
 	ld a, HIGH(wShadowOAM)
 	ldh [rDMA], a
 	; wait for DMA to finish
@@ -69,42 +74,92 @@ VBlank::
 	dec a
 	jr nz, .wait
 
-.doneHDMA
-	setrombank BANK(GbcVBlankHook)
-	call GbcVBlankHook
+.passDMA
 
-;	nop
-;	nop
-;	; HAX: don't update sprites here. They're updated elsewhere to prevent wobbliness.
-;	;ld a, BANK(PrepareOAMData)
-;	nop
-;	nop
-;	;ldh [hLoadedROMBank], a
-;	nop
-;	nop
-;	;ld [rROMB], a
-;	nop
-;	nop
-;	nop
-;	;call PrepareOAMData
-;	nop
-;	nop
-;	nop
+.doneHDMA
+	ld a, BANK(GbcVBlankHook)
+	ld [rROMB], a
+	call GbcVBlankHook
 
 	; VBlank-sensitive operations end.
 
 	call Random
+	
+	ldh a, [hBlink]
+	xor 80
+	ldh [hBlink], a
+
+;	jr .noNpcAnimation
+
+	ld a, [wSpriteFlags]
+	bit 0, a
+	jr nz, .noNpcAnimation ; dont animate npcs or update reflection during an OverworldDelayFrame vblank
+
+	; check if the owerworld is actually showing
+	ld a, 2
+	ldh [rWBK], a
+	ld a, [W2_TileBasedPalettes]
+	cp 2
+	ld a, 0
+	ldh [rWBK], a
+	jr nz, .noNpcAnimation
+
+;	ldh a, [hVBlankOccurred]
+;	and a
+;	jr z, .notOverworldLoopDelayFrame ; if vblank outside of Delayframe, not overworld loop Delayframe
+;	ldh a, [hWY]
+;	and a
+;	jr z, .notOverworldLoopDelayFrame ; if windows is up, not overworld loop Delayframe
+;	ld a, [wStatusFlags3]
+;	bit BIT_EMOTION_BUBBLE, a
+;	jr nz, .notOverworldLoopDelayFrame ; if emotion bubble is up, not overworld loop Delayframe
+;
+;	ldh a, [hAutoBGTransferEnabled]
+;	and a
+;	jr nz, .notOverworldLoopDelayFrame
+;
+;	ld a, [wFontLoaded]
+;	bit BIT_FONT_LOADED, a
+;	jr z, .noNpcAnimation
+;.notOverworldLoopDelayFrame
+
+	; only update npc animation every other frame
+	ldh a, [hBlink]
+	and a
+	jr z, .dontAnimateNpcThisVblank
+	ld a, BANK(AnimateNpcDuringText)
+	ldh [hLoadedROMBank], a
+	ld [rROMB], a
+	call AnimateNpcDuringText
+.dontAnimateNpcThisVblank
+
+	ldh a, [hPassedOamTiles]
+	and a
+	jr z, .skipDecDelayFramesCounter
+	dec a
+	ldh [hPassedOamTiles], a
+	jr nz, .noNpcAnimation
+.skipDecDelayFramesCounter
+
+	ldh a, [hDelayFrameHookBank]
+	and a
+	jr nz, .noNpcAnimation ; dont PrepareOAMData during vblank if it interrupted a Delayframe preparation
+	ld a, BANK(PrepareOAMData)
+	ldh [hLoadedROMBank], a
+	ld [rROMB], a
+	call PrepareOAMData
+.noNpcAnimation
+
+	ld hl, wSpriteFlags
+	res 0, [hl]
 
 	ldh a, [hVBlankOccurred]
 	and a
 	jr z, .skipZeroing
 	xor a
 	ldh [hVBlankOccurred], a
-
 .skipZeroing
-	ldh a, [hBlink]
-	xor 80
-	ldh [hBlink], a
+
 
 	ldh a, [hFrameCounter]
 	and a
@@ -151,6 +206,11 @@ VBlank::
 	pop af
 	ret
 
+OverworldDelayFrame::
+	push hl
+	ld hl, wSpriteFlags
+	set 0, [hl]
+	pop hl
 
 DelayFrame::
 ; Wait for the next vblank interrupt.
@@ -170,19 +230,47 @@ DEF NOT_VBLANKED EQU 1
 	ret
 
 STATInterrupt::
-	push af
-	ldh a, [rSTAT]
-	and STAT_LYC | STAT_LYCF ; keep only both LYC and LYCF bits
-	jr nz, .LYC_LY
+	push af ; 4
+	ldh a, [rVDMA_LEN] ; 3
+	inc a ; 1
+	jr z, .noVDMA ; 2
 
-.hBlank
+	add b ; 1
+	ld [hl], a ; 2 ; total : 13 ; target : 11
+
+;	set 7, [hl] ; 4 ; total : 14 ; target : 11
+
+.return
 	pop af
 	reti
 
-.LYC_LY
+.noVDMA
+	ldh a, [rSTAT]
+	and STAT_LYC | STAT_LYCF ; keep only both LYC and LYCF bits
+	jr z, .return
 	xor STAT_LYC | STAT_LYCF ; result will be 0 if both bit were set
-	jr nz, .hBlank
+	jr nz, .return
 	pop af
+
+;	reti
+
 	push hl
 	ld hl, _GbcPrepareVBlank
 	jp InterruptWrapper
+
+;	push af
+;	ldh a, [rSTAT]
+;	and STAT_LYC | STAT_LYCF ; keep only both LYC and LYCF bits
+;	jr nz, .LYC_LY
+;
+;.hBlank
+;	pop af
+;	reti
+;
+;.LYC_LY
+;	xor STAT_LYC | STAT_LYCF ; result will be 0 if both bit were set
+;	jr nz, .hBlank
+;	pop af
+;	push hl
+;	ld hl, _GbcPrepareVBlank
+;	jp InterruptWrapper

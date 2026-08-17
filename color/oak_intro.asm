@@ -3,37 +3,34 @@
 GetNidorinoPalID:
 	call ClearScreen
 IF GEN_2_GRAPHICS
-	ld a, PAL_NIDORINO
+	ld e, 0
+	ld d, PAL_NIDORINO
+	CALL_INDIRECT LoadPokemonPalette
+	ret
 ELSE
-	ld a, PAL_PURPLEMON
-ENDC
+	ld d, PAL_PURPLEMON
 	jr GotPalID
+ENDC
 
 GetRedPalID:
 	call ClearScreen
 IF GEN_2_GRAPHICS
-	ld a, PAL_HERO
+	ld d, PAL_HERO
 ELSE
-	ld a, PAL_REDMON
+	ld d, PAL_REDMON
 ENDC
 	jr GotPalID
 
 GetRivalPalID:
 	call ClearScreen
 IF GEN_2_GRAPHICS
-	ld a, PAL_GARY1
+	ld d, PAL_GARY1
 ELSE
-	ld a, PAL_MEWMON
+	ld d, PAL_MEWMON
 ENDC
-	jr GotPalID
+	; fallthrough
 
 GotPalID:
 	ld e, 0
-	ld d, a
-
-	ld a, 2
-	ldh [rWBK], a
 	CALL_INDIRECT LoadSGBPalette
-	xor a
-	ldh [rWBK], a
 	ret

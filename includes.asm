@@ -8,7 +8,7 @@ DEF LCD_COLORS EQU 0
 
 DEF COLOR_MATRIX = 1
 	;; Color correction
-	; 0 to turn OFF, 1 to 2 for 3 options (values above 3 will default to 1)
+	; 0 to turn OFF, 1 to 3 for 3 options (values above 3 will default to 1)
 	; 1 : Personal one based of hunterk with values rounded up to single digits
 	; 2 : hunterk Color Mangler matrix from their gbc shader
 	; 3 : Jojobear13 matrix from their "Built-in Color Correction for GBC games" tutorial

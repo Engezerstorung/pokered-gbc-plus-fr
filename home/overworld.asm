@@ -41,12 +41,23 @@ EnterMap::
 	farcall ShowMapEntrySign
 
 OverworldLoop::
-	call DelayFrame
+;	call DelayFrame
+	call OverworldDelayFrame
+
 OverworldLoopLessDelay::
-	call DelayFrame
+
+;	farcall LoadMapSpritePalettes
+
+;	call DelayFrame
+	call OverworldDelayFrame
+
+OverworldLoopNoDelay::
+	ld a, 2
+	ldh [hFrameCounter], a
+
 	call LoadGBPal
 	ld a, [wMovementFlags]
-	bit BIT_LEDGE_OR_FISHING, a
+	bit BIT_LEDGE, a
 	call nz, HandleMidJump
 	ld a, [wWalkCounter]
 	and a
@@ -92,11 +103,11 @@ OverworldLoopLessDelay::
 	call CheckForHiddenEventOrBookshelfOrCardKeyDoor
 	ldh a, [hItemAlreadyFound]
 	and a
-	jp z, OverworldLoop ; jump if a hidden event or bookshelf was found, but not if a card key door was found
+	jp z, PreOverworldLoop ; jump if a hidden event or bookshelf was found, but not if a card key door was found
 	call IsSpriteOrSignInFrontOfPlayer
 	ldh a, [hTextID]
 	and a
-	jp z, OverworldLoop
+	jp z, PreOverworldLoop
 .displayDialogue
 	predef GetTileAndCoordsInFrontOfPlayer
 	call UpdateSprites
@@ -130,21 +141,22 @@ OverworldLoopLessDelay::
 	ld a, [wCurOpponent]
 	and a
 	jp nz, .newBattle
-	jp OverworldLoop
+	jp PreOverworldLoop
 .noDirectionButtonsPressed
 	ld hl, wMiscFlags
 	res BIT_TURNING, [hl]
 	call UpdateSprites
+;	farcall LoadMapSpritePalettes
 	ld a, 1
 	ld [wCheckFor180DegreeTurn], a
 	ld a, [wPlayerMovingDirection] ; the direction that was pressed last time
 	and a
-	jp z, OverworldLoop
+	jp z, PreOverworldLoop
 ; if a direction was pressed last time
 	ld [wPlayerLastStopDirection], a ; save the last direction
 	xor a
 	ld [wPlayerMovingDirection], a ; zero the direction
-	jp OverworldLoop
+	jp PreOverworldLoop
 
 .checkIfDownButtonIsPressed
 	ldh a, [hJoyHeld] ; current joypad state
@@ -233,12 +245,13 @@ OverworldLoopLessDelay::
 	ld [wPlayerMovingDirection], a
 	call NewBattle
 	jp c, .battleOccurred
-	jp OverworldLoop
+	jp PreOverworldLoop
 
 .noDirectionChange
 	ld a, [wPlayerDirection] ; current direction
 	ld [wPlayerMovingDirection], a ; save direction
 	call UpdateSprites
+
 	ld a, [wWalkBikeSurfState]
 	cp $02 ; surfing
 	jr z, .surfing
@@ -250,17 +263,17 @@ OverworldLoopLessDelay::
 	ld hl, wMovementFlags
 	bit BIT_STANDING_ON_WARP, [hl]
 	pop hl
-	jp z, OverworldLoop
+	jp z, PreOverworldLoop
 ; collision occurred while standing on a warp
 	push hl
 	call ExtraWarpCheck ; sets carry if there is a potential to warp
 	pop hl
 	jp c, CheckWarpsCollision
-	jp OverworldLoop
+	jp PreOverworldLoop
 
 .surfing
 	call CollisionCheckOnWater
-	jp c, OverworldLoop
+	jp c, PreOverworldLoop
 
 .noCollision
 	ld a, $08
@@ -282,7 +295,7 @@ OverworldLoopLessDelay::
 	dec a ; riding a bike?
 	jr nz, .normalPlayerSpriteAdvancement
 	ld a, [wMovementFlags]
-	bit BIT_LEDGE_OR_FISHING, a
+	bit BIT_LEDGE, a
 	jr nz, .normalPlayerSpriteAdvancement
 	call DoBikeSpeedup
 	ld a, [hJoyHeld]
@@ -479,7 +492,7 @@ CheckWarpsCollision::
 	inc hl
 	dec c
 	jr nz, .loop
-	jp OverworldLoop
+	jp PreOverworldLoop
 
 CheckWarpsNoCollisionRetry1::
 	inc hl
@@ -511,7 +524,8 @@ WarpFound2::
 	ld [wCurMap], a
 	cp ROCK_TUNNEL_1F
 	jr nz, .notRockTunnel
-	ld a, $06
+;	ld a, $06 ; 2 * 3
+	ld a, 2 * 5
 	ld [wMapPalOffset], a
 	call GBFadeOutToBlack
 .notRockTunnel
@@ -697,13 +711,36 @@ CheckMapConnections::
 ; Since the sprite set shouldn't change, this will just update VRAM slots at
 ; x#SPRITESTATEDATA2_IMAGEBASEOFFSET without loading any tile patterns.
 	farcall InitMapSprites
+
 	call LoadTileBlockMap
 
+	ld a, [wUnusedCurMapTilesetCopy]
+	ld b, a
+	ld a, [wCurMapTileset]
+	cp b
+	call nz, LoadTilesetTilePatternData
+;	call LoadTilesetTilePatternData
+
 	farcall ShowMapEntrySign
+
+	ldh a, [hFrameCounter]
+	and a
+	jp z, OverworldLoopNoDelay
+	dec a
+	jp z, OverworldLoopNoDelay
 
 	jp OverworldLoopLessDelay
 
 .didNotEnterConnectedMap
+
+PreOverworldLoop::
+
+	ldh a, [hFrameCounter]
+	and a
+	jp z, OverworldLoopNoDelay
+	dec a
+	jp z, OverworldLoopLessDelay
+
 	jp OverworldLoop
 
 ; function to play a sound when changing maps
@@ -828,8 +865,10 @@ LoadPlayerSpriteGraphics::
 	; 1: biking
 	; 2: surfing
 
-	homecall ColorPlayerSprite
+;	homecall ColorPlayerSprite
+	homecall LoadMapSpritePalettes
 
+LoadPlayerSpriteGraphicsWithoutPalettes::
 	ld a, [wWalkBikeSurfState]
 	dec a
 	jr z, .ridingBike
@@ -875,35 +914,58 @@ INCLUDE "data/tilesets/tiles/bike_riding_tilesets.asm"
 ; load the tile pattern data of the current tileset into VRAM
 LoadTilesetTilePatternData::
 
-	ldh a, [hLoadedROMBank]
-	push af
-	ld a, [wTilesetBank]
-	ldh [hLoadedROMBank], a
-	ld [rROMB], a ; switch to ROM bank that contains tileset data
-
-	ld a, [wTilesetGfxPtr]
-	ld l, a
-	ld a, [wTilesetGfxPtr + 1]
-	ld h, a
-	ld de, vTileset
-;	ld bc, $600
+;	ldh a, [hLoadedROMBank]
+;	push af
 ;	ld a, [wTilesetBank]
-;	jp FarCopyData2
+;	ldh [hLoadedROMBank], a
+;	ld [rROMB], a ; switch to ROM bank that contains tileset data
+;
+;	ld a, [wTilesetGfxPtr]
+;	ld l, a
+;	ld a, [wTilesetGfxPtr + 1]
+;	ld h, a
+;	ld de, vTileset
+;;	ld bc, $600
+;;	ld a, [wTilesetBank]
+;;	jp FarCopyData2
+;
+;	ld a, 1
+;	ldh [rVBK], a
+;	ld bc, $80 tiles
+;	push bc
+;	call CopyData
+;	pop bc
+;	ld de, vTileset - $80 tiles
+;	call CopyData
+;	xor a
+;	ldh [rVBK], a
+;
+;	pop af
+;	ldh [hLoadedROMBank], a
+;	ld [rROMB], a
 
 	ld a, 1
 	ldh [rVBK], a
-	ld bc, $80 tiles
-	push bc
-	call CopyData
-	pop bc
-	ld de, vTileset - $80 tiles
-	call CopyData
+
+	ld a, [wTilesetGfxPtr]
+	ld e, a
+	ld a, [wTilesetGfxPtr + 1]
+	ld d, a
+	ld hl, vTileset
+	ld a, [wTilesetBank]
+	ld b, a
+	ld c, $80
+	call CopyVideoDataVDMA
+
+	ld hl, $80 tiles
+	add hl, de
+	ld d, h
+	ld e, l
+	ld hl, vTileset - $80 tiles
+	call CopyVideoDataVDMA
+
 	xor a
 	ldh [rVBK], a
-
-	pop af
-	ldh [hLoadedROMBank], a
-	ld [rROMB], a
 
 	jpfar VramSwap
 
@@ -1280,7 +1342,7 @@ IsSpriteInFrontOfPlayer2::
 ; sets the carry flag if there is a collision, and unsets it if there isn't a collision
 CollisionCheckOnLand::
 	ld a, [wMovementFlags]
-	bit BIT_LEDGE_OR_FISHING, a
+	bit BIT_LEDGE, a
 	jr nz, .noCollision
 ; if not jumping a ledge
 	ld a, [wSimulatedJoypadStatesIndex]
@@ -1352,7 +1414,7 @@ CheckForJumpingAndTilePairCollisions::
 	pop hl
 	and a
 	ld a, [wMovementFlags]
-	bit BIT_LEDGE_OR_FISHING, a
+	bit BIT_LEDGE, a
 	ret nz
 ; if not jumping
 
@@ -1557,6 +1619,20 @@ ENDR
 
 	reti
 
+GetTileIDFromBlock::
+	ldh a, [hLoadedROMBank]
+	ld b, a
+	ld a, [wTilesetBank] ; tileset data ROM bank
+	ldh [hLoadedROMBank], a
+	ld [rROMB], a ; switch to ROM bank that contains tileset data
+
+	ld c, [hl]
+
+	ld a, b
+	ldh [hLoadedROMBank], a
+	ld [rROMB], a
+	ret
+
 MakeTileMapOrPalMap:
 	ld a, BANK(_MakeTileMapOrPalMap)
 	ldh [hLoadedROMBank], a
@@ -1564,140 +1640,135 @@ MakeTileMapOrPalMap:
 	jp _MakeTileMapOrPalMap
 
 AdvancePlayerSprite::
-	ld a, [wSpritePlayerStateData1YStepVector]
+	ld hl, wSpritePlayerStateData1YStepVector
+	ld a, [hli]
 	ld b, a
-	ld a, [wSpritePlayerStateData1XStepVector]
-	ld c, a
+	inc l
+	ld c, [hl] ; wSpritePlayerStateData1XStepVector
+
 	ld hl, wWalkCounter
 	dec [hl]
 	jr nz, .afterUpdateMapCoords
 ; if it's the end of the animation, update the player's map coordinates
-	ld a, [wYCoord]
+	ld de, wYCoord
+	ld a, [de]
 	add b
-	ld [wYCoord], a
-	ld a, [wXCoord]
+	ld [de], a
+	inc de
+	ld a, [de] ; wXCoord
 	add c
-	ld [wXCoord], a
+	ld [de], a
 .afterUpdateMapCoords
-	ld a, [wWalkCounter]
+	ld a, [hl]
 	cp $07
 	jp nz, ScrollBackgroundAndSprites
 ; if this is the first iteration of the animation
-	ld a, c
-	cp $01
-	jr nz, .checkIfMovingWest
-; moving east
-	ld a, [wMapViewVRAMPointer]
-	ld e, a
-	and $e0
-	ld d, a
-	ld a, e
-	add $02
-	and $1f
-	or d
-	ld [wMapViewVRAMPointer], a
-	jr .adjustXCoordWithinBlock
-.checkIfMovingWest
-	cp $ff
-	jr nz, .checkIfMovingSouth
-; moving west
-	ld a, [wMapViewVRAMPointer]
-	ld e, a
-	and $e0
-	ld d, a
-	ld a, e
-	sub $02
-	and $1f
-	or d
-	ld [wMapViewVRAMPointer], a
-	jr .adjustXCoordWithinBlock
-.checkIfMovingSouth
-	ld a, b
-	cp $01
-	jr nz, .checkIfMovingNorth
-; moving south
-	ld a, [wMapViewVRAMPointer]
-	add $40
-	ld [wMapViewVRAMPointer], a
-	jr nc, .adjustXCoordWithinBlock
-	ld a, [wMapViewVRAMPointer + 1]
-	inc a
-	and $03
-	or $98
-	ld [wMapViewVRAMPointer + 1], a
-	jr .adjustXCoordWithinBlock
-.checkIfMovingNorth
-	cp $ff
-	jr nz, .adjustXCoordWithinBlock
-; moving north
-	ld a, [wMapViewVRAMPointer]
-	sub $40
-	ld [wMapViewVRAMPointer], a
-	jr nc, .adjustXCoordWithinBlock
-	ld a, [wMapViewVRAMPointer + 1]
-	dec a
-	and $03
-	or $98
-	ld [wMapViewVRAMPointer + 1], a
 
-.adjustXCoordWithinBlock
+	ld hl, wMapViewVRAMPointer
+	ld e, [hl]
+
+	ld a, c
+	add a
+	jr z, .checkIfMovingVertically
+; moving horizontally
+	add e
+	xor e
+	and %0001_1111
+	xor e
+
+	ld [hl], a
+
+	ld b, c
+	ld c, 1
 	ld de, wXBlockCoord
 	ld hl, wXOffsetSinceLastSpecialWarp
-	ld a, [de]
-	add c
-	ld [de], a
 
-	ld c, 1 ; value to add or sub when adjusting wCurrentTileBlockMapViewPointer
+	jr .adjustXCoordWithinBlock
+.checkIfMovingVertically
+;	ld a, b
+;	and a
+;	jr z, .UpdateMapView
+;	inc a
+;	ld a, e
+;	jr z, .substract
+;	add 32*2
+;	jr .doneOperation
+;.substract
+;	sub 32*2
+;.doneOperation
+;	ld [hli], a
+;	jr nc, .adjustYCoordWithinBlock
 
-	inc a ; z if -1 ($ff)
-	jr z, DecTileBlockMapPointer ; moved into the tile block to the west
-	sub $03
-	jr z, IncTileBlockMapPointer ; moved into the tile block to the east
+	ld a, b
+	rrca
+	jr nc, UpdateMapView
+	rrca
+	and %1100_0000 ; 1 or -1 * 64
+
+	add e
+	bit 7, b ; check if Y vector is negative
+	jr z, .yVectorIsPositive
+	cp e
+	ccf
+.yVectorIsPositive
+	ld [hli], a
+	jr nc, .adjustYCoordWithinBlock
+	
+	ld a, [hl]
+	ld d, a
+	add b
+	xor d
+	and %0000_0011
+	xor d
+	ld [hl], a
 
 .adjustYCoordWithinBlock
-	dec de ; wYBlockCoord
-	dec hl ; wYOffsetSinceLastSpecialWarp
-
 	ld a, [wCurMapWidth]
 	add MAP_BORDER * 2
-	ld c, a ; value to add or sub when adjusting wCurrentTileBlockMapViewPointer
+	ld c, a
 
+	ld de, wYBlockCoord
+	ld hl, wYOffsetSinceLastSpecialWarp
+
+.adjustXCoordWithinBlock
 	ld a, [de]
 	add b
 	ld [de], a
 
-	inc a ; z if -1 ($ff)
-	jr z, DecTileBlockMapPointer ; if z moved into the tile block to the north
-	sub $03
-	jr nz, UpdateMapView ; if z moved into the tile block to the north
+	add 2 ; c if -1 ($ff)
+	jr c, UpdateTileBlockMapPointer ; c if moved into the tile block to the north/west
+	sub 4 ; z if 2
+	jr nz, UpdateMapView ; nz if havent moved into the tile block to the south/east
 	; Fallthrough
 
-; the following two functions are used to move the pointer to the upper left
-; corner of the tile block map in the direction of motion
+; the following function is used to move the pointer to the upper left corner
+; of the screen view pointer on the tile block map in the direction of motion
+; a : new block coordinate (0 or 1)
+; b : movement vector (-1 or 1)
+; c : 1 if moving horizontaly (X), wCurMapWidth + MAP_BORDER * 2 if moving verticaly (Y)
+; de ; w[X/Y]BlockCoord
+; hl : w[X/Y]OffsetSinceLastSpecialWarp
+UpdateTileBlockMapPointer:
+	ld [de], a ; w[X/Y]BlockCoord ; replace by 1 if value was -1 ($ff) or by 0 if it was 2
 
-IncTileBlockMapPointer::
-;	xor a
-	ld [de], a ; a = 0
-	inc [hl]
+	ld a, [hl] ; w[X/Y]OffsetSinceLastSpecialWarp
+	add b
+	ld [hl], a
+	
 	ld hl, wCurrentTileBlockMapViewPointer
 	ld a, [hl]
+	bit 7, b
+	jr nz, .substract
 	add c
-	ld [hli], a
-	jr nc, UpdateMapView
-	inc [hl]
-	jr UpdateMapView
-
-DecTileBlockMapPointer::
-;	ld a, 1
-	inc a
-	ld [de], a ; a = 1
-	dec [hl]
-	ld hl, wCurrentTileBlockMapViewPointer
-	ld a, [hl]
+	jr .done
+.substract
 	sub c
+.done
 	ld [hli], a
 	jr nc, UpdateMapView
-	dec [hl]
+	ld a, [hl]
+	add b
+	ld [hl], a
 	; Fallthrough
 
 UpdateMapView:
@@ -1708,28 +1779,8 @@ UpdateMapView:
 	ld [rROMB], a
 
 	call _UpdateMapView
-
-	ld bc, 0
-
-	ld a, [wSpritePlayerStateData1YStepVector] ; vector value can be -1($ff), 0 or 1
-	inc a ; if z then -1
-	jr z, .gotRedrawPointerFunctionID
-	inc c
-	dec a ; if z then 0 so nz is 1
-	jr nz, .gotRedrawPointerFunctionID
-
-	ld a, [wSpritePlayerStateData1XStepVector]
-	inc c
-	inc a
-	jr z, .gotRedrawPointerFunctionID
-	inc c
-	dec a
-	jr z, .noPointerUpdate
-
-.gotRedrawPointerFunctionID
 	call UpdateRedrawPointer
 
-.noPointerUpdate
 	pop af
 	ldh [hLoadedROMBank], a
 	ld [rROMB], a
@@ -1870,7 +1921,7 @@ JoypadOverworld::
 	ldh [hJoyHeld], a
 	ld hl, wMovementFlags
 	ld a, [hl]
-	and (1 << BIT_SPINNING) | (1 << BIT_LEDGE_OR_FISHING) | (1 << 5) | (1 << 4) | (1 << 3)
+	and (1 << BIT_SPINNING) | (1 << BIT_FISHING) | (1 << BIT_LEDGE) | (1 << BIT_CUTTING) | (1 << 3)
 	ld [hl], a
 	ld hl, wStatusFlags5
 	res BIT_SCRIPTED_MOVEMENT_STATE, [hl]
@@ -1945,18 +1996,19 @@ CollisionCheckOnWater::
 
 ; function to run the current map's script
 RunMapScript::
-	push hl
-	push de
-	push bc
-	farcall TryPushingBoulder
-	ld a, [wMiscFlags]
-	bit BIT_BOULDER_DUST, a
-	jr z, .afterBoulderEffect
-	farcall DoBoulderDustAnimation
-.afterBoulderEffect
-	pop bc
-	pop de
-	pop hl
+;	push hl
+;	push de
+;	push bc
+;	farcall TryPushingBoulder
+;	ld a, [wMiscFlags]
+;	bit BIT_BOULDER_DUST, a
+;	jr z, .afterBoulderEffect
+;	farcall DoBoulderDustAnimation
+;.afterBoulderEffect
+;	pop bc
+;	pop de
+;	pop hl
+	homecall BoulderMapScript
 	call RunNPCMovementScript
 	ld a, [wCurMap] ; current map number
 	call SwitchToMapRomBank ; change to the ROM bank the map's data is in
@@ -1964,11 +2016,11 @@ RunMapScript::
 	ld a, [hli]
 	ld h, [hl]
 	ld l, a
-	ld de, .return
-	push de
+;	ld de, .return
+;	push de
 	jp hl ; jump to script
-.return
-	ret
+;.return
+;	ret
 
 LoadWalkingPlayerSpriteGraphics::
 	ld de, RedSprite
@@ -2056,15 +2108,23 @@ LoadMapHeader::
 	ld de, wEastConnectionHeader
 	call CopyMapConnectionHeader
 .getObjectDataPointer
+;	ld a, [hli]
+;	ld [wObjectDataPointerTemp], a
+;	ld a, [hli]
+;	ld [wObjectDataPointerTemp + 1], a
+;	push hl
+;	ld a, [wObjectDataPointerTemp]
+;	ld l, a
+;	ld a, [wObjectDataPointerTemp + 1]
+;	ld h, a ; hl = base of object data
+
 	ld a, [hli]
-	ld [wObjectDataPointerTemp], a
+	ld c, a
 	ld a, [hli]
-	ld [wObjectDataPointerTemp + 1], a
 	push hl
-	ld a, [wObjectDataPointerTemp]
-	ld l, a
-	ld a, [wObjectDataPointerTemp + 1]
+	ld l, c
 	ld h, a ; hl = base of object data
+
 	ld de, wMapBackgroundTile
 	ld a, [hli]
 	ld [de], a
@@ -2168,6 +2228,23 @@ LoadMapHeader::
 	inc e
 	ld a, [hli]
 	ld [de], a ; x#SPRITESTATEDATA2_MOVEMENTBYTE1
+
+	inc e
+	inc e
+	inc e
+	dec d
+	ld a, [hl]
+	inc a ; NONE $FF
+	jr z, .skipFacingDirection ; start face down
+	sub 2 ; UP_DOWWN $01
+	jr z, .skipFacingDirection ; start face down
+	inc a
+	and %000000_11
+	add a
+	add a
+	ld [de], a ; x#SPRITESTATEDATA1_FACINGDIRECTION
+.skipFacingDirection
+
 	ld a, [hli]
 	ldh [hLoadSpriteTemp1], a ; save movement byte 2
 	ld a, [hli]
@@ -2229,8 +2306,11 @@ LoadMapHeader::
 	pop hl
 .nextSprite
 	pop bc
-	dec d
-	ld a, $0a
+;	dec d
+;	ld a, $0a
+
+	ld a, $07
+
 	add e
 	ld e, a
 	inc c
@@ -2287,6 +2367,9 @@ LoadMapData::
 	ld a, HIGH(vBGMap0)
 	ld [wMapViewVRAMPointer + 1], a
 	xor a
+
+	ld [wMovingBGTilesCounter2], a
+
 	ld [wMapViewVRAMPointer], a
 	ldh [hSCY], a
 	ldh [hSCX], a

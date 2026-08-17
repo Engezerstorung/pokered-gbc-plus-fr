@@ -48,8 +48,8 @@
 	const SHIP_DOCK2        ; 2E
 	const SHIP_DOCK_CAR     ; 2F
 	const OUTDOOR_FLOWER_FADE ; 30
-	const OUTDOOR_GRASS_FADE; 31
-	const OUTDOOR_BLUE_FADE ; 32
+	const OUTDOOR_GRASS_NOBG; 31
+	const OUTDOOR_BLUE_NOBG ; 32
 	const INDOOR_FLOWER_FADE; 33
 	const CAVE_ENTRANCE     ; 34
 	const GATE_STAIRS       ; 35

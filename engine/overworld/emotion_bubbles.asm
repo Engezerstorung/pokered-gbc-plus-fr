@@ -17,31 +17,37 @@ EmotionBubble:
 	call CopyVideoData
 	pop af
 	ldh [rVBK], a
-	ld a, [wUpdateSpritesEnabled]
-	push af
-	ld a, $ff
-	ld [wUpdateSpritesEnabled], a
-	ld a, [wMovementFlags]
-	bit BIT_LEDGE_OR_FISHING, a ; are the last 4 OAM entries reserved for a shadow or fishing rod?
-	ld hl, wShadowOAMSprite35Attributes
-	ld de, wShadowOAMSprite39Attributes
-	jr z, .next
-	ld hl, wShadowOAMSprite31Attributes
-	ld de, wShadowOAMSprite35Attributes
+;;	ld a, [wUpdateSpritesEnabled]
+;;	push af
+;;	ld a, $ff
+;;	ld [wUpdateSpritesEnabled], a
+;	ld a, [wMovementFlags]
+;	bit BIT_LEDGE_OR_FISHING, a ; are the last 4 OAM entries reserved for a shadow or fishing rod?
+;	ld hl, wShadowOAMSprite35Attributes
+;	ld de, wShadowOAMSprite39Attributes
+;	jr z, .next
+;	ld hl, wShadowOAMSprite31Attributes
+;	ld de, wShadowOAMSprite35Attributes
+;
+;; Copy OAM data 16 bytes forward to make room for emotion bubble OAM data at the
+;; start of the OAM buffer.
+;.next
+;;	ld bc, $90
+;	ld c, $90
+;.loop
+;;	ld a, [hl]
+;	ld a, [hld]
+;	ld [de], a
+;;	dec hl
+;	dec de
+;;	dec bc
+;;	ld a, c
+;;	or b
+;	dec c
+;	jr nz, .loop
 
-; Copy OAM data 16 bytes forward to make room for emotion bubble OAM data at the
-; start of the OAM buffer.
-.next
-	ld bc, $90
-.loop
-	ld a, [hl]
-	ld [de], a
-	dec hl
-	dec de
-	dec bc
-	ld a, c
-	or b
-	jr nz, .loop
+	ld hl, wStatusFlags3
+	set BIT_EMOTION_BUBBLE, [hl]
 
 ; get the screen coordinates of the sprite the bubble is to be displayed above
 	ld hl, wSpritePlayerStateData1YPixels
@@ -62,8 +68,12 @@ EmotionBubble:
 	call WriteOAMBlock
 	ld c, 60
 	call DelayFrames
-	pop af
-	ld [wUpdateSpritesEnabled], a
+;	pop af
+;	ld [wUpdateSpritesEnabled], a
+
+	ld hl, wStatusFlags3
+	res BIT_EMOTION_BUBBLE, [hl]
+
 	call DelayFrame
 	jp UpdateSprites
 

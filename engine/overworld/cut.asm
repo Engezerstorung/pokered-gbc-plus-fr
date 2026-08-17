@@ -51,15 +51,24 @@ UsedCut:
 	call LoadScreenTilesFromBuffer2
 	ld hl, wStatusFlags5
 	res BIT_NO_TEXT_DELAY, [hl]
-	ld a, $ff
-	ld [wUpdateSpritesEnabled], a
+;	ld a, $ff
+;	ld [wUpdateSpritesEnabled], a
+
+	ld hl, wMovementFlags
+	set BIT_CUTTING, [hl]
+
 	farcall InitCutAnimOAM ; originally a call
 	ld de, CutTreeBlockSwaps
 	call ReplaceTreeTileBlock
 	call RedrawMapView
+
 	farcall AnimCut
-	ld a, $1
-	ld [wUpdateSpritesEnabled], a
+
+	ld hl, wMovementFlags
+	res BIT_CUTTING, [hl]
+
+;	ld a, $1
+;	ld [wUpdateSpritesEnabled], a
 	ld a, SFX_CUT
 	call PlaySound
 	ld a, $90
@@ -95,21 +104,21 @@ _InitCutAnimOAM: ; hooked in color/color.asm
 	pop af
 	ldh [rVBK], a
 ;	jr WriteCutAnimationOAMBlock
-	jr WriteCutOrBoulderDustAnimationOAMBlock
+	jr WriteCutTreeAnimationOAMBlock
 .grass
-	ld hl, vChars1 tile $7c
-	call LoadCutGrassAnimationTilePattern
-	ld hl, vChars1 tile $7d
-	call LoadCutGrassAnimationTilePattern
-	ld hl, vChars1 tile $7e
-	call LoadCutGrassAnimationTilePattern
-	ld hl, vChars1 tile $7f
+	ldh a, [rVBK]
+	push af
+	ld a, 1
+	ldh [rVBK], a
+	ld hl, vChars0 tile $7f
 	call LoadCutGrassAnimationTilePattern
 ;	call WriteCutAnimationOAMBlock
-	call WriteCutOrBoulderDustAnimationOAMBlock
+	call WriteCutGrassOrBoulderDustAnimationOAMBlock
+	pop af
+	ldh [rVBK], a
 	ld hl, wShadowOAMSprite36Attributes
 	ld de, OBJ_SIZE
-	ld a, OAM_XFLIP | OAM_PAL1 | 7 ; Overwrite attributes (use palette 7, animation)
+	ld a, OAM_XFLIP | OAM_BANK1 | 7 ; Overwrite attributes (use palette 7, animation)
 	ld c, e
 .loop
 	ld [hl], a
@@ -128,7 +137,20 @@ LoadCutGrassAnimationTilePattern:
 ;; code got move out so they could use different palettes.
 ;WriteCutAnimationOAMBlock:
 ;	call GetCutAnimationOffsets
-WriteCutOrBoulderDustAnimationOAMBlock:
+WriteCutGrassOrBoulderDustAnimationOAMBlock:
+	call GetCutOrBoulderDustAnimationOffsets
+	ld a, $9
+	ld de, .OAMBlock
+	jp WriteOAMBlock
+
+.OAMBlock:
+; tile ID, attributes
+	db $7f, OAM_BANK1 | 7 ; Uses palette 7 (animation)
+	db $7f, OAM_BANK1 | 7
+	db $7f, OAM_BANK1 | 7
+	db $7f, OAM_BANK1 | 7
+
+WriteCutTreeAnimationOAMBlock:
 	call GetCutOrBoulderDustAnimationOffsets
 	ld a, $9
 	ld de, .OAMBlock

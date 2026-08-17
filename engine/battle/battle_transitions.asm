@@ -5,47 +5,64 @@ BattleTransition:
 	xor a
 	ldh [hWUp], a
 	ldh [hWY], a
-	dec a
-	ld [wUpdateSpritesEnabled], a
+;	dec a
+;	ld [wUpdateSpritesEnabled], a
 	call DelayFrame
 
-; Determine which OAM block is being used by the enemy trainer sprite (if there
-; is one).
-	ld hl, wSpritePlayerStateData1ImageIndex
+; Hide all sprites except player and enemy trainer
+	ld h, HIGH(wSprite01StateData1ImageIndex)
 	ldh a, [hSpriteIndex] ; enemy trainer sprite index (0 if wild battle)
-	ld c, a
-	ld b, 0
-	ld de, SPRITESTATEDATA1_LENGTH
-.loop1
-	ld a, [hl]
-	cp $ff
-	jr z, .skip1
-	inc b
-.skip1
-	add hl, de
-	dec c
-	jr nz, .loop1
-
-; Clear OAM except for the blocks used by the player and enemy trainer sprites.
-	ld hl, wShadowOAMSprite04
-	ld c, 9
-.loop2
-	ld a, b
 	swap a
-	cp l
-	jr z, .skip2 ; skip clearing the block if the enemy trainer is using it
-	push hl
-	push bc
-	ld bc, OBJ_SIZE * 4
-	xor a
-	call FillMemory
-	pop bc
-	pop hl
-.skip2
-	ld de, OBJ_SIZE * 4
-	add hl, de
-	dec c
-	jr nz, .loop2
+	add SPRITESTATEDATA1_IMAGEINDEX
+	ld c, a
+
+	lb de, $10, $ff
+	ld a, LOW(wSprite01StateData1ImageIndex)
+.loop
+	cp c
+	jr z, .skipSprite
+	ld l, a
+	ld [hl], e
+	ld a, l
+.skipSprite
+	add d
+	jr nc, .loop
+
+;; Determine which OAM block is being used by the enemy trainer sprite (if there
+;; is one).
+;	ld c, a
+;	ld b, 0
+;	ld de, SPRITESTATEDATA1_LENGTH
+;.loop1
+;	ld a, [hl]
+;	cp $ff
+;	jr z, .skip1
+;	inc b
+;.skip1
+;	add hl, de
+;	dec c
+;	jr nz, .loop1
+;
+;; Clear OAM except for the blocks used by the player and enemy trainer sprites.
+;	ld hl, wShadowOAMSprite04
+;	ld c, 9
+;.loop2
+;	ld a, b
+;	swap a
+;	cp l
+;	jr z, .skip2 ; skip clearing the block if the enemy trainer is using it
+;	push hl
+;	push bc
+;	ld bc, OBJ_SIZE * 4
+;	xor a
+;	call FillMemory
+;	pop bc
+;	pop hl
+;.skip2
+;	ld de, OBJ_SIZE * 4
+;	add hl, de
+;	dec c
+;	jr nz, .loop2
 
 	call Delay3
 	call LoadBattleTransitionTile
@@ -183,6 +200,8 @@ SECTION "BattleTransition_BlackScreen", ROMX
 BattleTransition_BlackScreen:
 	ld a, $ff
 	ldh [rBGP], a
+	ldh [rBGP1], a
+	ldh [rBGP2], a
 	ldh [rOBP0], a
 	ldh [rOBP1], a
 	ret
@@ -450,6 +469,10 @@ BattleTransition_FlashScreen_:
 .loop
 	ld a, [hli]
 	ldh [rBGP], a
+	ld a, [hli]
+	ldh [rBGP1], a
+	ld a, [hli]
+	ldh [rBGP2], a
 	ld c, 2
 	call DelayFrames
 	dec b
@@ -457,6 +480,10 @@ BattleTransition_FlashScreen_:
 
 	ld a, [hli]
 	ldh [rBGP], a
+	ld a, [hli]
+	ldh [rBGP1], a
+	ld a, [hli]
+	ldh [rBGP2], a
 	push hl
 	farcall SetPal_Overworld
 	pop hl
@@ -464,21 +491,22 @@ BattleTransition_FlashScreen_:
 
 BattleTransition_FlashScreenPalettes:
 	; load fade to black palettes function
-	dc 3, 3, 2, 1
-	dc 3, 3, 3, 2
-	dc 3, 3, 3, 3
-	dc 3, 3, 3, 2
-	dc 3, 3, 2, 1
+	;	rBGP     rBGP1    rBGP2
+	dc 3,3,2,1, 3,3,1,2, 3,2,1,3
+	dc 3,3,3,2, 3,3,2,3, 3,3,2,3
+	dc 3,3,3,3, 3,3,3,3, 3,3,3,3
+	dc 3,3,3,2, 3,3,2,3, 3,3,2,3
+	dc 3,3,2,1, 3,3,1,2, 3,2,1,3
 	; load normal palettes function
-	dc 3, 2, 1, 0
+	dc 3,2,1,0, 3,2,0,1, 3,1,0,2
 	; load fade to white palettes function
-	dc 2, 1, 0, 0
-	dc 1, 0, 0, 0
-	dc 0, 0, 0, 0
-	dc 1, 0, 0, 0
-	dc 2, 1, 0, 0
+	dc 2,1,0,0, 2,1,0,0, 2,0,0,1
+	dc 1,0,0,0, 1,0,0,0, 1,0,0,0
+	dc 0,0,0,0, 0,0,0,0, 0,0,0,0
+	dc 1,0,0,0, 1,0,0,0, 1,0,0,0
+	dc 2,1,0,0, 2,1,0,0, 2,0,0,1
 	; load normal palettes function
-	dc 3, 2, 1, 0
+	dc 3,2,1,0, 3,2,0,1, 3,1,0,2
 
 ; used for low level trainer dungeon battles
 BattleTransition_Shrink:

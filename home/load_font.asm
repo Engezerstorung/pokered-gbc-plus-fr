@@ -1,4 +1,8 @@
 LoadFontTilePatterns::
+
+	ld a, %11000000
+	ldh [rBGPText], a
+
 	ldh a, [rLCDC]
 	bit B_LCDC_ENABLE, a
 	jr nz, .on
@@ -15,6 +19,10 @@ LoadFontTilePatterns::
 	jp CopyVideoDataDouble ; if LCD is on, transfer during V-blank
 
 LoadTextBoxTilePatterns::
+
+	ld a, %11000000
+	ldh [rBGPText], a
+
 ;	ldh a, [rLCDC]
 ;	bit B_LCDC_ENABLE, a
 ;	jr nz, .on
@@ -37,6 +45,9 @@ LoadPartialTextBoxTilePatterns::
 	jp GoodCopyVideoData ; if LCD is off, transfer all at once. if not, transfer during V-blank
 
 LoadMapSignAssets::
+	ld a, %11100100
+	ldh [rBGPText], a
+
 	farjp _LoadMapSignAssets
 
 LoadHpBarAndStatusTilePatterns::

@@ -6038,9 +6038,36 @@ LoadEnemyMonData:
 	ld b, SPDSPCDV_TRAINER
 	jr z, .storeDVs
 ; random DVs for wild mon
+
 	call BattleRandom
 	ld b, a
 	call BattleRandom
+
+;	bit 5, a
+;	jr z, .notShiny
+;	and $f0
+;	or $a
+;	ld b, $aa
+;.notShiny
+
+; After having generated vanilla DVs, roll again for a chance of shiny-ness, and only keep them if shiny
+	ld c, a
+	call BattleRandom
+	cp $aa ; check if SPD/SPC are 10
+	jr nz, .notShiny
+	ld d, a
+	call BattleRandom
+	bit 5, a ; check if bit 1 of the ATK high nybble is set
+	jr z, .notShiny
+	ld e, a
+	and $f
+	cp $a ; check if DEF is 10
+	jr nz, .notShiny
+	ld b, d
+	ld c, e
+.notShiny
+	ld a, c
+	
 .storeDVs
 	ld hl, wEnemyMonDVs
 	ld [hli], a
@@ -6714,6 +6741,10 @@ InitBattleCommon:
 	ld a, [hl]
 	push af
 	res BIT_TEXT_DELAY, [hl] ; no delay
+
+;	ld hl, wFontLoaded
+;	set BIT_FONT_LOADED, [hl] ; added to prevent reflection flicker inbetween battle text and battle transition
+
 	callfar InitBattleVariables
 	ld a, [wEnemyMonSpecies2]
 	sub OPP_ID_OFFSET
@@ -6721,6 +6752,10 @@ InitBattleCommon:
 	ld [wTrainerClass], a
 	call GetTrainerInformation
 	callfar ReadTrainer
+
+;	ld hl, wFontLoaded
+;	res BIT_FONT_LOADED, [hl]
+
 	call DoBattleTransitionAndInitBattleVariables
 	call _LoadTrainerPic
 	xor a
@@ -6740,6 +6775,10 @@ InitWildBattle:
 	ld a, $1
 	ld [wIsInBattle], a
 	call LoadEnemyMonData
+
+;	ld hl, wFontLoaded
+;	res BIT_FONT_LOADED, [hl]
+
 	call DoBattleTransitionAndInitBattleVariables
 	ld a, [wCurOpponent]
 	cp RESTLESS_SOUL
@@ -6824,7 +6863,8 @@ _LoadTrainerPic:
 	ld d, a ; de contains pointer to trainer pic
 	ld a, [wLinkState]
 	and a
-	ld a, BANK("Trainer Pics")
+;	ld a, BANK("Trainer Pics")
+	ld a, [wTrainerPicBank]
 	jr z, .loadSprite
 	ld a, BANK(RedPicFront)
 .loadSprite
@@ -6987,39 +7027,48 @@ PrintEXPBarAt1711:
 PrintEXPBar:
 	push de
 	call CalcEXPBarPixelLength
+	pop hl
 	ldh a, [hQuotient + 3] ; pixel length
 	ld [wEXPBarPixelLength], a
 	ld b, a
 	ld c, $08
-	ld d, $08
-	pop hl
+	ld d, 0
+	ld e, c
 .loop
 	ld a, b
-	sub c
+	sub e
 	jr nc, .skip
-	ld c, b
+	ld e, b
 	jr .loop
 .skip
 	ld b, a
-	ld a, $CC
-	add c
+	ld a, e
 .loop2
-	cp $D4
-	jr nz, .noFullExp
-	ld a, $6B
-.noFullExp
-	cp $CC
-	jr nz, .noEmptyExp
+	and a
 	ld a, $63
-.noEmptyExp
+	jr z, .gotTile
+	ld a, e
+	cp $8
+	ld a, $6B
+	jr z, .gotTile
+
+	push hl
+	push de
+	push bc
+	farcall LoadPartialBarTile
+	pop bc
+	pop de
+	pop hl
+	ld a, $64
+.gotTile
 	ld [hld], a
-	dec d
+	dec c
 	ret z
 	ld a, b
 	and a
 	jr nz, .loop
 	ld a, $63
-	jr .loop2
+	jr .gotTile
 
 CalcEXPBarPixelLength:
 	ld hl, wEXPBarKeepFullFlag
@@ -7195,7 +7244,9 @@ PrintEnemyMonGender:
 	ld de, wEnemyMonDVs
 	call PrintGenderCommon
 	hlcoord 9, 1
-	ld [hl], a
+	ld [hli], a
+	ret nc
+	ld [hl], '⁂'
 	ret
 
 PrintPlayerMonGender:
@@ -7204,12 +7255,31 @@ PrintPlayerMonGender:
 	ld de, wBattleMonDVs
 	call PrintGenderCommon
 	hlcoord 17, 8
-	ld [hl], a
+	ld [hli], a
+	ret nc
+	ld [hl], '⁂'
 	ret
 
 PrintGenderCommon: ; used by both routines
 	ld [wPokedexNum], a
 	farcall GetMonGender
+
+	ld a, [de]
+	bit 5, a
+	jr z, .notShiny
+	and $f
+	cp $a
+	jr nz, .notShiny
+	inc de
+	ld a, [de]
+	cp $aa
+	jr nz, .notShiny
+	scf
+	jr .shiny
+.notShiny
+	and a
+.shiny
+
 	ld a, [wPokedexNum]
 	ret
 ENDC

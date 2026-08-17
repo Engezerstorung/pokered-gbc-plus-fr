@@ -1,8 +1,13 @@
 DelayFrames::
 ; wait c frames
+	ld a, c
+	ldh [hPassedOamTiles], a
+.loop
 	call DelayFrame
 	dec c
-	jr nz, DelayFrames
+	jr nz, .loop
+	xor a
+	ldh [hPassedOamTiles], a
 	ret
 
 PlaySoundWaitForCurrent::

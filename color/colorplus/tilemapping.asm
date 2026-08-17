@@ -58,19 +58,30 @@ ENDR
 	reti
 
 UpdateRedrawPointer::
-	ld hl, RedrawPointerFunctionsTable
-	add hl, bc
-	add hl, bc
-	ld a, [hli]
-	ld h, [hl]
-	ld l, a
-	jp hl
+	ld a, [wSpritePlayerStateData1YStepVector] ; vector value can be -1($ff), 0 or 1
+	inc a ; if z then -1
+	jr z, GetNorthRowRedrawPointer
+	dec a ; if z then 0 so nz is 1
+	jr nz, GetSouthRowRedrawPointer
+	ld a, [wSpritePlayerStateData1XStepVector]
+	inc a
+	jr z, GetWestColumnRedrawPointer
+	dec a
+	ret z
 
-RedrawPointerFunctionsTable:
-	dw GetNorthRowRedrawPointer
-	dw GetSouthRowRedrawPointer
-	dw GetWestColumnRedrawPointer
-	dw GetEastColumnRedrawPointer
+GetEastColumnRedrawPointer:
+	ld a, [wMapViewVRAMPointer]
+	ld b, a
+	add 18
+	xor b
+	and $1f
+	xor b
+	ldh [hRedrawRowOrColumnDest], a
+	ld a, [wMapViewVRAMPointer + 1]
+	ldh [hRedrawRowOrColumnDest + 1], a
+	ld a, REDRAW_COL
+	ldh [hRedrawRowOrColumnMode], a
+	ret	
 
 GetNorthRowRedrawPointer:
 	ld b, REDRAW_ROW
@@ -93,29 +104,15 @@ GetSouthRowRedrawPointer:
 	ld a, [wMapViewVRAMPointer]
 	ldh [hRedrawRowOrColumnDest], a
 	ld a, [wMapViewVRAMPointer + 1]
+	ld b, a
 	add HIGH($200)
+	xor b
 	and $03
-	or $98
+	xor b
 	ldh [hRedrawRowOrColumnDest + 1], a
 	ld a, REDRAW_ROW
 	ldh [hRedrawRowOrColumnMode], a
 	ret
-
-GetEastColumnRedrawPointer:
-	ld a, [wMapViewVRAMPointer]
-	ld c, a
-	and $e0
-	ld b, a
-	ld a, c
-	add 18
-	and $1f
-	or b
-	ldh [hRedrawRowOrColumnDest], a
-	ld a, [wMapViewVRAMPointer + 1]
-	ldh [hRedrawRowOrColumnDest + 1], a
-	ld a, REDRAW_COL
-	ldh [hRedrawRowOrColumnMode], a
-	ret	
 
 _ScheduleNorthRowRedraw::
 	hlcoord 0, 0
@@ -356,6 +353,46 @@ CopyData_PalMap:
 	ldh [rWBK], a
 	ret
 
+_SaveScreenTilesToOverworldBuffer::
+	ld a, [rWBK]
+	push af
+	ld a, 2
+	ldh [rWBK], a
+
+	hlcoord 0, 0
+	ld de, W2_OverworldTileMapBackup
+	ld bc, SCREEN_WIDTH * SCREEN_HEIGHT
+	call CopyData
+
+	ld hl, W2_TileMapPalMap
+	ld de, W2_OverworldTileMapPalMapBackup
+	ld bc, SCREEN_WIDTH * SCREEN_HEIGHT
+	call CopyData
+
+	pop af
+	ld [rWBK], a
+	ret
+
+_LoadScreenTilesFromOverworldBuffer::
+	ld a, [rWBK]
+	push af
+	ld a, 2
+	ldh [rWBK], a
+
+	decoord 0, 0
+	ld hl, W2_OverworldTileMapBackup
+	ld bc, SCREEN_WIDTH * SCREEN_HEIGHT
+	call CopyData
+
+	ld de, W2_TileMapPalMap
+	ld hl, W2_OverworldTileMapPalMapBackup
+	ld bc, SCREEN_WIDTH * SCREEN_HEIGHT
+	call CopyData
+
+	pop af
+	ld [rWBK], a
+	ret	
+
 _UpdateMapView::
 	ld a, [wSpritePlayerStateData1YStepVector]
 	and a
@@ -364,42 +401,46 @@ _UpdateMapView::
 	and a
 	ret z
 
+; horitontal shift
+	di
+	ld [hSPTemp], sp
+
 	dec a
 	ld a, 2
 	ldh [rWBK], a
 	jp z, .shiftLeft
 
 ; shifting maps right
-	ld de, wTileMap + 20 * 18 - 3
-	ld hl, wTileMap + 20 * 18 - 1
+	ld sp, wTileMap + 20 * 18
+	ld hl, sp - 3
 	ld c, 2
 .nextShiftRight
 FOR _ROW, 1, 1+ 18
-	FOR _COL, 1, 1+ 20 - 2
-		ld a, [de]
-		ld [hld], a
-		IF _ROW < 18 || _COL < 20 - 2
-			dec de
+	FOR _COL, 1, 1+ 20 / 2 - 1
+		ld a, [hld]
+		ld d, a
+		IF _ROW < 18 || _COL < 20 / 2 - 1 
+			ld a, [hld]
+			ld e, a
+		ELSE
+			ld e, [hl]
 		ENDC
+		push de
 	ENDR
 	IF _ROW < 18
+		push de
 		dec hl
 		dec hl
-		dec de
-		dec de
 	ENDC
 ENDR
 	dec c
 	jp z, .doneShifting
-	ld de, W2_TileMapPalMap + 20 * 18 - 3
-	ld hl, W2_TileMapPalMap + 20 * 18 - 1
+	ld sp, W2_TileMapPalMap + 20 * 18
+	ld hl, sp - 3
 	jp .nextShiftRight
 
 .shiftLeft
 ; shifting maps left
-	di
-	ld [hSPTemp], sp
-
 	ld sp, wTileMap + 2
 	ld hl, sp - 2
 	ld c, 2
@@ -423,40 +464,44 @@ FOR _ROW, 1, 1+ 18
 	ENDC
 ENDR
 	dec c
-	jp z, .doneShiftingWithSP
+	jp z, .doneShifting
 	ld sp, W2_TileMapPalMap + 2
 	ld hl, sp - 2
 	jp .nextShiftLeft
 
 .verticalShift
+	di
+	ld [hSPTemp], sp
+
 	dec a
 	ld a, 2
 	ldh [rWBK], a
 	jp z, .shiftUp
 
 ; shifting map down
-	ld de, wTileMap + 20 * 18 - 41
-	ld hl, wTileMap + 20 * 18 - 1
+	ld sp, wTileMap + 20 * 18
+	ld hl, sp - 41
 	ld c, 2
 .nextShiftDown
-FOR _MAP, 1, 1+ 20 * (18 - 2)
-	ld a, [de]
-	ld [hld], a
-	IF _MAP < 20 * (18 - 2)
-		dec de
+FOR _MAP, 1, 1+ 20 * (18 - 2) / 2
+	ld a, [hld]
+	ld d, a
+	IF _MAP < 20 * (18 - 2) / 2
+		ld a, [hld]
+		ld e, a
+	ELSE
+		ld e, [hl]
 	ENDC
+	push de
 ENDR
 	dec c
 	jp z, .doneShifting
-	ld de, W2_TileMapPalMap + 20 * 18 - 41
-	ld hl, W2_TileMapPalMap + 20 * 18 - 1
+	ld sp, W2_TileMapPalMap + 20 * 18
+	ld hl, sp - 41
 	jp .nextShiftDown
 
 .shiftUp
 ; shifting map up
-	di
-	ld [hSPTemp], sp
-
 	ld sp, wTileMap + 40
 	ld hl, sp - 40
 	ld c, 2
@@ -479,12 +524,11 @@ ENDR
 	dec c
 	jp nz, .nextShiftUp
 
-.doneShiftingWithSP
+.doneShifting
 	ld sp, hSPTemp
 	pop hl
 	ld sp, hl
 	ei
-.doneShifting
 
 	xor a
 	ldh [rWBK], a
@@ -687,7 +731,7 @@ FOR _MAP, 1, 1+ 2
 	ld h, d
 	ld l, e
 	FOR _ROW, 1, 1+ 2
-		FOR _TILE_DUO, 1, 1+ 20 / 2
+		FOR _COL, 1, 1+ 20 / 2
 			pop de
 			ld a, e
 		;	IF _MAP > 1
@@ -702,7 +746,7 @@ FOR _MAP, 1, 1+ 2
 		;	ENDC
 			ld [hli], a
 			ld [bc], a
-			IF _ROW < 2 || _TILE_DUO < 20 / 2
+			IF _ROW < 2 || _COL < 20 / 2
 				inc bc
 			ENDC
 		ENDR

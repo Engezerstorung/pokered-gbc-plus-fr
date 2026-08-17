@@ -78,7 +78,7 @@ ENDM
 
 MACRO spritestatedata2
 \1WalkAnimationCounter:: db
-	ds 1
+\1FacingTable::          db
 \1YDisplacement::        db
 \1XDisplacement::        db
 \1MapY::                 db
@@ -87,10 +87,12 @@ MACRO spritestatedata2
 \1GrassPriority::        db
 \1MovementDelay::        db
 \1OrigFacingDirection::  db
-	ds 3
-\1PictureID::            db
+\1YPixelOffset::         db
+\1XPixelOffset::         db
+\1Animation::            db
+\1PaletteID::            db
 \1ImageBaseOffset::      db
-	ds 1
+\1Reflection::           db
 \1End::
 ENDM
 

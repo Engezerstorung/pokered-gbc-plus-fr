@@ -60,8 +60,20 @@ FarCopyDataDouble::
 	ret
 
 CopyVideoDataVDMA::
-; Copy c tiles from b:de to hl from a .2bpp assets aligned on a $XXX0 address
+	ldh a, [hAutoBGTransferEnabled]
+	push af
+	xor a
+	ldh [hAutoBGTransferEnabled], a
 
+	call CopyVideoDataVDMA_BgTransfer
+
+	pop af
+	ldh [hAutoBGTransferEnabled], a
+	ret
+
+
+CopyVideoDataVDMA_BgTransfer::
+; Copy c tiles from b:de to hl from a .2bpp assets aligned on a $XXX0 address
 	ldh a, [hLoadedROMBank]
 	ldh [hROMBankTemp], a
 	setrombank b
@@ -95,9 +107,12 @@ CopyVideoDataVDMA::
 	ld a, STAT_MODE_0 ; disable all STAT interrupt except hblank
 	ldh [rSTAT], a
 
-	set B_VDMA_LEN_MODE, c ; set HDMA mode
 	push hl
+	push bc
+
+	set B_VDMA_LEN_MODE, c ; set HDMA mode
 	ld hl, rVDMA_LEN
+	ld b, $7f
 
 .hblankInProgress
 	ldh a, [rSTAT]
@@ -113,19 +128,22 @@ CopyVideoDataVDMA::
 	inc a ; no DMA in progress = $FF
 	jr nz, .halt ; wait for HDMA to finish
 
+	pop bc
 	pop hl
 	pop af
 	ldh [rSTAT], a
 
 .done
+	inc c
+
 	ldh a, [hROMBankTemp]
 	setrombank
 	ret
 
 CopyVideoData::
 ; Wait for the next VBlank, then copy c 2bpp
-; tiles from b:de to hl, 8 tiles at a time.
-; This takes c/8 frames.
+; tiles from b:de to hl, 12 tiles at a time.
+; This takes c/12 frames.
 ; de = graphic to use
 ; hl = where in vram
 ; b = wich bank the graphic is in
@@ -133,8 +151,14 @@ CopyVideoData::
 ; see exemple : LoadPartyPokeballGfx
 	ldh a, [hAutoBGTransferEnabled]
 	push af
+
+	inc a
+	jr z, .dontDisable
+
 	xor a ; disable auto-transfer while copying
 	ldh [hAutoBGTransferEnabled], a
+
+.dontDisable
 
 	ldh a, [hLoadedROMBank]
 	ldh [hROMBankTemp], a
@@ -153,14 +177,45 @@ CopyVideoData::
 	ld a, h
 	ldh [hVBlankCopyDest + 1], a
 
-.loop
-	ld a, c
-	cp 8
-	jr nc, .keepgoing
+;.loop
+;	ld a, c
+;	cp 12 + 1
+;	jr nc, .keepgoing
+;
+;.done
+;	ldh [hVBlankCopySize], a
+;	call DelayFrame
+;	ldh a, [hROMBankTemp]
+;	ldh [hLoadedROMBank], a
+;	ld [rROMB], a
+;	pop af
+;	ldh [hAutoBGTransferEnabled], a
+;	ret
+;
+;.keepgoing
+;	ld a, 12
+;	ldh [hVBlankCopySize], a
+;	call DelayFrame
+;	ld a, c
+;	sub 12
+;	ld c, a
+;	jr .loop
 
-.done
+	ld a, c
+.continueTransfer
+	sub 12
+	ld c, 0
+	jr c, .lastTransfer
+	ld c, a
+	xor a
+.lastTransfer
+	add 12
 	ldh [hVBlankCopySize], a
 	call DelayFrame
+	ld a, c
+	and a
+	jr nz, .continueTransfer
+
 	ldh a, [hROMBankTemp]
 	ldh [hLoadedROMBank], a
 	ld [rROMB], a
@@ -168,23 +223,21 @@ CopyVideoData::
 	ldh [hAutoBGTransferEnabled], a
 	ret
 
-.keepgoing
-	ld a, 8
-	ldh [hVBlankCopySize], a
-	call DelayFrame
-	ld a, c
-	sub 8
-	ld c, a
-	jr .loop
-
 CopyVideoDataDouble::
 ; Wait for the next VBlank, then copy c 1bpp
-; tiles from b:de to hl, 8 tiles at a time.
-; This takes c/8 frames.
+; tiles from b:de to hl, 12 tiles at a time.
+; This takes c/12 frames.
 	ldh a, [hAutoBGTransferEnabled]
 	push af
+
+	inc a
+	jr z, .dontDisable
+
 	xor a ; disable auto-transfer while copying
 	ldh [hAutoBGTransferEnabled], a
+
+.dontDisable
+
 	ldh a, [hLoadedROMBank]
 	ldh [hROMBankTemp], a
 
@@ -204,7 +257,7 @@ CopyVideoDataDouble::
 
 .loop
 	ld a, c
-	cp 8
+	cp 12 + 1
 	jr nc, .keepgoing
 
 .done
@@ -218,11 +271,11 @@ CopyVideoDataDouble::
 	ret
 
 .keepgoing
-	ld a, 8
+	ld a, 12
 	ldh [hVBlankCopyDoubleSize], a
 	call DelayFrame
 	ld a, c
-	sub 8
+	sub 12
 	ld c, a
 	jr .loop
 
@@ -231,20 +284,37 @@ ClearScreenArea::
 	ld a, ' '
 
 ClearScreenAreaWithA::
-	ld de, SCREEN_WIDTH
+; optimisation by PokefanMarcel from the Pret Discord
+	ld d, a
+	ld a, SCREEN_WIDTH
+	sub c
+	ld e, a    ; e = SCREEN_WIDTH - c
+	ld a, d
 .loopRows
-	push hl
-	push bc
+	ld d, c
 .loopTiles
 	ld [hli], a
-	dec c
+	dec d
 	jr nz, .loopTiles
-	pop bc
-	pop hl
-	add hl, de
+	add hl, de ; d = 0
 	dec b
 	jr nz, .loopRows
 	ret
+
+;	ld de, SCREEN_WIDTH
+;.loopRows
+;	push hl
+;	push bc
+;.loopTiles
+;	ld [hli], a
+;	dec c
+;	jr nz, .loopTiles
+;	pop bc
+;	pop hl
+;	add hl, de
+;	dec b
+;	jr nz, .loopRows
+;	ret
 
 CopyScreenTileBufferToVRAM::
 ; Copy wTileMap to the BG Map starting at b * $100.

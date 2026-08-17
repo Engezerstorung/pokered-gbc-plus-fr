@@ -62,9 +62,9 @@ OakSpeech:
 	xor a
 	ldh [hTileAnimations], a
 IF GEN_2_GRAPHICS
-	ld a, PAL_OAK
+	ld d, PAL_OAK
 ELSE
-	ld a, PAL_BROWNMON
+	ld d, PAL_BROWNMON
 ENDC
 	call GotPalID ; HAX
 	nop

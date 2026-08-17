@@ -507,6 +507,19 @@ PrintGenderStatusScreen:
 	farcall GetMonGender
 	ld a, [wPokedexNum]
 	hlcoord 17, 2
-	ld [hl], a
+	ld [hli], a
+
+	ld a, [de]
+	bit 5, a
+	ret z
+	and $f
+	cp $a
+	ret nz
+	inc de
+	ld a, [de]
+	cp $aa
+	ret nz
+	ld [hl], '⁂'
+
 	ret
 ENDC

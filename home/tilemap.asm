@@ -69,3 +69,10 @@ LoadScreenTilesFromBuffer1::
 ;	ldh [hAutoBGTransferEnabled], a
 ;;	ret
 ;	farjp _LoadScreenPalsFromBuffer1
+
+SaveScreenTilesToOverworldBuffer::
+	farjp _SaveScreenTilesToOverworldBuffer
+
+LoadScreenTilesFromOverworldBuffer::
+	farjp _LoadScreenTilesFromOverworldBuffer
+

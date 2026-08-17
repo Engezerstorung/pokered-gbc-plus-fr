@@ -31,6 +31,7 @@ GetMonGender::
 ; Speed DV
 	inc de
 	ld a, [de]
+	dec de
 	and $f0
 	swap a
 ; Put them together
@@ -73,45 +74,74 @@ CheckForcedGender:
 	cp FEMALE_ONLY
 	ret nc
 
-	push hl
-	ld hl, wGenderFlags
-	bit 0, [hl] ; check if force male
-	res 0, [hl]
-	jr nz, .forceMale
-	bit 1, [hl] ; check if force female
-	res 1, [hl]
+;	push hl
+;	ld hl, wGenderFlags
+;	bit 0, [hl] ; check if force male
+;	res 0, [hl]
+;	jr nz, .forceMale
+;	bit 1, [hl] ; check if force female
+;	res 1, [hl]
+;	jr z, .done
+;
+;	ld hl, .checkFemaleDV
+;	jr .forceCommon
+;.forceMale
+;	ld hl, .checkMaleDV
+;.forceCommon
+;	swap a
+;	and $0F
+;	inc a
+;	ld b, a
+;
+;.rerollAttackDV
+;	call Random
+;	and $0F
+;	cp b
+;	jp hl
+;
+;.checkMaleDV
+;	jr c, .rerollAttackDV
+;	jr .gotAttackDV
+;.checkFemaleDV
+;	jr nc, .rerollAttackDV
+
+	; prepare values for female DV Range
+	and $f0
+	swap a
+	ld b, a
+	ld c, 0
+
+	ld a, [wGenderFlags]
+	bit 1, a ; check if force female
+	res 1, a
+	jr nz, .gotDVRange
+
+	; prepare values for male DV Range
+	ld c, b
+	inc c
+	ld b, 15
+
+	bit 0, a ; check if force male
+.gotDVRange
+	res 0, a
+	ld [wGenderFlags], a
 	jr z, .done
 
-	ld hl, .checkFemaleDV
-	jr .forceCommon
-.forceMale
-	ld hl, .checkMaleDV
-.forceCommon
-	and $0F
-	inc a
-	ld b, a
-
-.rerollAttackDV
-	call Random
-	and $0F
-	cp b
-	jp hl
-
-.checkMaleDV
-	jr c, .rerollAttackDV
-	jr .gotAttackDV
-.checkFemaleDV
-	jr nc, .rerollAttackDV
+	push de
+	ld d, b
+	ld e, c
+	call RandomValueInRange
+	pop de
 
 .gotAttackDV
 	ld b, a
 	swap b
 	ld a, [de]
-	and $0F
+	and $0f
 	or b
 	ld [de], a
 .done
-	pop hl
+;	pop hl
 	ret
 
 MonGenderRatios:
@@ -143,10 +173,12 @@ MonGenderRatios:
 	db SAME_BOTH_GENDERS ; Raichu
 	db SAME_BOTH_GENDERS ; Sandshrew
 	db SAME_BOTH_GENDERS ; Sandslash
-	db FEMALE_ONLY       ; Nidoran F
+;	db FEMALE_ONLY       ; Nidoran F ; temporary solution to not show additional gender sign for nidorans
+	db NO_GENDER         ; Nidoran F ; might need to be changed if knowing the gender become usefull for something else
 	db FEMALE_ONLY       ; Nidorina
 	db FEMALE_ONLY       ; Nidoqueen
-	db MALE_ONLY         ; Nidoran M
+;	db MALE_ONLY         ; Nidoran M
+	db NO_GENDER         ; Nidoran M ; see Nidoran F comment
 	db MALE_ONLY         ; Nidorino
 	db MALE_ONLY         ; Nidoking
 	db FEMALE_75_PERCENT ; Clefairy

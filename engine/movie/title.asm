@@ -119,6 +119,17 @@ DisplayTitleScreen:
 .tileScreenCopyrightTilesEnd
 
 .next
+
+IF DEF(_RED)
+	ld a, STARTER1 ; which Pokemon to show first on the title screen
+ENDC
+IF DEF(_BLUE)
+	ld a, STARTER2 ; which Pokemon to show first on the title screen
+ENDC
+	ld [wTitleMonSpecies], a
+	ld b, SET_PAL_TITLE_SCREEN
+	call RunPaletteCommand
+
 	call SaveScreenTilesToBuffer2
 	call LoadScreenTilesFromBuffer2
 	call EnableLCD
@@ -140,8 +151,8 @@ ENDC
 	call LoadScreenTilesFromBuffer2
 	ld a, HIGH(vBGMap0)
 	call TitleScreenCopyTileMapToVRAM
-	ld b, SET_PAL_TITLE_SCREEN
-	call RunPaletteCommand
+;	ld b, SET_PAL_TITLE_SCREEN
+;	call RunPaletteCommand
 	call GBPalNormal
 	ld a, %11100100
 	ldh [rOBP0], a
